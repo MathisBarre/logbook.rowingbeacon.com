@@ -1,0 +1,77 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:wght@300;400;500;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    font-size: var(--root-font-size);
+  }
+
+  body {
+    @apply bg-gray-100 text-gray-800;
+  }
+
+  .center {
+    @apply flex items-center justify-center;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply bg-steel-blue-700 px-4 py-2 rounded text-white hover:bg-steel-blue-800;
+  }
+
+  .btn-error {
+    @apply bg-error-800 px-4 py-2 rounded text-white hover:bg-error-900;
+  }
+
+  .input {
+    @apply border border-gray-400 rounded shadow-sm;
+  }
+}
+
+@layer utilities {
+  .dashed-error {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgb(153 27 27 / var(--tw-bg-opacity)),
+      rgb(153 27 27 / var(--tw-bg-opacity)) 1rem,
+      #ffffff40 1rem,
+      #ffffff40 2rem
+    );
+    background-size: 200% 200%;
+    animation: barberpole 5s linear infinite;
+  }
+
+  .dashed-primary {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgb(75 85 99 / var(--tw-bg-opacity)),
+      rgb(75 85 99 / var(--tw-bg-opacity)) 1rem,
+      #ffffff40 1rem,
+      #ffffff40 2rem
+    );
+    background-size: 200% 200%;
+    animation: barberpole 5s linear infinite;
+  }
+
+  .dashed-transparent {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 1rem,
+      #ffffff40 1rem,
+      #ffffff40 2rem
+    );
+    background-size: 200% 200%;
+    animation: barberpole 5s linear infinite;
+  }
+}
+
+@keyframes barberpole {
+  100% {
+    background-position: 100% 100%;
+  }
+}

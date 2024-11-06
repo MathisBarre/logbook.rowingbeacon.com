@@ -1,0 +1,42 @@
+{
+  "build": {
+    "beforeDevCommand": "yarn dev",
+    "beforeBuildCommand": "yarn build",
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1420"
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  },
+  "productName": "Rowing Beacon",
+  "mainBinaryName": "Rowing Beacon",
+  "version": "0.8.1",
+  "identifier": "com.rowing-beacon-tauri-app.app",
+  "plugins": {},
+  "app": {
+    "withGlobalTauri": false,
+    "windows": [
+      {
+        "alwaysOnTop": false,
+        "fullscreen": true,
+        "resizable": true,
+        "maximizable": true,
+        "maximized": true,
+        "title": "RowingBeacon",
+        "width": 800,
+        "height": 600
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  }
+}
