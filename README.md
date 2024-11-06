@@ -1,4 +1,4 @@
-# RowingBeacon
+![logo](https://github.com/MathisBarre/logbook.rowingbeacon.com/blob/main/public/banner.png?raw=true)
 
 [rowingbeacon.com](https://rowingbeacon.com)
 
