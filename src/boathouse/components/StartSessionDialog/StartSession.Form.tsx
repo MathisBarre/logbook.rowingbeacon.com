@@ -67,7 +67,24 @@ export const StartSessionForm = ({
     values,
   });
 
-  const { startSession, startSessionError } = useStartSession(onSessionStarted);
+  const {
+    startSession,
+    startSessionError,
+    acceptBadAmountOfRowers,
+    fixInputs,
+    alert,
+  } = useStartSession(onSessionStarted);
+
+  const formatValuesForSubmission = (values: StartSessionFormValues) => {
+    return {
+      boatId: values.boat.id,
+      rowersId: values.selectedRowersOptions.map((option) => option.id),
+      startDatetime: new Date(values.startDateTime),
+      estimatedEndDatetime: new Date(values.estimatedEndDateTime),
+      routeId: values.route.id,
+      comment: values.comment,
+    };
+  };
 
   return (
     <div>
@@ -75,34 +92,36 @@ export const StartSessionForm = ({
         <form
           className="flex flex-col gap-4"
           onSubmit={form.handleSubmit(async (values) => {
-            const startSessionPayload = {
-              boatId: values.boat.id,
-              rowersId: values.selectedRowersOptions.map((option) => option.id),
-              startDatetime: new Date(values.startDateTime),
-              estimatedEndDatetime: new Date(values.estimatedEndDateTime),
-              routeId: values.route.id,
-              comment: values.comment,
-            };
-
-            await startSession(startSessionPayload);
+            await startSession(formatValuesForSubmission(values));
           })}
         >
-          <StartSessionAlert
-            isDisplayed={false}
-            textContent={
-              <>
-                Vous avez renseigné 5 rameur(s)
-                <br /> Le bateau "102 Fillipi compétition" n'a que X rameur(s).
-                <br /> Souhaitez-vous continuer ?
-              </>
-            }
-            onStartSessionClick={() => {
-              console.log("click");
-            }}
-            onFixSessionClick={() => {
-              console.log("click");
-            }}
-          />
+          {alert?.code === "BAD_AMOUNT_OF_ROWERS" && (
+            <StartSessionAlert
+              textContent={
+                <>
+                  Vous avez renseigné{" "}
+                  <span className="font-medium">
+                    {alert.details.nbOfRowers} rameur(s)
+                  </span>
+                  .
+                  <br /> Le bateau "{alert.details.boatName}" nécessite{" "}
+                  <span className="font-medium">
+                    {alert.details.boatRowersQuantity} rameur(s)
+                  </span>
+                  .
+                  <br /> Souhaitez-vous continuer ?
+                </>
+              }
+              onStartSessionClick={() => {
+                acceptBadAmountOfRowers(
+                  formatValuesForSubmission(form.getValues())
+                );
+              }}
+              onFixSessionClick={() => {
+                fixInputs();
+              }}
+            />
+          )}
 
           <div className="flex gap-4">
             <FormField
@@ -201,20 +220,14 @@ export const StartSessionForm = ({
 };
 
 const StartSessionAlert = ({
-  isDisplayed,
   textContent,
   onStartSessionClick,
   onFixSessionClick,
 }: {
   textContent: React.ReactNode;
-  isDisplayed: boolean;
   onStartSessionClick: () => void;
   onFixSessionClick: () => void;
 }) => {
-  if (!isDisplayed) {
-    return null;
-  }
-
   return (
     <div className="absolute inset-0 bg-white bg-opacity-80 backdrop-blur-sm z-10">
       <div className=" flex justify-center items-center flex-col h-full mx-auto px-16 gap-4">
