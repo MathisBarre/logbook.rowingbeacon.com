@@ -11,3 +11,12 @@ export const areStringSimilar = (str1: string, str2: string) => {
   const s2 = simplifyString(str2);
   return s1.includes(s2) || s2.includes(s1);
 };
+
+export const replaceLastOccurrence = (
+  str: string,
+  search: string,
+  replace: string
+) => {
+  const index = str.lastIndexOf(search);
+  return str.slice(0, index) + replace + str.slice(index + search.length);
+};

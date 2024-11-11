@@ -13,6 +13,7 @@ import { dateStringSchema } from "../../../_common/utils/commonSchema";
 import { ErrorBlock } from "../../../_common/components/ErrorBlock";
 import { useStartSession } from "./startSession.hook";
 import { CircleAlertIcon } from "lucide-react";
+import { replaceLastOccurrence } from "../../../_common/utils/string.utils";
 
 const StartSessionFormSchema = z.object({
   boat: z.object({
@@ -73,6 +74,7 @@ export const StartSessionForm = ({
     acceptBadAmountOfRowers,
     fixInputs,
     alert,
+    acceptToHaveSameRowersAlreadyOnStartedSession,
   } = useStartSession(onSessionStarted);
 
   const formatValuesForSubmission = (values: StartSessionFormValues) => {
@@ -97,7 +99,7 @@ export const StartSessionForm = ({
         >
           {alert?.code === "BAD_AMOUNT_OF_ROWERS" && (
             <StartSessionAlert
-              textContent={
+              TextContent={() => (
                 <>
                   Vous avez renseigné{" "}
                   <span className="font-medium">
@@ -111,9 +113,47 @@ export const StartSessionForm = ({
                   .
                   <br /> Souhaitez-vous continuer ?
                 </>
-              }
+              )}
               onStartSessionClick={() => {
                 acceptBadAmountOfRowers(
+                  formatValuesForSubmission(form.getValues())
+                );
+              }}
+              onFixSessionClick={() => {
+                fixInputs();
+              }}
+            />
+          )}
+
+          {alert?.code === "ROWERS_ALREADY_ON_STARTED_SESSION" && (
+            <StartSessionAlert
+              TextContent={() => {
+                const alreadyOnSessionRowers =
+                  alert.details.alreadyOnSessionRowers;
+
+                if (alreadyOnSessionRowers === null) {
+                  return "Certains rameurs ont déjà commencé une autre sortie. Souhaitez-vous continuer ?";
+                }
+
+                const plural = alreadyOnSessionRowers.length > 1;
+
+                return (
+                  <>
+                    {replaceLastOccurrence(
+                      alreadyOnSessionRowers
+                        .map((rower) => rower.name)
+                        .join(", "),
+                      ", ",
+                      " et "
+                    )}
+                    {plural ? " ont" : " a"} déjà commencé une autre sortie.
+                    <br />
+                    Souhaitez-vous continuer ?
+                  </>
+                );
+              }}
+              onStartSessionClick={() => {
+                acceptToHaveSameRowersAlreadyOnStartedSession(
                   formatValuesForSubmission(form.getValues())
                 );
               }}
@@ -220,11 +260,11 @@ export const StartSessionForm = ({
 };
 
 const StartSessionAlert = ({
-  textContent,
+  TextContent,
   onStartSessionClick,
   onFixSessionClick,
 }: {
-  textContent: React.ReactNode;
+  TextContent: () => React.ReactNode;
   onStartSessionClick: () => void;
   onFixSessionClick: () => void;
 }) => {
@@ -232,7 +272,9 @@ const StartSessionAlert = ({
     <div className="absolute inset-0 bg-white bg-opacity-80 backdrop-blur-sm z-10">
       <div className=" flex justify-center items-center flex-col h-full mx-auto px-16 gap-4">
         <CircleAlertIcon className="h-8 w-8 text-error-700" />
-        <p className="text-center">{textContent}</p>
+        <p className="text-center max-w-96">
+          <TextContent />
+        </p>
         <div className="flex gap-2">
           <Button
             className="w-60"
