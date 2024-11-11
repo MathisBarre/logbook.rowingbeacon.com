@@ -24,11 +24,10 @@ export function StartSessionDialog({
 }: StartSessionDialogProps) {
   return (
     <SimpleDialog
-      modal={false}
+      modal={true}
       open={isOpen}
       onOpenChange={(v) => v === false && setIsOpen(false)}
       title="Commencer une sortie"
-      subtitle="Entrez les informations de la sortie"
     >
       <StartSessionFormDataWrapper
         closeAction={() => setIsOpen(false)}

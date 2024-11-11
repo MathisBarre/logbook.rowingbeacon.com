@@ -13,7 +13,7 @@ export const SimpleDialog = ({
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
-  subtitle: string;
+  subtitle?: string;
   children: React.ReactNode;
   className?: string;
   modal?: boolean;

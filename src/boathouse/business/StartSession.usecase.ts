@@ -81,9 +81,7 @@ export class StartSessionUsecase {
       return asError({
         code: "ROWERS_ALREADY_ON_STARTED_SESSION",
         details: {
-          alreadyOnSessionRowersId:
-            alreadyOnStartedSessionRowers ||
-            alreadyOnStartedSessionRowersId.map((rower) => ({ id: rower })),
+          alreadyOnSessionRowers: alreadyOnStartedSessionRowers,
         },
       });
     }

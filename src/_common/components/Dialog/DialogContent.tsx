@@ -32,17 +32,28 @@ export const DialogContent = React.forwardRef<
       )}
       {...props}
     >
-      <DialogHeader className="bg-gradient-to-r from-steel-blue-800 to-steel-blue-700 w-full px-6 py-6">
-        <DialogTitle className="text-gray-100 mb-[0.2rem]">{title}</DialogTitle>
-        <DialogDescription className="text-gray-100">
-          {subtitle}
-        </DialogDescription>
+      <DialogHeader className="bg-gradient-to-r from-steel-blue-800 to-steel-blue-600 w-full px-6 py-4 flex justify-between items-center">
+        <div className={cn("flex flex-col justify-center", subtitle && "my-1")}>
+          <DialogTitle
+            className={cn(
+              "text-gray-100",
+              subtitle && "mb-[0.2rem]",
+              !subtitle && "my-1"
+            )}
+          >
+            {title}
+          </DialogTitle>
+          <DialogDescription className="text-gray-100">
+            {subtitle}
+          </DialogDescription>
+        </div>
+
+        <DialogPrimitive.Close className="text-white bg-white bg-opacity-5 border border-white border-opacity-10 p-2 rounded-sm opacity-90 ring-offset-background transition-opacity hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground ">
+          <XMarkIcon className="h-5 w-5" />
+          <span className="sr-only">Close</span>
+        </DialogPrimitive.Close>
       </DialogHeader>
       <div className="p-6">{children}</div>
-      <DialogPrimitive.Close className="text-white absolute right-4 top-4 rounded-sm opacity-90 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-        <XMarkIcon className="h-5 w-5" />
-        <span className="sr-only">Close</span>
-      </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>
 ));

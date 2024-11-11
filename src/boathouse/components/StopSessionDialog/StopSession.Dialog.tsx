@@ -15,11 +15,10 @@ export function StopSessionDialog({
 }: StopSessionDialogProps) {
   return (
     <SimpleDialog
-      modal={false}
+      modal
       open={isOpen}
       onOpenChange={(v) => v === false && setIsOpen(false)}
       title="Terminer une sortie"
-      subtitle="En espérant que tout s'est bien passé !"
     >
       <StopSessionForm
         afterSubmit={() => setIsOpen(false)}
