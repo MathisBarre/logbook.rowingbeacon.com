@@ -210,7 +210,7 @@ function BoathouseScreen() {
                 <span className="text-sm leading-3 font-medium">
                   RowingBeacon
                 </span>
-                <span className="text-sm leading-3">Classic</span>
+                <span className="text-xs leading-3">Logbook</span>
               </div>
               <div className="font-medium text-sm">v{version}</div>
             </div>
