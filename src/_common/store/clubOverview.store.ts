@@ -8,11 +8,6 @@ import {
 import { BoatTypeEnum } from "../types/boat.type";
 import { generateBoatId } from "../business/boat.rules";
 
-export enum ProductChoiceEnum {
-  CLASSIC = "CLASSIC",
-  CLOUD = "CLOUD",
-}
-
 export interface ClubOverviewState {
   club: {
     password: string;

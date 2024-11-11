@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 import { adminEditModeStore } from "./adminEditMode.store";
 import { useClubOverviewStore } from "./clubOverview.store";
+import { closeApp, windowPrompt } from "../utils/window.utils";
 
 export const useAdminEditModeSystem = () => {
   const store = adminEditModeStore();
@@ -14,17 +15,34 @@ export const useAdminEditModeSystem = () => {
     if (pswd === onboardingStore.clubOverview?.club.password) {
       store.startAdminEditMode();
     } else {
-      alertUserIsNotAdmin();
+      wrongAdminPassword();
     }
   };
 
-  const alertUserIsNotAdmin = () => {
+  const close = (pswd: string | null) => {
+    if (pswd === null) {
+      return;
+    }
+
+    if (pswd === onboardingStore.clubOverview?.club.password) {
+      closeApp();
+    } else {
+      wrongAdminPassword();
+    }
+  };
+
+  const wrongAdminPassword = () => {
     toast.error("Mot de passe incorrect");
   };
 
   return {
     ...store,
     startAdminEditMode,
-    alertUserIsNotAdmin,
+    alertUserIsNotAdmin: wrongAdminPassword,
+    closeApp: close,
   };
+};
+
+export const askForAdminPassword = () => {
+  return windowPrompt("Mot de passe admin");
 };

@@ -5,10 +5,12 @@ import {
   ZustandSession,
 } from "../_common/store/sessions.store";
 import { ArrowLeftStartOnRectangleIcon } from "@heroicons/react/16/solid";
-import { getZoomPercentage, zoomIn, zoomOut } from "../_common/utils/zoom";
 import { version } from "../../package.json";
-import { useLogout } from "../_common/utils/logout";
-import { useAdminEditModeSystem } from "../_common/store/adminEditMode.system";
+
+import {
+  askForAdminPassword,
+  useAdminEditModeSystem,
+} from "../_common/store/adminEditMode.system";
 import { cn } from "../_common/utils/utils";
 import { BoatsList } from "./components/BoatList/BoatList";
 import { StartSessionDialog } from "./components/StartSessionDialog/StartSession.Dialog";
@@ -25,7 +27,6 @@ import { SimpleAlertDialog } from "../_common/components/SimpleAlertDialog";
 import { windowAlert, windowPrompt } from "../_common/utils/window.utils";
 
 function BoathouseScreen() {
-  const logout = useLogout();
   const sessionStore = useSessionsStore();
   const { clubOverview, addBoat, coachNote, setCoachNote } =
     useClubOverviewStore();
@@ -52,7 +53,6 @@ function BoathouseScreen() {
   };
 
   const [displayHistory, setDisplayHistory] = useState(false);
-  const [zoomPercentage, setZoomPercentage] = useState(100);
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -210,7 +210,7 @@ function BoathouseScreen() {
                 <span className="text-sm leading-3 font-medium">
                   RowingBeacon
                 </span>
-                <span className="text-sm leading-3">Classic</span>
+                <span className="text-xs leading-3">Logbook</span>
               </div>
               <div className="font-medium text-sm">v{version}</div>
             </div>
@@ -224,53 +224,12 @@ function BoathouseScreen() {
             </button>
             <button
               onClick={async () => {
-                adminEditSystem.startAdminEditMode(
-                  await windowPrompt("Mot de passe admin")
-                );
+                adminEditSystem.startAdminEditMode(await askForAdminPassword());
               }}
               className="px-6 rounded text-sm font-medium shadow-md bg-white text-steel-blue-800 hover:bg-gray-50 "
             >
               Mode édition
             </button>
-            <button
-              onClick={() => {
-                const isCurrentlyFullscreen = document.fullscreenElement;
-                if (!isCurrentlyFullscreen) {
-                  return document.documentElement.requestFullscreen();
-                }
-
-                if (!document.exitFullscreen) {
-                  toast.error(
-                    "Votre navigateur ne supporte pas le mode plein écran"
-                  );
-                }
-                document.exitFullscreen();
-              }}
-              className="px-6 rounded text-sm font-medium shadow-md bg-white text-steel-blue-800 hover:bg-gray-50 "
-            >
-              Plein écran
-            </button>
-            <div className=" text-sm font-medium shadow-md bg-white text-steel-blue-800 flex items-center justify-center rounded">
-              <button
-                className="h-8 w-8 hover:bg-gray-100"
-                onClick={() => {
-                  zoomOut();
-                  setZoomPercentage(getZoomPercentage());
-                }}
-              >
-                -
-              </button>
-              <p className="flex-1 text-center mx-4">Zoom {zoomPercentage}%</p>
-              <button
-                className="h-8 w-8 hover:bg-gray-100"
-                onClick={() => {
-                  zoomIn();
-                  setZoomPercentage(getZoomPercentage());
-                }}
-              >
-                +
-              </button>
-            </div>
 
             <button
               onClick={() => {
@@ -313,8 +272,8 @@ function BoathouseScreen() {
         />
 
         <SimpleAlertDialog
-          title="Vous allez perdre toutes vos données !"
-          description="En vous déconnectant, vous perdrez toutes les données non sauvegardés. Êtes-vous sûr de vouloir continuer ?"
+          title="Fermer l'application ?"
+          description="Vous allez fermer l'application. Aucune donnée ne sera perdue."
           isOpen={isLogoutAlertOpen}
           cancelElement={
             <Button
@@ -331,11 +290,12 @@ function BoathouseScreen() {
             <Button
               color="danger"
               type="button"
-              onClick={() => {
-                logout();
+              onClick={async () => {
+                setIsLogoutAlertOpen(false);
+                adminEditSystem.closeApp(await askForAdminPassword());
               }}
             >
-              Se déconnecter
+              Fermer l'application
             </Button>
           }
         />

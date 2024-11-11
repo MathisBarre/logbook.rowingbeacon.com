@@ -136,7 +136,7 @@ export const Onboarding = ({
                         className="resize-y w-full text-xs input placeholder:text-gray-400 font-mono"
                         rows={13}
                         placeholder={logStr`
-                          Example: 
+                          Exemple: 
                           100 Swift
                           101 Hudson
                           102 WinTech
