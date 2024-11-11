@@ -24,7 +24,7 @@ export function StartSessionDialog({
 }: StartSessionDialogProps) {
   return (
     <SimpleDialog
-      modal={false}
+      modal={true}
       open={isOpen}
       onOpenChange={(v) => v === false && setIsOpen(false)}
       title="Commencer une sortie"
