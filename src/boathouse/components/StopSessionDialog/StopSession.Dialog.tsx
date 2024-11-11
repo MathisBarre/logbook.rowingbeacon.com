@@ -15,7 +15,7 @@ export function StopSessionDialog({
 }: StopSessionDialogProps) {
   return (
     <SimpleDialog
-      modal={false}
+      modal
       open={isOpen}
       onOpenChange={(v) => v === false && setIsOpen(false)}
       title="Terminer une sortie"
