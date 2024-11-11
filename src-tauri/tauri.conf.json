@@ -18,7 +18,7 @@
   },
   "productName": "Rowing Beacon",
   "mainBinaryName": "Rowing Beacon",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "identifier": "com.rowing-beacon-tauri-app.app",
   "plugins": {},
   "app": {

@@ -14,11 +14,7 @@ export const useStartSession = (onSessionStarted: () => void) => {
   );
 
   const boathouseRepository = useGetZustandBoathouseRepository();
-  const [_startSessionParams, _setStartSessionParams] =
-    useState<StartSessionParams>({
-      allowNotSameNbOfRowers: false,
-      allowToHaveSameRowersAlreadyOnStartedSession: false,
-    });
+
   const [alert, setAlert] = useState<
     | null
     | {
@@ -47,11 +43,6 @@ export const useStartSession = (onSessionStarted: () => void) => {
       startSessionPayload: SessionToStart,
       startSessionParams: StartSessionParams
     ) => {
-      console.group("starting session...");
-      console.log("startSessionPayload", startSessionPayload);
-      console.log("startSessionParams", startSessionParams);
-      console.groupEnd();
-
       setSubmissionError("");
 
       const [error] = await new StartSessionUsecase(
@@ -62,8 +53,6 @@ export const useStartSession = (onSessionStarted: () => void) => {
         onSessionStarted();
         return;
       }
-
-      console.log("error", error);
 
       if (error.code === "BAD_AMOUNT_OF_ROWERS") {
         return setAlert({
@@ -86,7 +75,10 @@ export const useStartSession = (onSessionStarted: () => void) => {
 
   const startSession = useCallback(
     async (startSessionPayload: SessionToStart) => {
-      return _startSession(startSessionPayload, _startSessionParams);
+      return _startSession(startSessionPayload, {
+        allowNotSameNbOfRowers: false,
+        allowToHaveSameRowersAlreadyOnStartedSession: false,
+      });
     },
     [boathouseRepository]
   );
@@ -95,13 +87,10 @@ export const useStartSession = (onSessionStarted: () => void) => {
     async (startSessionPayload: SessionToStart) => {
       setAlert(null);
 
-      const newStartSessionParams = {
-        ..._startSessionParams,
+      await _startSession(startSessionPayload, {
         allowNotSameNbOfRowers: true,
-      };
-
-      _setStartSessionParams(newStartSessionParams);
-      await _startSession(startSessionPayload, newStartSessionParams);
+        allowToHaveSameRowersAlreadyOnStartedSession: false,
+      });
     },
     []
   );
@@ -110,13 +99,10 @@ export const useStartSession = (onSessionStarted: () => void) => {
     async (startSessionPayload: SessionToStart) => {
       setAlert(null);
 
-      const newStartSessionParams = {
-        ..._startSessionParams,
+      await _startSession(startSessionPayload, {
+        allowNotSameNbOfRowers: true,
         allowToHaveSameRowersAlreadyOnStartedSession: true,
-      };
-
-      _setStartSessionParams(newStartSessionParams);
-      await _startSession(startSessionPayload, newStartSessionParams);
+      });
     },
     []
   );
