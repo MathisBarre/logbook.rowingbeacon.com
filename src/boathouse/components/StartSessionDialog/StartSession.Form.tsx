@@ -139,13 +139,15 @@ export const StartSessionForm = ({
 
                 return (
                   <>
-                    {replaceLastOccurrence(
-                      alreadyOnSessionRowers
-                        .map((rower) => rower.name)
-                        .join(", "),
-                      ", ",
-                      " et "
-                    )}
+                    {plural
+                      ? replaceLastOccurrence(
+                          alreadyOnSessionRowers
+                            .map((rower) => rower.name)
+                            .join(", "),
+                          ", ",
+                          " et "
+                        )
+                      : alreadyOnSessionRowers[0].name}
                     {plural ? " ont" : " a"} déjà commencé une autre sortie.
                     <br />
                     Souhaitez-vous continuer ?
