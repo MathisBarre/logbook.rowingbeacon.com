@@ -232,45 +232,6 @@ function BoathouseScreen() {
             >
               Mode édition
             </button>
-            <button
-              onClick={() => {
-                const isCurrentlyFullscreen = document.fullscreenElement;
-                if (!isCurrentlyFullscreen) {
-                  return document.documentElement.requestFullscreen();
-                }
-
-                if (!document.exitFullscreen) {
-                  toast.error(
-                    "Votre navigateur ne supporte pas le mode plein écran"
-                  );
-                }
-                document.exitFullscreen();
-              }}
-              className="px-6 rounded text-sm font-medium shadow-md bg-white text-steel-blue-800 hover:bg-gray-50 "
-            >
-              Plein écran
-            </button>
-            <div className=" text-sm font-medium shadow-md bg-white text-steel-blue-800 flex items-center justify-center rounded">
-              <button
-                className="h-8 w-8 hover:bg-gray-100"
-                onClick={() => {
-                  zoomOut();
-                  setZoomPercentage(getZoomPercentage());
-                }}
-              >
-                -
-              </button>
-              <p className="flex-1 text-center mx-4">Zoom {zoomPercentage}%</p>
-              <button
-                className="h-8 w-8 hover:bg-gray-100"
-                onClick={() => {
-                  zoomIn();
-                  setZoomPercentage(getZoomPercentage());
-                }}
-              >
-                +
-              </button>
-            </div>
 
             <button
               onClick={() => {
