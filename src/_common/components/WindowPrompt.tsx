@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Button from "./Button";
 
 export type PromptOptions = {
   title?: string;
@@ -43,7 +44,8 @@ export const WindowPrompt: React.FC = () => {
     };
   }, []);
 
-  const handleOk = () => {
+  const handleOk = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (promiseHandlers) {
       promiseHandlers.resolve(inputValue);
       setOptions(null);
@@ -67,33 +69,37 @@ export const WindowPrompt: React.FC = () => {
       role="dialog"
     >
       {/* Background overlay */}
-      <div className="absolute inset-0 bg-gray-800 opacity-50"></div>
+      <div className="absolute inset-0 bg-gray-800 backdrop-blur blur-md opacity-50"></div>
       {/* Modal content */}
-      <div className="bg-white rounded-lg shadow-lg z-10 max-w-sm mx-auto p-6">
-        {options.title && (
-          <h2 className="text-xl font-semibold mb-4">{options.title}</h2>
-        )}
-        <p className="mb-4">{options.message}</p>
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2 mb-6"
-        />
-        <div className="flex justify-end">
-          <button
-            onClick={handleCancel}
-            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded mr-2"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleOk}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            OK
-          </button>
-        </div>
+      <div className="bg-white rounded-lg shadow-lg z-10 mx-auto p-6 aspect-video w-72">
+        <h2 className="text-lg font-medium mb-2">{options.message}</h2>
+        <form onSubmit={handleOk}>
+          <input
+            autoFocus
+            type={
+              options.message.toLowerCase().includes("mot de passe") ||
+              options.message.toLowerCase().includes("password")
+                ? "password"
+                : "text"
+            }
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            className="w-full border border-gray-300 rounded px-3 py-2 mb-4"
+          />
+          <div className="flex justify-end gap-2">
+            <Button
+              type="button"
+              onClick={handleCancel}
+              className="flex-1"
+              variant="outlined"
+            >
+              Annuler
+            </Button>
+            <Button type="submit" className="flex-1">
+              Soumettre
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   );
