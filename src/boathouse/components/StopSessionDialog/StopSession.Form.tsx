@@ -10,6 +10,7 @@ import Button from "../../../_common/components/Button";
 import { Label } from "../../../_common/components/Label";
 import CommentSection from "../StartSessionDialog/CommentSection";
 import { getCurrentDateTime, isAfter } from "../../../_common/utils/date.utils";
+import { useState } from "react";
 
 const StopSessionFormSchema = z.object({
   endDateTime: z.string({
@@ -42,6 +43,7 @@ export const StopSessionForm = ({
   });
 
   const sessionStore = useSessionsStore();
+  const [isIncidentOpen, setIsIncidentOpen] = useState(false);
 
   return (
     <Form {...form}>
@@ -108,6 +110,7 @@ export const StopSessionForm = ({
             Maintenant !
           </Button>
         </div>
+
         <FormField
           name="comment"
           control={form.control}
@@ -117,6 +120,33 @@ export const StopSessionForm = ({
             );
           }}
         />
+
+        <label
+          htmlFor="incident"
+          className="border p-2 rounded border-gray-300 flex bg-gray-50 flex-col gap-2 text-gray-700  overflow-hidden"
+        >
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              name="incident"
+              id="incident"
+              className="rounded-sm mr-2"
+              checked={isIncidentOpen}
+              onChange={(e) => setIsIncidentOpen(e.target.checked)}
+            />
+            Il y a eu un incident pendant cette sortie
+          </div>
+          {isIncidentOpen && (
+            <textarea
+              placeholder="Décrivez l'incident qui a eu lieu..."
+              className="bg-white border-t-gray-600 border-t border-x-0 border-b-0 border-none -mx-2 -mb-2"
+              name="incident"
+              id="incident"
+              rows={3}
+            />
+          )}
+        </label>
+
         <div className="flex gap-4">
           <Button
             className="flex-1"
