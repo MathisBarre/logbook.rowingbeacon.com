@@ -9,7 +9,7 @@ import { Form, FormField } from "../../../_common/components/Form";
 import Button from "../../../_common/components/Button";
 import { Label } from "../../../_common/components/Label";
 import CommentSection from "../StartSessionDialog/CommentSection";
-import { isAfter } from "../../../_common/utils/date.utils";
+import { getCurrentDateTime, isAfter } from "../../../_common/utils/date.utils";
 
 const StopSessionFormSchema = z.object({
   endDateTime: z.string({
@@ -74,28 +74,40 @@ export const StopSessionForm = ({
           afterSubmit();
         })}
       >
-        <FormField
-          name="endDateTime"
-          control={form.control}
-          render={({ field, fieldState }) => {
-            return (
-              <div className="flex flex-col gap-1 flex-1">
-                <Label>Date et heure de la fin</Label>
-                <input
-                  className="input"
-                  type="datetime-local"
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-                {fieldState?.error?.message && (
-                  <p className="text-xs text-error-600">
-                    {fieldState.error.message}
-                  </p>
-                )}
-              </div>
-            );
-          }}
-        />
+        <div className="flex gap-4 items-end">
+          <FormField
+            name="endDateTime"
+            control={form.control}
+            render={({ field, fieldState }) => {
+              return (
+                <div className="flex flex-col gap-1 flex-1">
+                  <Label>Date et heure de la fin</Label>
+                  <input
+                    className="input"
+                    type="datetime-local"
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                  {fieldState?.error?.message && (
+                    <p className="text-xs text-error-600">
+                      {fieldState.error.message}
+                    </p>
+                  )}
+                </div>
+              );
+            }}
+          />
+          <Button
+            type="button"
+            variant="outlined"
+            className="h-[2.625rem]"
+            onClick={() => {
+              form.setValue("endDateTime", getCurrentDateTime());
+            }}
+          >
+            Maintenant !
+          </Button>
+        </div>
         <FormField
           name="comment"
           control={form.control}
