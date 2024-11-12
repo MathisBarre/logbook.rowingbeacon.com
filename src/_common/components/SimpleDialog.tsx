@@ -24,7 +24,7 @@ export const SimpleDialog = ({
         title={title}
         subtitle={subtitle}
         className={cn(
-          "max-w-screen-md max-h-[calc(100vh-16rem)] overflow-y-auto bg-white",
+          "w-[48rem] max-h-[calc(100vh-4rem)] max-w-[calc(100vw-4rem)] overflow-y-auto bg-white",
           className
         )}
       >

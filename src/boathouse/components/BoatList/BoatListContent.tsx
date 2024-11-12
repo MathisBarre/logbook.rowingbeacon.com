@@ -203,7 +203,9 @@ const BoatInSessionRow = memo(
         onClick={() => onClick(boat)}
       >
         <div className="flex justify-between">
-          <p className="font-mono tracking-tighter">{boat.name}</p>
+          <p className="font-mono font-medium text-gray-700 tracking-tighter">
+            {boat.name}
+          </p>
           <p className="text-xs text-gray-400">
             Direction{" "}
             {sessionRelated?.route && (
@@ -227,7 +229,7 @@ const UnusuableBoatRow = memo(({ boat }: { boat: Boat }) => {
     <div
       key={boat.id}
       className={cn(
-        "px-2 py-1 bg-error-50 cursor-not-allowed font-mono tracking-tighter opacity-50 flex justify-between overflow-hidden"
+        "px-2 py-1 bg-error-50 cursor-not-allowed font-mono font-medium text-gray-700 tracking-tighter opacity-50 flex justify-between overflow-hidden"
       )}
     >
       <span className="text-error-900">{boat.name}</span>
@@ -246,7 +248,7 @@ const BoatRowDefault = memo(
     return (
       <div key={boat.id} className="flex">
         <div
-          className="px-2 py-1 hover:bg-gray-100 cursor-pointer font-mono tracking-tighter select-none flex-1"
+          className="px-2 py-1 hover:bg-gray-100 cursor-pointer font-mono font-medium text-gray-700 tracking-tighter select-none flex-1"
           onClick={() => onBoatRowClick(boat)}
         >
           <span className="select-none">{boat.name}</span>
