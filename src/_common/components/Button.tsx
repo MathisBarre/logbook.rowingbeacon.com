@@ -53,11 +53,11 @@ const Button = ({
           // primary - outlined
           isColorPrimary &&
             isOutlined &&
-            " bg-steel-blue-100 px-4 py-2 border border-steel-blue-200 rounded text-steel-blue-800",
+            " bg-steel-blue-50 px-4 py-2 border border-steel-blue-200 rounded text-steel-blue-800",
           isColorPrimary &&
             isOutlined &&
             !disabled &&
-            "hover:bg-steel-blue-200",
+            "hover:bg-steel-blue-100",
           isColorPrimary && isOutlined && loading && "dashed-primary",
 
           // primary - text
