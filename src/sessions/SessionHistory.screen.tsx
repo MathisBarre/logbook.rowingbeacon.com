@@ -133,7 +133,7 @@ export const SessionHistory = ({ goBack }: SessionHistoryProps) => {
         <p className="absolute bg-white py-1 px-2 border border-gray-300 bottom-4 right-4 rounded-sm flex gap-2 items-center ">
           devtools:session-generator:1000{" "}
           <button
-            className="bg-blue-300 px-2 py-1"
+            className="bg-steel-blue-300 px-2 py-1"
             onClick={() => {
               console.log("click");
               const generatedSessions = generateSessions(

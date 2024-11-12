@@ -122,9 +122,9 @@ function BoathouseScreen() {
 
           {adminEditSystem.isInAdminEditMode && (
             <>
-              <div className="absolute right-1 left-1 px-2 bottom-1 h-8 flex items-center bg-blue-50 border-blue-300 border rounded shadow-md gap-4 z-30">
+              <div className="absolute right-1 left-1 px-2 bottom-1 h-8 flex items-center bg-steel-blue-50 bg-steel-blue-300 border rounded shadow-md gap-4 z-30">
                 <p className="text-blue-500 text-sm font-bold">MODE ÉDITION</p>
-                <div className="w-[1px] h-4 bg-blue-300" />
+                <div className="w-[1px] h-4 bg-steel-blue-300" />
 
                 <button
                   className="text-sm underline font-medium"
@@ -141,7 +141,7 @@ function BoathouseScreen() {
                   Ajouter un bateau
                 </button>
 
-                <div className="w-[1px] h-4 bg-blue-300" />
+                <div className="w-[1px] h-4 bg-steel-blue-300" />
 
                 <button
                   onClick={() => {
@@ -152,7 +152,7 @@ function BoathouseScreen() {
                   Ajouter ou modifier un rameur
                 </button>
 
-                <div className="w-[1px] h-4 bg-blue-300" />
+                <div className="w-[1px] h-4 bg-steel-blue-300" />
 
                 <button
                   className="text-sm underline font-medium"
@@ -163,7 +163,7 @@ function BoathouseScreen() {
                   Ajouter ou modifier un parcours
                 </button>
 
-                <div className="w-[1px] h-4 bg-blue-300" />
+                <div className="w-[1px] h-4 bg-steel-blue-300" />
 
                 <button
                   className="text-sm underline font-medium"
@@ -185,7 +185,7 @@ function BoathouseScreen() {
                   Ajouter ou modifier la note du coach
                 </button>
 
-                <div className="w-[1px] h-4 bg-blue-300" />
+                <div className="w-[1px] h-4 bg-steel-blue-300" />
 
                 <button
                   className="text-sm underline text-error-700"
@@ -205,7 +205,7 @@ function BoathouseScreen() {
           )}
 
           <div className="absolute right-0 left-0 pl-1 bottom-1 h-8 flex justify-end gap-1">
-            <div className="flex items-center gap-3 bg-blue-900 text-white pl-1 pr-3 rounded">
+            <div className="flex items-center gap-3 bg-steel-blue-800 text-white pl-1 pr-3 rounded">
               <div className="flex flex-col justify-center">
                 <span className="text-sm leading-3 font-medium">
                   RowingBeacon

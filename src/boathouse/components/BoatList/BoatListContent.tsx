@@ -383,7 +383,7 @@ const EditButton = ({
       className={cn(
         "hidden parent group-hover:flex items-center relative group/foo px-5",
         variant === "normal" &&
-          "bg-blue-100 text-blue-400 hover:bg-blue-200 hover:text-blue-600 ",
+          "bg-steel-blue-100 text-blue-400 hover:bg-steel-blue-200 hover:text-blue-600 ",
         variant === "danger" &&
           "bg-error-100 text-error-400 hover:bg-error-200 hover:text-error-600 ",
         className
