@@ -2,9 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Roboto fonts */
+@font-face {
+  font-family: "Roboto";
+  src: url("/public/fonts/roboto/Roboto-Bold.ttf") format("truetype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("/public/fonts/roboto/Roboto-Light.ttf") format("truetype");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("/public/fonts/roboto/Roboto-Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("/public/fonts/roboto/Roboto-Regular.ttf") format("truetype");
+  font-weight: normal;
+}
+
+/* Import Roboto Mono fonts */
+@font-face {
+  font-family: "Roboto Mono";
+  src: url("/public/fonts/roboto_mono/RobotoMono-Bold.ttf") format("truetype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "Roboto Mono";
+  src: url("/public/fonts/roboto_mono/RobotoMono-Light.ttf") format("truetype");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "Roboto Mono";
+  src: url("/public/fonts/roboto_mono/RobotoMono-Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Roboto Mono";
+  src: url("/public/fonts/roboto_mono/RobotoMono-Regular.ttf")
+    format("truetype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Roboto Mono";
+  src: url("/public/fonts/roboto_mono/RobotoMono-SemiBold.ttf")
+    format("truetype");
+  font-weight: 600;
+}
+
 @layer base {
   :root {
     font-size: var(--root-font-size);
+    @apply font-sans;
   }
 
   body {
