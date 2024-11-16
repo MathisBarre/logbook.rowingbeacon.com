@@ -11,13 +11,17 @@ import { Label } from "../../../_common/components/Label";
 import CommentSection from "../StartSessionDialog/CommentSection";
 import { getCurrentDateTime, isAfter } from "../../../_common/utils/date.utils";
 import { useState } from "react";
-import { cn } from "../../../_common/utils/utils";
+import { cn, sleep } from "../../../_common/utils/utils";
+import useIncidentStore from "../../../_common/store/incident.store";
+import { getIncidenId } from "../../../_common/business/incident.rules";
+import { toast } from "sonner";
 
 const StopSessionFormSchema = z.object({
   endDateTime: z.string({
     message: "Ce champ est requis",
   }),
   comment: z.string(),
+  incident: z.string().optional(),
 });
 
 type StopSessionFormValues = z.infer<typeof StopSessionFormSchema>;
@@ -44,38 +48,58 @@ export const StopSessionForm = ({
   });
 
   const sessionStore = useSessionsStore();
+  const incidentStore = useIncidentStore();
   const [isIncidentOpen, setIsIncidentOpen] = useState(false);
 
   return (
     <Form {...form}>
       <form
         className="flex flex-col gap-4"
-        onSubmit={form.handleSubmit(({ comment, endDateTime }) => {
-          const registeredSession = sessionStore.findOngoingSessionByBoatId(
-            session.boat.id
-          );
+        onSubmit={form.handleSubmit(
+          async ({ comment, endDateTime, incident }) => {
+            const registeredSession = sessionStore.findOngoingSessionByBoatId(
+              session.boat.id
+            );
 
-          if (
-            registeredSession?.startDateTime &&
-            isAfter(
-              new Date(registeredSession?.startDateTime),
-              new Date(endDateTime)
-            )
-          ) {
-            form.setError("endDateTime", {
-              message:
-                "La date de fin doit être postérieure à la date de début",
+            if (
+              registeredSession?.startDateTime &&
+              isAfter(
+                new Date(registeredSession?.startDateTime),
+                new Date(endDateTime)
+              )
+            ) {
+              form.setError("endDateTime", {
+                message:
+                  "La date de fin doit être postérieure à la date de début",
+              });
+              return;
+            }
+
+            sessionStore.stopSession(session.boat.id, {
+              endDateTime: endDateTime,
+              comment: comment,
             });
-            return;
+
+            toast.success("La sortie a bien été terminée");
+
+            if (incident) {
+              const incidentPayload = {
+                id: getIncidenId(),
+                message: incident,
+                sessionId: session.id,
+                datetime: new Date(),
+              };
+
+              console.log("adding incident", incidentPayload);
+
+              incidentStore.addIncident(incidentPayload);
+
+              toast.success("L'incident a bien été enregistré");
+            }
+
+            afterSubmit();
           }
-
-          sessionStore.stopSession(session.boat.id, {
-            endDateTime: endDateTime,
-            comment: comment,
-          });
-
-          afterSubmit();
-        })}
+        )}
       >
         <div className="flex gap-4 items-end">
           <FormField
@@ -122,35 +146,50 @@ export const StopSessionForm = ({
           }}
         />
 
-        <label
-          htmlFor="incident"
-          className={cn(
-            "border p-2 rounded border-gray-300 flex bg-gray-50 flex-col gap-2 text-gray-700 overflow-hidden",
-            isIncidentOpen && "border-gray-400",
-            "focus-within:ring-1 focus-within:ring-steel-blue-500"
-          )}
-        >
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              name="incident"
-              id="incident"
-              className="rounded-sm mr-2"
-              checked={isIncidentOpen}
-              onChange={(e) => setIsIncidentOpen(e.target.checked)}
-            />
-            Il y a eu un incident pendant cette sortie
-          </div>
-          {isIncidentOpen && (
-            <textarea
-              placeholder="Décrivez l'incident qui a eu lieu..."
-              className="bg-white border-t-gray-600 border-t border-x-0 border-b-0 border-none -mx-2 -mb-2 focus:ring-0 sele"
-              name="incident"
-              id="incident"
-              rows={3}
-            />
-          )}
-        </label>
+        <FormField
+          name="incident"
+          control={form.control}
+          render={({ field }) => {
+            return (
+              <label
+                htmlFor="incident"
+                className={cn(
+                  "border p-2 rounded border-gray-300 flex bg-gray-50 flex-col gap-2 text-gray-700 overflow-hidden",
+                  isIncidentOpen && "border-gray-400",
+                  "focus-within:ring-1 focus-within:ring-steel-blue-500"
+                )}
+              >
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    name="incident"
+                    id="incident"
+                    className="rounded-sm mr-2"
+                    checked={isIncidentOpen}
+                    onChange={(e) => {
+                      setIsIncidentOpen(e.target.checked);
+                      if (!e.target.checked) {
+                        field.onChange("");
+                      }
+                    }}
+                  />
+                  Il y a eu un incident pendant cette sortie
+                </div>
+                {isIncidentOpen && (
+                  <textarea
+                    placeholder="Décrivez l'incident qui a eu lieu..."
+                    className="bg-white border-t-gray-600 border-t border-x-0 border-b-0 border-none -mx-2 -mb-2 focus:ring-0 sele"
+                    name="incident"
+                    id="incident"
+                    rows={3}
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
+              </label>
+            );
+          }}
+        />
 
         <div className="flex gap-4">
           <Button

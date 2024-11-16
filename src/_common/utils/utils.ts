@@ -43,3 +43,6 @@ export const logStr = (
 
   return cleanedLines.join("\n");
 };
+
+export const sleep = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
