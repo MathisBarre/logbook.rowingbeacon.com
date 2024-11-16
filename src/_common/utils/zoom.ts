@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 function zoom(zoomValue: number) {
   const root = document.documentElement;
 
@@ -11,17 +13,7 @@ function zoom(zoomValue: number) {
     fontSize = parseInt(root.style.getPropertyValue("--root-font-size"));
 
     root.style.setProperty("--root-font-size", fontSize + zoomValue + "px");
-  }
-}
-
-export const zoomIn = () => zoom(1);
-export const zoomOut = () => zoom(-1);
-
-export function resetZoom() {
-  const root = document.documentElement;
-
-  if (root) {
-    root.style.setProperty("--root-font-size", 16 + "px");
+    localStorage.setItem("zoomLevel", fontSize + zoomValue + "px");
   }
 }
 
@@ -35,4 +27,29 @@ export function getZoomPercentage() {
   }
 
   return 100;
+}
+
+export function useZoom() {
+  const [zoomPercentage, setZoomPercentage] = useState(getZoomPercentage());
+
+  useEffect(() => {
+    const savedZoomLevel = localStorage.getItem("zoomLevel");
+    if (savedZoomLevel) {
+      const root = document.documentElement;
+      root.style.setProperty("--root-font-size", savedZoomLevel);
+      setZoomPercentage(getZoomPercentage());
+    }
+  }, []);
+
+  return {
+    zoomIn: () => {
+      zoom(1);
+      setZoomPercentage(getZoomPercentage());
+    },
+    zoomOut: () => {
+      zoom(-1);
+      setZoomPercentage(getZoomPercentage());
+    },
+    zoomPercentage,
+  };
 }
