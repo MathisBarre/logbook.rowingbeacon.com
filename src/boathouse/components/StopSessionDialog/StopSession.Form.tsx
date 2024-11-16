@@ -94,7 +94,7 @@ export const StopSessionForm = ({
                 id: getIncidenId(),
                 message: incidentMessage,
                 sessionId: session.id,
-                datetime: new Date(),
+                datetime: endDateTime,
               };
 
               console.log("adding incident", incidentPayload);

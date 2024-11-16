@@ -40,7 +40,7 @@ export function IncidentLogsTable() {
   );
 }
 
-const FormattedDate = ({ datetime }: { datetime: Date }) => {
+const FormattedDate = ({ datetime }: { datetime: string }) => {
   const date = new Date(datetime);
 
   return (
