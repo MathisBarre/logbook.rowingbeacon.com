@@ -12,6 +12,7 @@ interface ZustandIncidentStore {
   incidents: ZustandIncident[];
   addIncident: (incident: ZustandIncident) => void;
   getIncidents: () => ZustandIncident[];
+  reset: () => void;
 }
 
 const useIncidentStore = create(
@@ -29,6 +30,9 @@ const useIncidentStore = create(
             new Date(b.datetime).getTime() - new Date(a.datetime).getTime()
           );
         });
+      },
+      reset: () => {
+        set({ incidents: [] });
       },
     }),
     {

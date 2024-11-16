@@ -26,6 +26,7 @@ import Button from "../_common/components/Button";
 import { SimpleAlertDialog } from "../_common/components/SimpleAlertDialog";
 import { windowAlert, windowPrompt } from "../_common/utils/window.utils";
 import { useZoom } from "../_common/utils/zoom";
+import { useLogout } from "../_common/utils/logout";
 
 function BoathouseScreen() {
   const sessionStore = useSessionsStore();
@@ -74,6 +75,7 @@ function BoathouseScreen() {
   const [isLogoutAlertOpen, setIsLogoutAlertOpen] = useState(false);
 
   const { zoomIn, zoomOut, zoomPercentage } = useZoom();
+  const logout = useLogout();
 
   if (!displayHistory) {
     return (
@@ -208,7 +210,23 @@ function BoathouseScreen() {
           )}
 
           <div className="absolute right-0 left-0 pl-1 bottom-1 h-8 flex justify-end gap-1">
-            <div className="flex items-center gap-3 bg-steel-blue-800 text-white pl-1 pr-3 rounded">
+            <div className="flex items-center gap-3 bg-steel-blue-800 text-white pl-1 pr-3 rounded relative group">
+              <button
+                onClick={async () => {
+                  if (
+                    adminEditSystem.allowAdminActions(
+                      await askForAdminPassword()
+                    )
+                  ) {
+                    logout();
+                  }
+                }}
+                type="button"
+                className="absolute inset-0 items-center justify-center bg-error-800 rounded hidden group-hover:flex"
+              >
+                Reset data
+              </button>
+
               <div className="flex flex-col justify-center">
                 <span className="text-sm leading-3 font-medium">
                   RowingBeacon
