@@ -17,18 +17,6 @@ function zoom(zoomValue: number) {
   }
 }
 
-export const zoomIn = () => zoom(1);
-export const zoomOut = () => zoom(-1);
-
-export function resetZoom() {
-  const root = document.documentElement;
-
-  if (root) {
-    root.style.setProperty("--root-font-size", 16 + "px");
-    localStorage.removeItem("zoomLevel");
-  }
-}
-
 export function getZoomPercentage() {
   const root = document.documentElement;
 
@@ -54,9 +42,14 @@ export function useZoom() {
   }, []);
 
   return {
-    zoomIn,
-    zoomOut,
-    resetZoom,
+    zoomIn: () => {
+      zoom(1);
+      setZoomPercentage(getZoomPercentage());
+    },
+    zoomOut: () => {
+      zoom(-1);
+      setZoomPercentage(getZoomPercentage());
+    },
     zoomPercentage,
   };
 }
