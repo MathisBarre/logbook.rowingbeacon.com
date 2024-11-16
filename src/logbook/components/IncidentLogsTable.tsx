@@ -1,9 +1,11 @@
 import { ChatBubbleLeftIcon } from "@heroicons/react/16/solid";
 import useIncidentStore from "../../_common/store/incident.store";
 import { getTime } from "../../_common/utils/date.utils";
+import { useIncidentSystem } from "../../_common/store/incident.system";
 
 export function IncidentLogsTable() {
   const incidents = useIncidentStore((state) => state.getIncidents());
+  const { getBoatNameBySessionId } = useIncidentSystem();
 
   return (
     <div className="overflow-auto pb-32">
@@ -12,6 +14,7 @@ export function IncidentLogsTable() {
       )}
 
       {incidents.map((incident) => {
+        const boatName = getBoatNameBySessionId(incident.sessionId);
         return (
           <div
             key={incident.id}
@@ -23,7 +26,7 @@ export function IncidentLogsTable() {
 
             <div className="flex-1">
               <p className="flex mb-2 font-mono tracking-tighter">
-                <span>Session ID: {incident.sessionId}</span>
+                <span>{boatName}</span>
               </p>
               <div className="text-sm text-gray-400 mt-1">
                 <ChatBubbleLeftIcon className="h-4 w-4 align-text-bottom inline mr-1 text-gray-400" />{" "}
