@@ -46,14 +46,14 @@ const Button = ({
           // primary - primary
           isColorPrimary &&
             isPrimary &&
-            "bg-steel-blue-700 px-4 py-2 rounded text-white",
+            "bg-steel-blue-700 px-4 py-2 rounded text-white border border-steel-blue-700",
           isColorPrimary && isPrimary && !disabled && "hover:bg-steel-blue-800",
           isColorPrimary && isPrimary && loading && "dashed-transparent",
 
           // primary - outlined
           isColorPrimary &&
             isOutlined &&
-            "border border-steel-blue-700 px-4 py-2 rounded text-steel-blue-700",
+            " bg-steel-blue-50 px-4 py-2 border border-steel-blue-200 rounded text-steel-blue-800",
           isColorPrimary &&
             isOutlined &&
             !disabled &&

@@ -20,3 +20,11 @@ export const replaceLastOccurrence = (
   const index = str.lastIndexOf(search);
   return str.slice(0, index) + replace + str.slice(index + search.length);
 };
+
+export const isStringEquivalentOfUndefined = (str: string | undefined) => {
+  if (str === undefined) {
+    return true;
+  }
+
+  return str.trim() === "";
+};

@@ -1,29 +1,26 @@
-import Button from "../_common/components/Button";
+import Button from "../../_common/components/Button";
 import {
   ZustandSession,
   useSessionsStore,
-} from "../_common/store/sessions.store";
-import {
-  SessionHistoryTable,
-  SessionInTable,
-} from "./components/SessionHistoryTable";
+} from "../../_common/store/sessions.store";
+import { SessionHistoryTable, SessionInTable } from "./SessionLogsTable";
 import { useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import { paginateData } from "../_common/utils/pagination.utils";
-import { isDev } from "../_common/utils/utils";
-import { Rower } from "../_common/types/rower.type";
-import { Route } from "../_common/types/route.type";
-import { Boat } from "../_common/types/boat.type";
-import { generateSessionId } from "../_common/business/session.rules";
-import { addHours } from "../_common/utils/date.utils";
-import { useClubOverviewStore } from "../_common/store/clubOverview.store";
-import { windowConfirm } from "../_common/utils/window.utils";
+import { paginateData } from "../../_common/utils/pagination.utils";
+import { isDev } from "../../_common/utils/utils";
+import { Rower } from "../../_common/types/rower.type";
+import { Route } from "../../_common/types/route.type";
+import { Boat } from "../../_common/types/boat.type";
+import { generateSessionId } from "../../_common/business/session.rules";
+import { addHours } from "../../_common/utils/date.utils";
+import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
+import { windowConfirm } from "../../_common/utils/window.utils";
 
-interface SessionHistoryProps {
+interface LogbookProps {
   goBack: () => void;
 }
 
-export const SessionHistory = ({ goBack }: SessionHistoryProps) => {
+export const SessionLogs = ({ goBack }: LogbookProps) => {
   const sessionsStore = useSessionsStore();
   const clubOverviewStore = useClubOverviewStore();
 
@@ -39,7 +36,7 @@ export const SessionHistory = ({ goBack }: SessionHistoryProps) => {
   const numberOfPages = Math.ceil(formattedData.length / pageSize) || 1;
 
   return (
-    <div className="border-r flex-1 shadow-md bg-white flex flex-col absolute inset-1 rounded overflow-hidden">
+    <div className="flex-1 shadow-md bg-white flex flex-col absolute inset-1 right-1/2 mr-[.125rem] rounded overflow-hidden">
       <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between">
         <div className="flex items-center">
           <Button type="button" onClick={goBack}>
@@ -56,7 +53,7 @@ export const SessionHistory = ({ goBack }: SessionHistoryProps) => {
             download={"export.json"}
             className="bg-gray-100 rounded flex items-center justify-center px-4 text-gray-700"
           >
-            Exporter les sessions en JSON
+            Export JSON
           </a>
           <a
             href={
@@ -79,7 +76,7 @@ export const SessionHistory = ({ goBack }: SessionHistoryProps) => {
             download={"export.csv"}
             className="bg-gray-100 rounded flex items-center justify-center px-4 text-gray-700"
           >
-            Exporter les sessions en CSV
+            Export CSV
           </a>
           <button
             className="bg-error-100 rounded flex items-center justify-center px-4 text-error-700"
@@ -94,7 +91,7 @@ export const SessionHistory = ({ goBack }: SessionHistoryProps) => {
               }
             }}
           >
-            Supprimer les sessions
+            Supprimer l'historique
           </button>
         </div>
       </div>
@@ -133,7 +130,7 @@ export const SessionHistory = ({ goBack }: SessionHistoryProps) => {
         <p className="absolute bg-white py-1 px-2 border border-gray-300 bottom-4 right-4 rounded-sm flex gap-2 items-center ">
           devtools:session-generator:1000{" "}
           <button
-            className="bg-blue-300 px-2 py-1"
+            className="bg-steel-blue-300 px-2 py-1"
             onClick={() => {
               console.log("click");
               const generatedSessions = generateSessions(

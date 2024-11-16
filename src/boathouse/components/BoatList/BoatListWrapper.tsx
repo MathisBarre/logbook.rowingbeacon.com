@@ -13,7 +13,7 @@ export const BoatListWrapper = ({
 }: BoatListWrapperProps) => {
   return (
     <div className="border-r bg-white flex flex-col h-full w-full rounded overflow-hidden">
-      <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between">
+      <div className="bg-border p-2 bg-gradient-to-r from-steel-blue-800 to-steel-blue-700 text-white flex justify-between">
         <h1 className="text-base">{label}</h1>
         <div>
           <label htmlFor="boatFilter" className="font-normal sr-only">

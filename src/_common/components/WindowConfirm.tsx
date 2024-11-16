@@ -77,7 +77,7 @@ export const WindowConfirm: React.FC = () => {
           </button>
           <button
             onClick={handleOk}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+            className="bg-steel-blue-500 hover:bg-steel-blue-600 text-white font-semibold py-2 px-4 rounded"
           >
             OK
           </button>
