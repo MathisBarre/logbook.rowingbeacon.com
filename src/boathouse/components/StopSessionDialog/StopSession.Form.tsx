@@ -11,6 +11,7 @@ import { Label } from "../../../_common/components/Label";
 import CommentSection from "../StartSessionDialog/CommentSection";
 import { getCurrentDateTime, isAfter } from "../../../_common/utils/date.utils";
 import { useState } from "react";
+import { cn } from "../../../_common/utils/utils";
 
 const StopSessionFormSchema = z.object({
   endDateTime: z.string({
@@ -123,7 +124,10 @@ export const StopSessionForm = ({
 
         <label
           htmlFor="incident"
-          className="border p-2 rounded border-gray-300 flex bg-gray-50 flex-col gap-2 text-gray-700  overflow-hidden"
+          className={cn(
+            "border p-2 rounded border-gray-300 flex bg-gray-50 flex-col gap-2 text-gray-700  overflow-hidden transition-all",
+            isIncidentOpen && "border-gray-400"
+          )}
         >
           <div className="flex items-center">
             <input
@@ -139,7 +143,7 @@ export const StopSessionForm = ({
           {isIncidentOpen && (
             <textarea
               placeholder="Décrivez l'incident qui a eu lieu..."
-              className="bg-white border-t-gray-600 border-t border-x-0 border-b-0 border-none -mx-2 -mb-2"
+              className="bg-white border-t-gray-600 border-t border-x-0 border-b-0 border-none -mx-2 -mb-2 focus:ring-0 sele"
               name="incident"
               id="incident"
               rows={3}
