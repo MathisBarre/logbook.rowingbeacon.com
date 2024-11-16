@@ -25,6 +25,7 @@ import { RowersCrudDialog } from "./components/RowersCrudDialog/RowersCrud.Dialo
 import Button from "../_common/components/Button";
 import { SimpleAlertDialog } from "../_common/components/SimpleAlertDialog";
 import { windowAlert, windowPrompt } from "../_common/utils/window.utils";
+import { useZoom } from "../_common/utils/zoom";
 
 function BoathouseScreen() {
   const sessionStore = useSessionsStore();
@@ -71,6 +72,8 @@ function BoathouseScreen() {
   }, []);
 
   const [isLogoutAlertOpen, setIsLogoutAlertOpen] = useState(false);
+
+  const { zoomIn, zoomOut, zoomPercentage } = useZoom();
 
   if (!displayHistory) {
     return (
@@ -122,7 +125,7 @@ function BoathouseScreen() {
 
           {adminEditSystem.isInAdminEditMode && (
             <>
-              <div className="absolute right-1 left-1 px-2 bottom-1 h-8 flex items-center bg-steel-blue-50 bg-steel-blue-300 border rounded shadow-md gap-4 z-30">
+              <div className="absolute right-1 left-1 px-2 bottom-1 h-8 flex items-center bg-steel-blue-300 border rounded shadow-md gap-4 z-30">
                 <p className="text-blue-500 text-sm font-bold">MODE ÉDITION</p>
                 <div className="w-[1px] h-4 bg-steel-blue-300" />
 
@@ -230,6 +233,26 @@ function BoathouseScreen() {
             >
               Mode édition
             </button>
+
+            <div className=" text-sm font-medium shadow-md bg-white text-steel-blue-800 flex items-center justify-center rounded">
+              <button
+                className="h-8 w-8 hover:bg-gray-100"
+                onClick={() => {
+                  zoomOut();
+                }}
+              >
+                -
+              </button>
+              <p className="flex-1 text-center mx-4">Zoom {zoomPercentage}%</p>
+              <button
+                className="h-8 w-8 hover:bg-gray-100"
+                onClick={() => {
+                  zoomIn();
+                }}
+              >
+                +
+              </button>
+            </div>
 
             <button
               onClick={() => {
