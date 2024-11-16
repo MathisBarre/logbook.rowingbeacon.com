@@ -74,6 +74,11 @@
   .center {
     @apply flex items-center justify-center;
   }
+
+  input,
+  textarea {
+    @apply focus:ring-1 focus:ring-steel-blue-500;
+  }
 }
 
 @layer components {
@@ -86,7 +91,7 @@
   }
 
   .input {
-    @apply border border-gray-400 rounded shadow-sm;
+    @apply border border-gray-400 rounded shadow-sm focus:ring-1 focus:ring-steel-blue-500;
   }
 }
 

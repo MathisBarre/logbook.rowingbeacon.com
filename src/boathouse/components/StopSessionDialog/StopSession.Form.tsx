@@ -125,8 +125,9 @@ export const StopSessionForm = ({
         <label
           htmlFor="incident"
           className={cn(
-            "border p-2 rounded border-gray-300 flex bg-gray-50 flex-col gap-2 text-gray-700  overflow-hidden transition-all",
-            isIncidentOpen && "border-gray-400"
+            "border p-2 rounded border-gray-300 flex bg-gray-50 flex-col gap-2 text-gray-700 overflow-hidden",
+            isIncidentOpen && "border-gray-400",
+            "focus-within:ring-1 focus-within:ring-steel-blue-500"
           )}
         >
           <div className="flex items-center">
