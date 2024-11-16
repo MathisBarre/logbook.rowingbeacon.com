@@ -108,7 +108,11 @@ export const StartSessionForm = ({
                   .
                   <br /> Le bateau "{alert.details.boatName}" nécessite{" "}
                   <span className="font-medium">
-                    {alert.details.boatRowersQuantity} rameur(s)
+                    {alert.details.boatRowersQuantity}{" "}
+                    {alert.details.boatRowersQuantity && (
+                      <>ou {alert.details.boatRowersQuantity + 1} </>
+                    )}
+                    rameur(s)
                   </span>
                   .
                   <br /> Souhaitez-vous continuer ?
