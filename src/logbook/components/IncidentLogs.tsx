@@ -1,4 +1,5 @@
 import { SirenIcon } from "lucide-react";
+import { IncidentLogsTable } from "./IncidentLogsTable";
 
 export const IncidentLogs = () => {
   return (
@@ -10,6 +11,8 @@ export const IncidentLogs = () => {
           </h1>
         </div>
       </div>
+
+      <IncidentLogsTable />
     </div>
   );
 };
