@@ -19,11 +19,11 @@ import { addHours } from "../_common/utils/date.utils";
 import { useClubOverviewStore } from "../_common/store/clubOverview.store";
 import { windowConfirm } from "../_common/utils/window.utils";
 
-interface SessionHistoryProps {
+interface LogbookProps {
   goBack: () => void;
 }
 
-export const SessionHistory = ({ goBack }: SessionHistoryProps) => {
+export const Logbook = ({ goBack }: LogbookProps) => {
   const sessionsStore = useSessionsStore();
   const clubOverviewStore = useClubOverviewStore();
 
@@ -39,7 +39,7 @@ export const SessionHistory = ({ goBack }: SessionHistoryProps) => {
   const numberOfPages = Math.ceil(formattedData.length / pageSize) || 1;
 
   return (
-    <div className="border-r flex-1 shadow-md bg-white flex flex-col absolute inset-1 rounded overflow-hidden">
+    <div className="flex-1 shadow-md bg-white flex flex-col absolute inset-1 rounded overflow-hidden">
       <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between">
         <div className="flex items-center">
           <Button type="button" onClick={goBack}>

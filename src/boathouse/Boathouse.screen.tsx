@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { SessionHistory } from "../sessions/SessionHistory.screen";
+import { Logbook } from "../logbook/Logbook.screen";
 import {
   useSessionsStore,
   ZustandSession,
@@ -304,7 +304,7 @@ function BoathouseScreen() {
   }
 
   return (
-    <SessionHistory
+    <Logbook
       goBack={() => {
         setDisplayHistory(false);
       }}
