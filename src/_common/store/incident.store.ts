@@ -5,7 +5,7 @@ interface ZustandIncident {
   id: string;
   message: string;
   sessionId: string;
-  datetime: Date;
+  datetime: string;
 }
 
 interface ZustandIncidentStore {
@@ -24,9 +24,11 @@ const useIncidentStore = create(
         }));
       },
       getIncidents: () => {
-        return get().incidents.sort(
-          (a, b) => b.datetime.getTime() - a.datetime.getTime()
-        );
+        return get().incidents.sort((a, b) => {
+          return (
+            new Date(b.datetime).getTime() - new Date(a.datetime).getTime()
+          );
+        });
       },
     }),
     {
