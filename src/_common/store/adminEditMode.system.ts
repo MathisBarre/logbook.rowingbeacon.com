@@ -35,11 +35,25 @@ export const useAdminEditModeSystem = () => {
     toast.error("Mot de passe incorrect");
   };
 
+  const allowAdminActions = (pswd: string | null): boolean => {
+    if (pswd === null) {
+      return false;
+    }
+
+    if (pswd === onboardingStore.clubOverview?.club.password) {
+      return true;
+    } else {
+      wrongAdminPassword();
+      return false;
+    }
+  };
+
   return {
     ...store,
     startAdminEditMode,
     alertUserIsNotAdmin: wrongAdminPassword,
     closeApp: close,
+    allowAdminActions,
   };
 };
 

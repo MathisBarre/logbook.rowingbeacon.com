@@ -15,6 +15,10 @@ import { generateSessionId } from "../../_common/business/session.rules";
 import { addHours } from "../../_common/utils/date.utils";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { windowConfirm } from "../../_common/utils/window.utils";
+import {
+  askForAdminPassword,
+  useAdminEditModeSystem,
+} from "../../_common/store/adminEditMode.system";
 
 interface LogbookProps {
   goBack: () => void;
@@ -34,6 +38,8 @@ export const SessionLogs = ({ goBack }: LogbookProps) => {
   });
 
   const numberOfPages = Math.ceil(formattedData.length / pageSize) || 1;
+
+  const adminEditSystem = useAdminEditModeSystem();
 
   return (
     <div className="flex-1 shadow-md bg-white flex flex-col absolute inset-1 right-1/2 mr-[.125rem] rounded overflow-hidden">
@@ -86,8 +92,12 @@ export const SessionLogs = ({ goBack }: LogbookProps) => {
                   "Êtes-vous sûr de vouloir supprimer toutes les sessions ?"
                 )
               ) {
-                sessionsStore.reset();
-                setCurrentPage(1);
+                if (
+                  adminEditSystem.allowAdminActions(await askForAdminPassword())
+                ) {
+                  sessionsStore.reset();
+                  setCurrentPage(1);
+                }
               }
             }}
           >
