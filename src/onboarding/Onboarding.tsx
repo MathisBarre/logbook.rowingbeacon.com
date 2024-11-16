@@ -62,7 +62,7 @@ export const Onboarding = ({
             onboard(formatFormValues(values));
           })}
         >
-          <article className="flex flex-col gap-1 items-start bg-steel-blue-100 border-l-4 bg-steel-blue-500 p-4 rounded text-blue-950 my-4">
+          <article className="flex flex-col gap-1 items-start bg-blue-100 border-l-4 border-blue-500 p-4 rounded text-blue-950 my-4">
             <div className="flex gap-2 items-center">
               <CircleHelpIcon className="color-blue-500 h-5 w-5" />
 
