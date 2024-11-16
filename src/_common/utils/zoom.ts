@@ -19,9 +19,11 @@ function zoom(zoomValue: number) {
 
 export function getZoomPercentage() {
   const root = document.documentElement;
+  const baseFontSize = 16;
 
   if (root) {
-    const fontSize = parseInt(root.style.getPropertyValue("--root-font-size"));
+    const fontSize =
+      parseInt(root.style.getPropertyValue("--root-font-size")) || baseFontSize;
 
     return Math.round((fontSize / 16) * 100);
   }
