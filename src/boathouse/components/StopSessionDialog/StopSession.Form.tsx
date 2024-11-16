@@ -11,10 +11,11 @@ import { Label } from "../../../_common/components/Label";
 import CommentSection from "../StartSessionDialog/CommentSection";
 import { getCurrentDateTime, isAfter } from "../../../_common/utils/date.utils";
 import { useState } from "react";
-import { cn, sleep } from "../../../_common/utils/utils";
+import { cn } from "../../../_common/utils/utils";
 import useIncidentStore from "../../../_common/store/incident.store";
 import { getIncidenId } from "../../../_common/business/incident.rules";
 import { toast } from "sonner";
+import { isStringEquivalentOfUndefined } from "../../../_common/utils/string.utils";
 
 const StopSessionFormSchema = z.object({
   endDateTime: z.string({
@@ -82,10 +83,16 @@ export const StopSessionForm = ({
 
             toast.success("La sortie a bien été terminée");
 
-            if (incident) {
+            if (isIncidentOpen) {
+              const emptyMessage = "Aucun détail renseigné";
+
+              const incidentMessage = isStringEquivalentOfUndefined(incident)
+                ? emptyMessage
+                : incident || emptyMessage;
+
               const incidentPayload = {
                 id: getIncidenId(),
-                message: incident,
+                message: incidentMessage,
                 sessionId: session.id,
                 datetime: new Date(),
               };
