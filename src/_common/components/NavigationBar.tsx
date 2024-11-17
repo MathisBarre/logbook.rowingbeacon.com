@@ -10,6 +10,7 @@ import { SimpleAlertDialog } from "./SimpleAlertDialog";
 import Button from "./Button";
 import { useState } from "react";
 import useNavigationStore from "../store/navigation.store";
+import { cn } from "../utils/utils";
 
 export const NavigationBar = () => {
   const { zoomIn, zoomOut, zoomPercentage } = useZoom();
@@ -78,7 +79,11 @@ export const NavigationBar = () => {
           onClick={() => {
             setPage("boathouse");
           }}
-          className="rounded text-sm font-medium shadow-md bg-white text-steel-blue-800 hover:bg-gray-50 flex-1"
+          className={cn(
+            "rounded text-sm font-medium shadow-md bg-white text-steel-blue-800 hover:bg-gray-50 flex-1",
+            page === "boathouse" &&
+              "border border-steel-blue-800 border-opacity-75"
+          )}
         >
           Boathouse
         </button>
@@ -87,7 +92,11 @@ export const NavigationBar = () => {
           onClick={() => {
             setPage("logbook");
           }}
-          className="flex-1 rounded text-sm font-medium shadow-md bg-white text-steel-blue-800 hover:bg-gray-50 border-steel-blue-900"
+          className={cn(
+            "rounded text-sm font-medium shadow-md bg-white text-steel-blue-800 hover:bg-gray-50 flex-1",
+            page === "logbook" &&
+              "border border-steel-blue-800 border-opacity-75"
+          )}
         >
           Logbook
         </button>
@@ -100,7 +109,11 @@ export const NavigationBar = () => {
               setPage("parameters");
             }
           }}
-          className="rounded text-sm font-medium shadow-md bg-white text-steel-blue-800 hover:bg-gray-50 flex-1"
+          className={cn(
+            "rounded text-sm font-medium shadow-md bg-white text-steel-blue-800 hover:bg-gray-50 flex-1",
+            page === "parameters" &&
+              "border border-steel-blue-800 border-opacity-75"
+          )}
         >
           Gestion
         </button>
