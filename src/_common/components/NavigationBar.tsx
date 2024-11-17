@@ -11,6 +11,7 @@ import Button from "./Button";
 import { useState } from "react";
 import useNavigationStore from "../store/navigation.store";
 import { cn } from "../utils/utils";
+import { LockIcon } from "lucide-react";
 
 export const NavigationBar = () => {
   const { zoomIn, zoomOut, zoomPercentage } = useZoom();
@@ -110,11 +111,12 @@ export const NavigationBar = () => {
             }
           }}
           className={cn(
-            "rounded text-sm font-medium shadow-md bg-white text-steel-blue-800 hover:bg-gray-50 flex-1",
+            "rounded text-sm font-medium shadow-md bg-white text-steel-blue-800 hover:bg-gray-50 flex-1 flex items-center justify-center gap-2",
             page === "parameters" &&
               "border border-steel-blue-800 border-opacity-75"
           )}
         >
+          <LockIcon className="h-4 w-4" />
           Gestion
         </button>
       </div>
