@@ -20,11 +20,7 @@ import {
   useAdminEditModeSystem,
 } from "../../_common/store/adminEditMode.system";
 
-interface LogbookProps {
-  goBack: () => void;
-}
-
-export const SessionLogs = ({ goBack }: LogbookProps) => {
+export const SessionLogs = () => {
   const sessionsStore = useSessionsStore();
   const clubOverviewStore = useClubOverviewStore();
 
@@ -42,14 +38,9 @@ export const SessionLogs = ({ goBack }: LogbookProps) => {
   const adminEditSystem = useAdminEditModeSystem();
 
   return (
-    <div className="flex-1 shadow-md bg-white flex flex-col absolute inset-1 right-1/2 mr-[.125rem] rounded overflow-hidden">
-      <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between">
-        <div className="flex items-center">
-          <Button type="button" onClick={goBack}>
-            <ChevronLeftIcon className="h-6 w-6" />
-          </Button>
-          <h1 className="text-base ml-2">Historique des sorties</h1>
-        </div>
+    <div className="flex-1 shadow-md bg-white flex flex-col absolute inset-0 right-1/2 mr-[.125rem] rounded overflow-hidden">
+      <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between h-12 items-center">
+        <h1 className="text-base ml-2">Historique des sorties</h1>
         <div className="flex gap-2">
           <a
             href={
@@ -57,7 +48,7 @@ export const SessionLogs = ({ goBack }: LogbookProps) => {
               encodeURIComponent(JSON.stringify(sessionsStore.session))
             }
             download={"export.json"}
-            className="bg-gray-100 rounded flex items-center justify-center px-4 text-gray-700"
+            className="bg-gray-100 rounded flex items-center justify-center px-4 text-gray-700 py-1"
           >
             Export JSON
           </a>
@@ -80,12 +71,12 @@ export const SessionLogs = ({ goBack }: LogbookProps) => {
                 `)
             }
             download={"export.csv"}
-            className="bg-gray-100 rounded flex items-center justify-center px-4 text-gray-700"
+            className="bg-gray-100 rounded flex items-center justify-center px-4 text-gray-700 py-1"
           >
             Export CSV
           </a>
           <button
-            className="bg-error-100 rounded flex items-center justify-center px-4 text-error-700"
+            className="bg-error-100 rounded flex items-center justify-center px-4 text-error-700 py-1"
             onClick={async () => {
               if (
                 await windowConfirm(
