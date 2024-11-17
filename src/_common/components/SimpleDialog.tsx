@@ -23,10 +23,7 @@ export const SimpleDialog = ({
       <DialogContent
         title={title}
         subtitle={subtitle}
-        className={cn(
-          "w-[48rem] max-h-[calc(100vh-4rem)] max-w-[calc(100vw-4rem)] overflow-y-auto bg-white",
-          className
-        )}
+        className={cn(className)}
       >
         {children}
       </DialogContent>
