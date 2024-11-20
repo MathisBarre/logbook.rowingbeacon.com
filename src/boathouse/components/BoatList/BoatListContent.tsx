@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Boat, BoatTypeEnum } from "../../../_common/types/boat.type";
+import { Boat } from "../../../_common/types/boat.type";
 import { useSearchInBoats } from "./BoatList.utils";
 import {
   useSessionsStore,
@@ -8,24 +8,12 @@ import {
 import { useAdminEditModeSystem } from "../../../_common/store/adminEditMode.system";
 import { cn } from "../../../_common/utils/utils";
 
-import { useClubOverviewStore } from "../../../_common/store/clubOverview.store";
-import { ArrowsUpDownIcon } from "@heroicons/react/20/solid";
 import {
   formatDate,
   getTime,
   isToday,
   isTomorrow,
 } from "../../../_common/utils/date.utils";
-import {
-  ConstructionIcon,
-  DeleteIcon,
-  PencilIcon,
-  TypeIcon,
-} from "lucide-react";
-import {
-  windowPrompt,
-  windowConfirm,
-} from "../../../_common/utils/window.utils";
 
 interface BoatListContentProps {
   search: string;
@@ -259,13 +247,6 @@ const BoatRowDefault = memo(
 );
 
 const EditBoatRow = memo(({ boat }: { boat: Boat }) => {
-  const {
-    updateBoatType,
-    updateBoatName,
-    toggleBoatIsInMaintenance,
-    deleteBoat,
-  } = useClubOverviewStore();
-
   return (
     <div
       key={boat.id}
@@ -279,130 +260,9 @@ const EditBoatRow = memo(({ boat }: { boat: Boat }) => {
           {boat.name}
         </span>
       </div>
-
-      <EditButton
-        onClick={async () => {
-          const newBoatName = await windowPrompt(
-            "Nouveau nom du bateau",
-            boat.name
-          );
-
-          if (newBoatName) {
-            updateBoatName(boat.id, newBoatName);
-          }
-        }}
-        description="Changer le nom du bateau"
-        className="rounded-l"
-      >
-        <PencilIcon className="h-4 w-4" /> <TypeIcon className="h-4 w-4" />
-      </EditButton>
-      <EditButton
-        onClick={() => {
-          toggleBoatIsInMaintenance(boat.id);
-        }}
-        description="Basculer l'état de maintenance"
-      >
-        <ConstructionIcon className="h-4 w-4" />
-      </EditButton>
-      <EditButton
-        onClick={() => {
-          updateBoatType(boat.id, BoatTypeEnum.ONE_ROWER_COXLESS);
-        }}
-        description="Type -> 1x"
-      >
-        <ArrowsUpDownIcon className="h-4 w-4" /> 1
-      </EditButton>
-      <EditButton
-        onClick={() => {
-          updateBoatType(boat.id, BoatTypeEnum.TWO_ROWERS_COXLESS);
-        }}
-        description="Type -> 2x / 2-"
-      >
-        <ArrowsUpDownIcon className="h-4 w-4" /> 2
-      </EditButton>
-      <EditButton
-        onClick={() => {
-          updateBoatType(boat.id, BoatTypeEnum.FOUR_ROWERS_COXLESS);
-        }}
-        description="Type -> 4x / 4- / 4+"
-      >
-        <ArrowsUpDownIcon className="h-4 w-4" /> 4
-      </EditButton>
-      <EditButton
-        onClick={() => {
-          updateBoatType(boat.id, BoatTypeEnum.EIGHT_ROWERS_COXED);
-        }}
-        description="Type -> 8x / 8+"
-      >
-        <ArrowsUpDownIcon className="h-4 w-4" /> 8
-      </EditButton>
-      <EditButton
-        onClick={() => {
-          updateBoatType(boat.id, BoatTypeEnum.OTHER);
-        }}
-        description="Type -> Autre"
-        className=""
-      >
-        <ArrowsUpDownIcon className="h-4 w-4" /> X
-      </EditButton>
-      <EditButton
-        variant="danger"
-        onClick={async () => {
-          if (
-            await windowConfirm(
-              `Voulez-vous vraiment supprimer définitivement le bateau "${boat.name}" ? Il ne sera plus possible de renseigner des sorties avec ce bateau mais les sorties déjà effectuées resteront enregistrées.`
-            )
-          ) {
-            deleteBoat(boat.id);
-          }
-        }}
-        description="Supprimer"
-        className=" rounded-r mr-6"
-      >
-        <DeleteIcon className="h-4 w-4" />
-      </EditButton>
     </div>
   );
 });
-
-const EditButton = ({
-  children,
-  onClick,
-  description,
-  className,
-  variant = "normal",
-}: {
-  children: React.ReactNode;
-  onClick: () => void;
-  description: string;
-  className?: string;
-  variant?: "normal" | "danger";
-}) => {
-  return (
-    <button
-      className={cn(
-        "hidden parent group-hover:flex items-center relative group/foo px-5",
-        variant === "normal" &&
-          "bg-steel-blue-100 text-blue-400 hover:bg-steel-blue-200 hover:text-blue-600 ",
-        variant === "danger" &&
-          "bg-error-100 text-error-400 hover:bg-error-200 hover:text-error-600 ",
-        className
-      )}
-      onClick={onClick}
-    >
-      {children}
-
-      <div className="absolute top-0 bottom-0 z-40 text-center left-1/2 transform -translate-x-1/2 translate-y-full hidden group-hover/foo:flex justify-center items-center">
-        <div
-          className="bg-white rounded px-2
-        text-nowrap whitespace-nowrap border"
-        >
-          {description}
-        </div>
-      </div>
-    </button>
-  );
-};
 
 const EmptyRow = memo(
   ({ isEmpty, search }: { isEmpty: boolean; search: string }) => {
