@@ -160,7 +160,7 @@ export const RowersCrud = () => {
                     }}
                     className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
                   >
-                    <PencilIcon className="h-4 w-4 cursor-pointer text-blue-900" />
+                    <PencilIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
                   </button>
                   <div className="h-full w-[1px] bg-gray-200" />
                   <button
