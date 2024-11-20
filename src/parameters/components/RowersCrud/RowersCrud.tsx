@@ -4,7 +4,6 @@ import {
   PencilIcon,
   SearchIcon,
   Trash2Icon,
-  UsersIcon,
 } from "lucide-react";
 import { useClubOverviewStore } from "../../../_common/store/clubOverview.store";
 import { toast } from "sonner";
@@ -97,23 +96,25 @@ export const RowersCrud = () => {
   const sortedRowers = searchedRowers.sort((a, b) =>
     a.name.localeCompare(b.name)
   );
+
   const pageSize = 32;
+
   const [currentPage, setCurrentPage] = useState(1);
   const numberOfPages = Math.ceil(sortedRowers.length / pageSize);
   const paginatedRowers = paginateData(sortedRowers, {
     currentPage,
-    pageSize,
+    pageSize: pageSize,
   });
 
   const [textareaContent, setTextareaContent] = useState("");
 
   return (
-    <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto">
+    <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
       <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between h-12">
         <h1 className="text-base ml-2 flex gap-2 items-center">Vos rameurs</h1>
       </div>
 
-      <div className="p-4">
+      <div className="p-4 flex flex-col flex-1">
         <div className="flex gap-4 mb-4">
           <Dialog>
             <DialogTrigger>
@@ -148,38 +149,45 @@ export const RowersCrud = () => {
             />
           </div>
         </div>
-        <div className="grid gap-4 grid-cols-4">
-          {paginatedRowers.map((rower) => (
-            <div key={rower.id} className="border rounded flex items-center">
-              <p className="text-nowrap px-4 flex-1">{rower.name}</p>
-              <div className="h-full w-[1px] bg-gray-200" />
-              <button
-                onClick={() => {
-                  updateRowerName(rower.id, rower.name);
-                }}
-                className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
-              >
-                <PencilIcon className="h-4 w-4 cursor-pointer text-blue-900" />
-              </button>
-              <div className="h-full w-[1px] bg-gray-200" />
-              <button
-                onClick={() => {
-                  deleteRower(rower.id);
-                }}
-                className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
-              >
-                <Trash2Icon className="h-4 w-4 cursor-pointer text-error-900" />
-              </button>
-            </div>
-          ))}
+        <div className="flex-1 relative">
+          <div className="overflow-y-scroll absolute inset-0 border p-4 rounded">
+            <div className="grid gap-4 grid-cols-4 ">
+              {paginatedRowers.map((rower) => (
+                <div
+                  key={rower.id}
+                  className="border rounded flex items-center"
+                >
+                  <p className="text-nowrap px-4 flex-1">{rower.name}</p>
+                  <div className="h-full w-[1px] bg-gray-200" />
+                  <button
+                    onClick={() => {
+                      updateRowerName(rower.id, rower.name);
+                    }}
+                    className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
+                  >
+                    <PencilIcon className="h-4 w-4 cursor-pointer text-blue-900" />
+                  </button>
+                  <div className="h-full w-[1px] bg-gray-200" />
+                  <button
+                    onClick={() => {
+                      deleteRower(rower.id);
+                    }}
+                    className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
+                  >
+                    <Trash2Icon className="h-4 w-4 cursor-pointer text-error-900" />
+                  </button>
+                </div>
+              ))}
 
-          {Array.from({
-            length: pageSize - paginatedRowers.length,
-          }).map((_, index) => (
-            <div key={index} className="invisible h-12" />
-          ))}
+              {Array.from({
+                length: pageSize - paginatedRowers.length,
+              }).map((_, index) => (
+                <div key={index} className="invisible h-12" />
+              ))}
+            </div>
+          </div>
         </div>
-        <div className="flex justify-center items-center gap-8 mt-8">
+        <div className="flex justify-center items-center gap-8 mt-4">
           <p className="italic text-center">
             Page {currentPage} sur {numberOfPages}
           </p>
