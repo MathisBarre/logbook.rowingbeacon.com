@@ -4,8 +4,10 @@ import { forEnum } from "../_common/utils/utils";
 import { RoutesCrud } from "./components/RoutesCrud";
 import { BoatCrud } from "./components/BoatsCrud";
 
+type Page = "rowers" | "routes" | "boats" | "params";
+
 export const ParametersScreen = () => {
-  const [page, setPage] = useState<"rowers" | "routes" | "boats">("rowers");
+  const [page, setPage] = useState<Page>("rowers");
 
   return (
     <div className="flex flex-col h-full gap-1">
@@ -14,6 +16,7 @@ export const ParametersScreen = () => {
           rowers: () => <RowersCrud />,
           routes: () => <RoutesCrud />,
           boats: () => <BoatCrud />,
+          params: () => <div>Params</div>,
         })}
       </div>
 
@@ -48,9 +51,9 @@ const NavigationButton = ({
   setPage,
 }: {
   label: string;
-  page: "rowers" | "routes" | "boats";
-  currentPage: "rowers" | "routes" | "boats";
-  setPage: (page: "rowers" | "routes" | "boats") => void;
+  page: Page;
+  currentPage: Page;
+  setPage: (page: Page) => void;
 }) => {
   return (
     <button
