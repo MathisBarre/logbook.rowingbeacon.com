@@ -22,6 +22,7 @@ import {
   Dialog,
   DialogTrigger,
 } from "../../../_common/components/Dialog/Dialog";
+import { useLocalStorage } from "../../../_common/utils/useLocalStorage";
 
 export const RowersCrud = () => {
   const store = useClubOverviewStore();
@@ -97,7 +98,7 @@ export const RowersCrud = () => {
     a.name.localeCompare(b.name)
   );
 
-  const pageSize = 32;
+  const [pageSize, setPageSize] = useLocalStorage("rower-crud-page-size", 32);
 
   const [currentPage, setCurrentPage] = useState(1);
   const numberOfPages = Math.ceil(sortedRowers.length / pageSize);
@@ -178,12 +179,6 @@ export const RowersCrud = () => {
                   </button>
                 </div>
               ))}
-
-              {Array.from({
-                length: pageSize - paginatedRowers.length,
-              }).map((_, index) => (
-                <div key={index} className="invisible h-12" />
-              ))}
             </div>
           </div>
         </div>
@@ -213,6 +208,20 @@ export const RowersCrud = () => {
               <ChevronRightIcon />
             </Button>
           </div>
+          <select
+            className="input"
+            value={pageSize}
+            onChange={(e) => {
+              setPageSize(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+          >
+            <option value={16}>16</option>
+            <option value={32}>32</option>
+            <option value={64}>64</option>
+            <option value={128}>128</option>
+            <option value={256}>256</option>
+          </select>
         </div>
       </div>
     </div>
