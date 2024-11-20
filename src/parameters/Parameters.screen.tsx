@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { RowersCrud } from "./components/RowersCrud/RowersCrud";
+import { RowersCrud } from "./components/RowersCrud";
 import { forEnum } from "../_common/utils/utils";
 
 export const ParametersScreen = () => {

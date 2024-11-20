@@ -5,24 +5,18 @@ import {
   SearchIcon,
   Trash2Icon,
 } from "lucide-react";
-import { useClubOverviewStore } from "../../../_common/store/clubOverview.store";
+import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { toast } from "sonner";
-import Button from "../../../_common/components/Button";
+import Button from "../../_common/components/Button";
 import { useState } from "react";
-import { Input } from "../../../_common/components/Input";
-import { Label } from "../../../_common/components/Label";
-import { areStringSimilar } from "../../../_common/utils/string.utils";
-import { paginateData } from "../../../_common/utils/pagination.utils";
-import {
-  windowConfirm,
-  windowPrompt,
-} from "../../../_common/utils/window.utils";
-import { DialogContent } from "../../../_common/components/Dialog/DialogContent";
-import {
-  Dialog,
-  DialogTrigger,
-} from "../../../_common/components/Dialog/Dialog";
-import { useLocalStorage } from "../../../_common/utils/useLocalStorage";
+import { Input } from "../../_common/components/Input";
+import { Label } from "../../_common/components/Label";
+import { areStringSimilar } from "../../_common/utils/string.utils";
+import { paginateData } from "../../_common/utils/pagination.utils";
+import { windowConfirm, windowPrompt } from "../../_common/utils/window.utils";
+import { DialogContent } from "../../_common/components/Dialog/DialogContent";
+import { Dialog, DialogTrigger } from "../../_common/components/Dialog/Dialog";
+import { useLocalStorage } from "../../_common/utils/useLocalStorage";
 
 export const RowersCrud = () => {
   const store = useClubOverviewStore();
