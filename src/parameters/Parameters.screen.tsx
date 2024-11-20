@@ -4,7 +4,7 @@ import { forEnum } from "../_common/utils/utils";
 import { RoutesCrud } from "./components/RoutesCrud";
 import { BoatCrud } from "./components/BoatsCrud";
 
-type Page = "rowers" | "routes" | "boats" | "params";
+type Page = "rowers" | "routes" | "boats";
 
 export const ParametersScreen = () => {
   const [page, setPage] = useState<Page>("rowers");
@@ -16,7 +16,6 @@ export const ParametersScreen = () => {
           rowers: () => <RowersCrud />,
           routes: () => <RoutesCrud />,
           boats: () => <BoatCrud />,
-          params: () => <div>Params</div>,
         })}
       </div>
 
