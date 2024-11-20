@@ -112,7 +112,7 @@ export const RowersCrud = () => {
       <div className="p-4 flex flex-col flex-1">
         <div className="flex gap-4 mb-4">
           <Dialog>
-            <DialogTrigger>
+            <DialogTrigger asChild>
               <Button type="button">Ajouter des rameurs</Button>
             </DialogTrigger>
             <DialogContent title="Ajouter des rameurs">
@@ -145,7 +145,7 @@ export const RowersCrud = () => {
           </div>
         </div>
         <div className="flex-1 relative">
-          <div className="overflow-y-scroll absolute inset-0 border p-4 rounded">
+          <div className="overflow-y-auto absolute inset-0 border p-4 rounded">
             <div className="grid gap-4 grid-cols-4 ">
               {paginatedRowers.map((rower) => (
                 <div

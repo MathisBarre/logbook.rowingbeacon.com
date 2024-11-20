@@ -113,6 +113,7 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
                   id: generateBoatId(),
                   name: boatName,
                   isInMaintenance: false,
+                  type: BoatTypeEnum.OTHER,
                 },
               ],
             },

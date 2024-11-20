@@ -15,7 +15,7 @@ export const boathTypeWithLabel = [
   { type: BoatTypeEnum.FOUR_ROWERS_COXLESS, label: "4x / 4-" },
   { type: BoatTypeEnum.FOUR_ROWERS_COXED, label: "4+" },
   { type: BoatTypeEnum.EIGHT_ROWERS_COXED, label: "8x / 8+" },
-  { type: BoatTypeEnum.OTHER, label: "Autre / Non catégorisé" },
+  { type: BoatTypeEnum.OTHER, label: "Autre" },
 ];
 
 export interface Boat {
