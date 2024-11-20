@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { RowersCrud } from "./components/RowersCrud";
 import { forEnum } from "../_common/utils/utils";
+import { RoutesCrud } from "./components/RoutesCrud";
 
 export const ParametersScreen = () => {
   const [page, setPage] = useState<"rowers" | "routes" | "boats">("rowers");
@@ -10,7 +11,7 @@ export const ParametersScreen = () => {
       <div className="flex-1 relative">
         {forEnum(page, {
           rowers: () => <RowersCrud />,
-          routes: () => <div>Routes</div>,
+          routes: () => <RoutesCrud />,
           boats: () => <div>Bateaux</div>,
         })}
       </div>

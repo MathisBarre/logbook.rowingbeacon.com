@@ -36,7 +36,7 @@ export const RoutesCrud = () => {
     const routeName = await windowPrompt("Nom du parcours");
 
     if (!routeName) {
-      return toast.error("Le parcours n'a pas été ajouté");
+      return;
     }
 
     store.addRoute(routeName);
@@ -46,41 +46,44 @@ export const RoutesCrud = () => {
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
       <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between h-12">
-        <h1 className="text-base ml-2 flex gap-2 items-center">Vos rameurs</h1>
+        <h1 className="text-base ml-2 flex gap-2 items-center">Vos parcours</h1>
       </div>
-      <Button
-        type="button"
-        className="mb-4"
-        onClick={() => {
-          addRoute();
-        }}
-      >
-        Ajouter un parcours
-      </Button>
-      <div className="flex gap-4 flex-wrap">
-        {routes.map((route) => (
-          <div key={route.id} className="border rounded flex items-center">
-            <p className="text-nowrap px-4">{route.name}</p>
-            <div className="h-full w-[1px] bg-gray-200" />
-            <button
-              onClick={() => {
-                updateRouteName(route.id, route.name);
-              }}
-              className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
-            >
-              <PencilIcon className="h-4 w-4 cursor-pointer text-blue-900" />
-            </button>
-            <div className="h-full w-[1px] bg-gray-200" />
-            <button
-              onClick={() => {
-                deleteRoute(route.id);
-              }}
-              className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
-            >
-              <Trash2Icon className="h-4 w-4 cursor-pointer text-error-900" />
-            </button>
-          </div>
-        ))}
+
+      <div className="p-4">
+        <Button
+          type="button"
+          className="mb-4 w-full"
+          onClick={() => {
+            addRoute();
+          }}
+        >
+          Ajouter un parcours
+        </Button>
+        <div className="flex gap-4 flex-wrap">
+          {routes.map((route) => (
+            <div key={route.id} className="border rounded flex items-center">
+              <p className="text-nowrap px-4">{route.name}</p>
+              <div className="h-full w-[1px] bg-gray-200" />
+              <button
+                onClick={() => {
+                  updateRouteName(route.id, route.name);
+                }}
+                className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
+              >
+                <PencilIcon className="h-4 w-4 cursor-pointer text-blue-900" />
+              </button>
+              <div className="h-full w-[1px] bg-gray-200" />
+              <button
+                onClick={() => {
+                  deleteRoute(route.id);
+                }}
+                className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
+              >
+                <Trash2Icon className="h-4 w-4 cursor-pointer text-error-900" />
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
