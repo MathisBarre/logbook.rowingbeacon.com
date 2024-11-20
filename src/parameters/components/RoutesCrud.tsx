@@ -1,17 +1,10 @@
 import { PencilIcon, Trash2Icon } from "lucide-react";
-import { SimpleDialog } from "../../../_common/components/SimpleDialog";
-import { useClubOverviewStore } from "../../../_common/store/clubOverview.store";
+import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { toast } from "sonner";
-import Button from "../../../_common/components/Button";
-import { windowPrompt } from "../../../_common/utils/window.utils";
+import Button from "../../_common/components/Button";
+import { windowPrompt } from "../../_common/utils/window.utils";
 
-export const RoutesCrudDialog = ({
-  isOpen,
-  setIsOpen,
-}: {
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
-}) => {
+export const RoutesCrud = () => {
   const store = useClubOverviewStore();
   const { routes } = store.clubOverview;
 
@@ -51,12 +44,10 @@ export const RoutesCrudDialog = ({
   };
 
   return (
-    <SimpleDialog
-      open={isOpen}
-      onOpenChange={(v) => setIsOpen(v)}
-      title="Gestion des vos parcours"
-      subtitle="Créer, modifier ou supprimer vos parcours"
-    >
+    <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
+      <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between h-12">
+        <h1 className="text-base ml-2 flex gap-2 items-center">Vos rameurs</h1>
+      </div>
       <Button
         type="button"
         className="mb-4"
@@ -91,6 +82,6 @@ export const RoutesCrudDialog = ({
           </div>
         ))}
       </div>
-    </SimpleDialog>
+    </div>
   );
 };
