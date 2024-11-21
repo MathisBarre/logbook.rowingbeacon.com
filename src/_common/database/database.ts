@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import createMigrationTable from "./migrations/00_migration-table";
 import createSessionTable from "./migrations/01_create-session-table";
 import { getErrorMessage } from "../utils/error";
+import updateSessionTable from "./migrations/02_update-session-table";
 
 let db: Database | null = null;
 
@@ -31,6 +32,11 @@ const applyMigrations = async (db: Database) => {
         label: "Create session table",
         timestamp: 1732188036770,
         sql: createSessionTable,
+      },
+      {
+        label: "Update session table",
+        timestamp: 1732189377064,
+        sql: updateSessionTable,
       },
     ].sort(sortByTimestamp);
 
@@ -66,14 +72,3 @@ const sortByTimestamp = (
 ) => {
   return a.timestamp - b.timestamp;
 };
-
-// CREATE TABLE IF NOT EXISTS session (
-//   id TEXT PRIMARY KEY,
-//   boat_id TEXT NOT NULL,
-//   start_date_time TEXT NOT NULL,
-//   estimated_end_date_time TEXT,
-//   route_id TEXT,
-//   end_date_time TEXT,
-//   incident_id TEXT,
-//   comment TEXT
-// );
