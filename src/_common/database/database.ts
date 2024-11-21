@@ -2,6 +2,7 @@ import Database from "@tauri-apps/plugin-sql";
 import { toast } from "sonner";
 import createMigrationTable from "./migrations/00_migration-table";
 import createSessionTable from "./migrations/01_create-session-table";
+import { getErrorMessage } from "../utils/error";
 
 let db: Database | null = null;
 
@@ -54,7 +55,7 @@ const applyMigrations = async (db: Database) => {
 
     console.log("✅ All migration applied");
   } catch (e) {
-    console.error(e);
+    console.error("❌" + getErrorMessage(e));
     throw e;
   }
 };
