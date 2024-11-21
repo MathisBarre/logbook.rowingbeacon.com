@@ -1,9 +1,8 @@
 import Database from "@tauri-apps/plugin-sql";
 import { toast } from "sonner";
 import createMigrationTable from "./migrations/00_migration-table";
-import createSessionTable from "./migrations/01_create-session-table";
 import { getErrorMessage } from "../utils/error";
-import updateSessionTable from "./migrations/02_update-session-table";
+import { migrations } from "./migrations";
 
 let db: Database | null = null;
 
@@ -27,18 +26,7 @@ const applyMigrations = async (db: Database) => {
   try {
     db.execute(createMigrationTable);
 
-    const migrations = [
-      {
-        label: "Create session table",
-        timestamp: 1732188036770,
-        sql: createSessionTable,
-      },
-      {
-        label: "Update session table",
-        timestamp: 1732189377064,
-        sql: updateSessionTable,
-      },
-    ].sort(sortByTimestamp);
+    migrations.sort(sortByTimestamp);
 
     for (const migration of migrations) {
       const { timestamp, sql, label } = migration;
@@ -55,7 +43,7 @@ const applyMigrations = async (db: Database) => {
         ]);
         console.log(`✅ Migration "${label}" applied`);
       } else {
-        console.log(`⏩ Migration "${label}" already applied`);
+        console.log(`⏩ Migration "${label}" has been skipped`);
       }
     }
 
