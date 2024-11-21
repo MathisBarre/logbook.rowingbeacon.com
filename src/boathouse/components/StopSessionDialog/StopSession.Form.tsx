@@ -38,7 +38,7 @@ export const StopSessionForm = ({
   const form = useForm<StopSessionFormValues>({
     resolver: zodResolver(StopSessionFormSchema),
     defaultValues: {
-      endDateTime: undefined,
+      endDateTime: "",
       comment: session.comment,
     },
   });

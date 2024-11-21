@@ -153,11 +153,10 @@ class SessionDatabaseRepository implements ISessionDatabaseRepository {
   async saveSession(
     session: SessionToSave
   ): Promise<SimpleResult<"FAILED_TO_SAVE_SESSION", null>> {
-    try {
-      const db = await getDatabase();
+    const db = await getDatabase();
 
+    try {
       await db.execute(/* sql */ `
-        ROLLBACK;
         BEGIN TRANSACTION;
       `);
 
@@ -205,6 +204,10 @@ class SessionDatabaseRepository implements ISessionDatabaseRepository {
 
       return asOk(null);
     } catch (e) {
+      await db.execute(/* sql */ `
+        ROLLBACK;
+      `);
+
       console.error(e);
       return asError({
         code: "FAILED_TO_SAVE_SESSION",
