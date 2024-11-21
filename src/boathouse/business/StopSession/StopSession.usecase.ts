@@ -7,21 +7,24 @@ import { isStringEquivalentOfUndefined } from "../../../_common/utils/string.uti
 import { getDatabase } from "../../../_common/database/database";
 
 interface ISessionStore {
-  getOngoingSession(sessionId: string): SimpleResult<
-    "FAILED_TO_GET_SESSION",
-    {
-      id: string;
-      boatId: string;
-      startDateTime: string;
-      estimatedEndDateTime: string;
-      routeId: string;
-      rowerIds: string[];
-    }
-  >;
+  getOngoingSession(sessionId: string):
+    | {
+        id: string;
+        boat: {
+          id: string;
+        };
+        startDateTime: string;
+        estimatedEndDateTime: string;
+        route: {
+          id: string;
+        };
+        rowers: {
+          id: string;
+        }[];
+      }
+    | undefined;
 
-  removeSession(
-    sessionId: string
-  ): SimpleResult<"FAILED_TO_REMOVE_SESSION", null>;
+  removeSession(sessionId: string): void;
 }
 
 interface SessionToSave {
@@ -65,15 +68,23 @@ class StopSession {
     comment: string;
     incident: {
       checked: boolean;
-      message: string;
+      message: string | undefined;
     };
-  }) {
-    const [getSessionError, ongoingSessionInStore] =
-      this.sessionStore.getOngoingSession(stopSessionPayload.sessionId);
+  }): Promise<
+    SimpleResult<
+      | "ONGOING_SESSION_NOT_FOUND"
+      | "END_DATE_BEFORE_START_DATE"
+      | "FAILED_TO_SAVE_SESSION",
+      string
+    >
+  > {
+    const ongoingSessionInStore = this.sessionStore.getOngoingSession(
+      stopSessionPayload.sessionId
+    );
 
-    if (getSessionError) {
+    if (ongoingSessionInStore === undefined) {
       return asError({
-        code: getSessionError.code,
+        code: "ONGOING_SESSION_NOT_FOUND",
       });
     }
 
@@ -90,6 +101,27 @@ class StopSession {
     }
 
     const incidentId = generateIncidenId();
+
+    const [saveSessionError] = await this.sessionDatabaseRepository.saveSession(
+      {
+        id: ongoingSessionInStore.id,
+        boatId: ongoingSessionInStore.boat.id,
+        startDateTime: ongoingSessionInStore.startDateTime,
+        estimatedEndDateTime: ongoingSessionInStore.estimatedEndDateTime,
+        routeId: ongoingSessionInStore.route.id,
+        endDateTime: stopSessionPayload.endDateTime,
+        comment: stopSessionPayload.comment,
+        incidentId: incidentId,
+        rowerIds: ongoingSessionInStore.rowers.map((rower) => rower.id),
+      }
+    );
+
+    if (saveSessionError) {
+      return asError({
+        code: saveSessionError.code,
+      });
+    }
+
     if (stopSessionPayload.incident.checked) {
       const emptyMessage = "Aucun détail renseigné";
 
@@ -111,35 +143,7 @@ class StopSession {
       this.incidentStore.addIncident(incidentPayload);
     }
 
-    const [saveSessionError] = await this.sessionDatabaseRepository.saveSession(
-      {
-        id: ongoingSessionInStore.id,
-        boatId: ongoingSessionInStore.boatId,
-        startDateTime: ongoingSessionInStore.startDateTime,
-        estimatedEndDateTime: ongoingSessionInStore.estimatedEndDateTime,
-        routeId: ongoingSessionInStore.routeId,
-        endDateTime: stopSessionPayload.endDateTime,
-        comment: stopSessionPayload.comment,
-        incidentId: incidentId,
-        rowerIds: ongoingSessionInStore.rowerIds
-      }
-    );
-
-    if (saveSessionError) {
-      return asError({
-        code: saveSessionError.code,
-      });
-    }
-
-    const [removeSessionError] = this.sessionStore.removeSession(
-      stopSessionPayload.sessionId
-    );
-
-    if (removeSessionError) {
-      return asError({
-        code: removeSessionError.code,
-      });
-    }
+    this.sessionStore.removeSession(stopSessionPayload.sessionId);
 
     return asOk("success");
   }
@@ -205,10 +209,11 @@ class SessionDatabaseRepository implements ISessionDatabaseRepository {
       return asError({
         code: "FAILED_TO_SAVE_SESSION",
       });
+    }
   }
 }
 
-const useGetStopSession = () => {
+export const useGetStopSession = () => {
   const sessionStore = useSessionsStore();
   const incidentStore = useIncidentStore();
 
