@@ -52,62 +52,60 @@ export const StopSessionForm = ({
   const incidentStore = useIncidentStore();
   const [isIncidentOpen, setIsIncidentOpen] = useState(false);
 
+  const onSubmit = form.handleSubmit(
+    async ({ comment, endDateTime, incident }) => {
+      const registeredSession = sessionStore.findOngoingSessionByBoatId(
+        session.boat.id
+      );
+
+      if (
+        registeredSession?.startDateTime &&
+        isAfter(
+          new Date(registeredSession?.startDateTime),
+          new Date(endDateTime)
+        )
+      ) {
+        form.setError("endDateTime", {
+          message: "La date de fin doit être postérieure à la date de début",
+        });
+        return;
+      }
+
+      sessionStore.stopSession(session.boat.id, {
+        endDateTime: endDateTime,
+        comment: comment,
+      });
+
+      toast.success("La sortie a bien été terminée");
+
+      if (isIncidentOpen) {
+        const emptyMessage = "Aucun détail renseigné";
+
+        const incidentMessage = isStringEquivalentOfUndefined(incident)
+          ? emptyMessage
+          : incident || emptyMessage;
+
+        const incidentPayload = {
+          id: getIncidenId(),
+          message: incidentMessage,
+          sessionId: session.id,
+          datetime: endDateTime,
+        };
+
+        console.log("adding incident", incidentPayload);
+
+        incidentStore.addIncident(incidentPayload);
+
+        toast.success("L'incident a bien été enregistré");
+      }
+
+      afterSubmit();
+    }
+  );
+
   return (
     <Form {...form}>
-      <form
-        className="flex flex-col gap-4"
-        onSubmit={form.handleSubmit(
-          async ({ comment, endDateTime, incident }) => {
-            const registeredSession = sessionStore.findOngoingSessionByBoatId(
-              session.boat.id
-            );
-
-            if (
-              registeredSession?.startDateTime &&
-              isAfter(
-                new Date(registeredSession?.startDateTime),
-                new Date(endDateTime)
-              )
-            ) {
-              form.setError("endDateTime", {
-                message:
-                  "La date de fin doit être postérieure à la date de début",
-              });
-              return;
-            }
-
-            sessionStore.stopSession(session.boat.id, {
-              endDateTime: endDateTime,
-              comment: comment,
-            });
-
-            toast.success("La sortie a bien été terminée");
-
-            if (isIncidentOpen) {
-              const emptyMessage = "Aucun détail renseigné";
-
-              const incidentMessage = isStringEquivalentOfUndefined(incident)
-                ? emptyMessage
-                : incident || emptyMessage;
-
-              const incidentPayload = {
-                id: getIncidenId(),
-                message: incidentMessage,
-                sessionId: session.id,
-                datetime: endDateTime,
-              };
-
-              console.log("adding incident", incidentPayload);
-
-              incidentStore.addIncident(incidentPayload);
-
-              toast.success("L'incident a bien été enregistré");
-            }
-
-            afterSubmit();
-          }
-        )}
-      >
+      <form className="flex flex-col gap-4" onSubmit={onSubmit}>
         <div className="flex gap-4 items-end">
           <FormField
             name="endDateTime"
