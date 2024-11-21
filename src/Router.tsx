@@ -2,7 +2,6 @@ import { NavigationBar } from "./_common/components/NavigationBar";
 import useNavigationStore from "./_common/store/navigation.store";
 import { forEnum } from "./_common/utils/utils";
 import BoathouseScreen from "./boathouse/Boathouse.screen";
-import { Database } from "./Database";
 import { LogbookScreen } from "./logbook/Logbook.screen";
 import { Onboarding } from "./onboarding/Onboarding";
 import { useOnboardingStore } from "./onboarding/onboarding.store";
@@ -14,8 +13,6 @@ export function Router() {
   const {
     navigation: { page },
   } = useNavigationStore();
-
-  return <Database />;
 
   if (!isOnboardingDone) {
     return <Onboarding setIsOnboardingDone={setIsOnboardingDone} />;
