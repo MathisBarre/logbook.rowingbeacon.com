@@ -1,7 +1,7 @@
 import { generateIncidenId } from "../../../_common/business/incident.rules";
 import useIncidentStore from "../../../_common/store/incident.store";
 import { useSessionsStore } from "../../../_common/store/sessions.store";
-import { isAfter } from "../../../_common/utils/date.utils";
+import { isAfter, toISODateFormat } from "../../../_common/utils/date.utils";
 import { asError, asOk, SimpleResult } from "../../../_common/utils/error";
 import { isStringEquivalentOfUndefined } from "../../../_common/utils/string.utils";
 import { getDatabase } from "../../../_common/database/database";
@@ -52,6 +52,7 @@ interface IIncidentStore {
     message: string;
     sessionId: string;
     datetime: string;
+    boatId: string;
   }): void;
 }
 
@@ -78,6 +79,11 @@ class StopSession {
       string
     >
   > {
+    stopSessionPayload = {
+      ...stopSessionPayload,
+      endDateTime: toISODateFormat(stopSessionPayload.endDateTime),
+    };
+
     const ongoingSessionInStore = this.sessionStore.getOngoingSession(
       stopSessionPayload.sessionId
     );
@@ -136,6 +142,7 @@ class StopSession {
         message: incidentMessage,
         sessionId: stopSessionPayload.sessionId,
         datetime: stopSessionPayload.endDateTime,
+        boatId: ongoingSessionInStore.boat.id,
       };
 
       console.log("adding incident", incidentPayload);
@@ -187,7 +194,7 @@ class SessionDatabaseRepository implements ISessionDatabaseRepository {
       );
 
       const values = session.rowerIds
-        .map((rowerId) => `(${session.id}, ${rowerId})`)
+        .map((rowerId) => `('${session.id}', '${rowerId}')`)
         .join(", ");
 
       await db.execute(/* sql */ `
