@@ -13,7 +13,7 @@ import { getCurrentDateTime, isAfter } from "../../../_common/utils/date.utils";
 import { useState } from "react";
 import { cn } from "../../../_common/utils/utils";
 import useIncidentStore from "../../../_common/store/incident.store";
-import { getIncidenId } from "../../../_common/business/incident.rules";
+import { generateIncidenId } from "../../../_common/business/incident.rules";
 import { toast } from "sonner";
 import { isStringEquivalentOfUndefined } from "../../../_common/utils/string.utils";
 
@@ -86,7 +86,7 @@ export const StopSessionForm = ({
           : incident || emptyMessage;
 
         const incidentPayload = {
-          id: getIncidenId(),
+          id: generateIncidenId(),
           message: incidentMessage,
           sessionId: session.id,
           datetime: endDateTime,
