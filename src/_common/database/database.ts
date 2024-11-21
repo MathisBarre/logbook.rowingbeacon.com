@@ -19,6 +19,7 @@ export const getDatabase = async () => {
   } catch (e) {
     console.error(e);
     toast.error("Failed to load database");
+    throw e;
   }
 };
 

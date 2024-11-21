@@ -46,6 +46,7 @@ interface ZustandSessionsStoreState {
     }
   ) => void;
   getOngoingSessions: () => ZustandSession[];
+  getOngoingSession: (sessionId: string) => ZustandSession | undefined;
   getCompletedSessions: () => ZustandSession[];
   findOngoingSessionByBoatId: (boatId: string) => ZustandSession | undefined;
   reset: () => void;
@@ -101,6 +102,10 @@ export const useSessionsStore = create<ZustandSessionsStoreState>()(
 
         getOngoingSessions() {
           return get().session.filter((session) => !session.endDateTime);
+        },
+
+        getOngoingSession(sessionId) {
+          return get().session.find((session) => session.id === sessionId);
         },
 
         getCompletedSessions() {
