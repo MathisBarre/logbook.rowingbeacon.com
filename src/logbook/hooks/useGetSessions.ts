@@ -45,6 +45,12 @@ export const useGetLastSessions = (payload: {
   useEffect(() => {
     setLoading(true);
     const fetchSessions = async () => {
+      const totalNumberOfSession = await getTotalNumberOfSessions();
+
+      const numberOfPages = Math.ceil(totalNumberOfSession / pageSize);
+
+      setNumberOfPages(numberOfPages);
+
       const data = await getLastSessions({
         pageSize,
         skip: (currentPage - 1) * pageSize,
@@ -84,7 +90,7 @@ export const useGetLastSessions = (payload: {
     };
 
     fetchSessions();
-  }, [pageSize]);
+  }, [pageSize, currentPage]);
 
   const next = () => {
     setCurrentPage((prev) => prev + 1);
@@ -104,7 +110,7 @@ export const useGetLastSessions = (payload: {
   };
 };
 
-export const getLastSessions = async (payload: {
+const getLastSessions = async (payload: {
   pageSize: number;
   skip: number;
 }): Promise<
@@ -163,4 +169,17 @@ export const getLastSessions = async (payload: {
     `);
 
   return result;
+};
+
+const getTotalNumberOfSessions = async (): Promise<number> => {
+  const db = await getDatabase();
+
+  const result = await db.select<{ count: number }[]>(/* sql */ `
+    SELECT 
+      COUNT(*) as count
+    FROM 
+      session
+  `);
+
+  return result[0].count;
 };

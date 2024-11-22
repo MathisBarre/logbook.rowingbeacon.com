@@ -6,7 +6,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 export const SessionLogs = () => {
   const { numberOfPages, currentPage, next, prev, loading, sessions } =
     useGetLastSessions({
-      pageSize: 10,
+      pageSize: 24,
     });
 
   return (

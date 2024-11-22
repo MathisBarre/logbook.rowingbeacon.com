@@ -12,8 +12,8 @@ export interface SessionInTable {
     id: string;
     name: string;
   };
-  startDateTime: string | null;
-  endDateTime: string | null;
+  startDateTime: Date | null;
+  endDateTime: Date | null;
   comment: string | null;
   route: {
     id: string;
