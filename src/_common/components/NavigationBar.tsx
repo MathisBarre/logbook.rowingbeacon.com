@@ -32,7 +32,7 @@ export const NavigationBar = () => {
               if (
                 adminEditSystem.allowAdminActions(await askForAdminPassword())
               ) {
-                logout();
+                await logout();
               }
             }}
             type="button"
