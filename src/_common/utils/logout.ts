@@ -13,8 +13,8 @@ export const useLogout = () => {
   return async () => {
     const db = await getDatabase();
 
-    db.execute("DELETE FROM session");
-    db.execute("DELETE FROM session_rowers");
+    await db.execute("DELETE FROM session");
+    await db.execute("DELETE FROM session_rowers");
 
     sessionStore.reset();
     clubOverviewStore.reset();

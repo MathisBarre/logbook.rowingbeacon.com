@@ -168,12 +168,6 @@ class SessionDatabaseRepository implements ISessionDatabaseRepository {
     const db = await getDatabase();
 
     try {
-      await rollbackIfPossible(db);
-
-      await db.execute(/* sql */ `
-        BEGIN TRANSACTION;
-      `);
-
       await db.execute(
         /* sql */ `
         INSERT INTO session (
@@ -212,15 +206,10 @@ class SessionDatabaseRepository implements ISessionDatabaseRepository {
         VALUES ${values}
       `);
 
-      await db.execute(/* sql */ `
-        COMMIT;
-      `);
-
       console.log("✅ Session saved");
 
       return asOk(null);
     } catch (e) {
-      await rollbackIfPossible(db);
       console.error("❌ Failed to save session");
       console.error(e);
       return asError({
