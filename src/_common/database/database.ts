@@ -55,6 +55,16 @@ const applyMigrations = async (db: Database) => {
   }
 };
 
+export const rollbackIfPossible = async (db: Database) => {
+  try {
+    await db.execute(/* sql */ `
+      ROLLBACK;
+    `);
+  } catch (e) {
+    console.log(`ℹ️ Tried to rollback. But nothing to rollback.`);
+  }
+};
+
 const sortByTimestamp = (
   a: { timestamp: number },
   b: { timestamp: number }

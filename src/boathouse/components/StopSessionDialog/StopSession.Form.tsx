@@ -13,9 +13,13 @@ import { toast } from "sonner";
 import { useGetStopSession } from "../../business/StopSession/StopSession.usecase";
 
 const StopSessionFormSchema = z.object({
-  endDateTime: z.string({
-    message: "Ce champ est requis",
-  }),
+  endDateTime: z
+    .string({
+      message: "Ce champ est requis",
+    })
+    .min(1, {
+      message: "Ce champ est requis",
+    }),
   comment: z.string(),
   incident: z.string().optional(),
 });

@@ -1,28 +1,45 @@
 import { UserIcon, ChatBubbleLeftIcon } from "@heroicons/react/16/solid";
 import { getTime } from "../../_common/utils/date.utils";
+import Loading from "../../_common/components/Loading";
 
 export interface SessionInTable {
   id: string;
-  rowersName: string[];
-  boatName: string;
+  rowers: {
+    id: string;
+    name: string;
+  }[];
+  boat: {
+    id: string;
+    name: string;
+  };
   startDateTime: string | null;
   endDateTime: string | null;
-  status: string;
   comment: string | null;
-  route: string;
+  route: {
+    id: string;
+    name: string;
+  } | null;
 }
 
 interface SessionHistoryTableProps {
   sessionsInTableList: SessionInTable[];
+  loading: boolean;
 }
 
 export function SessionHistoryTable({
   sessionsInTableList,
+  loading,
 }: SessionHistoryTableProps) {
   return (
     <div className="overflow-auto pb-32">
       {sessionsInTableList.length === 0 && (
         <p className="text-center py-16">Aucune session</p>
+      )}
+
+      {loading && (
+        <div className="flex justify-center items-center py-16">
+          <Loading />
+        </div>
       )}
 
       {sessionsInTableList.map((session) => {
@@ -41,15 +58,15 @@ export function SessionHistoryTable({
             <div className="flex-1">
               <p className="flex mb-2 font-mono tracking-tighter">
                 <span>
-                  {session.boatName} <span className="text-gray-300">|</span>{" "}
-                  {session.route}
+                  {session.boat.name} <span className="text-gray-300">|</span>{" "}
+                  {session.route?.name || "Aucun parcours"}
                 </span>
               </p>
-              {session.rowersName.length > 0 && (
+              {session.rowers.length > 0 && (
                 <>
                   <div className="text-sm text-gray-400">
                     <UserIcon className="h-4 w-4 align-text-bottom inline mr-1 text-gray-400" />{" "}
-                    {session.rowersName.join(", ")}
+                    {session.rowers.map((r) => r.name).join(", ")}
                   </div>
                 </>
               )}
@@ -74,8 +91,8 @@ const FormattedDate = ({
   start,
   end,
 }: {
-  start: string | null;
-  end: string | null;
+  start: string | null | Date;
+  end: string | null | Date;
 }) => {
   if (!start) {
     return "N/A";

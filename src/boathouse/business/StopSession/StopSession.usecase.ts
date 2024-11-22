@@ -4,7 +4,10 @@ import { useSessionsStore } from "../../../_common/store/sessions.store";
 import { isAfter, toISODateFormat } from "../../../_common/utils/date.utils";
 import { asError, asOk, SimpleResult } from "../../../_common/utils/error";
 import { isStringEquivalentOfUndefined } from "../../../_common/utils/string.utils";
-import { getDatabase } from "../../../_common/database/database";
+import {
+  getDatabase,
+  rollbackIfPossible,
+} from "../../../_common/database/database";
 
 interface ISessionStore {
   getOngoingSession(sessionId: string):
@@ -160,9 +163,13 @@ class SessionDatabaseRepository implements ISessionDatabaseRepository {
   async saveSession(
     session: SessionToSave
   ): Promise<SimpleResult<"FAILED_TO_SAVE_SESSION", null>> {
+    console.log("ℹ️ Saving session...", session);
+
     const db = await getDatabase();
 
     try {
+      await rollbackIfPossible(db);
+
       await db.execute(/* sql */ `
         BEGIN TRANSACTION;
       `);
@@ -209,12 +216,12 @@ class SessionDatabaseRepository implements ISessionDatabaseRepository {
         COMMIT;
       `);
 
+      console.log("✅ Session saved");
+
       return asOk(null);
     } catch (e) {
-      await db.execute(/* sql */ `
-        ROLLBACK;
-      `);
-
+      await rollbackIfPossible(db);
+      console.error("❌ Failed to save session");
       console.error(e);
       return asError({
         code: "FAILED_TO_SAVE_SESSION",
