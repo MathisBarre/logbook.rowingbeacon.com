@@ -41,3 +41,19 @@ export const asError = <ErrorCode extends string, Details = unknown>(error: {
 }): ErrorResult<ErrorCode, Details> => {
   return [new ErrorWithCode(error), null];
 };
+
+export const getErrorMessage = (error: unknown): string => {
+  if (error instanceof ErrorWithCode) {
+    return `${error.code}: ${error.message}`;
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (typeof error === "string") {
+    return error;
+  }
+
+  return "Unknown error";
+};

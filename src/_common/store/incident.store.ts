@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 
 interface ZustandIncident {
   id: string;
+  boatId: string;
   message: string;
   sessionId: string;
   datetime: string;

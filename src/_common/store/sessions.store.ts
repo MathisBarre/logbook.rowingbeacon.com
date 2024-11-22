@@ -46,8 +46,10 @@ interface ZustandSessionsStoreState {
     }
   ) => void;
   getOngoingSessions: () => ZustandSession[];
+  getOngoingSession: (sessionId: string) => ZustandSession | undefined;
   getCompletedSessions: () => ZustandSession[];
   findOngoingSessionByBoatId: (boatId: string) => ZustandSession | undefined;
+  removeSession: (sessionId: string) => void;
   reset: () => void;
   bulkAddSessions: (sessions: ZustandSession[]) => void;
 }
@@ -103,6 +105,10 @@ export const useSessionsStore = create<ZustandSessionsStoreState>()(
           return get().session.filter((session) => !session.endDateTime);
         },
 
+        getOngoingSession(sessionId) {
+          return get().session.find((session) => session.id === sessionId);
+        },
+
         getCompletedSessions() {
           return get().session.filter((session) => session.endDateTime);
         },
@@ -117,6 +123,16 @@ export const useSessionsStore = create<ZustandSessionsStoreState>()(
           set((state) => {
             return {
               session: [...state.session, ...sessions],
+            };
+          });
+        },
+
+        removeSession(sessionId) {
+          set((state) => {
+            return {
+              session: state.session.filter(
+                (session) => session.id !== sessionId
+              ),
             };
           });
         },

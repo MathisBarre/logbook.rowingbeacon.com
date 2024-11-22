@@ -1,26 +1,25 @@
 import { z } from "zod";
-import {
-  useSessionsStore,
-  ZustandSession,
-} from "../../../_common/store/sessions.store";
+import { ZustandSession } from "../../../_common/store/sessions.store";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormField } from "../../../_common/components/Form";
 import Button from "../../../_common/components/Button";
 import { Label } from "../../../_common/components/Label";
 import CommentSection from "../StartSessionDialog/CommentSection";
-import { getCurrentDateTime, isAfter } from "../../../_common/utils/date.utils";
+import { getCurrentDateTime } from "../../../_common/utils/date.utils";
 import { useState } from "react";
-import { cn } from "../../../_common/utils/utils";
-import useIncidentStore from "../../../_common/store/incident.store";
-import { getIncidenId } from "../../../_common/business/incident.rules";
+import { cn, forEnum } from "../../../_common/utils/utils";
 import { toast } from "sonner";
-import { isStringEquivalentOfUndefined } from "../../../_common/utils/string.utils";
+import { useGetStopSession } from "../../business/StopSession/StopSession.usecase";
 
 const StopSessionFormSchema = z.object({
-  endDateTime: z.string({
-    message: "Ce champ est requis",
-  }),
+  endDateTime: z
+    .string({
+      message: "Ce champ est requis",
+    })
+    .min(1, {
+      message: "Ce champ est requis",
+    }),
   comment: z.string(),
   incident: z.string().optional(),
 });
@@ -43,71 +42,54 @@ export const StopSessionForm = ({
   const form = useForm<StopSessionFormValues>({
     resolver: zodResolver(StopSessionFormSchema),
     defaultValues: {
-      endDateTime: undefined,
+      endDateTime: "",
       comment: session.comment,
     },
   });
 
-  const sessionStore = useSessionsStore();
-  const incidentStore = useIncidentStore();
   const [isIncidentOpen, setIsIncidentOpen] = useState(false);
+
+  const stopSession = useGetStopSession();
+
+  const onSubmit = form.handleSubmit(async (formPayload) => {
+    const [stopSessionError] = await stopSession.execute({
+      sessionId: session.id,
+      endDateTime: formPayload.endDateTime,
+      comment: formPayload.comment,
+      incident: {
+        checked: isIncidentOpen,
+        message: formPayload.incident,
+      },
+    });
+
+    if (stopSessionError) {
+      return forEnum(stopSessionError.code, {
+        END_DATE_BEFORE_START_DATE: () => {
+          form.setError("endDateTime", {
+            message: "La date de fin doit être postérieure à la date de début",
+          });
+        },
+        FAILED_TO_SAVE_SESSION: () => {
+          toast.error(
+            "Une erreur est survenue lors de la sauvegarde de la sortie"
+          );
+        },
+        ONGOING_SESSION_NOT_FOUND: () => {
+          toast.error(
+            "Une erreur est survenue lors de la sauvegarde de la sortie"
+          );
+        },
+      });
+    }
+
+    toast.success("La fin de la sortie a bien été enregistrée");
+
+    afterSubmit();
+  });
 
   return (
     <Form {...form}>
-      <form
-        className="flex flex-col gap-4"
-        onSubmit={form.handleSubmit(
-          async ({ comment, endDateTime, incident }) => {
-            const registeredSession = sessionStore.findOngoingSessionByBoatId(
-              session.boat.id
-            );
-
-            if (
-              registeredSession?.startDateTime &&
-              isAfter(
-                new Date(registeredSession?.startDateTime),
-                new Date(endDateTime)
-              )
-            ) {
-              form.setError("endDateTime", {
-                message:
-                  "La date de fin doit être postérieure à la date de début",
-              });
-              return;
-            }
-
-            sessionStore.stopSession(session.boat.id, {
-              endDateTime: endDateTime,
-              comment: comment,
-            });
-
-            toast.success("La sortie a bien été terminée");
-
-            if (isIncidentOpen) {
-              const emptyMessage = "Aucun détail renseigné";
-
-              const incidentMessage = isStringEquivalentOfUndefined(incident)
-                ? emptyMessage
-                : incident || emptyMessage;
-
-              const incidentPayload = {
-                id: getIncidenId(),
-                message: incidentMessage,
-                sessionId: session.id,
-                datetime: endDateTime,
-              };
-
-              console.log("adding incident", incidentPayload);
-
-              incidentStore.addIncident(incidentPayload);
-
-              toast.success("L'incident a bien été enregistré");
-            }
-
-            afterSubmit();
-          }
-        )}
-      >
+      <form className="flex flex-col gap-4" onSubmit={onSubmit}>
         <div className="flex gap-4 items-end">
           <FormField
             name="endDateTime"
