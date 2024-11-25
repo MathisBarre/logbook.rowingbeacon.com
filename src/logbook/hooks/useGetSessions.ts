@@ -62,29 +62,25 @@ export const useGetLastSessions = (payload: {
 
       const formattedData = data.map((session) => {
         return {
-          id: session.session_id,
+          id: session.sessionId,
           rowers: clubOverview.getRowersById(
-            (session.rower_ids || "").split(",")
+            (session.rowerIds || "").split(",")
           ),
-          boat: clubOverview.getBoatById(session.boat_id) || {
-            id: session.boat_id,
+          boat: clubOverview.getBoatById(session.boatId) || {
+            id: session.boatId,
             name: "NOT_FOUND",
           },
-          startDateTime: new Date(session.start_date_time),
-          endDateTime: session.end_date_time
-            ? new Date(session.end_date_time)
-            : null,
-          estimatedEndDateTime: session.estimated_end_date_time
-            ? new Date(session.estimated_end_date_time)
-            : null,
-          comment: session.comment || null,
-          route: session.route_id
-            ? clubOverview.getRouteById(session.route_id) || {
-                id: session.route_id,
+          startDateTime: session.startDateTime,
+          endDateTime: session.endDateTime,
+          estimatedEndDateTime: session.estimatedEndDateTime,
+          comment: session.comment,
+          route: session.routeId
+            ? clubOverview.getRouteById(session.routeId) || {
+                id: session.routeId,
                 name: "NOT_FOUND",
               }
             : null,
-          incident: session.incident_id ? { id: session.incident_id } : null,
+          incident: session.incidentId ? { id: session.incidentId } : null,
         };
       });
 

@@ -7,17 +7,19 @@ export const sessionRepository = {
     order: {
       startDateTime: "DESC";
     };
+    fromDate?: Date;
+    toDate?: Date;
   }): Promise<
     {
-      session_id: string;
-      boat_id: string;
-      start_date_time: string;
-      estimated_end_date_time: string | null;
-      route_id: string | null;
-      end_date_time: string | null;
-      incident_id: string | null;
+      sessionId: string;
+      boatId: string;
+      startDateTime: Date;
+      estimatedEndDateTime: Date | null;
+      routeId: string | null;
+      endDateTime: Date | null;
+      incidentId: string | null;
       comment: string | null;
-      rower_ids: string | null;
+      rowerIds: string | null;
     }[]
   > => {
     const { pageSize, skip } = payload;
@@ -62,7 +64,17 @@ export const sessionRepository = {
   
       `);
 
-    return result;
+    return result.map((session) => ({
+      sessionId: session.session_id,
+      boatId: session.boat_id,
+      comment: session.comment,
+      endDateTime: getDateOrNull(session.end_date_time),
+      estimatedEndDateTime: getDateOrNull(session.estimated_end_date_time),
+      incidentId: session.incident_id,
+      routeId: session.route_id,
+      rowerIds: session.rower_ids,
+      startDateTime: new Date(session.start_date_time),
+    }));
   },
 
   getTotalNumberOfSessions: async (): Promise<number> => {
@@ -77,4 +89,8 @@ export const sessionRepository = {
 
     return result[0].count;
   },
+};
+
+const getDateOrNull = (date: string | null) => {
+  return date ? new Date(date) : null;
 };
