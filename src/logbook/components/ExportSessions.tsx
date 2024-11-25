@@ -29,8 +29,6 @@ export const ExportSessions = () => {
   });
 
   const handleSubmit = form.handleSubmit(async (data) => {
-    // TODO - Password protection
-
     const exportLocation = await save({
       title: "RowingBeacon - Export des sessions",
       canCreateDirectories: true,
