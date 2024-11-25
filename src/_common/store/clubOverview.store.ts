@@ -54,6 +54,7 @@ export interface ClubOverviewStoreState {
   deleteRower: (rowerId: string) => void;
   addRower: (rowerName: string) => void;
   getRowersById: (rowersId: string[]) => ClubOverviewState["rowers"];
+  getRowerById: (rowerId: string) => ClubOverviewState["rowers"][0] | undefined;
 
   reset: () => void;
 }
@@ -100,6 +101,12 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
         getRowersById: (rowersId: string[]) => {
           return get().clubOverview.rowers.filter((rower) =>
             rowersId.includes(rower.id)
+          );
+        },
+
+        getRowerById: (rowerId: string) => {
+          return get().clubOverview.rowers.find(
+            (rower) => rower.id === rowerId
           );
         },
 

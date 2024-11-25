@@ -9,6 +9,8 @@ import { Label } from "../../_common/components/Label";
 import { addMonths, getDateTime } from "../../_common/utils/date.utils";
 import { save } from "@tauri-apps/plugin-dialog";
 import { toast } from "sonner";
+import { sessionRepository } from "../SessionRepository";
+import { useExportSessions } from "../hooks/useExportSessions";
 
 const ExportSessionsFormSchema = z.object({
   fromDate: dateStringSchema,
@@ -28,33 +30,9 @@ export const ExportSessions = () => {
     },
   });
 
-  const handleSubmit = form.handleSubmit(async (data) => {
-    const exportLocation = await save({
-      title: "RowingBeacon - Export des sessions",
-      canCreateDirectories: true,
-      defaultPath: `RowingBeacon_sessions_export.${data.fileType}`,
-    });
+  const exportSessions = useExportSessions();
 
-    if (!exportLocation) {
-      return toast.error("L'export a échoué");
-    }
-
-    const { fileDirectory, fileName } = getInfosFromPath(exportLocation);
-
-    exportData({
-      data: [
-        {
-          foo: "bar",
-          baz: "qux",
-        },
-      ],
-      fileName,
-      fileType: data.fileType,
-      fileDirectory,
-    });
-
-    toast.success("Export réussi");
-  });
+  const handleSubmit = form.handleSubmit(exportSessions);
 
   return (
     <form

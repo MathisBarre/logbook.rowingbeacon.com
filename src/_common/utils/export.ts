@@ -4,7 +4,7 @@ import { writeTextFile, writeFile } from "@tauri-apps/plugin-fs";
 export type ExportType = "xlsx" | "ods" | "json" | "csv";
 
 export const exportSpreadsheet = (args: {
-  data: any[];
+  data: Record<string, string>[];
   fileName: string;
   fileType: "xlsx" | "ods";
   fileDirectory: string;
@@ -39,7 +39,7 @@ const saveTextFile = (args: { content: string; fullPath: string }) => {
 };
 
 const getFullPath = (args: {
-  data: any[];
+  data: Record<string, string>[];
   fileName: string;
   fileType: ExportType;
   fileDirectory: string;
@@ -48,7 +48,7 @@ const getFullPath = (args: {
 };
 
 export const exportJson = (args: {
-  data: any[];
+  data: Record<string, string>[];
   fileName: string;
   fileType: ExportType;
   fileDirectory: string;
@@ -63,7 +63,7 @@ export const exportJson = (args: {
 };
 
 export const exportCsv = (args: {
-  data: any[];
+  data: Record<string, string>[];
   fileName: string;
   fileType: ExportType;
   fileDirectory: string;
@@ -83,7 +83,7 @@ export const exportCsv = (args: {
 };
 
 export const exportData = (args: {
-  data: any[];
+  data: Record<string, string>[];
   fileName: string;
   fileType: ExportType;
   fileDirectory: string;

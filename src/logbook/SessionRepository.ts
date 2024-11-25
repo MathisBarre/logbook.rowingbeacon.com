@@ -3,7 +3,7 @@ import { getDateTimeWithoutTimezone } from "../_common/utils/date.utils";
 
 export const sessionRepository = {
   getSessions: async (payload: {
-    pageSize: number;
+    maxPageSize: number;
     skip: number;
     order: {
       startDateTime: "DESC";
@@ -43,7 +43,7 @@ export const sessionRepository = {
       toDateFilter = `AND s.end_date_time <= '${toDateTime}'`;
     }
 
-    const { pageSize, skip } = payload;
+    const { maxPageSize: pageSize, skip } = payload;
 
     const db = await getDatabase();
 

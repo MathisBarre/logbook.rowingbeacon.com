@@ -59,7 +59,7 @@ export const useGetLastSessions = (payload: {
         setNumberOfPages(numberOfPages);
 
         const data = await sessionRepository.getSessions({
-          pageSize,
+          maxPageSize: pageSize,
           skip: (currentPage - 1) * pageSize,
           order: {
             startDateTime: "DESC",
