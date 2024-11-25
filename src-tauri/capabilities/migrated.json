@@ -12,13 +12,6 @@
     "sql:allow-execute",
     "dialog:default",
     "fs:default",
-    "fs:allow-data-write-recursive",
-    "fs:allow-desktop-write-recursive",
-    "fs:allow-document-write-recursive",
-    "fs:allow-download-write-recursive",
-    "fs:allow-home-write-recursive",
-    "fs:allow-public-write-recursive",
-    "fs:allow-resource-write-recursive",
-    "fs:allow-temp-write-recursive"
+    "fs:allow-home-write-recursive"
   ]
 }
