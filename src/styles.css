@@ -93,6 +93,10 @@
   .input {
     @apply border border-gray-400 rounded shadow-sm focus:ring-1 focus:ring-steel-blue-500;
   }
+
+  .form-error {
+    @apply text-xs text-error-600;
+  }
 }
 
 @layer utilities {

@@ -92,7 +92,7 @@ export const StartSessionForm = ({
     <div>
       <Form {...form}>
         <form
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-6"
           onSubmit={form.handleSubmit(async (values) => {
             await startSession(formatValuesForSubmission(values));
           })}
@@ -169,7 +169,7 @@ export const StartSessionForm = ({
             />
           )}
 
-          <div className="flex gap-4">
+          <div className="flex gap-6">
             <FormField
               name="boat"
               control={form.control}
@@ -210,7 +210,7 @@ export const StartSessionForm = ({
             )}
           />
 
-          <div className="flex gap-4">
+          <div className="flex gap-6">
             <FormField
               name="startDateTime"
               control={form.control}
@@ -244,7 +244,7 @@ export const StartSessionForm = ({
             )}
           />
 
-          <div className="flex gap-4">
+          <div className="flex gap-6">
             <Button
               type="button"
               variant="outlined"
@@ -276,7 +276,7 @@ const StartSessionAlert = ({
 }) => {
   return (
     <div className="absolute inset-0 bg-white bg-opacity-80 backdrop-blur-sm z-10">
-      <div className=" flex justify-center items-center flex-col h-full mx-auto px-16 gap-4">
+      <div className=" flex justify-center items-center flex-col h-full mx-auto px-16 gap-6">
         <CircleAlertIcon className="h-8 w-8 text-error-700" />
         <p className="text-center max-w-96">
           <TextContent />
