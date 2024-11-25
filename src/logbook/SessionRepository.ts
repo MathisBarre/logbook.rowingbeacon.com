@@ -90,8 +90,6 @@ export const sessionRepository = {
       }[]
     >(query);
 
-    console.log(result);
-
     return result.map((session) => ({
       sessionId: session.session_id,
       boatId: session.boat_id,

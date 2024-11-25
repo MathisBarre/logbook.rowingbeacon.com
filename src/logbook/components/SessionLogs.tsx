@@ -59,7 +59,7 @@ export const SessionLogs = () => {
           }}
         >
           <DialogContent
-            title="Exporter l'historique des sessions"
+            title="Exporter l'historique des sorties"
             className="max-w-xl"
           >
             <ExportSessions />

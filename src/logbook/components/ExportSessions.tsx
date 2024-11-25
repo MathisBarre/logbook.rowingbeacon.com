@@ -4,12 +4,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField } from "../../_common/components/Form";
 import Button from "../../_common/components/Button";
-import { exportData, getInfosFromPath } from "../../_common/utils/export";
 import { Label } from "../../_common/components/Label";
 import { addMonths, getDateTime } from "../../_common/utils/date.utils";
-import { save } from "@tauri-apps/plugin-dialog";
-import { toast } from "sonner";
-import { sessionRepository } from "../SessionRepository";
 import { useExportSessions } from "../hooks/useExportSessions";
 
 const ExportSessionsFormSchema = z.object({
@@ -30,7 +26,7 @@ export const ExportSessions = () => {
     },
   });
 
-  const exportSessions = useExportSessions();
+  const { exportSessions, isLoading } = useExportSessions();
 
   const handleSubmit = form.handleSubmit(exportSessions);
 
@@ -102,7 +98,9 @@ export const ExportSessions = () => {
           )}
         />
       </div>
-      <Button type="submit">Exporter</Button>
+      <Button loading={isLoading} type="submit">
+        Exporter
+      </Button>
     </form>
   );
 };

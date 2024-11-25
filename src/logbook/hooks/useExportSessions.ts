@@ -9,10 +9,12 @@ import { save } from "@tauri-apps/plugin-dialog";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { getDateTimeWithoutTimezone } from "../../_common/utils/date.utils";
 import useIncidentStore from "../../_common/store/incident.store";
+import { useState } from "react";
 
 export const useExportSessions = () => {
   const clubOverview = useClubOverviewStore();
   const incidentStore = useIncidentStore();
+  const [isLoading, setIsLoading] = useState(false);
 
   const getSessions = async (data: { fromDate: string; toDate: string }) => {
     const sessionsDB = await sessionRepository.getSessions({
@@ -84,32 +86,49 @@ export const useExportSessions = () => {
     });
   };
 
-  return async (data: {
+  const exportSessions = async (data: {
     fromDate: string;
     toDate: string;
     fileType: ExportType;
   }) => {
-    const sessions = await getSessions(data);
+    try {
+      setIsLoading(true);
 
-    const exportLocation = await save({
-      title: "RowingBeacon - Export des sessions",
-      canCreateDirectories: true,
-      defaultPath: `RowingBeacon_sessions_export.${data.fileType}`,
-    });
+      const exportLocation = await save({
+        title: "RowingBeacon - Export des sorties",
+        canCreateDirectories: true,
+        defaultPath: `RowingBeacon_sessions.${data.fileType}`,
+      });
 
-    if (!exportLocation) {
-      return toast.error("L'export a échoué");
+      if (!exportLocation) {
+        return;
+      }
+
+      const { fileDirectory, fileName } = getInfosFromPath(exportLocation);
+
+      const sessions = await getSessions(data);
+
+      if (sessions.length === 0) {
+        return toast.error("Aucune session trouvée avec ces filtres");
+      }
+
+      exportData({
+        data: sessions,
+        fileName,
+        fileType: data.fileType,
+        fileDirectory,
+      });
+
+      toast.success("Export réussi");
+    } catch {
+      toast.error("Erreur lors de l'export");
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    const { fileDirectory, fileName } = getInfosFromPath(exportLocation);
-
-    exportData({
-      data: sessions,
-      fileName,
-      fileType: data.fileType,
-      fileDirectory,
-    });
-
-    toast.success("Export réussi");
+  return {
+    exportSessions,
+    isLoading,
   };
 };
