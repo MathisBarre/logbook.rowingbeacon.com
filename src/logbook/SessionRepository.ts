@@ -47,19 +47,7 @@ export const sessionRepository = {
 
     const db = await getDatabase();
 
-    const result = await db.select<
-      {
-        session_id: string;
-        boat_id: string;
-        start_date_time: string;
-        estimated_end_date_time: string | null;
-        route_id: string | null;
-        end_date_time: string | null;
-        incident_id: string | null;
-        comment: string | null;
-        rower_ids: string | null;
-      }[]
-    >(/* sql */ `
+    const query = /* sql */ `
       SELECT 
         s.id AS session_id,
         s.boat_id,
@@ -74,6 +62,10 @@ export const sessionRepository = {
         session s
       LEFT JOIN 
         session_rowers sr ON s.id = sr.session_id
+      WHERE
+        1=1
+        ${fromDateFilter}
+        ${toDateFilter}
       GROUP BY 
         s.id
       ORDER BY 
@@ -82,11 +74,23 @@ export const sessionRepository = {
         ${pageSize}
       OFFSET
         ${skip}
-      WHERE
-        1=1
-        ${fromDateFilter}
-        ${toDateFilter}
-      `);
+    `;
+
+    const result = await db.select<
+      {
+        session_id: string;
+        boat_id: string;
+        start_date_time: string;
+        estimated_end_date_time: string | null;
+        route_id: string | null;
+        end_date_time: string | null;
+        incident_id: string | null;
+        comment: string | null;
+        rower_ids: string | null;
+      }[]
+    >(query);
+
+    console.log(result);
 
     return result.map((session) => ({
       sessionId: session.session_id,

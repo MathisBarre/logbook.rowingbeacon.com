@@ -32,7 +32,7 @@ export function SessionHistoryTable({
 }: SessionHistoryTableProps) {
   return (
     <div className="overflow-auto pb-32">
-      {sessionsInTableList.length === 0 && (
+      {sessionsInTableList.length === 0 && !loading && (
         <p className="text-center py-16">Aucune session</p>
       )}
 
