@@ -17,7 +17,7 @@ export const exportSpreadsheet = (args: {
 
   const file = new Uint8Array(
     XLSX.write(wb, {
-      type: "file",
+      type: "array",
       bookType: args.fileType,
     })
   );

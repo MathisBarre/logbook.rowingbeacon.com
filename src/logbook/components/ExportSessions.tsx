@@ -43,7 +43,7 @@ export const ExportSessions = () => {
 
     const { fileDirectory, fileName } = getInfosFromPath(exportLocation);
 
-    return exportData({
+    exportData({
       data: [
         {
           foo: "bar",
@@ -54,6 +54,8 @@ export const ExportSessions = () => {
       fileType: data.fileType,
       fileDirectory,
     });
+
+    toast.success("Export réussi");
   });
 
   return (
