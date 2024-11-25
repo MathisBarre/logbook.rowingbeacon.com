@@ -53,7 +53,7 @@ function BoathouseScreen() {
       <div
         className={cn(
           "shadow-md absolute left-0 bottom-0 right-[calc(50%+0.125rem)]",
-          coachNote ? "top-11" : "top-0"
+          coachNote ? "top-10" : "top-0"
         )}
       >
         <BoatsList
@@ -66,7 +66,7 @@ function BoathouseScreen() {
       <div
         className={cn(
           "shadow-md absolute right-0 bottom-0 left-[calc(50%+0.125rem)]",
-          coachNote ? "top-11" : "top-0"
+          coachNote ? "top-10" : "top-0"
         )}
       >
         <BoatsList

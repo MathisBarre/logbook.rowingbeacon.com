@@ -6,10 +6,12 @@ import {
   useAdminEditModeSystem,
 } from "../../_common/store/adminEditMode.system";
 import { DeleteDatas } from "./DeleteDatas";
+import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 
 export const MiscParams = () => {
   const [deleteDataDialogOpen, setDeleteDataDialogOpen] = useState(false);
   const adminEditSystem = useAdminEditModeSystem();
+  const clubOverview = useClubOverviewStore();
 
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
@@ -19,38 +21,58 @@ export const MiscParams = () => {
         </h1>
       </div>
 
-      <div className="p-4">
-        <h1 className="font-bold text-xl mb-2">Actions sensibles</h1>
+      <div className="p-4 flex flex-col gap-8">
+        <section>
+          <h1 className="font-bold text-xl">La note du coach</h1>
 
-        <Button
-          type="button"
-          color="danger"
-          onClick={async () => {
-            if (
-              !adminEditSystem.allowAdminActions(await askForAdminPassword())
-            ) {
-              return;
-            }
+          <p>Cette note sera affichée en haut de la page "Boathouse"</p>
 
-            setDeleteDataDialogOpen(true);
-          }}
-        >
-          Supprimer toutes les données
-        </Button>
+          <textarea
+            cols={64}
+            rows={4}
+            className="input resize"
+            name="coachnote"
+            id="coachnote"
+            onChange={(e) => {
+              clubOverview.setCoachNote(e.target.value);
+            }}
+            value={clubOverview.coachNote}
+          />
+        </section>
 
-        <Dialog
-          open={deleteDataDialogOpen}
-          onOpenChange={(open) => {
-            setDeleteDataDialogOpen(open);
-          }}
-        >
-          <DialogContent
-            title="Supprimer toutes les données !"
-            className="max-w-xl"
+        <section>
+          <h1 className="font-bold text-xl mb-2">Actions sensibles</h1>
+
+          <Button
+            type="button"
+            color="danger"
+            onClick={async () => {
+              if (
+                !adminEditSystem.allowAdminActions(await askForAdminPassword())
+              ) {
+                return;
+              }
+
+              setDeleteDataDialogOpen(true);
+            }}
           >
-            <DeleteDatas />
-          </DialogContent>
-        </Dialog>
+            Supprimer toutes les données
+          </Button>
+
+          <Dialog
+            open={deleteDataDialogOpen}
+            onOpenChange={(open) => {
+              setDeleteDataDialogOpen(open);
+            }}
+          >
+            <DialogContent
+              title="Supprimer toutes les données !"
+              className="max-w-xl"
+            >
+              <DeleteDatas />
+            </DialogContent>
+          </Dialog>
+        </section>
       </div>
     </div>
   );
