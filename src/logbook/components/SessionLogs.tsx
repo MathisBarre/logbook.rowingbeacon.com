@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Button from "../../_common/components/Button";
 import {
   Dialog,
@@ -15,11 +16,18 @@ export const SessionLogs = () => {
       pageSize: 24,
     });
 
+  const [isExportOpen, setIsExportOpen] = useState(false);
+
   return (
     <div className="flex-1 shadow-md bg-white flex flex-col absolute inset-0 right-1/2 mr-[.125rem] rounded overflow-hidden">
       <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between h-12 items-center">
         <h1 className="text-base ml-2">Historique des sorties</h1>
-        <Dialog>
+        <Dialog
+          open={isExportOpen}
+          onOpenChange={(open) => {
+            setIsExportOpen(open);
+          }}
+        >
           <DialogTrigger asChild>
             <button
               type="button"
@@ -29,7 +37,10 @@ export const SessionLogs = () => {
               <FileUpIcon className="h-4 w-4 ml-1" />
             </button>
           </DialogTrigger>
-          <DialogContent title="Exporter l'historique des sessions">
+          <DialogContent
+            title="Exporter l'historique des sessions"
+            className="max-w-xl"
+          >
             <ExportSessions />
           </DialogContent>
         </Dialog>

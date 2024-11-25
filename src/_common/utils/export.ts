@@ -1,5 +1,7 @@
 import * as XLSX from "xlsx";
 
+export type ExportType = "xlsx" | "ods" | "json" | "csv";
+
 export const exportSpreadsheet = (
   payload: { sheetName: string; jsonData: any[] }[],
   fileName: string,
@@ -37,11 +39,14 @@ export const exportCsv = (data: any[], fileName: string) => {
   downloadBlob(blob, `${fileName}.csv`);
 };
 
-export const exportData = (
-  data: any[],
-  fileName: string,
-  fileType: "xlsx" | "ods" | "json" | "csv"
-) => {
+export const exportData = (args: {
+  data: any[];
+  fileName: string;
+  fileType: ExportType;
+  fileDirectory: string;
+}) => {
+  const { data, fileName, fileType } = args;
+
   if (fileType === "xlsx" || fileType === "ods") {
     return exportSpreadsheet(
       [{ sheetName: fileName, jsonData: data }],
@@ -57,4 +62,17 @@ export const exportData = (
   if (fileType === "csv") {
     return exportCsv(data, fileName);
   }
+};
+
+export const getInfosFromPath = (filePath: string) => {
+  const lastSlashIndex = filePath.lastIndexOf("/");
+  const fileDirectory = filePath.slice(0, lastSlashIndex);
+
+  const [fileName, fileType] = filePath.slice(lastSlashIndex + 1).split(".");
+
+  return {
+    fileName,
+    fileType,
+    fileDirectory,
+  };
 };

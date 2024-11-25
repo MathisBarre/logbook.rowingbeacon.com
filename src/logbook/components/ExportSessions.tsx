@@ -4,14 +4,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField } from "../../_common/components/Form";
 import Button from "../../_common/components/Button";
-import { exportData } from "../../_common/utils/export";
+import { exportData, getInfosFromPath } from "../../_common/utils/export";
 import { Label } from "../../_common/components/Label";
 import { addMonths, getDateTime } from "../../_common/utils/date.utils";
+import { save } from "@tauri-apps/plugin-dialog";
+import { toast } from "sonner";
 
 const ExportSessionsFormSchema = z.object({
   fromDate: dateStringSchema,
   toDate: dateStringSchema,
-  exportDestination: z.string().optional(),
   fileType: z.enum(["ods", "xlsx", "json", "csv"]),
 });
 
@@ -27,19 +28,32 @@ export const ExportSessions = () => {
     },
   });
 
-  const handleSubmit = form.handleSubmit((data) => {
-    console.log(data);
+  const handleSubmit = form.handleSubmit(async (data) => {
+    // TODO - Password protection
 
-    return exportData(
-      [
+    const exportLocation = await save({
+      title: "RowingBeacon - Export des sessions",
+      canCreateDirectories: true,
+      defaultPath: `RowingBeacon_sessions_export.${data.fileType}`,
+    });
+
+    if (!exportLocation) {
+      return toast.error("L'export a échoué");
+    }
+
+    const { fileDirectory, fileName } = getInfosFromPath(exportLocation);
+
+    return exportData({
+      data: [
         {
           foo: "bar",
           baz: "qux",
         },
       ],
-      "sessions",
-      data.fileType
-    );
+      fileName,
+      fileType: data.fileType,
+      fileDirectory,
+    });
   });
 
   return (
@@ -58,7 +72,7 @@ export const ExportSessions = () => {
             render={({ field, fieldState }) => (
               <>
                 <Label className="flex flex-col gap-1">
-                  Date de début
+                  Depuis le
                   <input className="input" type="date" {...field} />
                 </Label>
                 {fieldState.error && (
@@ -75,7 +89,7 @@ export const ExportSessions = () => {
             render={({ field, fieldState }) => (
               <>
                 <Label className="flex flex-col gap-1">
-                  Date de fin
+                  Jusqu'au
                   <input className="input flex-1" type="date" {...field} />
                 </Label>
 
@@ -86,24 +100,6 @@ export const ExportSessions = () => {
             )}
           />
         </div>
-      </div>
-      <div>
-        <FormField
-          control={form.control}
-          name="exportDestination"
-          render={({ field, fieldState }) => (
-            <>
-              <Label className="flex flex-col gap-1">
-                Destination d'exportation
-                <input className="input" type="text" {...field} />
-              </Label>
-
-              {fieldState.error && (
-                <p className="form-error mt-1">{fieldState.error.message}</p>
-              )}
-            </>
-          )}
-        />
       </div>
       <div>
         <FormField
