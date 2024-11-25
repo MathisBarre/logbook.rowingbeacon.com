@@ -10,7 +10,7 @@ import { Label } from "../../_common/components/Label";
 const ExportSessionsFormSchema = z.object({
   fromDate: dateStringSchema,
   toDate: dateStringSchema,
-  exportDestination: z.string(),
+  exportDestination: z.string().optional(),
   fileType: z.enum(["ods", "xlsx", "json", "csv"]),
 });
 
@@ -27,7 +27,7 @@ export const ExportSessions = () => {
   const handleSubmit = form.handleSubmit((data) => {
     console.log(data);
 
-    exportData(
+    return exportData(
       [
         {
           foo: "bar",
@@ -41,46 +41,48 @@ export const ExportSessions = () => {
 
   return (
     <form
-      className="flex flex-col gap-4"
+      className="flex flex-col gap-6"
       onSubmit={(e) => {
         e.preventDefault();
         handleSubmit();
       }}
     >
-      <div>
-        <FormField
-          control={form.control}
-          name="fromDate"
-          render={({ field, fieldState }) => (
-            <>
-              <Label className="flex flex-col gap-1">
-                Date de début
-                <input className="input" type="date" {...field} />
-              </Label>
-              {fieldState.error && (
-                <p className="form-error mt-1">{fieldState.error.message}</p>
-              )}
-            </>
-          )}
-        />
-      </div>
-      <div>
-        <FormField
-          control={form.control}
-          name="toDate"
-          render={({ field, fieldState }) => (
-            <>
-              <Label className="flex flex-col gap-1">
-                Date de fin
-                <input className="input" type="date" {...field} />
-              </Label>
+      <div className="flex gap-6">
+        <div className="flex-1">
+          <FormField
+            control={form.control}
+            name="fromDate"
+            render={({ field, fieldState }) => (
+              <>
+                <Label className="flex flex-col gap-1">
+                  Date de début
+                  <input className="input" type="date" {...field} />
+                </Label>
+                {fieldState.error && (
+                  <p className="form-error mt-1">{fieldState.error.message}</p>
+                )}
+              </>
+            )}
+          />
+        </div>
+        <div className="flex-1">
+          <FormField
+            control={form.control}
+            name="toDate"
+            render={({ field, fieldState }) => (
+              <>
+                <Label className="flex flex-col gap-1">
+                  Date de fin
+                  <input className="input flex-1" type="date" {...field} />
+                </Label>
 
-              {fieldState.error && (
-                <p className="form-error mt-1">{fieldState.error.message}</p>
-              )}
-            </>
-          )}
-        />
+                {fieldState.error && (
+                  <p className="form-error mt-1">{fieldState.error.message}</p>
+                )}
+              </>
+            )}
+          />
+        </div>
       </div>
       <div>
         <FormField

@@ -15,14 +15,19 @@ export function getTime(date: string | Date) {
   });
 }
 
+export const getDateTimeWithoutTimezone = (date: string | Date) => {
+  const dateObject = new Date(date);
+  const year = dateObject.getFullYear();
+  const month = (dateObject.getMonth() + 1).toString().padStart(2, "0");
+  const day = dateObject.getDate().toString().padStart(2, "0");
+  const hour = dateObject.getHours().toString().padStart(2, "0");
+  const minute = dateObject.getMinutes().toString().padStart(2, "0");
+  return `${year}-${month}-${day}T${hour}:${minute}`;
+};
+
 export const getCurrentDateTime = () => {
   const currentDate = new Date();
-  const year = currentDate.getFullYear();
-  const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
-  const day = currentDate.getDate().toString().padStart(2, "0");
-  const hour = currentDate.getHours().toString().padStart(2, "0");
-  const minute = currentDate.getMinutes().toString().padStart(2, "0");
-  return `${year}-${month}-${day}T${hour}:${minute}`;
+  return getDateTimeWithoutTimezone(currentDate);
 };
 
 export const isToday = (date: string | Date) => {
