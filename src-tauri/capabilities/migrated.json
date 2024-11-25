@@ -9,6 +9,7 @@
     "shell:default",
     "core:window:allow-close",
     "sql:default",
-    "sql:allow-execute"
+    "sql:allow-execute",
+    "dialog:default"
   ]
 }
