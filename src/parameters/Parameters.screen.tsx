@@ -3,8 +3,9 @@ import { RowersCrud } from "./components/RowersCrud";
 import { forEnum } from "../_common/utils/utils";
 import { RoutesCrud } from "./components/RoutesCrud";
 import { BoatCrud } from "./components/BoatsCrud";
+import { MiscParams } from "./components/MiscParams";
 
-type Page = "rowers" | "routes" | "boats";
+type Page = "rowers" | "routes" | "boats" | "misc";
 
 export const ParametersScreen = () => {
   const [page, setPage] = useState<Page>("rowers");
@@ -16,10 +17,17 @@ export const ParametersScreen = () => {
           rowers: () => <RowersCrud />,
           routes: () => <RoutesCrud />,
           boats: () => <BoatCrud />,
+          misc: () => <MiscParams />,
         })}
       </div>
 
       <nav className="flex gap-1">
+        <NavigationButton
+          label="Paramètres divers"
+          page="misc"
+          currentPage={page}
+          setPage={setPage}
+        />
         <NavigationButton
           label="Parcours"
           page="routes"

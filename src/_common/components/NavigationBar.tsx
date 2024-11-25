@@ -2,7 +2,6 @@ import {
   askForAdminPassword,
   useAdminEditModeSystem,
 } from "../store/adminEditMode.system";
-import { useLogout } from "../utils/logout";
 import { useZoom } from "../utils/zoom";
 import { ArrowLeftStartOnRectangleIcon } from "@heroicons/react/16/solid";
 import { version } from "../../../package.json";
@@ -15,7 +14,6 @@ import { LockIcon } from "lucide-react";
 
 export const NavigationBar = () => {
   const { zoomIn, zoomOut, zoomPercentage } = useZoom();
-  const logout = useLogout();
   const adminEditSystem = useAdminEditModeSystem();
   const {
     setPage,
@@ -27,20 +25,6 @@ export const NavigationBar = () => {
     <>
       <div className="h-8 flex justify-end gap-1">
         <div className="flex items-center gap-3 bg-steel-blue-800 text-white pl-1 pr-3 rounded relative group">
-          <button
-            onClick={async () => {
-              if (
-                adminEditSystem.allowAdminActions(await askForAdminPassword())
-              ) {
-                await logout();
-              }
-            }}
-            type="button"
-            className="absolute inset-0 items-center justify-center bg-error-800 rounded hidden group-hover:flex"
-          >
-            Reset data
-          </button>
-
           <div className="flex flex-col justify-center">
             <span className="text-sm leading-3 font-medium">RowingBeacon</span>
             <span className="text-xs leading-3">Logbook</span>

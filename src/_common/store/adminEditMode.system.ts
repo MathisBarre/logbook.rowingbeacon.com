@@ -7,12 +7,20 @@ export const useAdminEditModeSystem = () => {
   const store = adminEditModeStore();
   const onboardingStore = useClubOverviewStore();
 
+  const isAdminPassword = (pswd: string | null) => {
+    if (pswd === null) {
+      return false;
+    }
+
+    return pswd === onboardingStore.clubOverview?.club.password;
+  };
+
   const startAdminEditMode = (pswd: string | null) => {
     if (pswd === null) {
       return;
     }
 
-    if (pswd === onboardingStore.clubOverview?.club.password) {
+    if (isAdminPassword(pswd)) {
       store.startAdminEditMode();
     } else {
       wrongAdminPassword();
@@ -24,7 +32,7 @@ export const useAdminEditModeSystem = () => {
       return;
     }
 
-    if (pswd === onboardingStore.clubOverview?.club.password) {
+    if (isAdminPassword(pswd)) {
       closeApp();
     } else {
       wrongAdminPassword();
@@ -36,11 +44,7 @@ export const useAdminEditModeSystem = () => {
   };
 
   const allowAdminActions = (pswd: string | null): boolean => {
-    if (pswd === null) {
-      return false;
-    }
-
-    if (pswd === onboardingStore.clubOverview?.club.password) {
+    if (isAdminPassword(pswd)) {
       return true;
     } else {
       wrongAdminPassword();
@@ -54,6 +58,7 @@ export const useAdminEditModeSystem = () => {
     alertUserIsNotAdmin: wrongAdminPassword,
     closeApp: close,
     allowAdminActions,
+    isAdminPassword,
   };
 };
 
