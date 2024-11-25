@@ -101,82 +101,85 @@ export const BoatCrud = () => {
         </div>
 
         <div className="flex-1 relative">
-          <div className="absolute inset-0 overflow-y-auto grid gap-4 grid-cols-2 p-4 border rounded">
-            {sortedBoats.map((boat) => {
-              return (
-                <div
-                  className="border rounded pl-4 flex items-center"
-                  key={boat.id}
-                >
-                  {boat.name}
-
-                  <div className="flex-1"></div>
-
-                  <Separator />
-                  <EditButton
-                    onClick={async () => {
-                      const newBoatName = await windowPrompt(
-                        "Nouveau nom du bateau",
-                        boat.name
-                      );
-
-                      if (newBoatName) {
-                        updateBoatName(boat.id, newBoatName);
-                      }
-                    }}
+          <div className="absolute inset-0 overflow-y-auto p-4 border rounded flex flex-col">
+            <div className="grid gap-4 grid-cols-2">
+              {sortedBoats.map((boat) => {
+                return (
+                  <div
+                    className="border rounded pl-4 flex items-center"
+                    key={boat.id}
                   >
-                    <PencilIcon className="text-steel-blue-800 h-4 w-4" />{" "}
-                    <TypeIcon className="text-steel-blue-800 h-4 w-4" />
-                  </EditButton>
-                  <Separator />
-                  <EditButton
-                    onClick={() => {
-                      toggleBoatIsInMaintenance(boat.id);
-                    }}
-                    isActive={boat.isInMaintenance}
-                  >
-                    <ConstructionIcon className="text-steel-blue-800 h-4 w-4 mr-2" />
-                    <p className="text-sm text-steel-blue-800">Maintenance</p>
-                  </EditButton>
-                  <Separator />
+                    {boat.name}
 
-                  <select
-                    className="border-none focus:ring-0 h-12 text-steel-blue-800"
-                    name="boatType"
-                    id="boatType"
-                    value={boat.type || BoatTypeEnum.OTHER}
-                    onChange={(e) => {
-                      updateBoatType(boat.id, e.target.value as BoatTypeEnum);
-                    }}
-                  >
-                    {boathTypeWithLabel.map((type) => (
-                      <option
-                        key={type.type}
-                        value={type.type}
-                        selected={type.type === boat.type}
-                      >
-                        {type.label}
-                      </option>
-                    ))}
-                  </select>
+                    <div className="flex-1"></div>
 
-                  <Separator />
-                  <EditButton
-                    onClick={async () => {
-                      if (
-                        await windowConfirm(
-                          `Voulez-vous vraiment supprimer définitivement le bateau "${boat.name}" ? Il ne sera plus possible de renseigner des sorties avec ce bateau mais les sorties déjà effectuées resteront enregistrées.`
-                        )
-                      ) {
-                        deleteBoat(boat.id);
-                      }
-                    }}
-                  >
-                    <Trash2Icon className="h-4 w-4 cursor-pointer text-error-900" />
-                  </EditButton>
-                </div>
-              );
-            })}
+                    <Separator />
+                    <EditButton
+                      onClick={async () => {
+                        const newBoatName = await windowPrompt(
+                          "Nouveau nom du bateau",
+                          boat.name
+                        );
+
+                        if (newBoatName) {
+                          updateBoatName(boat.id, newBoatName);
+                        }
+                      }}
+                    >
+                      <PencilIcon className="text-steel-blue-800 h-4 w-4" />{" "}
+                      <TypeIcon className="text-steel-blue-800 h-4 w-4" />
+                    </EditButton>
+                    <Separator />
+                    <EditButton
+                      onClick={() => {
+                        toggleBoatIsInMaintenance(boat.id);
+                      }}
+                      isActive={boat.isInMaintenance}
+                    >
+                      <ConstructionIcon className="text-steel-blue-800 h-4 w-4 mr-2" />
+                      <p className="text-sm text-steel-blue-800">Maintenance</p>
+                    </EditButton>
+                    <Separator />
+
+                    <select
+                      className="border-none focus:ring-0 h-12 text-steel-blue-800"
+                      name="boatType"
+                      id="boatType"
+                      value={boat.type || BoatTypeEnum.OTHER}
+                      onChange={(e) => {
+                        updateBoatType(boat.id, e.target.value as BoatTypeEnum);
+                      }}
+                    >
+                      {boathTypeWithLabel.map((type) => (
+                        <option
+                          key={type.type}
+                          value={type.type}
+                          selected={type.type === boat.type}
+                        >
+                          {type.label}
+                        </option>
+                      ))}
+                    </select>
+
+                    <Separator />
+                    <EditButton
+                      onClick={async () => {
+                        if (
+                          await windowConfirm(
+                            `Voulez-vous vraiment supprimer définitivement le bateau "${boat.name}" ? Il ne sera plus possible de renseigner des sorties avec ce bateau mais les sorties déjà effectuées resteront enregistrées.`
+                          )
+                        ) {
+                          deleteBoat(boat.id);
+                        }
+                      }}
+                    >
+                      <Trash2Icon className="h-4 w-4 cursor-pointer text-error-900" />
+                    </EditButton>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="flex-1" />
           </div>
         </div>
       </div>
