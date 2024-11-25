@@ -12,6 +12,7 @@
     "sql:allow-execute",
     "dialog:default",
     "fs:default",
-    "fs:allow-home-write-recursive"
+    "fs:allow-home-write-recursive",
+    "autostart:default"
   ]
 }

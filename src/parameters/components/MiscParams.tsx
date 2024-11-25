@@ -7,11 +7,13 @@ import {
 } from "../../_common/store/adminEditMode.system";
 import { DeleteDatas } from "./DeleteDatas";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
+import { useAutoStart } from "../hooks/useAutoStart";
 
 export const MiscParams = () => {
   const [deleteDataDialogOpen, setDeleteDataDialogOpen] = useState(false);
   const adminEditSystem = useAdminEditModeSystem();
   const clubOverview = useClubOverviewStore();
+  const { autoStartState, enableAutoStart, disableAutoStart } = useAutoStart();
 
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
@@ -38,6 +40,38 @@ export const MiscParams = () => {
             }}
             value={clubOverview.coachNote}
           />
+        </section>
+
+        <section>
+          <h1 className="font-bold text-xl">Démarrage automatique</h1>
+          <p>
+            En activant cette option, RowingBeacon se lancera au démarrage du
+            système
+          </p>
+
+          {autoStartState === "pending" && <p>Chargement...</p>}
+          {autoStartState === "activated" && (
+            <>
+              <p>
+                Le démarrage automatique est{" "}
+                <span className="font-bold underline">activé</span>
+              </p>
+              <Button type="button" onClick={disableAutoStart} className="mt-2">
+                Désactiver le démarrage automatique
+              </Button>
+            </>
+          )}
+          {autoStartState === "not-activated" && (
+            <>
+              <p>
+                Le démarrage automatique est{" "}
+                <span className="font-bold underline">désactivé</span>
+              </p>
+              <Button type="button" onClick={enableAutoStart} className="mt-2">
+                Activer le démarrage automatique
+              </Button>
+            </>
+          )}
         </section>
 
         <section>
