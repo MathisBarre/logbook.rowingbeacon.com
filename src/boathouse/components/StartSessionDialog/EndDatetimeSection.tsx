@@ -19,7 +19,7 @@ const EndDatetimeSection = ({
         value={value}
         onChange={onChange}
       />
-      {errorMessage && <p className="text-xs text-error-600">{errorMessage}</p>}
+      {errorMessage && <p className="form-error">{errorMessage}</p>}
     </div>
   );
 };

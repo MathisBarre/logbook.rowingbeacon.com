@@ -105,9 +105,7 @@ export const StopSessionForm = ({
                     onChange={field.onChange}
                   />
                   {fieldState?.error?.message && (
-                    <p className="text-xs text-error-600">
-                      {fieldState.error.message}
-                    </p>
+                    <p className="form-error">{fieldState.error.message}</p>
                   )}
                 </div>
               );
