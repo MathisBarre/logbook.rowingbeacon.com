@@ -23,6 +23,7 @@
     "@radix-ui/react-select": "^1.2.2",
     "@radix-ui/react-slot": "^1.0.2",
     "@tauri-apps/plugin-dialog": "~2",
+    "@tauri-apps/plugin-fs": "~2",
     "@tauri-apps/plugin-shell": "~2",
     "@tauri-apps/plugin-sql": "~2",
     "@types/uuid": "^9.0.8",
