@@ -1,13 +1,14 @@
 import { generateIncidenId } from "../../../_common/business/incident.rules";
 import useIncidentStore from "../../../_common/store/incident.store";
 import { useSessionsStore } from "../../../_common/store/sessions.store";
-import { isAfter, toISODateFormat } from "../../../_common/utils/date.utils";
+import {
+  getDateTimeWithoutTimezone,
+  isAfter,
+  toISODateFormat,
+} from "../../../_common/utils/date.utils";
 import { asError, asOk, SimpleResult } from "../../../_common/utils/error";
 import { isStringEquivalentOfUndefined } from "../../../_common/utils/string.utils";
-import {
-  getDatabase,
-  rollbackIfPossible,
-} from "../../../_common/database/database";
+import { getDatabase } from "../../../_common/database/database";
 
 interface ISessionStore {
   getOngoingSession(sessionId: string):
@@ -185,10 +186,10 @@ class SessionDatabaseRepository implements ISessionDatabaseRepository {
         [
           session.id,
           session.boatId,
-          session.startDateTime,
-          session.estimatedEndDateTime,
+          getDateTimeWithoutTimezone(session.startDateTime),
+          getDateTimeWithoutTimezone(session.estimatedEndDateTime),
           session.routeId,
-          session.endDateTime,
+          getDateTimeWithoutTimezone(session.endDateTime),
           session.incidentId,
           session.comment,
         ]

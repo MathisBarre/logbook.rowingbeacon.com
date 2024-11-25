@@ -1,4 +1,5 @@
 import { getDatabase } from "../_common/database/database";
+import { getDateTimeWithoutTimezone } from "../_common/utils/date.utils";
 
 export const sessionRepository = {
   getSessions: async (payload: {
@@ -22,6 +23,26 @@ export const sessionRepository = {
       rowerIds: string | null;
     }[]
   > => {
+    const _fromDateTime = getStartOfDay(payload.fromDate);
+    const fromDateTime = _fromDateTime
+      ? getDateTimeWithoutTimezone(_fromDateTime)
+      : undefined;
+    const _toDateTime = getEndOfDay(payload.toDate);
+    const toDateTime = _toDateTime
+      ? getDateTimeWithoutTimezone(_toDateTime)
+      : undefined;
+
+    let fromDateFilter = "";
+    let toDateFilter = "";
+
+    if (fromDateTime) {
+      fromDateFilter = `AND s.start_date_time >= '${fromDateTime}'`;
+    }
+
+    if (toDateTime) {
+      toDateFilter = `AND s.end_date_time <= '${toDateTime}'`;
+    }
+
     const { pageSize, skip } = payload;
 
     const db = await getDatabase();
@@ -61,7 +82,10 @@ export const sessionRepository = {
         ${pageSize}
       OFFSET
         ${skip}
-  
+      WHERE
+        1=1
+        ${fromDateFilter}
+        ${toDateFilter}
       `);
 
     return result.map((session) => ({
@@ -93,4 +117,24 @@ export const sessionRepository = {
 
 const getDateOrNull = (date: string | null) => {
   return date ? new Date(date) : null;
+};
+
+const getStartOfDay = (date: Date | undefined) => {
+  if (!date) {
+    return undefined;
+  }
+
+  const dateObject = new Date(date);
+  dateObject.setHours(0, 0, 0, 0);
+  return dateObject;
+};
+
+const getEndOfDay = (date: Date | undefined) => {
+  if (!date) {
+    return undefined;
+  }
+
+  const dateObject = new Date(date);
+  dateObject.setHours(23, 59, 59, 999);
+  return dateObject;
 };
