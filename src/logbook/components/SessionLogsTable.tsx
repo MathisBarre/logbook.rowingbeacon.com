@@ -24,16 +24,24 @@ export interface SessionInTable {
 interface SessionHistoryTableProps {
   sessionsInTableList: SessionInTable[];
   loading: boolean;
+  errorMessage?: string | null;
 }
 
 export function SessionHistoryTable({
   sessionsInTableList,
   loading,
+  errorMessage,
 }: SessionHistoryTableProps) {
   return (
     <div className="overflow-auto pb-32">
-      {sessionsInTableList.length === 0 && !loading && (
+      {sessionsInTableList.length === 0 && !loading && !errorMessage && (
         <p className="text-center py-16">Aucune session</p>
+      )}
+
+      {errorMessage && (
+        <div className="flex justify-center items-center py-16">
+          <p className="text-red-500">Erreur lors du chargement des sessions</p>
+        </div>
       )}
 
       {loading && (

@@ -11,10 +11,17 @@ import { SessionHistoryTable } from "./SessionLogsTable";
 import { ChevronLeftIcon, ChevronRightIcon, FileUpIcon } from "lucide-react";
 
 export const SessionLogs = () => {
-  const { numberOfPages, currentPage, next, prev, loading, sessions } =
-    useGetLastSessions({
-      pageSize: 24,
-    });
+  const {
+    numberOfPages,
+    currentPage,
+    next,
+    prev,
+    loading,
+    sessions,
+    errorMessage,
+  } = useGetLastSessions({
+    pageSize: 24,
+  });
 
   const [isExportOpen, setIsExportOpen] = useState(false);
 
@@ -46,7 +53,11 @@ export const SessionLogs = () => {
         </Dialog>
       </div>
 
-      <SessionHistoryTable sessionsInTableList={sessions} loading={loading} />
+      <SessionHistoryTable
+        sessionsInTableList={sessions}
+        loading={loading}
+        errorMessage={errorMessage}
+      />
 
       <section className="shadow border py-4 px-8 absolute z-10 bg-white p-2 rounded bottom-4 left-1/2 -translate-x-1/2">
         <p className="italic text-center">
