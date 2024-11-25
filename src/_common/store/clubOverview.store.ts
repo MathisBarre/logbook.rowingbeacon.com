@@ -56,6 +56,8 @@ export interface ClubOverviewStoreState {
   getRowersById: (rowersId: string[]) => ClubOverviewState["rowers"];
   getRowerById: (rowerId: string) => ClubOverviewState["rowers"][0] | undefined;
 
+  setHashedPassword: (password: string) => void;
+
   reset: () => void;
 }
 
@@ -75,6 +77,18 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
         clubOverview: defaultClubOverviewState,
 
         coachNote: "",
+
+        setHashedPassword: (password: string) => {
+          set((state) => ({
+            clubOverview: {
+              ...state.clubOverview,
+              club: {
+                ...state.clubOverview.club,
+                password,
+              },
+            },
+          }));
+        },
 
         setCoachNote: (coachNote: string) => {
           set(() => {

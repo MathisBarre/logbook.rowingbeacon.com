@@ -3100,7 +3100,7 @@ dependencies = [
 
 [[package]]
 name = "rowing-beacon-tauri-app"
-version = "0.14.3"
+version = "0.14.4"
 dependencies = [
  "serde",
  "serde_json",

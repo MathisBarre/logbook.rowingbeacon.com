@@ -2,17 +2,22 @@ import { toast } from "sonner";
 import { adminEditModeStore } from "./adminEditMode.store";
 import { useClubOverviewStore } from "./clubOverview.store";
 import { closeApp, windowPrompt } from "../utils/window.utils";
+import { hashPassword, verifyPassword } from "../utils/password";
 
 export const useAdminEditModeSystem = () => {
   const store = adminEditModeStore();
   const onboardingStore = useClubOverviewStore();
+
+  const setAdminPassword = (pswd: string) => {
+    return onboardingStore.setHashedPassword(hashPassword(pswd));
+  };
 
   const isAdminPassword = (pswd: string | null) => {
     if (pswd === null) {
       return false;
     }
 
-    return pswd === onboardingStore.clubOverview?.club.password;
+    return verifyPassword(pswd, onboardingStore.clubOverview?.club.password);
   };
 
   const startAdminEditMode = (pswd: string | null) => {
@@ -59,6 +64,7 @@ export const useAdminEditModeSystem = () => {
     closeApp: close,
     allowAdminActions,
     isAdminPassword,
+    setAdminPassword,
   };
 };
 

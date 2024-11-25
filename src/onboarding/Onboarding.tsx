@@ -17,6 +17,7 @@ import { generateRoutesId } from "../_common/business/route.rules";
 import { logStr } from "../_common/utils/utils";
 import { windowAlert } from "../_common/utils/window.utils";
 import { BoatTypeEnum } from "../_common/types/boat.type";
+import { hashPassword } from "../_common/utils/password";
 
 const OnboardingFormSchema = z.object({
   clubPassword: z.string(),
@@ -84,7 +85,7 @@ export const Onboarding = ({
                 const ADMIN_PASSWORD = "admin";
                 onboard({
                   club: {
-                    password: ADMIN_PASSWORD,
+                    password: hashPassword(ADMIN_PASSWORD),
                   },
                   boats: generateBoats(),
                   rowers: generateRowers(30),
@@ -106,8 +107,7 @@ export const Onboarding = ({
                 Mot de passe
                 <span className="text-xs text-gray-500 font-normal mt-1">
                   Le mot de passe sera utile pour protéger les actions
-                  sensibles. Vous pouvez le laisser vide si vous ne souhaitez
-                  pas mettre en place de protection.
+                  sensibles.
                 </span>
               </Label>
               <FormField
@@ -221,9 +221,7 @@ export const Onboarding = ({
 const formatFormValues = (values: OnboardingFormValues) => {
   return {
     club: {
-      name: "NO_NAME",
-      address: "NO_ADDRESS",
-      password: values.clubPassword,
+      password: hashPassword(values.clubPassword),
     },
     boats: values.boats.split("\n").map((boat) => ({
       id: generateBoatId(),

@@ -3255,6 +3255,11 @@ jsonfile@^6.0.1:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
+jssha@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/jssha/-/jssha-3.3.1.tgz#c5b7fc7fb9aa745461923b87df0e247dd59c7ea8"
+  integrity sha512-VCMZj12FCFMQYcFLPRm/0lOBbLi8uM2BhXPTqw3U4YAfs4AZfiApOoBLoN8cQE60Z50m1MYMTQVCfgF/KaCVhQ==
+
 knip@^5.26.0:
   version "5.26.0"
   resolved "https://registry.yarnpkg.com/knip/-/knip-5.26.0.tgz#52a063bc8ef107b79e96654fd72b34b3ebcc75c8"
