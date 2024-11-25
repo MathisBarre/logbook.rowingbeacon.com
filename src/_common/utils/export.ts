@@ -1,26 +1,41 @@
 import * as XLSX from "xlsx";
-import { writeTextFile } from "@tauri-apps/plugin-fs";
+import { writeTextFile, writeFile } from "@tauri-apps/plugin-fs";
 
 export type ExportType = "xlsx" | "ods" | "json" | "csv";
 
-export const exportSpreadsheet = (
-  payload: { sheetName: string; jsonData: any[] }[],
-  fileName: string,
-  fileType: "xlsx" | "ods" = "xlsx"
-) => {
+export const exportSpreadsheet = (args: {
+  data: any[];
+  fileName: string;
+  fileType: "xlsx" | "ods";
+  fileDirectory: string;
+}) => {
   const wb = XLSX.utils.book_new();
 
-  payload.forEach(({ sheetName, jsonData }) => {
-    const ws = XLSX.utils.json_to_sheet(jsonData);
+  const ws = XLSX.utils.json_to_sheet(args.data);
 
-    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+  XLSX.utils.book_append_sheet(wb, ws, args.fileName);
+
+  const file = new Uint8Array(
+    XLSX.write(wb, {
+      type: "file",
+      bookType: args.fileType,
+    })
+  );
+
+  const fullPath = getFullPath(args);
+
+  return saveFile({
+    file,
+    fullPath,
   });
-
-  XLSX.writeFile(wb, `${fileName}.${fileType}`);
 };
 
-const saveTextFile = (args: { content: string; fileName: string }) => {
-  return writeTextFile(args.fileName, args.content);
+const saveFile = (args: { file: Uint8Array; fullPath: string }) => {
+  return writeFile(args.fullPath, args.file);
+};
+
+const saveTextFile = (args: { content: string; fullPath: string }) => {
+  return writeTextFile(args.fullPath, args.content);
 };
 
 const getFullPath = (args: {
@@ -43,7 +58,7 @@ export const exportJson = (args: {
 
   return saveTextFile({
     content: json,
-    fileName: fullPath,
+    fullPath,
   });
 };
 
@@ -63,7 +78,7 @@ export const exportCsv = (args: {
 
   return saveTextFile({
     content: csv,
-    fileName: fullPath,
+    fullPath: fullPath,
   });
 };
 
@@ -73,14 +88,13 @@ export const exportData = (args: {
   fileType: ExportType;
   fileDirectory: string;
 }) => {
-  const { data, fileName, fileType } = args;
+  const { fileType } = args;
 
   if (fileType === "xlsx" || fileType === "ods") {
-    return exportSpreadsheet(
-      [{ sheetName: fileName, jsonData: data }],
-      fileName,
-      fileType
-    );
+    return exportSpreadsheet({
+      ...args,
+      fileType,
+    });
   }
 
   if (fileType === "json") {
