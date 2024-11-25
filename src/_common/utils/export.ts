@@ -1,4 +1,5 @@
 import * as XLSX from "xlsx";
+import { writeTextFile } from "@tauri-apps/plugin-fs";
 
 export type ExportType = "xlsx" | "ods" | "json" | "csv";
 
@@ -18,25 +19,52 @@ export const exportSpreadsheet = (
   XLSX.writeFile(wb, `${fileName}.${fileType}`);
 };
 
-const downloadBlob = (blob: Blob, fileName: string) => {
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = fileName;
-  a.click();
+const saveTextFile = (args: { content: string; fileName: string }) => {
+  return writeTextFile(args.fileName, args.content);
 };
 
-export const exportJson = (data: any[], fileName: string) => {
-  const json = JSON.stringify(data, null, 2);
-  const blob = new Blob([json], { type: "application/json" });
-  downloadBlob(blob, `${fileName}.json`);
+const getFullPath = (args: {
+  data: any[];
+  fileName: string;
+  fileType: ExportType;
+  fileDirectory: string;
+}) => {
+  return `${args.fileDirectory}/${args.fileName}.${args.fileType}`;
 };
 
-export const exportCsv = (data: any[], fileName: string) => {
-  const csv = data.map((row) => Object.values(row).join(",")).join("\n");
-  const blob = new Blob([csv], { type: "text/csv" });
-  downloadBlob(blob, `${fileName}.csv`);
+export const exportJson = (args: {
+  data: any[];
+  fileName: string;
+  fileType: ExportType;
+  fileDirectory: string;
+}) => {
+  const fullPath = getFullPath(args);
+  const json = JSON.stringify(args.data, null, 2);
+
+  return saveTextFile({
+    content: json,
+    fileName: fullPath,
+  });
+};
+
+export const exportCsv = (args: {
+  data: any[];
+  fileName: string;
+  fileType: ExportType;
+  fileDirectory: string;
+}) => {
+  const fullPath = getFullPath(args);
+
+  const csvHeaders = Object.keys(args.data[0]).join(",");
+  const csvValues = args.data
+    .map((row) => Object.values(row).join(","))
+    .join("\n");
+  const csv = `${csvHeaders}\n${csvValues}`;
+
+  return saveTextFile({
+    content: csv,
+    fileName: fullPath,
+  });
 };
 
 export const exportData = (args: {
@@ -56,11 +84,11 @@ export const exportData = (args: {
   }
 
   if (fileType === "json") {
-    return exportJson(data, fileName);
+    return exportJson(args);
   }
 
   if (fileType === "csv") {
-    return exportCsv(data, fileName);
+    return exportCsv(args);
   }
 };
 
