@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getDatabase } from "../../_common/database/database";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
+import { sessionRepository } from "../SessionRepository";
 
 interface SessionLog {
   id: string;
@@ -45,15 +45,19 @@ export const useGetLastSessions = (payload: {
   useEffect(() => {
     setLoading(true);
     const fetchSessions = async () => {
-      const totalNumberOfSession = await getTotalNumberOfSessions();
+      const totalNumberOfSession =
+        await sessionRepository.getTotalNumberOfSessions();
 
       const numberOfPages = Math.ceil(totalNumberOfSession / pageSize);
 
       setNumberOfPages(numberOfPages);
 
-      const data = await getLastSessions({
+      const data = await sessionRepository.getSessions({
         pageSize,
         skip: (currentPage - 1) * pageSize,
+        order: {
+          startDateTime: "DESC",
+        },
       });
 
       const formattedData = data.map((session) => {
@@ -108,78 +112,4 @@ export const useGetLastSessions = (payload: {
     loading,
     sessions,
   };
-};
-
-const getLastSessions = async (payload: {
-  pageSize: number;
-  skip: number;
-}): Promise<
-  {
-    session_id: string;
-    boat_id: string;
-    start_date_time: string;
-    estimated_end_date_time: string | null;
-    route_id: string | null;
-    end_date_time: string | null;
-    incident_id: string | null;
-    comment: string | null;
-    rower_ids: string | null;
-  }[]
-> => {
-  const { pageSize, skip } = payload;
-
-  const db = await getDatabase();
-
-  const result = await db.select<
-    {
-      session_id: string;
-      boat_id: string;
-      start_date_time: string;
-      estimated_end_date_time: string | null;
-      route_id: string | null;
-      end_date_time: string | null;
-      incident_id: string | null;
-      comment: string | null;
-      rower_ids: string | null;
-    }[]
-  >(/* sql */ `
-    SELECT 
-      s.id AS session_id,
-      s.boat_id,
-      s.start_date_time,
-      s.estimated_end_date_time,
-      s.route_id,
-      s.end_date_time,
-      s.incident_id,
-      s.comment,
-      GROUP_CONCAT(sr.rower_id) AS rower_ids -- Combine rower IDs into a comma-separated string
-    FROM 
-      session s
-    LEFT JOIN 
-      session_rowers sr ON s.id = sr.session_id
-    GROUP BY 
-      s.id
-    ORDER BY 
-      s.start_date_time DESC
-    LIMIT 
-      ${pageSize}
-    OFFSET
-      ${skip}
-
-    `);
-
-  return result;
-};
-
-const getTotalNumberOfSessions = async (): Promise<number> => {
-  const db = await getDatabase();
-
-  const result = await db.select<{ count: number }[]>(/* sql */ `
-    SELECT 
-      COUNT(*) as count
-    FROM 
-      session
-  `);
-
-  return result[0].count;
 };
