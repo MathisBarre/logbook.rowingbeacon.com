@@ -3,6 +3,7 @@ import { dateStringSchema } from "../../_common/utils/commonSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField } from "../../_common/components/Form";
+import Button from "../../_common/components/Button";
 
 const ExportSessionsFormSchema = z.object({
   fromDate: dateStringSchema,
@@ -19,7 +20,7 @@ export const ExportSessions = () => {
   });
 
   return (
-    <form>
+    <form className="flex flex-col gap-4">
       <div>
         <FormField
           control={form.control}
@@ -32,6 +33,48 @@ export const ExportSessions = () => {
           )}
         />
       </div>
+      <div>
+        <FormField
+          control={form.control}
+          name="toDate"
+          render={({ field }) => (
+            <label className="flex flex-col">
+              Date de fin
+              <input className="input" type="date" {...field} />
+            </label>
+          )}
+        />
+      </div>
+      <div>
+        <FormField
+          control={form.control}
+          name="exportDestination"
+          render={({ field }) => (
+            <label className="flex flex-col">
+              Destination d'exportation
+              <input className="input" type="text" {...field} />
+            </label>
+          )}
+        />
+      </div>
+      <div>
+        <FormField
+          control={form.control}
+          name="fileType"
+          render={({ field }) => (
+            <label className="flex flex-col">
+              Type de fichier
+              <select className="input" {...field}>
+                <option value="ods">.ods - OpenDocument</option>
+                <option value="xlsx">.xlsx - Excel</option>
+                <option value="json">.json - JSON</option>
+                <option value="csv">.csv - CSV</option>
+              </select>
+            </label>
+          )}
+        />
+      </div>
+      <Button type="submit">Exporter</Button>
     </form>
   );
 };
