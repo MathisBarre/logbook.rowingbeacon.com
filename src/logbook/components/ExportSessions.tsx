@@ -6,6 +6,7 @@ import { FormField } from "../../_common/components/Form";
 import Button from "../../_common/components/Button";
 import { exportData } from "../../_common/utils/export";
 import { Label } from "../../_common/components/Label";
+import { addMonths, getDateTime } from "../../_common/utils/date.utils";
 
 const ExportSessionsFormSchema = z.object({
   fromDate: dateStringSchema,
@@ -21,6 +22,8 @@ export const ExportSessions = () => {
     resolver: zodResolver(ExportSessionsFormSchema),
     defaultValues: {
       fileType: "ods",
+      fromDate: getDateTime(addMonths(new Date(), -1)),
+      toDate: getDateTime(new Date()),
     },
   });
 

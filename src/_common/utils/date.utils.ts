@@ -25,6 +25,14 @@ export const getDateTimeWithoutTimezone = (date: string | Date) => {
   return `${year}-${month}-${day}T${hour}:${minute}`;
 };
 
+export const getDateTime = (date: string | Date) => {
+  const dateObject = new Date(date);
+  const year = dateObject.getFullYear();
+  const month = (dateObject.getMonth() + 1).toString().padStart(2, "0");
+  const day = dateObject.getDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 export const getCurrentDateTime = () => {
   const currentDate = new Date();
   return getDateTimeWithoutTimezone(currentDate);
@@ -75,5 +83,11 @@ export const isAfter = (date: Date, otherDate: Date) => {
 export const addDays = (date: Date, addDays: number) => {
   const newDate = new Date(date);
   newDate.setDate(newDate.getDate() + addDays);
+  return newDate;
+};
+
+export const addMonths = (date: Date, addMonths: number) => {
+  const newDate = new Date(date);
+  newDate.setMonth(newDate.getMonth() + addMonths);
   return newDate;
 };
