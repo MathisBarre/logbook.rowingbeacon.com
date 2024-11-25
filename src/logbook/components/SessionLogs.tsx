@@ -1,10 +1,6 @@
 import { useState } from "react";
 import Button from "../../_common/components/Button";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "../../_common/components/Dialog/Dialog";
+import { Dialog, DialogContent } from "../../_common/components/Dialog/Dialog";
 import { useGetLastSessions } from "../hooks/useGetSessions";
 import { ExportSessions } from "./ExportSessions";
 import { SessionHistoryTable } from "./SessionLogsTable";
