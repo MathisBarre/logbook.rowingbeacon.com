@@ -10,6 +10,7 @@ import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { getDateTimeWithoutTimezone } from "../../_common/utils/date.utils";
 import useIncidentStore from "../../_common/store/incident.store";
 import { useState } from "react";
+import { getErrorMessage } from "../../_common/utils/error";
 
 export const useExportSessions = () => {
   const clubOverview = useClubOverviewStore();
@@ -120,7 +121,8 @@ export const useExportSessions = () => {
       });
 
       toast.success("Export réussi");
-    } catch {
+    } catch (e) {
+      toast.error(getErrorMessage(e));
       toast.error("Erreur lors de l'export");
     } finally {
       setIsLoading(false);
