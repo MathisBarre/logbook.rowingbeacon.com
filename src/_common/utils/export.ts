@@ -13,7 +13,7 @@ export const exportSpreadsheet = (args: {
 
   const ws = XLSX.utils.json_to_sheet(args.data);
 
-  XLSX.utils.book_append_sheet(wb, ws, args.fileName);
+  XLSX.utils.book_append_sheet(wb, ws);
 
   const file = new Uint8Array(
     XLSX.write(wb, {

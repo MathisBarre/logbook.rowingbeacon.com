@@ -122,8 +122,7 @@ export const useExportSessions = () => {
 
       toast.success("Export réussi");
     } catch (e) {
-      toast.error(getErrorMessage(e));
-      toast.error("Erreur lors de l'export");
+      toast.error(`Erreur lors de l'export (${getErrorMessage(e)})`);
     } finally {
       setIsLoading(false);
     }
