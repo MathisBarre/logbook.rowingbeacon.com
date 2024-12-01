@@ -1,11 +1,6 @@
 import { toast } from "sonner";
-import {
-  exportData,
-  ExportType,
-  getInfosFromPath,
-} from "../../_common/utils/export";
+import { exportData, ExportType } from "../../_common/utils/export";
 import { sessionRepository } from "../SessionRepository";
-import { save } from "@tauri-apps/plugin-dialog";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { getDateTimeWithoutTimezone } from "../../_common/utils/date.utils";
 import useIncidentStore from "../../_common/store/incident.store";
@@ -16,6 +11,12 @@ export const useExportSessions = () => {
   const clubOverview = useClubOverviewStore();
   const incidentStore = useIncidentStore();
   const [isLoading, setIsLoading] = useState(false);
+  const [fileName, setFileName] = useState("");
+  const [isExportSuccess, setIsExportSuccess] = useState(false);
+
+  const closeSuccess = () => {
+    setIsExportSuccess(false);
+  };
 
   const getSessions = async (data: { fromDate: string; toDate: string }) => {
     const sessionsDB = await sessionRepository.getSessions({
@@ -95,17 +96,12 @@ export const useExportSessions = () => {
     try {
       setIsLoading(true);
 
-      const exportLocation = await save({
-        title: "RowingBeacon - Export des sorties",
-        canCreateDirectories: true,
-        defaultPath: `RowingBeacon_sessions.${data.fileType}`,
-      });
-
-      if (!exportLocation) {
-        return;
-      }
-
-      const { fileDirectory, fileName } = getInfosFromPath(exportLocation);
+      const fileName = `RowingBeacon_sessions_${getDateTimeWithoutTimezone(
+        new Date()
+      )
+        .replace(":", "-")
+        .replace("T", "-")}.${data.fileType}`;
+      setFileName(fileName);
 
       const sessions = await getSessions(data);
 
@@ -117,10 +113,9 @@ export const useExportSessions = () => {
         data: sessions,
         fileName,
         fileType: data.fileType,
-        fileDirectory,
       });
 
-      toast.success("Export réussi");
+      setIsExportSuccess(true);
     } catch (e) {
       toast.error(`Erreur lors de l'export (${getErrorMessage(e)})`);
     } finally {
@@ -131,5 +126,8 @@ export const useExportSessions = () => {
   return {
     exportSessions,
     isLoading,
+    fileName,
+    isExportSuccess,
+    closeSuccess,
   };
 };

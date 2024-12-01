@@ -10,7 +10,6 @@ module.exports = {
       mono: "Roboto Mono, monospace, mono",
     },
     colors: {
-      ...colors,
       white: colors.white,
       gray: colors.gray,
       success: colors.green,
