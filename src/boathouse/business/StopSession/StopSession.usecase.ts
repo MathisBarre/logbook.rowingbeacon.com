@@ -31,7 +31,7 @@ interface ISessionStore {
   removeSession(sessionId: string): void;
 }
 
-interface SessionToSave {
+export interface SessionToSave {
   id: string;
   boatId: string;
   startDateTime: string;
@@ -40,7 +40,6 @@ interface SessionToSave {
   endDateTime: string;
   incidentId: string;
   comment: string;
-
   rowerIds: string[];
 }
 
