@@ -1,5 +1,5 @@
 import * as XLSX from "xlsx";
-import { writeTextFile, writeFile } from "@tauri-apps/plugin-fs";
+import { writeTextFile, writeFile, BaseDirectory } from "@tauri-apps/plugin-fs";
 
 export type ExportType = "xlsx" | "ods" | "json" | "csv";
 
@@ -7,7 +7,6 @@ export const exportSpreadsheet = (args: {
   data: Record<string, string>[];
   fileName: string;
   fileType: "xlsx" | "ods";
-  fileDirectory: string;
 }) => {
   const wb = XLSX.utils.book_new();
 
@@ -22,43 +21,34 @@ export const exportSpreadsheet = (args: {
     })
   );
 
-  const fullPath = getFullPath(args);
-
   return saveFile({
     file,
-    fullPath,
+    fileName: args.fileName,
   });
 };
 
-const saveFile = (args: { file: Uint8Array; fullPath: string }) => {
-  return writeFile(args.fullPath, args.file);
+const saveFile = (args: { file: Uint8Array; fileName: string }) => {
+  return writeFile(args.fileName, args.file, {
+    baseDir: BaseDirectory.Download,
+  });
 };
 
-const saveTextFile = (args: { content: string; fullPath: string }) => {
-  return writeTextFile(args.fullPath, args.content);
-};
-
-const getFullPath = (args: {
-  data: Record<string, string>[];
-  fileName: string;
-  fileType: ExportType;
-  fileDirectory: string;
-}) => {
-  return `${args.fileDirectory}/${args.fileName}.${args.fileType}`;
+const saveTextFile = (args: { content: string; fileName: string }) => {
+  return writeTextFile(args.fileName, args.content, {
+    baseDir: BaseDirectory.Download,
+  });
 };
 
 export const exportJson = (args: {
   data: Record<string, string>[];
   fileName: string;
   fileType: ExportType;
-  fileDirectory: string;
 }) => {
-  const fullPath = getFullPath(args);
   const json = JSON.stringify(args.data, null, 2);
 
   return saveTextFile({
     content: json,
-    fullPath,
+    fileName: args.fileName,
   });
 };
 
@@ -66,10 +56,7 @@ export const exportCsv = (args: {
   data: Record<string, string>[];
   fileName: string;
   fileType: ExportType;
-  fileDirectory: string;
 }) => {
-  const fullPath = getFullPath(args);
-
   const csvHeaders = Object.keys(args.data[0]).join(",");
   const csvValues = args.data
     .map((row) => Object.values(row).join(","))
@@ -78,7 +65,7 @@ export const exportCsv = (args: {
 
   return saveTextFile({
     content: csv,
-    fullPath: fullPath,
+    fileName: args.fileName,
   });
 };
 
@@ -86,7 +73,6 @@ export const exportData = (args: {
   data: Record<string, string>[];
   fileName: string;
   fileType: ExportType;
-  fileDirectory: string;
 }) => {
   const { fileType } = args;
 
@@ -104,17 +90,4 @@ export const exportData = (args: {
   if (fileType === "csv") {
     return exportCsv(args);
   }
-};
-
-export const getInfosFromPath = (filePath: string) => {
-  const lastSlashIndex = filePath.lastIndexOf("/");
-  const fileDirectory = filePath.slice(0, lastSlashIndex);
-
-  const [fileName, fileType] = filePath.slice(lastSlashIndex + 1).split(".");
-
-  return {
-    fileName,
-    fileType,
-    fileDirectory,
-  };
 };

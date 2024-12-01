@@ -1,11 +1,6 @@
 import { toast } from "sonner";
-import {
-  exportData,
-  ExportType,
-  getInfosFromPath,
-} from "../../_common/utils/export";
+import { exportData, ExportType } from "../../_common/utils/export";
 import { sessionRepository } from "../SessionRepository";
-import { save } from "@tauri-apps/plugin-dialog";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { getDateTimeWithoutTimezone } from "../../_common/utils/date.utils";
 import useIncidentStore from "../../_common/store/incident.store";
@@ -95,17 +90,9 @@ export const useExportSessions = () => {
     try {
       setIsLoading(true);
 
-      const exportLocation = await save({
-        title: "RowingBeacon - Export des sorties",
-        canCreateDirectories: true,
-        defaultPath: `RowingBeacon_sessions.${data.fileType}`,
-      });
-
-      if (!exportLocation) {
-        return;
-      }
-
-      const { fileDirectory, fileName } = getInfosFromPath(exportLocation);
+      const fileName = `RowingBeacon_sessions_${getDateTimeWithoutTimezone(
+        new Date()
+      )}.${data.fileType}`;
 
       const sessions = await getSessions(data);
 
@@ -117,10 +104,11 @@ export const useExportSessions = () => {
         data: sessions,
         fileName,
         fileType: data.fileType,
-        fileDirectory,
       });
 
-      toast.success("Export réussi");
+      toast.success(
+        "Export réussi. Le fichier a été enregistré dans le dossier de téléchargement."
+      );
     } catch (e) {
       toast.error(`Erreur lors de l'export (${getErrorMessage(e)})`);
     } finally {
