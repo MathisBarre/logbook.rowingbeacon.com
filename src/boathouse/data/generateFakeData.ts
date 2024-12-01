@@ -1,5 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
-import { SessionToSave } from "../business/StopSession/StopSession.usecase";
+import {
+  SessionDatabaseRepository,
+  SessionToSave,
+} from "../business/StopSession/StopSession.usecase";
 import { generateIncidenId } from "../../_common/business/incident.rules";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { fromBoatTypeToNbOfRowers } from "../../_common/business/boat.rules";
@@ -7,6 +10,7 @@ import { Boat } from "../../_common/types/boat.type";
 
 export const useGenerateFakeData = () => {
   const { getAllRoutes, getAllBoats, getAllRowers } = useClubOverviewStore();
+  const sessionDatabaseRepository = new SessionDatabaseRepository();
 
   return async function generateFakeData() {
     const data: SessionToSave[] = [];
@@ -19,36 +23,32 @@ export const useGenerateFakeData = () => {
       const currentDate = new Date(startDate);
       currentDate.setDate(startDate.getDate() + i);
       const dayOfWeek = currentDate.getDay();
-      const sessions: SessionToSave[] = [];
+      let sessions: SessionToSave[] = [];
 
       if (dayOfWeek === 3 || dayOfWeek === 6) {
         // Mercredi ou Samedi
-        sessions.concat(
+        sessions = sessions.concat(
           createSessions(currentDate, "morning", routes, boats, rowers)
         );
-        sessions.concat(
+        sessions = sessions.concat(
           createSessions(currentDate, "afternoon", routes, boats, rowers)
         );
       } else if (dayOfWeek === 0) {
-        // Dimanche
-        if (Math.random() < 0.3) {
-          sessions.concat(
-            createSessions(currentDate, "day", routes, boats, rowers)
-          );
-        }
+        sessions = sessions.concat(
+          createSessions(currentDate, "day", routes, boats, rowers)
+        );
       } else {
-        // Autres jours
-        if (Math.random() < 0.3) {
-          sessions.concat(
-            createSessions(currentDate, "evening", routes, boats, rowers)
-          );
-        }
+        sessions = sessions.concat(
+          createSessions(currentDate, "evening", routes, boats, rowers)
+        );
       }
 
       data.push(...sessions);
     }
 
-    console.log(data);
+    for (const session of data) {
+      await sessionDatabaseRepository.saveSession(session);
+    }
   };
 };
 
@@ -85,7 +85,6 @@ function createSession(
   boats: Boat[],
   rowers: { id: string; name: string }[]
 ): SessionToSave {
-  const duration = 50 + Math.random() * 100; // Durée entre 50min et 2h30
   const hasComment = Math.random() < 0.4;
   const hasAccident = Math.random() < 0.1;
 
@@ -109,19 +108,22 @@ function createSession(
     .sort(() => 0.5 - Math.random())
     .slice(0, nbOfRowers);
 
-  return {
+  const sessionCreated = {
     id: uuidv4(),
     boatId: boat.id,
     startDateTime: startDateTime.toISOString(),
-    estimatedEndDateTime: getEndDateTime(startDateTime, duration).toISOString(),
+    estimatedEndDateTime: getEndDateTime(startDateTime).toISOString(),
     routeId: route.id,
-    endDateTime: new Date(date.getTime() + duration * 60000).toISOString(),
+    endDateTime: getEndDateTime(startDateTime).toISOString(),
     incidentId: hasAccident ? generateIncidenId() : "",
     comment: hasComment ? "Commentaire aléatoire" : "",
     rowerIds: selectedRowers.map((rower) => rower.id),
   };
+
+  return sessionCreated;
 }
 
-function getEndDateTime(startDateTime: Date, duration: number): Date {
+function getEndDateTime(startDateTime: Date): Date {
+  const duration = 50 + Math.random() * 100;
   return new Date(startDateTime.getTime() + duration * 60000);
 }

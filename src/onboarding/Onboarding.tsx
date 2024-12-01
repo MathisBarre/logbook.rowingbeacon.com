@@ -18,6 +18,7 @@ import { logStr } from "../_common/utils/utils";
 import { windowAlert } from "../_common/utils/window.utils";
 import { BoatTypeEnum } from "../_common/types/boat.type";
 import { hashPassword } from "../_common/utils/password";
+import { useGenerateFakeData } from "../boathouse/data/generateFakeData";
 
 const OnboardingFormSchema = z.object({
   clubPassword: z.string(),
@@ -43,6 +44,8 @@ export const Onboarding = ({
     setClubOverview(values);
     setIsOnboardingDone(true);
   };
+
+  const generateFakeData = useGenerateFakeData();
 
   return (
     <div className="min-h-screen flex flex-col relative">
@@ -91,6 +94,8 @@ export const Onboarding = ({
                   rowers: generateRowers(30),
                   routes: generateRoutes(3),
                 });
+                generateFakeData();
+
                 await windowAlert(
                   `Le mot de passe admin du mode démo est "${ADMIN_PASSWORD}"`
                 );

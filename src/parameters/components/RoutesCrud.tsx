@@ -2,7 +2,7 @@ import { PencilIcon, Trash2Icon } from "lucide-react";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { toast } from "sonner";
 import Button from "../../_common/components/Button";
-import { windowPrompt } from "../../_common/utils/window.utils";
+import { windowConfirm, windowPrompt } from "../../_common/utils/window.utils";
 
 export const RoutesCrud = () => {
   const store = useClubOverviewStore();
@@ -24,7 +24,7 @@ export const RoutesCrud = () => {
   };
 
   const deleteRoute = (routeId: string) => {
-    if (!confirm("Êtes-vous sûr de vouloir supprimer ce parcours ?")) {
+    if (!windowConfirm("Êtes-vous sûr de vouloir supprimer ce parcours ?")) {
       return;
     }
 

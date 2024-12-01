@@ -159,7 +159,7 @@ class StopSession {
   }
 }
 
-class SessionDatabaseRepository implements ISessionDatabaseRepository {
+export class SessionDatabaseRepository implements ISessionDatabaseRepository {
   async saveSession(
     session: SessionToSave
   ): Promise<SimpleResult<"FAILED_TO_SAVE_SESSION", null>> {
