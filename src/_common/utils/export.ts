@@ -4,13 +4,28 @@ import { writeTextFile, writeFile, BaseDirectory } from "@tauri-apps/plugin-fs";
 export type ExportType = "xlsx" | "ods" | "json" | "csv";
 
 export const exportSpreadsheet = (args: {
-  data: Record<string, string>[];
+  data: Record<string, string | Date>[];
   fileName: string;
   fileType: "xlsx" | "ods";
 }) => {
   const wb = XLSX.utils.book_new();
 
-  const ws = XLSX.utils.json_to_sheet(args.data);
+  const data = args.data.map((row) => {
+    return {
+      ...row,
+      start_date_time: row.start_date_time
+        ? new Date(row.start_date_time)
+        : null,
+      estimated_end_date_time: row.estimated_end_date_time
+        ? new Date(row.estimated_end_date_time)
+        : null,
+      end_date_time: row.end_date_time ? new Date(row.end_date_time) : null,
+    };
+  });
+
+  const ws = XLSX.utils.json_to_sheet(data, {
+    cellDates: true,
+  });
 
   XLSX.utils.book_append_sheet(wb, ws);
 
