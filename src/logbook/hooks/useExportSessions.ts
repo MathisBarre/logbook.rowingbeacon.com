@@ -11,6 +11,12 @@ export const useExportSessions = () => {
   const clubOverview = useClubOverviewStore();
   const incidentStore = useIncidentStore();
   const [isLoading, setIsLoading] = useState(false);
+  const [fileName, setFileName] = useState("");
+  const [isExportSuccess, setIsExportSuccess] = useState(false);
+
+  const closeSuccess = () => {
+    setIsExportSuccess(false);
+  };
 
   const getSessions = async (data: { fromDate: string; toDate: string }) => {
     const sessionsDB = await sessionRepository.getSessions({
@@ -92,7 +98,10 @@ export const useExportSessions = () => {
 
       const fileName = `RowingBeacon_sessions_${getDateTimeWithoutTimezone(
         new Date()
-      )}.${data.fileType}`;
+      )
+        .replace(":", "-")
+        .replace("T", "-")}.${data.fileType}`;
+      setFileName(fileName);
 
       const sessions = await getSessions(data);
 
@@ -106,9 +115,7 @@ export const useExportSessions = () => {
         fileType: data.fileType,
       });
 
-      toast.success(
-        "Export réussi. Le fichier a été enregistré dans le dossier de téléchargement."
-      );
+      setIsExportSuccess(true);
     } catch (e) {
       toast.error(`Erreur lors de l'export (${getErrorMessage(e)})`);
     } finally {
@@ -119,5 +126,8 @@ export const useExportSessions = () => {
   return {
     exportSessions,
     isLoading,
+    fileName,
+    isExportSuccess,
+    closeSuccess,
   };
 };

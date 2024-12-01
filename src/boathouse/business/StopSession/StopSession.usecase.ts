@@ -164,8 +164,6 @@ class SessionDatabaseRepository implements ISessionDatabaseRepository {
   async saveSession(
     session: SessionToSave
   ): Promise<SimpleResult<"FAILED_TO_SAVE_SESSION", null>> {
-    console.log("ℹ️ Saving session...", session);
-
     const db = await getDatabase();
 
     try {

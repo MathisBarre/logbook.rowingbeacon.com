@@ -58,7 +58,11 @@ export const SessionLogs = () => {
             title="Exporter l'historique des sorties"
             className="max-w-xl"
           >
-            <ExportSessions />
+            <ExportSessions
+              closeDialog={() => {
+                setIsExportOpen(false);
+              }}
+            />
           </DialogContent>
         </Dialog>
       </div>
