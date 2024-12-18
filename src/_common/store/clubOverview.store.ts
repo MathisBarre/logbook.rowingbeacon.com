@@ -42,6 +42,7 @@ export interface ClubOverviewStoreState {
   toggleBoatIsInMaintenance: (boatId: string) => void;
   addBoat: (boatName: string) => void;
   deleteBoat: (boatId: string) => void;
+  getAllBoats: () => ClubOverviewState["boats"];
 
   updateRouteName: (routeId: string, name: string) => void;
   deleteRoute: (routeId: string) => void;
@@ -49,12 +50,14 @@ export interface ClubOverviewStoreState {
   getRouteById: (
     routeId: string
   ) => ClubOverviewState["routes"][number] | undefined;
+  getAllRoutes: () => ClubOverviewState["routes"];
 
   updateRowerName: (rowerId: string, name: string) => void;
   deleteRower: (rowerId: string) => void;
   addRower: (rowerName: string) => void;
   getRowersById: (rowersId: string[]) => ClubOverviewState["rowers"];
   getRowerById: (rowerId: string) => ClubOverviewState["rowers"][0] | undefined;
+  getAllRowers: () => ClubOverviewState["rowers"];
 
   setHashedPassword: (password: string) => void;
 
@@ -270,6 +273,10 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
             };
           });
         },
+
+        getAllBoats: () => get().clubOverview.boats,
+        getAllRoutes: () => get().clubOverview.routes,
+        getAllRowers: () => get().clubOverview.rowers,
       }),
       {
         name: "clubOverview",

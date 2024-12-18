@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   PencilIcon,
+  PlusIcon,
   SearchIcon,
   Trash2Icon,
 } from "lucide-react";
@@ -17,6 +19,9 @@ import { windowConfirm, windowPrompt } from "../../_common/utils/window.utils";
 import { DialogContent } from "../../_common/components/Dialog/DialogContent";
 import { Dialog, DialogTrigger } from "../../_common/components/Dialog/Dialog";
 import { useLocalStorage } from "../../_common/utils/useLocalStorage";
+import { ChartBarIcon } from "@heroicons/react/16/solid";
+import { RowerStats } from "./RowerStats";
+import { RowerStatsComparisons } from "./RowerStatsComparisons";
 
 export const RowersCrud = () => {
   const store = useClubOverviewStore();
@@ -66,19 +71,16 @@ export const RowersCrud = () => {
       }
     } finally {
       if (rowerAdded === 0) {
-        return toast.error("Aucun rameur n'a été ajouté");
-      }
-
-      if (rowerAdded < rowersToAddNumber) {
+        toast.error("Aucun rameur n'a été ajouté");
+      } else if (rowerAdded < rowersToAddNumber) {
         toast.warning(
           `${rowerAdded} rameurs sur ${rowersToAddNumber} ont été ajoutés`
         );
         setTextareaContent("");
-        return;
+      } else {
+        toast.success("Tous les rameurs ont été ajoutés");
+        setTextareaContent("");
       }
-
-      toast.success("Tous les rameurs ont été ajoutés");
-      setTextareaContent("");
     }
   };
 
@@ -113,7 +115,12 @@ export const RowersCrud = () => {
         <div className="flex gap-4 mb-4">
           <Dialog>
             <DialogTrigger asChild>
-              <Button type="button">Ajouter des rameurs</Button>
+              <Button type="button">
+                <div className="flex gap-2 items-center">
+                  <PlusIcon className="h-4 w-4" />
+                  Ajouter des rameurs
+                </div>
+              </Button>
             </DialogTrigger>
             <DialogContent title="Ajouter des rameurs">
               <Label>Ajouter un ou plusieurs rameurs (un par ligne)</Label>
@@ -127,6 +134,20 @@ export const RowersCrud = () => {
               <Button type="button" className="w-full" onClick={addRowers}>
                 Ajouter le ou les rameurs
               </Button>
+            </DialogContent>
+          </Dialog>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button type="button">
+                <div className="flex gap-2 items-center">
+                  <ChartBarIcon className="h-4 w-4" />
+                  Statistiques rameurs
+                </div>
+              </Button>
+            </DialogTrigger>
+            <DialogContent title="Statistiques rameurs">
+              <RowerStatsComparisons />
             </DialogContent>
           </Dialog>
 
@@ -154,9 +175,24 @@ export const RowersCrud = () => {
                 >
                   <p className="text-nowrap px-4 flex-1">{rower.name}</p>
                   <div className="h-full w-[1px] bg-gray-200" />
+
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <button className="flex items-center justify-center hover:bg-gray-100 h-12 w-12">
+                        <ChartBarIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
+                      </button>
+                    </DialogTrigger>
+                    <DialogContent
+                      className="max-w-[24rem]"
+                      title={`Statistiques de ${rower.name}`}
+                    >
+                      <RowerStats rowerId={rower.id} />
+                    </DialogContent>
+                  </Dialog>
+                  <div className="h-full w-[1px] bg-gray-200" />
                   <button
-                    onClick={() => {
-                      updateRowerName(rower.id, rower.name);
+                    onClick={async () => {
+                      await updateRowerName(rower.id, rower.name);
                     }}
                     className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
                   >
@@ -164,8 +200,8 @@ export const RowersCrud = () => {
                   </button>
                   <div className="h-full w-[1px] bg-gray-200" />
                   <button
-                    onClick={() => {
-                      deleteRower(rower.id);
+                    onClick={async () => {
+                      await deleteRower(rower.id);
                     }}
                     className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
                   >

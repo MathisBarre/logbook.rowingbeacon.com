@@ -9,100 +9,105 @@ import { SimpleAlertDialog } from "./SimpleAlertDialog";
 import Button from "./Button";
 import { useState } from "react";
 import useNavigationStore from "../store/navigation.store";
-import { cn } from "../utils/utils";
-import { LockIcon } from "lucide-react";
+import { BookIcon, LockIcon, ShipIcon } from "lucide-react";
+import logo from "../../_common/images/logo.svg";
+import { Popover, PopoverContent, PopoverTrigger } from "./Popover";
+import PageButton from "./PageButton";
 
 export const NavigationBar = () => {
   const { zoomIn, zoomOut, zoomPercentage } = useZoom();
-  const adminEditSystem = useAdminEditModeSystem();
   const {
     setPage,
     navigation: { page },
   } = useNavigationStore();
   const [isLogoutAlertOpen, setIsLogoutAlertOpen] = useState(false);
+  const adminEditSystem = useAdminEditModeSystem();
 
   return (
     <>
-      <div className="h-8 flex justify-end gap-1">
-        <div className="flex items-center gap-3 bg-steel-blue-800 text-white pl-1 pr-3 rounded relative group">
-          <div className="flex flex-col justify-center">
-            <span className="text-sm leading-3 font-medium">RowingBeacon</span>
-            <span className="text-xs leading-3">Logbook</span>
-          </div>
-          <div className="font-medium text-sm">v{version}</div>
+      <div className="flex justify-end mb-0 gap-1">
+        <Popover>
+          <PopoverTrigger asChild>
+            <button
+              type="button"
+              className="flex gap-2 hover:bg-steel-blue-900 min-w-48 justify-center py-2 cursor-pointer shadow-md rounded border overflow-hidden bg-steel-blue-800"
+            >
+              <div className="flex items-center  h-full">
+                <img src={logo} className="h-6 w-6" />
+              </div>
+
+              <div className="">
+                <p className="text-sm leading-4 font-medium text-white text-left">
+                  RowingBeacon
+                </p>
+                <p className="text-xs leading-3 text-white text-left">
+                  Logbook v{version}
+                </p>
+              </div>
+            </button>
+          </PopoverTrigger>
+          <PopoverContent asChild>
+            <div className="flex flex-col p-2 gap-2 rounded  w-48">
+              <div className=" text-sm font-medium text-steel-blue-800 flex items-center justify-center rounded bg-steel-blue-50 border border-steel-blue-100">
+                <button
+                  className="h-8 w-8 hover:bg-steel-blue-200 border-r border-steel-blue-100"
+                  onClick={() => {
+                    zoomOut();
+                  }}
+                >
+                  -
+                </button>
+                <p className="flex-1 text-center mx-4">
+                  Zoom {zoomPercentage}%
+                </p>
+                <button
+                  className="h-8 w-8 hover:bg-steel-blue-200 border-l border-steel-blue-100"
+                  onClick={() => {
+                    zoomIn();
+                  }}
+                >
+                  +
+                </button>
+              </div>
+              <button
+                type="button"
+                className="text-sm font-medium text-error-800 hover:bg-error-100 border-error-100 bg-error-50 border rounded flex p-2 gap-2 items-center "
+                onClick={() => {
+                  setIsLogoutAlertOpen(true);
+                }}
+              >
+                <ArrowLeftStartOnRectangleIcon className="h-4 w-4" />
+                Fermer l&apos;application
+              </button>
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        <div className="flex flex-1 gap-1">
+          <PageButton
+            page="boathouse"
+            currentPage={page}
+            setPage={setPage}
+            icon={<ShipIcon className="h-4 w-4" />}
+            label="Boathouse"
+          />
+
+          <PageButton
+            page="logbook"
+            currentPage={page}
+            setPage={setPage}
+            icon={<BookIcon className="h-4 w-4" />}
+            label="Logbook"
+          />
+
+          <PageButton
+            page="parameters"
+            currentPage={page}
+            setPage={setPage}
+            icon={<LockIcon className="h-4 w-4" />}
+            label="Gestion"
+          />
         </div>
-        <button
-          className="px-6 rounded text-sm font-medium shadow-md bg-white text-error-800 hover:bg-gray-50 border-error-900"
-          onClick={() => {
-            setIsLogoutAlertOpen(true);
-          }}
-        >
-          <ArrowLeftStartOnRectangleIcon className="h-4 w-4" />
-        </button>
-
-        <div className=" text-sm font-medium shadow-md bg-white text-steel-blue-800 flex items-center justify-center rounded">
-          <button
-            className="h-8 w-8 hover:bg-gray-100"
-            onClick={() => {
-              zoomOut();
-            }}
-          >
-            -
-          </button>
-          <p className="flex-1 text-center mx-4">Zoom {zoomPercentage}%</p>
-          <button
-            className="h-8 w-8 hover:bg-gray-100"
-            onClick={() => {
-              zoomIn();
-            }}
-          >
-            +
-          </button>
-        </div>
-
-        <button
-          onClick={() => {
-            setPage("boathouse");
-          }}
-          className={cn(
-            "rounded text-sm font-medium shadow-md bg-white text-steel-blue-800 hover:bg-gray-50 flex-1",
-            page === "boathouse" &&
-              "border border-steel-blue-800 border-opacity-75"
-          )}
-        >
-          Boathouse
-        </button>
-
-        <button
-          onClick={() => {
-            setPage("logbook");
-          }}
-          className={cn(
-            "rounded text-sm font-medium shadow-md bg-white text-steel-blue-800 hover:bg-gray-50 flex-1",
-            page === "logbook" &&
-              "border border-steel-blue-800 border-opacity-75"
-          )}
-        >
-          Logbook
-        </button>
-
-        <button
-          onClick={async () => {
-            if (
-              adminEditSystem.allowAdminActions(await askForAdminPassword())
-            ) {
-              setPage("parameters");
-            }
-          }}
-          className={cn(
-            "rounded text-sm font-medium shadow-md bg-white text-steel-blue-800 hover:bg-gray-50 flex-1 flex items-center justify-center gap-2",
-            page === "parameters" &&
-              "border border-steel-blue-800 border-opacity-75"
-          )}
-        >
-          <LockIcon className="h-4 w-4" />
-          Gestion
-        </button>
       </div>
 
       <SimpleAlertDialog
@@ -124,12 +129,14 @@ export const NavigationBar = () => {
           <Button
             color="danger"
             type="button"
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onClick={async () => {
               setIsLogoutAlertOpen(false);
-              adminEditSystem.closeApp(await askForAdminPassword());
+              const password = await askForAdminPassword();
+              await adminEditSystem.closeApp(password);
             }}
           >
-            Fermer l'application
+            Fermer l&apos;application
           </Button>
         }
       />

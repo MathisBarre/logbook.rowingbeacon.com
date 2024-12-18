@@ -69,7 +69,9 @@ const isArrayOfOptions = (
     value.every(
       (item) =>
         typeof item === "object" &&
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         typeof item.value === "string" &&
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         typeof item.label === "string"
     )
   );

@@ -36,7 +36,7 @@ export const StartSessionFormDataWrapper = ({
         isLoading={false}
         startSessionData={clubOverview}
         cancelAction={closeAction}
-        onSessionStarted={async () => {
+        onSessionStarted={() => {
           closeAction();
         }}
         values={{

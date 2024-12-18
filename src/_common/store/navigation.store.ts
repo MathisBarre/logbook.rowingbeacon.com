@@ -1,12 +1,14 @@
 import { create } from "zustand";
 
+export type AdminPage = "boathouse" | "logbook" | "parameters";
+
 interface ZustandNavigation {
-  page: "boathouse" | "logbook" | "parameters";
+  page: AdminPage;
 }
 
 interface ZustandNavigationStore {
   navigation: ZustandNavigation;
-  setPage: (page: "boathouse" | "logbook" | "parameters") => void;
+  setPage: (page: AdminPage) => void;
 }
 
 const useNavigationStore = create<ZustandNavigationStore>((set) => ({

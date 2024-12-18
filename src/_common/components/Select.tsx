@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import * as React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { cn } from "../utils/utils";

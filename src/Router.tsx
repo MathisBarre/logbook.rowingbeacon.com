@@ -33,9 +33,7 @@ const AppTemplate = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="absolute inset-0 flex flex-col p-1 gap-1 h-screen max-h-screen">
       <main className="flex-1 relative">{children}</main>
-      <nav className="relative">
-        <NavigationBar />
-      </nav>
+      <NavigationBar />
     </div>
   );
 };

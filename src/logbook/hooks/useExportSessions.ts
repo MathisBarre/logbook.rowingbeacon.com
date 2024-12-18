@@ -109,7 +109,7 @@ export const useExportSessions = () => {
         return toast.error("Aucune session trouvée avec ces filtres");
       }
 
-      exportData({
+      await exportData({
         data: sessions,
         fileName,
         fileType: data.fileType,

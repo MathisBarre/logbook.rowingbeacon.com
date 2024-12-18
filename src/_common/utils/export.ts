@@ -37,6 +37,7 @@ export const exportSpreadsheet = (args: {
   );
 
   return saveFile({
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     file,
     fileName: args.fileName,
   });

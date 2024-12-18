@@ -1,6 +1,7 @@
 import { v4 } from "uuid";
 import { ZustandSession } from "../store/sessions.store";
 import { Boat, BoatTypeEnum } from "../types/boat.type";
+import { forEnum } from "../utils/utils";
 
 export const generateBoatId = () => {
   return `boat-${v4()}`;
@@ -46,5 +47,21 @@ export const sortBoatsByTypeAndName = (boats: Boat[]) => {
       types.indexOf(a.type || BoatTypeEnum.OTHER) -
       types.indexOf(b.type || BoatTypeEnum.OTHER)
     );
+  });
+};
+
+export const fromBoatTypeToNbOfRowers = (type?: BoatTypeEnum) => {
+  if (!type) {
+    return undefined;
+  }
+
+  return forEnum(type, {
+    ONE_ROWER_COXLESS: () => 1,
+    TWO_ROWERS_COXLESS: () => 2,
+    TWO_ROWERS_COXED: () => 3,
+    FOUR_ROWERS_COXLESS: () => 4,
+    FOUR_ROWERS_COXED: () => 5,
+    EIGHT_ROWERS_COXED: () => 8,
+    OTHER: () => undefined,
   });
 };

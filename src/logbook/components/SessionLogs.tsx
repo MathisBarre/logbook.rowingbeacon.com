@@ -34,6 +34,7 @@ export const SessionLogs = () => {
         <button
           type="button"
           className="bg-gray-100 rounded flex items-center justify-center px-4 text-gray-700 py-1 text-sm h-full"
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onClick={async () => {
             if (
               !adminEditSystem.allowAdminActions(await askForAdminPassword())

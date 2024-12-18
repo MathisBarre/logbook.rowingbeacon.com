@@ -11,16 +11,16 @@ export const useAutoStart = () => {
       const _isEnabled = await isEnabled();
 
       setAutoStartState(_isEnabled ? "activated" : "not-activated");
-    })();
+    })().catch(console.error);
   });
 
   return {
     autoStartState,
-    async enableAutoStart() {
+    enableAutoStart: async () => {
       await enable();
       setAutoStartState("activated");
     },
-    async disableAutoStart() {
+    disableAutoStart: async () => {
       await disable();
       setAutoStartState("not-activated");
     },

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-base-to-string */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -9,6 +12,7 @@ export const isDev = process.env.NODE_ENV === "development";
 
 export const forEnum = <
   EnumValue extends string | number,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Callbacks extends Record<EnumValue, () => any>
 >(
   enumValue: EnumValue,
@@ -17,7 +21,6 @@ export const forEnum = <
   const cb = callbacks[enumValue];
   if (!cb) {
     // ? should never happen, ts should catch it before
-    // eslint-disable-next-line regex/invalid
     throw new Error("UNKNOWN_ENUM_VALUE");
   }
   return cb();

@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import {
   ConstructionIcon,
   PencilIcon,
+  PlusIcon,
   Trash2Icon,
   TypeIcon,
 } from "lucide-react";
@@ -21,6 +23,9 @@ import Button from "../../_common/components/Button";
 import { Label } from "../../_common/components/Label";
 import { useState } from "react";
 import { toast } from "sonner";
+import { ChartBarIcon } from "@heroicons/react/16/solid";
+import { BoatStats } from "./BoatStats";
+import { BoatStatsComparisons } from "./BoatStatsComparisons";
 
 export const BoatCrud = () => {
   const store = useClubOverviewStore();
@@ -54,19 +59,16 @@ export const BoatCrud = () => {
       }
     } finally {
       if (boatsAdded === 0) {
-        return toast.error("Aucun bateau n'a été ajouté");
-      }
-
-      if (boatsAdded < rowersToAddNumber) {
+        toast.error("Aucun bateau n'a été ajouté");
+      } else if (boatsAdded < rowersToAddNumber) {
         toast.warning(
           `${boatsAdded} bateaux sur ${rowersToAddNumber} ont été ajoutés`
         );
         setTextareaContent("");
-        return;
+      } else {
+        toast.success("Tous les bateaux ont été ajoutés");
+        setTextareaContent("");
       }
-
-      toast.success("Tous les bateaux ont été ajoutés");
-      setTextareaContent("");
     }
   };
 
@@ -80,8 +82,11 @@ export const BoatCrud = () => {
         <div className="flex gap-4 mb-4">
           <Dialog>
             <DialogTrigger asChild>
-              <Button type="button" className="w-full">
-                Ajouter des bateaux
+              <Button type="button">
+                <div className="flex gap-2 items-center ">
+                  <PlusIcon className="h-4 w-4" />
+                  Ajouter des bateaux
+                </div>
               </Button>
             </DialogTrigger>
             <DialogContent title="Ajouter des bateaux">
@@ -98,6 +103,23 @@ export const BoatCrud = () => {
               </Button>
             </DialogContent>
           </Dialog>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button type="button">
+                <div className="flex gap-2 items-center ">
+                  <ChartBarIcon className="h-4 w-4" />
+                  Statistiques rameurs
+                </div>
+              </Button>
+            </DialogTrigger>
+            <DialogContent
+              title="Statistiques rameurs"
+              className="overflow-auto"
+            >
+              <BoatStatsComparisons />
+            </DialogContent>
+          </Dialog>
         </div>
 
         <div className="flex-1 relative">
@@ -112,6 +134,22 @@ export const BoatCrud = () => {
                     {boat.name}
 
                     <div className="flex-1"></div>
+
+                    <Separator />
+
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <button className="flex items-center justify-center hover:bg-gray-100 h-12 w-12">
+                          <ChartBarIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
+                        </button>
+                      </DialogTrigger>
+                      <DialogContent
+                        className="max-w-[24rem]"
+                        title={`Statistiques de ${boat.name}`}
+                      >
+                        <BoatStats boatId={boat.id} />
+                      </DialogContent>
+                    </Dialog>
 
                     <Separator />
                     <EditButton

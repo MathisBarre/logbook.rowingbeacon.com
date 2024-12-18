@@ -89,6 +89,7 @@ export const StopSessionForm = ({
 
   return (
     <Form {...form}>
+      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
       <form className="flex flex-col gap-4" onSubmit={onSubmit}>
         <div className="flex gap-4 items-end">
           <FormField

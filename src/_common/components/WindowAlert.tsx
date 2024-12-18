@@ -17,7 +17,7 @@ export function alert(options: AlertOptions): Promise<void> {
   if (alertFunction) {
     return alertFunction(options);
   } else {
-    return Promise.reject("Alert function not set");
+    return Promise.reject(new Error("Alert function not set"));
   }
 }
 

@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { PencilIcon, Trash2Icon } from "lucide-react";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { toast } from "sonner";
 import Button from "../../_common/components/Button";
-import { windowPrompt } from "../../_common/utils/window.utils";
+import { windowConfirm, windowPrompt } from "../../_common/utils/window.utils";
 
 export const RoutesCrud = () => {
   const store = useClubOverviewStore();
@@ -23,8 +24,10 @@ export const RoutesCrud = () => {
     toast.success("Le nom du parcours a été modifié");
   };
 
-  const deleteRoute = (routeId: string) => {
-    if (!confirm("Êtes-vous sûr de vouloir supprimer ce parcours ?")) {
+  const deleteRoute = async (routeId: string) => {
+    if (
+      !(await windowConfirm("Êtes-vous sûr de vouloir supprimer ce parcours ?"))
+    ) {
       return;
     }
 
@@ -53,8 +56,8 @@ export const RoutesCrud = () => {
         <Button
           type="button"
           className="mb-4 w-full"
-          onClick={() => {
-            addRoute();
+          onClick={async () => {
+            await addRoute();
           }}
         >
           Ajouter un parcours
@@ -65,8 +68,8 @@ export const RoutesCrud = () => {
               <p className="text-nowrap px-4">{route.name}</p>
               <div className="h-full w-[1px] bg-gray-200" />
               <button
-                onClick={() => {
-                  updateRouteName(route.id, route.name);
+                onClick={async () => {
+                  await updateRouteName(route.id, route.name);
                 }}
                 className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
               >
@@ -74,8 +77,8 @@ export const RoutesCrud = () => {
               </button>
               <div className="h-full w-[1px] bg-gray-200" />
               <button
-                onClick={() => {
-                  deleteRoute(route.id);
+                onClick={async () => {
+                  await deleteRoute(route.id);
                 }}
                 className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
               >

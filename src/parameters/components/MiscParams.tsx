@@ -27,7 +27,9 @@ export const MiscParams = () => {
         <section>
           <h1 className="font-bold text-xl">La note du coach</h1>
 
-          <p>Cette note sera affichée en haut de la page "Boathouse"</p>
+          <p>
+            Cette note sera affichée en haut de la page &quot;Boathouse&quot;
+          </p>
 
           <textarea
             cols={64}
@@ -56,6 +58,7 @@ export const MiscParams = () => {
                 Le démarrage automatique est{" "}
                 <span className="font-bold underline">activé</span>
               </p>
+              {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
               <Button type="button" onClick={disableAutoStart} className="mt-2">
                 Désactiver le démarrage automatique
               </Button>
@@ -67,6 +70,8 @@ export const MiscParams = () => {
                 Le démarrage automatique est{" "}
                 <span className="font-bold underline">désactivé</span>
               </p>
+
+              {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
               <Button type="button" onClick={enableAutoStart} className="mt-2">
                 Activer le démarrage automatique
               </Button>
@@ -80,6 +85,7 @@ export const MiscParams = () => {
           <Button
             type="button"
             color="danger"
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onClick={async () => {
               if (
                 !adminEditSystem.allowAdminActions(await askForAdminPassword())

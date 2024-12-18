@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import { memo } from "react";
 import { Boat } from "../../../_common/types/boat.type";
 import { useSearchInBoats } from "./BoatList.utils";

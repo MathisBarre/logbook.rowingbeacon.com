@@ -39,8 +39,9 @@ export function SessionHistoryTable({
       )}
 
       {errorMessage && (
-        <div className="flex justify-center items-center py-16">
+        <div className="flex justify-center items-center py-16 flex-col">
           <p className="text-red-500">Erreur lors du chargement des sessions</p>
+          <p className="text-red-500">{errorMessage}</p>
         </div>
       )}
 

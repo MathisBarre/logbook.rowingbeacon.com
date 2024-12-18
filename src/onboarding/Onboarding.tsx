@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import Button from "../_common/components/Button";
 import { Input } from "../_common/components/Input";
 import { Label } from "../_common/components/Label";
@@ -7,10 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FormField } from "../_common/components/Form";
 import { faker } from "@faker-js/faker";
-import {
-  ClubOverviewStoreState,
-  useClubOverviewStore,
-} from "../_common/store/clubOverview.store";
+import { useClubOverviewStore } from "../_common/store/clubOverview.store";
 import { generateBoatId } from "../_common/business/boat.rules";
 import { generateRowerId } from "../_common/business/rower.rules";
 import { generateRoutesId } from "../_common/business/route.rules";
@@ -18,6 +16,8 @@ import { logStr } from "../_common/utils/utils";
 import { windowAlert } from "../_common/utils/window.utils";
 import { BoatTypeEnum } from "../_common/types/boat.type";
 import { hashPassword } from "../_common/utils/password";
+import { useGenerateFakeData } from "../boathouse/data/generateFakeData";
+import { useState } from "react";
 
 const OnboardingFormSchema = z.object({
   clubPassword: z.string(),
@@ -39,10 +39,9 @@ export const Onboarding = ({
     resolver: zodResolver(OnboardingFormSchema),
   });
 
-  const onboard = (values: ClubOverviewStoreState["clubOverview"]) => {
-    setClubOverview(values);
-    setIsOnboardingDone(true);
-  };
+  const generateFakeData = useGenerateFakeData();
+
+  const [generatingFakeDate, setIsGeneratingFakeData] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col relative">
@@ -60,7 +59,8 @@ export const Onboarding = ({
         <form
           className="flex flex-col gap-6"
           onSubmit={form.handleSubmit((values) => {
-            onboard(formatFormValues(values));
+            setClubOverview(formatFormValues(values));
+            setIsOnboardingDone(true);
           })}
         >
           <article className="flex flex-col gap-1 items-start bg-blue-100 border-l-4 border-blue-500 p-4 rounded text-blue-950 my-4">
@@ -74,29 +74,37 @@ export const Onboarding = ({
               </div>
             </div>
             <p className="text-sm ">
-              Si vous souhaitez simplement tester l'application, vous pouvez
-              activer le mode démo pour utiliser des données fictives.
+              Si vous souhaitez simplement tester l&apos;application, vous
+              pouvez activer le mode démo pour utiliser des données fictives.
             </p>
             <Button
+              loading={generatingFakeDate}
               variant="outlined"
               type="button"
               className="flex items-center gap-2 text-sm mt-1"
               onClick={async () => {
+                setIsGeneratingFakeData(true);
                 const ADMIN_PASSWORD = "admin";
-                onboard({
+                setClubOverview({
                   club: {
                     password: hashPassword(ADMIN_PASSWORD),
                   },
                   boats: generateBoats(),
-                  rowers: generateRowers(30),
+                  rowers: generateRowers(100),
                   routes: generateRoutes(3),
                 });
+
+                await generateFakeData();
+                setIsGeneratingFakeData(false);
+
+                setIsOnboardingDone(true);
+
                 await windowAlert(
                   `Le mot de passe admin du mode démo est "${ADMIN_PASSWORD}"`
                 );
               }}
             >
-              Lancer l'application en mode démo
+              Lancer l&apos;application en mode démo
               <ArrowRightIcon className="h-4 w-4" />
             </Button>
           </article>

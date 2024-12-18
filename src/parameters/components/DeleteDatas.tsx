@@ -18,17 +18,18 @@ export const DeleteDatas = () => {
         <span className="font-bold text-xl">Attention !</span>
       </div>
       <p>
-        Vous êtes sur le point de supprimer toutes les données de l'application.
+        Vous êtes sur le point de supprimer toutes les données de
+        l&apos;application.
       </p>
 
       <p>
         Il sera impossible de les récupérer une fois supprimée. Assurez-vous
-        d'avoir exporté les données importantes.
+        d&apos;avoir exporté les données importantes.
       </p>
 
       <p>
-        Confirmez en écrivant exactement "{requiredTextToDelete}" dans le champ
-        ci-dessous.
+        Confirmez en écrivant exactement &quot;{requiredTextToDelete}&quot; dans
+        le champ ci-dessous.
       </p>
 
       <textarea
@@ -61,6 +62,7 @@ export const DeleteDatas = () => {
           textareaContent !== requiredTextToDelete ||
           !adminEditSystem.isAdminPassword(adminPassword)
         }
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onClick={async () => {
           if (textareaContent !== requiredTextToDelete) {
             return;
@@ -70,7 +72,7 @@ export const DeleteDatas = () => {
             return;
           }
 
-          logout();
+          await logout();
         }}
       >
         <SkullIcon />

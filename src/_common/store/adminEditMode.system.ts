@@ -38,7 +38,7 @@ export const useAdminEditModeSystem = () => {
     }
 
     if (isAdminPassword(pswd)) {
-      closeApp();
+      return closeApp();
     } else {
       wrongAdminPassword();
     }

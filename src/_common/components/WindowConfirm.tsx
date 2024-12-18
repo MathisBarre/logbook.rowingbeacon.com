@@ -17,7 +17,7 @@ export function confirm(options: ConfirmOptions): Promise<boolean> {
   if (confirmFunction) {
     return confirmFunction(options);
   } else {
-    return Promise.reject("Confirm function not set");
+    return Promise.reject(new Error("Confirm function not set"));
   }
 }
 

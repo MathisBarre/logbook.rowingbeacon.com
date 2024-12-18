@@ -1,5 +1,6 @@
 import { useOnboardingStore } from "../../onboarding/onboarding.store";
 import { getDatabase } from "../database/database";
+import { DBSessionOnRowers, DBSessions } from "../database/schema";
 import { useClubOverviewStore } from "../store/clubOverview.store";
 import useIncidentStore from "../store/incident.store";
 import { useSessionsStore } from "../store/sessions.store";
@@ -11,10 +12,10 @@ export const useLogout = () => {
   const setIsOnboardingDone = useOnboardingStore((state) => state.setOnboarded);
 
   return async () => {
-    const db = await getDatabase();
+    const { drizzle } = await getDatabase();
 
-    await db.execute("DELETE FROM session");
-    await db.execute("DELETE FROM session_rowers");
+    await drizzle.delete(DBSessions);
+    await drizzle.delete(DBSessionOnRowers);
 
     sessionStore.reset();
     clubOverviewStore.reset();

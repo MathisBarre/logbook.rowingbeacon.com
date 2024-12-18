@@ -19,7 +19,7 @@ export function prompt(options: PromptOptions): Promise<string | null> {
   if (promptFunction) {
     return promptFunction(options);
   } else {
-    return Promise.reject("Prompt function not set");
+    return Promise.reject(new Error("Prompt function not set"));
   }
 }
 

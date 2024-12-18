@@ -98,7 +98,9 @@ export const useGetLastSessions = (payload: {
       }
     };
 
-    fetchSessions();
+    fetchSessions().catch((e) => {
+      setErrorMessage(getErrorMessage(e));
+    });
   }, [pageSize, currentPage]);
 
   const next = () => {

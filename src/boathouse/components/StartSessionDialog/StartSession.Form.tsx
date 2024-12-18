@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { z } from "zod";
 import { BoatSection } from "./BoatSection";
 import CommentSection from "./CommentSection";
@@ -106,13 +107,10 @@ export const StartSessionForm = ({
                     {alert.details.nbOfRowers} rameur(s)
                   </span>
                   .
-                  <br /> Le bateau "{alert.details.boatName}" nécessite{" "}
+                  <br /> Le bateau &quot;{alert.details.boatName}&quot;
+                  nécessite{" "}
                   <span className="font-medium">
-                    {alert.details.boatRowersQuantity}{" "}
-                    {alert.details.boatRowersQuantity && (
-                      <>ou {alert.details.boatRowersQuantity + 1} </>
-                    )}
-                    rameur(s)
+                    {alert.details.boatRowersQuantity} rameur(s)
                   </span>
                   .
                   <br /> Souhaitez-vous continuer ?
@@ -121,7 +119,9 @@ export const StartSessionForm = ({
               onStartSessionClick={() => {
                 acceptBadAmountOfRowers(
                   formatValuesForSubmission(form.getValues())
-                );
+                ).catch(() => {
+                  console.error("Failed to accept bad amount of rowers");
+                });
               }}
               onFixSessionClick={() => {
                 fixInputs();
@@ -161,7 +161,11 @@ export const StartSessionForm = ({
               onStartSessionClick={() => {
                 acceptToHaveSameRowersAlreadyOnStartedSession(
                   formatValuesForSubmission(form.getValues())
-                );
+                ).catch(() => {
+                  console.error(
+                    "Failed to accept to have same rowers already on started session"
+                  );
+                });
               }}
               onFixSessionClick={() => {
                 fixInputs();
@@ -282,6 +286,9 @@ const StartSessionAlert = ({
           <TextContent />
         </p>
         <div className="flex gap-2">
+          <Button className="w-60" type="button" onClick={onFixSessionClick}>
+            Corriger les informations
+          </Button>
           <Button
             className="w-60"
             type="button"
@@ -290,9 +297,6 @@ const StartSessionAlert = ({
             onClick={onStartSessionClick}
           >
             Commencer la sortie
-          </Button>
-          <Button className="w-60" type="button" onClick={onFixSessionClick}>
-            Corriger les informations
           </Button>
         </div>
       </div>

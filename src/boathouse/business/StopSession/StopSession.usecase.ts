@@ -9,6 +9,10 @@ import {
 import { asError, asOk, SimpleResult } from "../../../_common/utils/error";
 import { isStringEquivalentOfUndefined } from "../../../_common/utils/string.utils";
 import { getDatabase } from "../../../_common/database/database";
+import {
+  DBSessionOnRowers,
+  DBSessions,
+} from "../../../_common/database/schema";
 
 interface ISessionStore {
   getOngoingSession(sessionId: string):
@@ -31,7 +35,7 @@ interface ISessionStore {
   removeSession(sessionId: string): void;
 }
 
-interface SessionToSave {
+export interface SessionToSave {
   id: string;
   boatId: string;
   startDateTime: string;
@@ -40,13 +44,12 @@ interface SessionToSave {
   endDateTime: string;
   incidentId: string;
   comment: string;
-
   rowerIds: string[];
 }
 
 interface ISessionDatabaseRepository {
-  saveSession(
-    session: SessionToSave
+  saveSessions(
+    sessions: SessionToSave[]
   ): Promise<SimpleResult<"FAILED_TO_SAVE_SESSION", null>>;
 }
 
@@ -112,19 +115,20 @@ class StopSession {
 
     const incidentId = generateIncidenId();
 
-    const [saveSessionError] = await this.sessionDatabaseRepository.saveSession(
-      {
-        id: ongoingSessionInStore.id,
-        boatId: ongoingSessionInStore.boat.id,
-        startDateTime: ongoingSessionInStore.startDateTime,
-        estimatedEndDateTime: ongoingSessionInStore.estimatedEndDateTime,
-        routeId: ongoingSessionInStore.route.id,
-        endDateTime: stopSessionPayload.endDateTime,
-        comment: stopSessionPayload.comment,
-        incidentId: incidentId,
-        rowerIds: ongoingSessionInStore.rowers.map((rower) => rower.id),
-      }
-    );
+    const [saveSessionError] =
+      await this.sessionDatabaseRepository.saveSessions([
+        {
+          id: ongoingSessionInStore.id,
+          boatId: ongoingSessionInStore.boat.id,
+          startDateTime: ongoingSessionInStore.startDateTime,
+          estimatedEndDateTime: ongoingSessionInStore.estimatedEndDateTime,
+          routeId: ongoingSessionInStore.route.id,
+          endDateTime: stopSessionPayload.endDateTime,
+          comment: stopSessionPayload.comment,
+          incidentId: incidentId,
+          rowerIds: ongoingSessionInStore.rowers.map((rower) => rower.id),
+        },
+      ]);
 
     if (saveSessionError) {
       return asError({
@@ -160,56 +164,44 @@ class StopSession {
   }
 }
 
-class SessionDatabaseRepository implements ISessionDatabaseRepository {
-  async saveSession(
-    session: SessionToSave
+export class SessionDatabaseRepository implements ISessionDatabaseRepository {
+  async saveSessions(
+    sessions: SessionToSave[]
   ): Promise<SimpleResult<"FAILED_TO_SAVE_SESSION", null>> {
-    const db = await getDatabase();
+    const { drizzle } = await getDatabase();
 
     try {
-      await db.execute(
-        /* sql */ `
-        INSERT INTO session (
-          id,
-          boat_id,
-          start_date_time,
-          estimated_end_date_time,
-          route_id,
-          end_date_time,
-          incident_id,
-          comment
-        )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-      `,
-        [
-          session.id,
-          session.boatId,
-          getDateTimeWithoutTimezone(session.startDateTime),
-          getDateTimeWithoutTimezone(session.estimatedEndDateTime),
-          session.routeId,
-          getDateTimeWithoutTimezone(session.endDateTime),
-          session.incidentId,
-          session.comment,
-        ]
+      const sessionsToSave = sessions.map((session) => ({
+        id: session.id,
+        boatId: session.boatId,
+        startDateTime: getDateTimeWithoutTimezone(session.startDateTime),
+        estimatedEndDateTime: getDateTimeWithoutTimezone(
+          session.estimatedEndDateTime
+        ),
+        routeId: session.routeId,
+        endDateTime: getDateTimeWithoutTimezone(session.endDateTime),
+        incidentId: session.incidentId,
+        comment: session.comment,
+      }));
+
+      await drizzle.insert(DBSessions).values(sessionsToSave);
+
+      const rowersOnSessionsToSave = sessions.flatMap((session) =>
+        session.rowerIds.map((rowerId) => ({
+          session_id: session.id,
+          rower_id: rowerId,
+        }))
       );
 
-      const values = session.rowerIds
-        .map((rowerId) => `('${session.id}', '${rowerId}')`)
-        .join(", ");
+      console.log("rowersOnSessionsToSave", rowersOnSessionsToSave);
 
-      await db.execute(/* sql */ `
-        INSERT INTO session_rowers (
-          session_id,
-          rower_id
-        )
-        VALUES ${values}
-      `);
+      await drizzle.insert(DBSessionOnRowers).values(rowersOnSessionsToSave);
 
-      console.log("✅ Session saved");
+      console.log("✅ Session(s) saved");
 
       return asOk(null);
     } catch (e) {
-      console.error("❌ Failed to save session");
+      console.error("❌ Failed to save session(s)");
       console.error(e);
       return asError({
         code: "FAILED_TO_SAVE_SESSION",

@@ -8,9 +8,7 @@ export const checkIfNotSameRowersAsSeatsInBoat = (
     return false;
   }
 
-  const goodRowerQuantity =
-    nbOfRowers === boat.rowersQuantity ||
-    nbOfRowers === boat.rowersQuantity + 1;
+  const goodRowerQuantity = nbOfRowers === boat.rowersQuantity;
 
   return !goodRowerQuantity;
 };

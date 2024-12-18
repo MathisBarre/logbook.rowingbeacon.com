@@ -40,6 +40,7 @@ function BoathouseScreen() {
       {coachNote && (
         <div
           className=" bg-yellow-100 border border-yellow-700 text-yellow-900 rounded h-9 px-2 flex items-center overflow-hidden z-30 hover:bg-yellow-200 cursor-pointer"
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onClick={async () => {
             await windowAlert(coachNote);
           }}

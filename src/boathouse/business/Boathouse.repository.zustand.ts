@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/require-await */
+import { fromBoatTypeToNbOfRowers } from "../../_common/business/boat.rules";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { useSessionsStore } from "../../_common/store/sessions.store";
-import { Boat, BoatTypeEnum } from "../../_common/types/boat.type";
+import { Boat } from "../../_common/types/boat.type";
 import { asError, asOk } from "../../_common/utils/error";
-import { forEnum } from "../../_common/utils/utils";
 import { IBoathouseRepository } from "./Boathouse.repository.interface";
 import { StartedSession } from "./StartedSession.business";
 
@@ -59,20 +60,4 @@ export const useGetZustandBoathouseRepository = () => {
   };
 
   return repository;
-};
-
-const fromBoatTypeToNbOfRowers = (type?: BoatTypeEnum) => {
-  if (!type) {
-    return undefined;
-  }
-
-  return forEnum(type, {
-    ONE_ROWER_COXLESS: () => 1,
-    TWO_ROWERS_COXLESS: () => 2,
-    TWO_ROWERS_COXED: () => 3,
-    FOUR_ROWERS_COXLESS: () => 4,
-    FOUR_ROWERS_COXED: () => 5,
-    EIGHT_ROWERS_COXED: () => 8,
-    OTHER: () => undefined,
-  });
 };

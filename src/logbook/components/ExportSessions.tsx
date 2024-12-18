@@ -44,8 +44,8 @@ export const ExportSessions = ({
             <>
               <p>Export réalisé avec succès</p>
               <p>
-                "{fileName}" a été téléchargé dans votre dossier
-                "Téléchargements"
+                &quot;{fileName}&quot; a été téléchargé dans votre dossier
+                &quot;Téléchargements&quot;
               </p>
             </>
           )}
@@ -60,9 +60,10 @@ export const ExportSessions = ({
       )}
       <form
         className="flex flex-col gap-6"
-        onSubmit={(e) => {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onSubmit={async (e) => {
           e.preventDefault();
-          handleSubmit();
+          await handleSubmit();
         }}
       >
         <div className="flex gap-6">
@@ -92,7 +93,7 @@ export const ExportSessions = ({
               render={({ field, fieldState }) => (
                 <>
                   <Label className="flex flex-col gap-1">
-                    Jusqu'au
+                    Jusqu&apos;au
                     <input className="input flex-1" type="date" {...field} />
                   </Label>
 

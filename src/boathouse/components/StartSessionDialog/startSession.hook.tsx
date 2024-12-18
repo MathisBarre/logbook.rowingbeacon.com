@@ -107,7 +107,7 @@ export const useStartSession = (onSessionStarted: () => void) => {
     []
   );
 
-  const fixInputs = useCallback(async () => {
+  const fixInputs = useCallback(() => {
     setAlert(null);
   }, []);
 
