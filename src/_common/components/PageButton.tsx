@@ -35,12 +35,14 @@ const PageButton = ({
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       onClick={handleClick}
       className={cn(
-        "text-sm font-medium text-steel-blue-800 hover:bg-gray-200 flex-1 flex items-center justify-center gap-2 shadow-md rounded bg-white border",
-        currentPage === page && " border-steel-blue-900 bg-gray-100"
+        "text-sm font-medium text-steel-blue-800 hover:bg-gray-200 flex-1 shadow-md rounded bg-white border overflow-hidden",
+        currentPage === page && " border-steel-blue-900 bg-gray-100 bg-pattern "
       )}
     >
-      {icon}
-      {label}
+      <div className="flex items-center justify-center gap-2 bg-radial-white h-full w-full">
+        {icon}
+        {label}
+      </div>
     </button>
   );
 };
