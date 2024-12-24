@@ -13,6 +13,8 @@ interface RouteSectionProps {
 }
 
 const RouteSection = ({ routes, onChange, value }: RouteSectionProps) => {
+  if (routes.length === 0) return null;
+
   return (
     <div className="flex flex-col gap-1 flex-1">
       <Label>Parcours</Label>
