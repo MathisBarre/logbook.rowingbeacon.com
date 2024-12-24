@@ -1,6 +1,13 @@
 import { UserIcon, ChatBubbleLeftIcon } from "@heroicons/react/16/solid";
 import { getTime } from "../../_common/utils/date.utils";
 import Loading from "../../_common/components/Loading";
+import { Trash2Icon } from "lucide-react";
+import { useRemoveSession } from "../hooks/useRemoveSession";
+import {
+  askForAdminPassword,
+  useAdminEditModeSystem,
+} from "../../_common/store/adminEditMode.system";
+import { toast } from "sonner";
 
 export interface SessionInTable {
   id: string;
@@ -25,13 +32,18 @@ interface SessionHistoryTableProps {
   sessionsInTableList: SessionInTable[];
   loading: boolean;
   errorMessage?: string | null;
+  refresh: () => Promise<void>;
 }
 
 export function SessionHistoryTable({
   sessionsInTableList,
   loading,
   errorMessage,
+  refresh,
 }: SessionHistoryTableProps) {
+  const { removeSession } = useRemoveSession();
+  const adminEditSystem = useAdminEditModeSystem();
+
   return (
     <div className="overflow-auto pb-32">
       {sessionsInTableList.length === 0 && !loading && !errorMessage && (
@@ -57,6 +69,22 @@ export function SessionHistoryTable({
             key={session.id}
             className="flex even:bg-gray-100 py-6 px-12 items-center relative"
           >
+            <span
+              className="absolute bottom-2 right-2 text-error-800 underline text-sm cursor-pointer"
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onClick={async () => {
+                if (
+                  adminEditSystem.allowAdminActions(await askForAdminPassword())
+                ) {
+                  await removeSession(session.id);
+                  await refresh();
+                  toast.success("La session a été supprimée");
+                }
+              }}
+            >
+              <Trash2Icon className="h-4 w-4" />
+            </span>
+
             <div className="mr-12 font-mono tracking-tighter">
               <FormattedDate
                 start={session.startDateTime}

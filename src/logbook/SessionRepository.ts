@@ -1,6 +1,6 @@
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { getDatabase } from "../_common/database/database";
-import { DBSessions } from "../_common/database/schema";
+import { DBSessionOnRowers, DBSessions } from "../_common/database/schema";
 import { getDateTimeWithoutTimezone } from "../_common/utils/date.utils";
 
 export const sessionRepository = {
@@ -69,6 +69,16 @@ export const sessionRepository = {
     console.log(result);
 
     return result[0].count;
+  },
+
+  removeSession: async (sessionId: string) => {
+    const { drizzle } = await getDatabase();
+
+    await drizzle.delete(DBSessions).where(eq(DBSessions.id, sessionId));
+
+    await drizzle
+      .delete(DBSessionOnRowers)
+      .where(eq(DBSessionOnRowers.session_id, sessionId));
   },
 };
 

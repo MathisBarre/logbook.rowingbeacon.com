@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { sessionRepository } from "../SessionRepository";
 import { getErrorMessage } from "../../_common/utils/error";
@@ -36,6 +36,7 @@ export const useGetLastSessions = (payload: {
   loading: boolean;
   sessions: SessionLog[];
   errorMessage: string | null;
+  refresh: () => Promise<void>;
 } => {
   const { pageSize } = payload;
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,59 +46,59 @@ export const useGetLastSessions = (payload: {
   const clubOverview = useClubOverviewStore();
   const [errorMessage, setErrorMessage] = useState<null | string>(null);
 
-  useEffect(() => {
-    const fetchSessions = async () => {
-      try {
-        setLoading(true);
-        setErrorMessage(null);
+  const fetchSessions = useCallback(async () => {
+    try {
+      setLoading(true);
+      setErrorMessage(null);
 
-        const totalNumberOfSession =
-          await sessionRepository.getTotalNumberOfSessions();
+      const totalNumberOfSession =
+        await sessionRepository.getTotalNumberOfSessions();
 
-        const numberOfPages = Math.ceil(totalNumberOfSession / pageSize);
+      const numberOfPages = Math.ceil(totalNumberOfSession / pageSize);
 
-        setNumberOfPages(numberOfPages);
+      setNumberOfPages(numberOfPages);
 
-        const data = await sessionRepository.getSessions({
-          maxPageSize: pageSize,
-          skip: (currentPage - 1) * pageSize,
-          order: {
-            startDateTime: "DESC",
+      const data = await sessionRepository.getSessions({
+        maxPageSize: pageSize,
+        skip: (currentPage - 1) * pageSize,
+        order: {
+          startDateTime: "DESC",
+        },
+      });
+
+      const formattedData = data.map((session) => {
+        return {
+          id: session.sessionId,
+          rowers: clubOverview.getRowersById(
+            (session.rowerIds || "").split(",")
+          ),
+          boat: clubOverview.getBoatById(session.boatId) || {
+            id: session.boatId,
+            name: "NOT_FOUND",
           },
-        });
+          startDateTime: session.startDateTime,
+          endDateTime: session.endDateTime,
+          estimatedEndDateTime: session.estimatedEndDateTime,
+          comment: session.comment,
+          route: session.routeId
+            ? clubOverview.getRouteById(session.routeId) || {
+                id: session.routeId,
+                name: "NOT_FOUND",
+              }
+            : null,
+          incident: session.incidentId ? { id: session.incidentId } : null,
+        };
+      });
 
-        const formattedData = data.map((session) => {
-          return {
-            id: session.sessionId,
-            rowers: clubOverview.getRowersById(
-              (session.rowerIds || "").split(",")
-            ),
-            boat: clubOverview.getBoatById(session.boatId) || {
-              id: session.boatId,
-              name: "NOT_FOUND",
-            },
-            startDateTime: session.startDateTime,
-            endDateTime: session.endDateTime,
-            estimatedEndDateTime: session.estimatedEndDateTime,
-            comment: session.comment,
-            route: session.routeId
-              ? clubOverview.getRouteById(session.routeId) || {
-                  id: session.routeId,
-                  name: "NOT_FOUND",
-                }
-              : null,
-            incident: session.incidentId ? { id: session.incidentId } : null,
-          };
-        });
+      setSessions(formattedData);
+    } catch (e) {
+      setErrorMessage(getErrorMessage(e));
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-        setSessions(formattedData);
-      } catch (e) {
-        setErrorMessage(getErrorMessage(e));
-      } finally {
-        setLoading(false);
-      }
-    };
-
+  useEffect(() => {
     fetchSessions().catch((e) => {
       setErrorMessage(getErrorMessage(e));
     });
@@ -119,5 +120,6 @@ export const useGetLastSessions = (payload: {
     loading,
     sessions,
     errorMessage,
+    refresh: fetchSessions,
   };
 };

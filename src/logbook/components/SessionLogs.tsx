@@ -19,6 +19,7 @@ export const SessionLogs = () => {
     loading,
     sessions,
     errorMessage,
+    refresh,
   } = useGetLastSessions({
     pageSize: 24,
   });
@@ -72,6 +73,7 @@ export const SessionLogs = () => {
         sessionsInTableList={sessions}
         loading={loading}
         errorMessage={errorMessage}
+        refresh={refresh}
       />
 
       <section className="shadow border py-4 px-8 absolute z-10 bg-white p-2 rounded bottom-4 left-1/2 -translate-x-1/2">
