@@ -1,3 +1,4 @@
+import { Route } from "../../_common/types/route.type";
 import { toISODateFormat } from "../../_common/utils/date.utils";
 import { asError, asOk } from "../../_common/utils/error";
 import { checkIfNotSameRowersAsSeatsInBoat } from "./Boat.business";
@@ -86,14 +87,20 @@ export class StartSessionUsecase {
       });
     }
 
-    const [getRouteError, route] = await this.boathouseRepository.getRoute(
-      payload.routeId
-    );
+    let route: Route | null = null;
 
-    if (getRouteError) {
-      return asError({
-        code: "ROUTE_NOT_FOUND",
-      });
+    if (payload.routeId) {
+      const [getRouteError, _route] = await this.boathouseRepository.getRoute(
+        payload.routeId
+      );
+
+      if (getRouteError) {
+        return asError({
+          code: "ROUTE_NOT_FOUND",
+        });
+      }
+
+      route = _route;
     }
 
     const [getRowersError, rowers] =

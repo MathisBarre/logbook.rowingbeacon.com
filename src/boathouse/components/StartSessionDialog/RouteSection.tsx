@@ -1,6 +1,11 @@
 import { Label } from "../../../_common/components/Label";
 import { Route } from "../../../_common/types/route.type";
 
+export const defaultRoute: Route = {
+  id: "null",
+  name: "Aucun parcours",
+};
+
 interface RouteSectionProps {
   routes: Route[];
   onChange: (value: { id: string; name: string }) => void;
@@ -24,6 +29,7 @@ const RouteSection = ({ routes, onChange, value }: RouteSectionProps) => {
         }}
         value={value.id}
       >
+        <option value={defaultRoute.id}>{defaultRoute.name}</option>
         {routes.sort().map((route) => (
           <option key={route.id} value={route.id}>
             {route.name}

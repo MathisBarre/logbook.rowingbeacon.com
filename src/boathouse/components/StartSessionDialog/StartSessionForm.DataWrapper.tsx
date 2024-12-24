@@ -1,6 +1,7 @@
 import { StartSessionForm } from "./StartSession.Form";
 import { getCurrentDateTime } from "../../../_common/utils/date.utils";
 import { useClubOverviewStore } from "../../../_common/store/clubOverview.store";
+import { defaultRoute } from "./RouteSection";
 
 interface StartSessionFormDataWrapperProps {
   closeAction: () => void;
@@ -17,7 +18,7 @@ export const StartSessionFormDataWrapper = ({
 }: StartSessionFormDataWrapperProps) => {
   const defaultValues = {
     boat: defaultBoat,
-    route: { id: "null", name: "" },
+    route: defaultRoute,
     selectedRowersOptions: [],
     startDateTime: getCurrentDateTime(),
     durationValue: "na" as const,
@@ -41,7 +42,6 @@ export const StartSessionFormDataWrapper = ({
         }}
         values={{
           ...defaultValues,
-          route: clubOverview.routes.sort()[0],
         }}
       />
     </div>

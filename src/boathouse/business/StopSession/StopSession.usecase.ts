@@ -25,7 +25,7 @@ interface ISessionStore {
         estimatedEndDateTime?: string | undefined;
         route: {
           id: string;
-        };
+        } | null;
         rowers: {
           id: string;
         }[];
@@ -40,7 +40,7 @@ export interface SessionToSave {
   boatId: string;
   startDateTime: string;
   estimatedEndDateTime?: string | undefined;
-  routeId: string;
+  routeId?: string | undefined;
   endDateTime: string;
   incidentId: string;
   comment: string;
@@ -122,7 +122,7 @@ class StopSession {
           boatId: ongoingSessionInStore.boat.id,
           startDateTime: ongoingSessionInStore.startDateTime,
           estimatedEndDateTime: ongoingSessionInStore.estimatedEndDateTime,
-          routeId: ongoingSessionInStore.route.id,
+          routeId: ongoingSessionInStore?.route?.id || undefined,
           endDateTime: stopSessionPayload.endDateTime,
           comment: stopSessionPayload.comment,
           incidentId: incidentId,

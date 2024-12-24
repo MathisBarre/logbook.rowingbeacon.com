@@ -7,10 +7,10 @@ interface ZustandRower {
   name: string;
 }
 
-interface ZustandRoute {
+type ZustandRoute = {
   id: string;
   name: string;
-}
+} | null;
 
 interface ZustandBoat {
   id: string;
@@ -32,7 +32,7 @@ interface ZustandSessionsStoreState {
   session: ZustandSession[];
   startSession: (payload: {
     rowers: ZustandRower[];
-    route: ZustandRoute;
+    route: ZustandRoute | null;
     boat: ZustandBoat;
     startDateTime: string;
     estimatedEndDateTime?: string | undefined;

@@ -7,7 +7,7 @@ import { StartedSession } from "./StartedSession.business";
 export interface IBoathouseRepository {
   saveSession(payload: {
     boat: Boat & { rowersQuantity: number | undefined };
-    route: Route;
+    route: Route | null;
     rowers: Rower[];
     startDateTime: string;
     estimatedEndDateTime?: string | undefined;

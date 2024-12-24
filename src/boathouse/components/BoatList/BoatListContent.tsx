@@ -196,18 +196,20 @@ const BoatInSessionRow = memo(
             {boat.name}
           </p>
           <p className="text-xs text-gray-400">
-            Direction{" "}
-            {sessionRelated?.route && (
-              <span className="">
-                {`"${sessionRelated?.route.name}"`}
-                {sessionRelated.estimatedEndDateTime && (
-                  <>
-                    - Retour prévu{" "}
-                    {formatSimpleDate(sessionRelated.estimatedEndDateTime)}
-                  </>
-                )}
-              </span>
-            )}
+            <>
+              {sessionRelated?.route && (
+                <>Direction {`"${sessionRelated?.route.name}"`}</>
+              )}
+              {sessionRelated?.route &&
+                sessionRelated?.estimatedEndDateTime &&
+                " - "}
+              {sessionRelated?.estimatedEndDateTime && (
+                <>
+                  Retour prévu{" "}
+                  {formatSimpleDate(sessionRelated.estimatedEndDateTime)}
+                </>
+              )}
+            </>
           </p>
         </div>
         <p className="text-sm text-gray-400">

@@ -1,5 +1,5 @@
 export interface SessionToStart {
-  routeId: string;
+  routeId: string | null;
   boatId: string;
   rowersId: string[];
   startDatetime: Date;

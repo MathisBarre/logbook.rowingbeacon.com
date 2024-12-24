@@ -108,7 +108,7 @@ export const StartSessionForm = ({
       rowersId: values.selectedRowersOptions.map((option) => option.id),
       startDatetime: new Date(values.startDateTime),
       estimatedEndDatetime: estimatedEndDatetime,
-      routeId: values.route.id,
+      routeId: values.route.id === "null" ? null : values.route.id,
       comment: values.comment,
     };
   };
