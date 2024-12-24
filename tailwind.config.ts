@@ -1,7 +1,8 @@
-const colors = require("tailwindcss/colors");
+import colors from "tailwindcss/colors";
+import twAnimate from "tailwindcss-animate";
+import twForms from "@tailwindcss/forms";
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   darkMode: ["class"],
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
@@ -37,5 +38,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/forms")],
+  plugins: [twAnimate, twForms],
 };
