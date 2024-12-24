@@ -23,7 +23,7 @@ export interface ZustandSession {
   route: ZustandRoute;
   boat: ZustandBoat;
   startDateTime: string;
-  estimatedEndDateTime: string;
+  estimatedEndDateTime?: string | undefined;
   comment: string;
   endDateTime: string | null;
 }
@@ -35,7 +35,7 @@ interface ZustandSessionsStoreState {
     route: ZustandRoute;
     boat: ZustandBoat;
     startDateTime: string;
-    estimatedEndDateTime: string;
+    estimatedEndDateTime?: string | undefined;
     comment: string;
   }) => void;
   stopSession: (

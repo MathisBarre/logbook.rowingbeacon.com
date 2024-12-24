@@ -2,7 +2,7 @@
 import { z } from "zod";
 import { BoatSection } from "./BoatSection";
 import CommentSection from "./CommentSection";
-import EndDatetimeSection from "./EndDatetimeSection";
+import DurationEstimationSelect from "./DurationEstimationSelect";
 import RouteSection from "./RouteSection";
 import { RowersSection } from "./RowersSection";
 import StartDatetimeSection from "./StartDatetimeSection";
@@ -15,6 +15,7 @@ import { ErrorBlock } from "../../../_common/components/ErrorBlock";
 import { useStartSession } from "./startSession.hook";
 import { CircleAlertIcon } from "lucide-react";
 import { replaceLastOccurrence } from "../../../_common/utils/string.utils";
+import { addMinutes } from "../../../_common/utils/date.utils";
 
 const StartSessionFormSchema = z.object({
   boat: z.object({
@@ -30,7 +31,21 @@ const StartSessionFormSchema = z.object({
     .array(z.object({ id: z.string(), name: z.string() }))
     .min(1, { message: "Veuillez sélectionner au moins un rameur" }),
   startDateTime: dateStringSchema,
-  estimatedEndDateTime: dateStringSchema,
+  durationValue: z.enum([
+    "na",
+    "15",
+    "30",
+    "45",
+    "60",
+    "75",
+    "90",
+    "105",
+    "120",
+    "135",
+    "150",
+    "165",
+    "180",
+  ]),
   comment: z.string(),
 });
 
@@ -79,11 +94,20 @@ export const StartSessionForm = ({
   } = useStartSession(onSessionStarted);
 
   const formatValuesForSubmission = (values: StartSessionFormValues) => {
+    const durationInMinutes =
+      values.durationValue !== "na"
+        ? parseInt(values.durationValue)
+        : undefined;
+
+    const estimatedEndDatetime = durationInMinutes
+      ? addMinutes(new Date(values.startDateTime), durationInMinutes)
+      : undefined;
+
     return {
       boatId: values.boat.id,
       rowersId: values.selectedRowersOptions.map((option) => option.id),
       startDatetime: new Date(values.startDateTime),
-      estimatedEndDatetime: new Date(values.estimatedEndDateTime),
+      estimatedEndDatetime: estimatedEndDatetime,
       routeId: values.route.id,
       comment: values.comment,
     };
@@ -228,10 +252,10 @@ export const StartSessionForm = ({
             />
 
             <FormField
-              name="estimatedEndDateTime"
+              name="durationValue"
               control={form.control}
               render={({ field, fieldState }) => (
-                <EndDatetimeSection
+                <DurationEstimationSelect
                   value={field.value}
                   onChange={field.onChange}
                   errorMessage={fieldState.error?.message}

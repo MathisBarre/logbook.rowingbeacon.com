@@ -20,7 +20,7 @@ export const StartSessionFormDataWrapper = ({
     route: { id: "null", name: "" },
     selectedRowersOptions: [],
     startDateTime: getCurrentDateTime(),
-    estimatedEndDateTime: "",
+    durationValue: "na" as const,
     comment: "",
   };
 

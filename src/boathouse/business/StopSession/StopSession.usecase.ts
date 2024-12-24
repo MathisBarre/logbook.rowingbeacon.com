@@ -22,7 +22,7 @@ interface ISessionStore {
           id: string;
         };
         startDateTime: string;
-        estimatedEndDateTime: string;
+        estimatedEndDateTime?: string | undefined;
         route: {
           id: string;
         };
@@ -39,7 +39,7 @@ export interface SessionToSave {
   id: string;
   boatId: string;
   startDateTime: string;
-  estimatedEndDateTime: string;
+  estimatedEndDateTime?: string | undefined;
   routeId: string;
   endDateTime: string;
   incidentId: string;
@@ -175,9 +175,9 @@ export class SessionDatabaseRepository implements ISessionDatabaseRepository {
         id: session.id,
         boatId: session.boatId,
         startDateTime: getDateTimeWithoutTimezone(session.startDateTime),
-        estimatedEndDateTime: getDateTimeWithoutTimezone(
-          session.estimatedEndDateTime
-        ),
+        estimatedEndDateTime: session.estimatedEndDateTime
+          ? getDateTimeWithoutTimezone(session.estimatedEndDateTime)
+          : undefined,
         routeId: session.routeId,
         endDateTime: getDateTimeWithoutTimezone(session.endDateTime),
         incidentId: session.incidentId,

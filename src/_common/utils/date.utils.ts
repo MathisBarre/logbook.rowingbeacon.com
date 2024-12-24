@@ -72,6 +72,10 @@ export const toISODateFormat = (dateTime: string | Date): string => {
   return date.toISOString();
 };
 
+export const addMinutes = (date: Date, minutes: number) => {
+  return new Date(date.getTime() + minutes * MINUTE_IN_MS);
+};
+
 export const addHours = (date: Date, hours: number) => {
   return new Date(date.getTime() + hours * HOUR_IN_MS);
 };

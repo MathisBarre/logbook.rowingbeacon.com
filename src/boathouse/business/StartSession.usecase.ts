@@ -114,7 +114,9 @@ export class StartSessionUsecase {
       route,
       comment: payload.comment,
       rowers,
-      estimatedEndDateTime: toISODateFormat(payload.estimatedEndDatetime),
+      estimatedEndDateTime: payload.estimatedEndDatetime
+        ? toISODateFormat(payload.estimatedEndDatetime)
+        : undefined,
       startDateTime: toISODateFormat(payload.startDatetime),
     });
 

@@ -199,8 +199,13 @@ const BoatInSessionRow = memo(
             Direction{" "}
             {sessionRelated?.route && (
               <span className="">
-                {`"${sessionRelated?.route.name}"`} - Retour prévu{" "}
-                {formatSimpleDate(sessionRelated.estimatedEndDateTime)}
+                {`"${sessionRelated?.route.name}"`}
+                {sessionRelated.estimatedEndDateTime && (
+                  <>
+                    - Retour prévu{" "}
+                    {formatSimpleDate(sessionRelated.estimatedEndDateTime)}
+                  </>
+                )}
               </span>
             )}
           </p>

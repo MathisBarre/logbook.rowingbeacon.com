@@ -10,7 +10,7 @@ export interface IBoathouseRepository {
     route: Route;
     rowers: Rower[];
     startDateTime: string;
-    estimatedEndDateTime: string;
+    estimatedEndDateTime?: string | undefined;
     comment: string;
   }): Promise<SimpleResult<string, null>>;
   getBoat(boatId: string): Promise<SimpleResult<string, Boat>>;
