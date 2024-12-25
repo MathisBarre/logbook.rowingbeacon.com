@@ -139,12 +139,12 @@ export const BoatCrud = () => {
               <Button type="button">
                 <div className="flex gap-2 items-center ">
                   <ChartBarIcon className="h-4 w-4" />
-                  Statistiques rameurs
+                  Statistiques bateaux
                 </div>
               </Button>
             </DialogTrigger>
             <DialogContent
-              title="Statistiques rameurs"
+              title="Statistiques bateaux"
               className="overflow-auto"
             >
               <BoatStatsComparisons />
