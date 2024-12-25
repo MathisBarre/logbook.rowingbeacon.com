@@ -5,12 +5,15 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { getErrorMessage } from "../../_common/utils/error";
 import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
+import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 
 export const RowerStats = ({ rowerId }: { rowerId: string }) => {
-  const { count, totalDuration } = useGetRowerStats(rowerId);
+  const { count, totalDuration, mostUsedBoats } = useGetRowerStats(rowerId);
+  const { getBoatById } = useClubOverviewStore();
 
   return (
     <div>
+      <h1 className="font-medium text-lg mb-2">Statistiques générales</h1>
       <p>
         <span>Nombre de sessions : </span> <strong>{count}</strong>
       </p>
@@ -24,12 +27,28 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
           {millisecondToDayHourMinutes(totalDuration / count || 0)}
         </strong>
       </p>
+      <h1 className="font-medium text-lg mb-2 mt-4">
+        Bateaux les plus utilisés
+      </h1>
+
+      <ul>
+        {mostUsedBoats.map((boat) => (
+          <li key={boat.id}>
+            <span>{getBoatById(boat.id)?.name || "NAME_NOT_FOUND"}</span>{" "}
+            <span className="font-bold"> - {boat.count} utilisations</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
 
 const useGetRowerStats = (rowerId: string) => {
-  const [stats, setStats] = useState({ count: 0, totalDuration: 0 });
+  const [stats, setStats] = useState<{
+    count: number;
+    totalDuration: number;
+    mostUsedBoats: { id: string; count: number }[];
+  }>({ count: 0, totalDuration: 0, mostUsedBoats: [] });
 
   useEffect(() => {
     getRowerStats(rowerId)
@@ -45,6 +64,7 @@ const getRowerStats = async (
 ): Promise<{
   count: number;
   totalDuration: number;
+  mostUsedBoats: { id: string; count: number }[];
 }> => {
   const { drizzle } = await getDatabase();
 
@@ -66,5 +86,25 @@ const getRowerStats = async (
     return acc + duration;
   }, 0);
 
-  return { count, totalDuration };
+  // get most used boats
+  const boats = sessions
+    .reduce((acc: { id: string; count: number }[], session) => {
+      const boatId = session.session?.boatId;
+      if (!boatId) {
+        return acc;
+      }
+
+      const existing = acc.find((b) => b.id === boatId);
+      if (existing) {
+        existing.count++;
+      } else {
+        acc.push({ id: boatId, count: 1 });
+      }
+
+      return acc;
+    }, [] as { id: string; count: number }[])
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 3);
+
+  return { count, totalDuration, mostUsedBoats: boats };
 };
