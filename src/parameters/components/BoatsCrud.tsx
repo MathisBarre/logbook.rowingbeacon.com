@@ -178,8 +178,8 @@ export const BoatCrud = () => {
                           </button>
                         </DialogTrigger>
                         <DialogContent
-                          className="max-w-[24rem]"
-                          title={`Statistiques de ${boat.name}`}
+                          className="max-w-[32rem]"
+                          title={`Informations à propos de ${boat.name}`}
                         >
                           <BoatStats boatId={boat.id} />
                         </DialogContent>

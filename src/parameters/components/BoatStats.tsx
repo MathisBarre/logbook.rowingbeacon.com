@@ -5,12 +5,18 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { getErrorMessage } from "../../_common/utils/error";
 import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
+import useIncidentStore from "../../_common/store/incident.store";
+import { formatDate } from "../../_common/utils/date.utils";
 
 export const BoatStats = ({ boatId }: { boatId: string }) => {
   const { count, totalDuration } = useGetBoatStats(boatId);
+  const { getIncidentsByBoatId } = useIncidentStore();
+  const incidents = getIncidentsByBoatId(boatId);
 
   return (
     <div>
+      <h1 className="font-medium text-lg mb-2">Statistiques</h1>
+
       <p>
         <span>Nombre de sessions : </span> <strong>{count}</strong>
       </p>
@@ -24,6 +30,18 @@ export const BoatStats = ({ boatId }: { boatId: string }) => {
           {millisecondToDayHourMinutes(totalDuration / count || 0)}
         </strong>
       </p>
+      <h1 className="font-medium text-lg mt-4 mb-2">Incidents</h1>
+
+      {incidents.length === 0 && <p>Aucun incident</p>}
+
+      <ul className="list-disc pl-4">
+        {incidents.map((incident) => (
+          <li key={incident.id}>
+            <span className="font-bold">{formatDate(incident.datetime)}</span> -{" "}
+            {incident.message}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

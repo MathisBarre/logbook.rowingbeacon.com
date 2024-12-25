@@ -14,6 +14,7 @@ interface ZustandIncidentStore {
   addIncident: (incident: ZustandIncident) => void;
   getIncidents: () => ZustandIncident[];
   getIncident: (id: string) => ZustandIncident | undefined;
+  getIncidentsByBoatId: (boatId: string) => ZustandIncident[];
   reset: () => void;
 }
 
@@ -35,6 +36,9 @@ const useIncidentStore = create(
       },
       getIncident: (id: string) => {
         return get().incidents.find((incident) => incident.id === id);
+      },
+      getIncidentsByBoatId: (boatId: string) => {
+        return get().incidents.filter((incident) => incident.boatId === boatId);
       },
       reset: () => {
         set({ incidents: [] });
