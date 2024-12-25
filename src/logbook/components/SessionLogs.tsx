@@ -4,7 +4,12 @@ import { Dialog, DialogContent } from "../../_common/components/Dialog/Dialog";
 import { useGetLastSessions } from "../hooks/useGetSessions";
 import { ExportSessions } from "./ExportSessions";
 import { SessionHistoryTable } from "./SessionLogsTable";
-import { ChevronLeftIcon, ChevronRightIcon, FileUpIcon } from "lucide-react";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  FileUpIcon,
+  LogsIcon,
+} from "lucide-react";
 import {
   askForAdminPassword,
   useAdminEditModeSystem,
@@ -30,8 +35,11 @@ export const SessionLogs = () => {
 
   return (
     <div className="flex-1 shadow-md bg-white flex flex-col absolute inset-0 right-1/2 mr-[.125rem] rounded overflow-hidden">
-      <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between h-12 items-center">
-        <h1 className="text-base ml-2">Historique des sorties</h1>
+      <div className="bg-border p-2 bg-gradient-to-r from-steel-blue-800 to-steel-blue-700 text-white flex justify-between h-12 items-center">
+        <h1 className="text-base ml-2 flex gap-2 items-center">
+          <LogsIcon />
+          Historique des sorties
+        </h1>
         <button
           type="button"
           className="bg-gray-100 rounded flex items-center justify-center px-4 text-gray-700 py-1 text-sm h-full"
