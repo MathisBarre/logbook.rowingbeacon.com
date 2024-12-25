@@ -31,6 +31,8 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
         Bateaux les plus utilisés
       </h1>
 
+      {mostUsedBoats.length === 0 && <p>Aucun bateau utilisé</p>}
+
       <ul>
         {mostUsedBoats.map((boat) => (
           <li key={boat.id}>
