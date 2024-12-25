@@ -8,6 +8,12 @@ export enum BoatTypeEnum {
   "OTHER" = "OTHER",
 }
 
+export const getTypeLabel = (type: BoatTypeEnum | undefined) => {
+  return (
+    boathTypeWithLabel.find((t) => t.type === type)?.label || "LABEL_NOT_FOUND"
+  );
+};
+
 export const boathTypeWithLabel = [
   { type: BoatTypeEnum.ONE_ROWER_COXLESS, label: "1x" },
   { type: BoatTypeEnum.TWO_ROWERS_COXLESS, label: "2x / 2-" },
