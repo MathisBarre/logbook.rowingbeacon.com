@@ -78,12 +78,12 @@ const getRowersStats = async (): Promise<
   const sessions = await drizzle
     .select()
     .from(DBSessionOnRowers)
-    .leftJoin(DBSessions, eq(DBSessions.id, DBSessionOnRowers.session_id));
+    .leftJoin(DBSessions, eq(DBSessions.id, DBSessionOnRowers.sessionId));
 
   const stats = sessions
     .reduce((acc, curr) => {
       const existingItem = acc.find(
-        (stat) => stat.rowerId === curr.session_rowers.rower_id
+        (stat) => stat.rowerId === curr.session_rowers.rowerId
       );
 
       let totalDuration = 0;
@@ -99,7 +99,7 @@ const getRowersStats = async (): Promise<
         existingItem.totalDuration += totalDuration;
       } else {
         acc.push({
-          rowerId: curr.session_rowers.rower_id,
+          rowerId: curr.session_rowers.rowerId,
           count: 1,
           totalDuration: totalDuration,
         });

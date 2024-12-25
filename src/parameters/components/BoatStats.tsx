@@ -7,11 +7,14 @@ import { getErrorMessage } from "../../_common/utils/error";
 import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
 import useIncidentStore from "../../_common/store/incident.store";
 import { formatDate } from "../../_common/utils/date.utils";
+import Loading from "../../_common/components/Loading";
 
 export const BoatStats = ({ boatId }: { boatId: string }) => {
   const { count, totalDuration } = useGetBoatStats(boatId);
   const { getIncidentsByBoatId } = useIncidentStore();
   const incidents = getIncidentsByBoatId(boatId);
+
+  if (count === undefined) return <Loading />;
 
   return (
     <div>

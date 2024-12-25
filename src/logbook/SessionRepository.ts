@@ -50,9 +50,7 @@ export const sessionRepository = {
       endDateTime: getDateOrNull(session.endDateTime),
       estimatedEndDateTime: getDateOrNull(session.estimatedEndDateTime),
       startDateTime: new Date(session.startDateTime),
-      rowerIds: session.sessionOnRowers
-        .map((rower) => rower.rower_id)
-        .join(","),
+      rowerIds: session.sessionOnRowers.map((rower) => rower.rowerId).join(","),
     }));
   },
 
@@ -76,7 +74,7 @@ export const sessionRepository = {
 
     await drizzle
       .delete(DBSessionOnRowers)
-      .where(eq(DBSessionOnRowers.session_id, sessionId));
+      .where(eq(DBSessionOnRowers.sessionId, sessionId));
   },
 };
 
