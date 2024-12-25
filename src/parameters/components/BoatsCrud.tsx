@@ -3,6 +3,7 @@ import {
   ConstructionIcon,
   PencilIcon,
   PlusIcon,
+  SearchIcon,
   Trash2Icon,
   TypeIcon,
 } from "lucide-react";
@@ -27,11 +28,17 @@ import { toast } from "sonner";
 import { ChartBarIcon } from "@heroicons/react/16/solid";
 import { BoatStats } from "./BoatStats";
 import { BoatStatsComparisons } from "./BoatStatsComparisons";
+import { Input } from "../../_common/components/Input";
+import { areStringSimilar } from "../../_common/utils/string.utils";
 
 export const BoatCrud = () => {
   const store = useClubOverviewStore();
   const boats = store.getAllBoats();
-  const sortedBoats = sortBoatsByTypeAndName(boats);
+  const [search, setSearch] = useState("");
+  const searchedBoats = boats.filter((boat) =>
+    areStringSimilar(boat.name, search)
+  );
+  const sortedBoats = sortBoatsByTypeAndName(searchedBoats);
 
   const {
     updateBoatType,
@@ -143,6 +150,19 @@ export const BoatCrud = () => {
               <BoatStatsComparisons />
             </DialogContent>
           </Dialog>
+
+          <div className="relative flex-1">
+            <SearchIcon className="absolute h-full w-5 left-3 pt-[0.125rem]" />
+            <Input
+              placeholder="Rechercher un bateau"
+              className="pl-10 mt-0"
+              type="search"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+            />
+          </div>
         </div>
 
         <div className="flex-1 relative">
