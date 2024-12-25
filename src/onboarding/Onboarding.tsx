@@ -23,7 +23,7 @@ const OnboardingFormSchema = z.object({
   clubPassword: z.string(),
   boats: z.string(),
   rowers: z.string(),
-  routes: z.string(),
+  routes: z.string().optional(),
 });
 
 type OnboardingFormValues = z.infer<typeof OnboardingFormSchema>;
@@ -170,7 +170,7 @@ export const Onboarding = ({
               <section className="bg-white rounded-lg p-6 flex flex-col gap-6 flex-1">
                 <div>
                   <Label className="flex flex-col mb-1">
-                    Parcours
+                    Parcours (facultatif)
                     <span className="text-xs text-gray-500 font-normal mt-1">
                       Entrez le nom de vos parcours, un par ligne
                     </span>
@@ -239,10 +239,12 @@ const formatFormValues = (values: OnboardingFormValues) => {
       id: generateRowerId(),
       name: rower.trim(),
     })),
-    routes: values.routes.split("\n").map((route) => ({
-      id: generateRoutesId(),
-      name: route.trim(),
-    })),
+    routes:
+      values.routes?.split("\n").map((route) => ({
+        id: generateRoutesId(),
+        name: route.trim(),
+        type: BoatTypeEnum.OTHER,
+      })) || [],
   };
 };
 

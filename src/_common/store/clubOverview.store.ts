@@ -43,7 +43,7 @@ export interface ClubOverviewStoreState {
   updateBoatType: (boatId: string, type: BoatTypeEnum) => void;
   updateBoatName: (boatId: string, name: string) => void;
   toggleBoatIsInMaintenance: (boatId: string) => void;
-  addBoat: (boatName: string) => void;
+  addBoat: (boat: { name: string; type?: BoatTypeEnum }) => void;
   archiveBoat: (boatId: string) => void;
   getAllBoats: () => ClubOverviewState["boats"];
 
@@ -130,7 +130,7 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
           );
         },
 
-        addBoat: (boatName: string) => {
+        addBoat: ({ name: boatName, type: boatType }) => {
           set((state) => ({
             clubOverview: {
               ...state.clubOverview,
@@ -140,7 +140,7 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
                   id: generateBoatId(),
                   name: boatName,
                   isInMaintenance: false,
-                  type: BoatTypeEnum.OTHER,
+                  type: boatType || BoatTypeEnum.OTHER,
                 },
               ],
             },

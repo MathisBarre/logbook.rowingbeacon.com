@@ -54,10 +54,12 @@ export const BoatCrud = () => {
     try {
       for (const boat of boats) {
         if (boat) {
-          store.addBoat(boat);
+          store.addBoat({ name: boat, type: addBoatSelect });
           boatsAdded++;
         }
       }
+
+      setAddBoatSelect(BoatTypeEnum.OTHER);
     } finally {
       if (boatsAdded === 0) {
         toast.error("Aucun bateau n'a été ajouté");
@@ -72,6 +74,8 @@ export const BoatCrud = () => {
       }
     }
   };
+
+  const [addBoatSelect, setAddBoatSelect] = useState(BoatTypeEnum.OTHER);
 
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
@@ -95,10 +99,28 @@ export const BoatCrud = () => {
               <textarea
                 className="input flex w-full mb-4 resize-y min-h-16 placeholder:text-gray-300"
                 rows={10}
-                placeholder={"bateau 1 \nbateau 2 \nbateau 3"}
+                placeholder={"bateau 1 \nbateau 2 \nbateau 3 \n..."}
                 value={textareaContent}
                 onChange={(e) => setTextareaContent(e.target.value)}
               />
+              <Label className="flex flex-col gap-1 mb-2">
+                Importer en tant que
+                <select
+                  className=" focus:ring-0 h-12 text-steel-blue-800 input"
+                  name="boatType"
+                  id="boatType"
+                  value={addBoatSelect}
+                  onChange={(e) => {
+                    setAddBoatSelect(e.target.value as BoatTypeEnum);
+                  }}
+                >
+                  {boathTypeWithLabel.map((type) => (
+                    <option key={type.type} value={type.type}>
+                      {type.label}
+                    </option>
+                  ))}
+                </select>
+              </Label>
               <Button type="button" className="w-full" onClick={addBoats}>
                 Ajouter le ou les bateaux
               </Button>
