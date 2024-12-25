@@ -1,5 +1,5 @@
 import Button from "../../_common/components/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog, DialogContent } from "../../_common/components/Dialog/Dialog";
 import {
   askForAdminPassword,
@@ -8,12 +8,21 @@ import {
 import { DeleteDatas } from "./DeleteDatas";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { useAutoStart } from "../hooks/useAutoStart";
+import { toast } from "sonner";
+import { getErrorMessage } from "../../_common/utils/error";
+import { getDatabase } from "../../_common/database/database";
+import { DBSessions } from "../../_common/database/schema";
+import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
+import useIncidentStore from "../../_common/store/incident.store";
 
 export const MiscParams = () => {
   const [deleteDataDialogOpen, setDeleteDataDialogOpen] = useState(false);
   const adminEditSystem = useAdminEditModeSystem();
   const clubOverview = useClubOverviewStore();
   const { autoStartState, enableAutoStart, disableAutoStart } = useAutoStart();
+  const { count, totalDuration } = useMiscStats();
+  const { getIncidents } = useIncidentStore();
+  const incidents = getIncidents();
 
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
@@ -24,6 +33,22 @@ export const MiscParams = () => {
       </div>
 
       <div className="p-4 flex flex-col gap-8">
+        <section>
+          <h1 className="font-bold text-xl">Statistiques du club</h1>
+
+          <ul>
+            <li>Nombre de sessions : {count}</li>
+            <li>
+              Temps total passé sur l&apos;eau :{" "}
+              {millisecondToDayHourMinutes(totalDuration)}
+            </li>
+            <li>
+              Moyenne temps / sessions :{" "}
+              {millisecondToDayHourMinutes(totalDuration / count || 0)}
+            </li>
+            <li>Nombre d&apos;incidents : {incidents.length}</li>
+          </ul>
+        </section>
         <section>
           <h1 className="font-bold text-xl">La note du coach</h1>
 
@@ -116,4 +141,39 @@ export const MiscParams = () => {
       </div>
     </div>
   );
+};
+
+const useMiscStats = () => {
+  const [stats, setStats] = useState({ count: 0, totalDuration: 0 });
+
+  useEffect(() => {
+    getMiscStats()
+      .then(setStats)
+      .catch((e) => toast.error(getErrorMessage(e)));
+  }, []);
+
+  return stats;
+};
+
+const getMiscStats = async (): Promise<{
+  count: number;
+  totalDuration: number;
+}> => {
+  const { drizzle } = await getDatabase();
+
+  const sessions = await drizzle.select().from(DBSessions);
+
+  const count = sessions.length;
+  const totalDuration = sessions.reduce((acc: number, session) => {
+    if (!session?.startDateTime || !session?.endDateTime) {
+      return acc;
+    }
+
+    const start = new Date(session.startDateTime);
+    const end = new Date(session.endDateTime);
+    const duration = end.getTime() - start.getTime();
+    return acc + duration;
+  }, 0);
+
+  return { count, totalDuration };
 };
