@@ -7,7 +7,7 @@ import { windowConfirm, windowPrompt } from "../../_common/utils/window.utils";
 
 export const RoutesCrud = () => {
   const store = useClubOverviewStore();
-  const { routes } = store.clubOverview;
+  const routes = store.getAllRoutes();
 
   const updateRouteName = async (routeId: string, currentName: string) => {
     const newRouteName = await windowPrompt(
@@ -31,7 +31,7 @@ export const RoutesCrud = () => {
       return;
     }
 
-    store.deleteRoute(routeId);
+    store.archiveRoute(routeId);
     toast.success("Le parcours a été supprimé");
   };
 

@@ -25,7 +25,7 @@ import { RowerStatsComparisons } from "./RowerStatsComparisons";
 
 export const RowersCrud = () => {
   const store = useClubOverviewStore();
-  const { rowers } = store.clubOverview;
+  const rowers = store.getAllRowers();
 
   const updateRowerName = async (rowerId: string, currentName: string) => {
     const newRowerName = await windowPrompt(
@@ -49,7 +49,7 @@ export const RowersCrud = () => {
       return;
     }
 
-    store.deleteRower(rowerId);
+    store.archiveRower(rowerId);
     toast.success("Le rameur a été supprimé");
   };
 

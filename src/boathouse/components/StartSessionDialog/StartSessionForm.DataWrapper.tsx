@@ -25,17 +25,17 @@ export const StartSessionFormDataWrapper = ({
     comment: "",
   };
 
-  const { clubOverview } = useClubOverviewStore();
-
-  if (!clubOverview) {
-    return null;
-  }
+  const { getAllBoats, getAllRoutes, getAllRowers } = useClubOverviewStore();
 
   return (
     <div className="flex flex-col gap-4">
       <StartSessionForm
         isLoading={false}
-        startSessionData={clubOverview}
+        startSessionData={{
+          boats: getAllBoats(),
+          routes: getAllRoutes(),
+          rowers: getAllRowers(),
+        }}
         cancelAction={closeAction}
         onSessionStarted={() => {
           closeAction();

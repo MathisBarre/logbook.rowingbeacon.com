@@ -30,14 +30,14 @@ import { BoatStatsComparisons } from "./BoatStatsComparisons";
 
 export const BoatCrud = () => {
   const store = useClubOverviewStore();
-  const { boats } = store.clubOverview;
+  const boats = store.getAllBoats();
   const sortedBoats = sortBoatsByTypeAndName(boats);
 
   const {
     updateBoatType,
     updateBoatName,
     toggleBoatIsInMaintenance,
-    deleteBoat,
+    archiveBoat: deleteBoat,
   } = useClubOverviewStore();
 
   const [textareaContent, setTextareaContent] = useState("");

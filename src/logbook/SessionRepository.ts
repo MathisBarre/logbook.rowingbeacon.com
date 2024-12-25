@@ -66,8 +66,6 @@ export const sessionRepository = {
         session
     `);
 
-    console.log(result);
-
     return result[0].count;
   },
 

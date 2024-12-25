@@ -17,14 +17,17 @@ export interface ClubOverviewState {
     name: string;
     isInMaintenance?: boolean;
     type?: BoatTypeEnum;
+    archivedAt?: string | undefined;
   }[];
   routes: {
     id: string;
     name: string;
+    archivedAt?: string | undefined;
   }[];
   rowers: {
     id: string;
     name: string;
+    archivedAt?: string | undefined;
   }[];
 }
 
@@ -41,11 +44,11 @@ export interface ClubOverviewStoreState {
   updateBoatName: (boatId: string, name: string) => void;
   toggleBoatIsInMaintenance: (boatId: string) => void;
   addBoat: (boatName: string) => void;
-  deleteBoat: (boatId: string) => void;
+  archiveBoat: (boatId: string) => void;
   getAllBoats: () => ClubOverviewState["boats"];
 
   updateRouteName: (routeId: string, name: string) => void;
-  deleteRoute: (routeId: string) => void;
+  archiveRoute: (routeId: string) => void;
   addRoute: (routeName: string) => void;
   getRouteById: (
     routeId: string
@@ -53,7 +56,7 @@ export interface ClubOverviewStoreState {
   getAllRoutes: () => ClubOverviewState["routes"];
 
   updateRowerName: (rowerId: string, name: string) => void;
-  deleteRower: (rowerId: string) => void;
+  archiveRower: (rowerId: string) => void;
   addRower: (rowerName: string) => void;
   getRowersById: (rowersId: string[]) => ClubOverviewState["rowers"];
   getRowerById: (rowerId: string) => ClubOverviewState["rowers"][0] | undefined;
@@ -144,12 +147,17 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
           }));
         },
 
-        deleteBoat: (boatId: string) => {
+        archiveBoat: (boatId: string) => {
           set((state) => ({
             clubOverview: {
               ...state.clubOverview,
-              boats: state.clubOverview.boats.filter(
-                (boat) => boat.id !== boatId
+              boats: state.clubOverview.boats.map((boat) =>
+                boat.id === boatId
+                  ? {
+                      ...boat,
+                      archivedAt: new Date().toISOString(),
+                    }
+                  : boat
               ),
             },
           }));
@@ -202,12 +210,17 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
           }));
         },
 
-        deleteRoute: (routeId: string) => {
+        archiveRoute: (routeId: string) => {
           set((state) => ({
             clubOverview: {
               ...state.clubOverview,
-              routes: state.clubOverview.routes.filter(
-                (route) => route.id !== routeId
+              routes: state.clubOverview.routes.map((route) =>
+                route.id === routeId
+                  ? {
+                      ...route,
+                      archivedAt: new Date().toISOString(),
+                    }
+                  : route
               ),
             },
           }));
@@ -239,12 +252,17 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
           }));
         },
 
-        deleteRower: (rowerId: string) => {
+        archiveRower: (rowerId: string) => {
           set((state) => ({
             clubOverview: {
               ...state.clubOverview,
-              rowers: state.clubOverview.rowers.filter(
-                (rower) => rower.id !== rowerId
+              rowers: state.clubOverview.rowers.map((rower) =>
+                rower.id === rowerId
+                  ? {
+                      ...rower,
+                      archivedAt: new Date().toISOString(),
+                    }
+                  : rower
               ),
             },
           }));
@@ -274,9 +292,27 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
           });
         },
 
-        getAllBoats: () => get().clubOverview.boats,
-        getAllRoutes: () => get().clubOverview.routes,
-        getAllRowers: () => get().clubOverview.rowers,
+        getAllBoats: () => {
+          const boats = get().clubOverview.boats.filter(
+            (boat) => !boat.archivedAt
+          );
+          console.log(boats);
+          return boats;
+        },
+        getAllRoutes: () => {
+          const routes = get().clubOverview.routes.filter(
+            (route) => !route.archivedAt
+          );
+          console.log(routes);
+          return routes;
+        },
+        getAllRowers: () => {
+          const rowers = get().clubOverview.rowers.filter(
+            (rower) => !rower.archivedAt
+          );
+          console.log(rowers);
+          return rowers;
+        },
       }),
       {
         name: "clubOverview",

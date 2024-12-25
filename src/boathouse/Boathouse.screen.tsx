@@ -15,8 +15,9 @@ import { windowAlert } from "../_common/utils/window.utils";
 
 function BoathouseScreen() {
   const sessionStore = useSessionsStore();
-  const { clubOverview, coachNote } = useClubOverviewStore();
-  const { availableBoats, boatsInUse } = useSortBoats(clubOverview.boats || []);
+  const { coachNote, getAllBoats } = useClubOverviewStore();
+  const boats = getAllBoats();
+  const { availableBoats, boatsInUse } = useSortBoats(boats || []);
 
   const [startSessionOpenWithBoat, setStartSessionOpenWithBoat] = useState<
     | false
