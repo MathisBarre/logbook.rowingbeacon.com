@@ -24,14 +24,16 @@ export const RoutesCrud = () => {
     toast.success("Le nom du parcours a été modifié");
   };
 
-  const deleteRoute = async (routeId: string) => {
+  const deleteRoute = async (route: { id: string; name: string }) => {
     if (
-      !(await windowConfirm("Êtes-vous sûr de vouloir supprimer ce parcours ?"))
+      !(await windowConfirm(
+        `Voulez-vous archiver le parcours "${route.name}" ? Il ne sera plus possible de renseigner des sorties avec ce parcours, mais les données enregistrées ne seront pas impactées.`
+      ))
     ) {
       return;
     }
 
-    store.archiveRoute(routeId);
+    store.archiveRoute(route.id);
     toast.success("Le parcours a été supprimé");
   };
 
@@ -78,7 +80,7 @@ export const RoutesCrud = () => {
               <div className="h-full w-[1px] bg-gray-200" />
               <button
                 onClick={async () => {
-                  await deleteRoute(route.id);
+                  await deleteRoute(route);
                 }}
                 className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
               >

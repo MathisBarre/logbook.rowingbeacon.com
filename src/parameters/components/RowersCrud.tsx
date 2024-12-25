@@ -42,14 +42,16 @@ export const RowersCrud = () => {
     toast.success("Le nom du rameur a été modifié");
   };
 
-  const deleteRower = async (rowerId: string) => {
+  const deleteRower = async (rower: { id: string; name: string }) => {
     if (
-      !(await windowConfirm("Êtes-vous sûr de vouloir supprimer ce rameur ?"))
+      !(await windowConfirm(
+        `Voulez-vous archiver le rameur "${rower.name}" ? Il ne sera plus possible de renseigner des sorties avec ce rameur, mais les données enregistrées ne seront pas impactées.`
+      ))
     ) {
       return;
     }
 
-    store.archiveRower(rowerId);
+    store.archiveRower(rower.id);
     toast.success("Le rameur a été supprimé");
   };
 
@@ -201,7 +203,7 @@ export const RowersCrud = () => {
                   <div className="h-full w-[1px] bg-gray-200" />
                   <button
                     onClick={async () => {
-                      await deleteRower(rower.id);
+                      await deleteRower(rower);
                     }}
                     className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
                   >

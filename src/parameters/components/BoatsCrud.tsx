@@ -221,7 +221,7 @@ export const BoatCrud = () => {
                         onClick={async () => {
                           if (
                             await windowConfirm(
-                              `Voulez-vous vraiment supprimer définitivement le bateau "${boat.name}" ? Il ne sera plus possible de renseigner des sorties avec ce bateau mais les sorties déjà effectuées resteront enregistrées.`
+                              `Voulez-vous archiver le bateau "${boat.name}" ? Il ne sera plus possible de renseigner des sorties avec ce bateau, mais les données enregistrées ne seront pas impactées.`
                             )
                           ) {
                             deleteBoat(boat.id);
