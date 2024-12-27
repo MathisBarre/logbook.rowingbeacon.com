@@ -61,7 +61,7 @@ export const fromBoatTypeToNbOfRowers = (type?: BoatTypeEnum) => {
     TWO_ROWERS_COXED: () => 3,
     FOUR_ROWERS_COXLESS: () => 4,
     FOUR_ROWERS_COXED: () => 5,
-    EIGHT_ROWERS_COXED: () => 8,
+    EIGHT_ROWERS_COXED: () => 9,
     OTHER: () => undefined,
   });
 };

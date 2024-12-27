@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import {
+  BicepsFlexedIcon,
   ConstructionIcon,
   PencilIcon,
   PlusIcon,
@@ -30,6 +31,7 @@ import { BoatStats } from "./BoatStats";
 import { BoatStatsComparisons } from "./BoatStatsComparisons";
 import { Input } from "../../_common/components/Input";
 import { areStringSimilar } from "../../_common/utils/string.utils";
+import { BoatLevelSystem } from "./BoatLevelSystem";
 
 export const BoatCrud = () => {
   const store = useClubOverviewStore();
@@ -202,6 +204,21 @@ export const BoatCrud = () => {
                           title={`Informations à propos de ${boat.name}`}
                         >
                           <BoatStats boatId={boat.id} />
+                        </DialogContent>
+                      </Dialog>
+                      <Separator />
+
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <button className="flex items-center justify-center hover:bg-gray-100 h-12 w-12">
+                            <BicepsFlexedIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent
+                          className="max-w-[40rem]"
+                          title={`Gestion niveau de ${boat.name}`}
+                        >
+                          <BoatLevelSystem boatId={boat.id} />
                         </DialogContent>
                       </Dialog>
 

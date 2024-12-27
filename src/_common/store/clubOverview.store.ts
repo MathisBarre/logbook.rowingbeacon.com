@@ -29,6 +29,11 @@ export interface ClubOverviewState {
     name: string;
     archivedAt?: string | undefined;
   }[];
+  levels: {
+    id: string;
+    name: string;
+    position: number;
+  }[];
 }
 
 export interface ClubOverviewStoreState {
@@ -74,6 +79,7 @@ const defaultClubOverviewState: ClubOverviewState = {
   boats: [],
   routes: [],
   rowers: [],
+  levels: [],
 };
 
 export const useClubOverviewStore = create<ClubOverviewStoreState>()(

@@ -14,6 +14,9 @@ import { getDatabase } from "../../_common/database/database";
 import { DBSessions } from "../../_common/database/schema";
 import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
 import useIncidentStore from "../../_common/store/incident.store";
+import { BoatTypeEnum, getTypeLabel } from "../../_common/types/boat.type";
+import { fromBoatTypeToNbOfRowers } from "../../_common/business/boat.rules";
+import { useBoatLevelConfigStore } from "../../_common/store/boatLevelConfig.store";
 
 export const MiscParams = () => {
   const [deleteDataDialogOpen, setDeleteDataDialogOpen] = useState(false);
@@ -24,6 +27,9 @@ export const MiscParams = () => {
   const { getIncidents } = useIncidentStore();
   const incidents = getIncidents();
 
+  const { getBoatLevelConfig } = useBoatLevelConfigStore();
+  const boatLevelConfig = getBoatLevelConfig();
+
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
       <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between h-12">
@@ -32,158 +38,200 @@ export const MiscParams = () => {
         </h1>
       </div>
 
-      <div className="p-4 flex flex-col gap-8">
-        <section>
-          <h1 className="font-bold text-xl">Statistiques du club</h1>
+      <div className="flex-1 relative">
+        <div className="p-4 flex flex-col gap-8 absolute inset-0 overflow-auto">
+          <section>
+            <h1 className="font-bold text-xl">Statistiques du club</h1>
 
-          <ul>
-            <li>Nombre de sessions : {count}</li>
-            <li>
-              Temps total passé sur l&apos;eau :{" "}
-              {millisecondToDayHourMinutes(totalDuration)}
-            </li>
-            <li>
-              Moyenne temps / sessions :{" "}
-              {millisecondToDayHourMinutes(totalDuration / count || 0)}
-            </li>
-            <li>Nombre d&apos;incidents : {incidents.length}</li>
-          </ul>
-        </section>
-        <section>
-          <h1 className="font-bold text-xl">Système de niveau</h1>
+            <ul>
+              <li>Nombre de sessions : {count}</li>
+              <li>
+                Temps total passé sur l&apos;eau :{" "}
+                {millisecondToDayHourMinutes(totalDuration)}
+              </li>
+              <li>
+                Moyenne temps / sessions :{" "}
+                {millisecondToDayHourMinutes(totalDuration / count || 0)}
+              </li>
+              <li>Nombre d&apos;incidents : {incidents.length}</li>
+            </ul>
+          </section>
+          <section>
+            <h1 className="font-bold text-xl">Système de niveau</h1>
 
-          <p>
-            Si le bateau est de type &quot;1x&quot; et que le rameur n&apos;a
-            pas le niveau suffisant,{" "}
-            <select name="" id="" className="pl-1 py-0 pr-8">
-              <option value="">bloquer le début de la sortie</option>
-              <option value="">
-                afficher une alerte laissant la possibilité de commencer la
-                sortie
-              </option>
-            </select>
-          </p>
-          <p>
-            Si le bateau est de type &quot;2x&quot; et{" "}
-            <select name="" id="" className="pl-1 py-0 pr-8">
-              <option value="">qu&apos;un des rameurs n&apos;a</option>
-              <option value="">que les deux rameurs n&apos;ont</option>
-            </select>{" "}
-            n&apos;a pas le niveau suffisant,{" "}
-            <select name="" id="" className="pl-1 py-0 pr-8">
-              <option value="">bloquer le début de la sortie</option>
-              <option value="">
-                afficher une alerte laissant la possibilité de commencer la
-                sortie
-              </option>
-            </select>
-          </p>
-          <p>
-            Si le bateau est de type &quot;2+&quot; et{" "}
-            <select name="" id="" className="pl-1 py-0 pr-8">
-              <option value="">qu&apos;au moins un des rameurs n&apos;a</option>
-              <option value="">qu&apos;au moins deux rameurs n&apos;ont</option>
-              <option value="">que les trois rameurs n&apos;ont</option>
-            </select>{" "}
-            n&apos;a pas le niveau suffisant,{" "}
-            <select name="" id="" className="pl-1 py-0 pr-8">
-              <option value="">bloquer le début de la sortie</option>
-              <option value="">
-                afficher une alerte laissant la possibilité de commencer la
-                sortie
-              </option>
-            </select>
-          </p>
-        </section>
-        <section>
-          <h1 className="font-bold text-xl">La note du coach</h1>
+            <div className="h-4" />
 
-          <p>
-            Cette note sera affichée en haut de la page &quot;Boathouse&quot;
-          </p>
+            <p>
+              <span className="font-bold">Alerte à partir de</span> : afficher
+              une alerte lorsque x rameurs ou plus n&apos;ont pas les critères
+              requis pour le bateau selectionné
+            </p>
 
-          <textarea
-            cols={64}
-            rows={4}
-            className="input resize"
-            name="coachnote"
-            id="coachnote"
-            onChange={(e) => {
-              clubOverview.setCoachNote(e.target.value);
-            }}
-            value={clubOverview.coachNote}
-          />
-        </section>
+            <p>
+              <span className="font-bold">Bloquage à partir de</span> : bloquer
+              l&apos;utilisation du bateau si x rameurs ou plus n&apos;ont pas
+              les critères requis pour le bateau selectionné
+            </p>
 
-        <section>
-          <h1 className="font-bold text-xl">Démarrage automatique</h1>
-          <p>
-            En activant cette option, RowingBeacon se lancera au démarrage du
-            système
-          </p>
+            <table className="table mt-4">
+              <thead>
+                <tr>
+                  <th className="text-left pr-4">Type de bateau</th>
+                  <th className="text-left pr-4">Alerte</th>
+                  <th className="text-left pr-4">Bloquage</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(boatLevelConfig).map(([type, config]) => {
+                  const nbOfRowers = fromBoatTypeToNbOfRowers(
+                    type as BoatTypeEnum
+                  );
 
-          {autoStartState === "pending" && <p>Chargement...</p>}
-          {autoStartState === "activated" && (
-            <>
-              <p>
-                Le démarrage automatique est{" "}
-                <span className="font-bold underline">activé</span>
-              </p>
-              {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-              <Button type="button" onClick={disableAutoStart} className="mt-2">
-                Désactiver le démarrage automatique
-              </Button>
-            </>
-          )}
-          {autoStartState === "not-activated" && (
-            <>
-              <p>
-                Le démarrage automatique est{" "}
-                <span className="font-bold underline">désactivé</span>
-              </p>
+                  if (!nbOfRowers) {
+                    return null;
+                  }
 
-              {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-              <Button type="button" onClick={enableAutoStart} className="mt-2">
-                Activer le démarrage automatique
-              </Button>
-            </>
-          )}
-        </section>
+                  return (
+                    <tr key={type}>
+                      <td>{getTypeLabel(type as BoatTypeEnum)}</td>
+                      <td>
+                        <select
+                          name=""
+                          id=""
+                          className="w-full input cursor-not-allowed opacity-50"
+                          disabled
+                          value={config.alert}
+                        >
+                          <option value="-1">ne pas alerter</option>
+                          {Array.from({ length: nbOfRowers }, (_, i) => (
+                            <option key={i} value={i + 1}>
+                              à partir d&apos;au moins {i + 1} rameur(s)
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td>
+                        <select
+                          name=""
+                          id=""
+                          className="w-full input cursor-not-allowed opacity-50"
+                          value={config.block}
+                          disabled
+                        >
+                          <option value="">ne pas bloquer</option>
+                          {Array.from({ length: nbOfRowers }, (_, i) => (
+                            <option key={i} value={i + 1}>
+                              à partir d&apos;au moins {i + 1} rameur(s)
+                            </option>
+                          ))}
+                        </select>{" "}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </section>
+          <section>
+            <h1 className="font-bold text-xl">La note du coach</h1>
 
-        <section>
-          <h1 className="font-bold text-xl mb-2">Actions sensibles</h1>
+            <p>
+              Cette note sera affichée en haut de la page &quot;Boathouse&quot;
+            </p>
 
-          <Button
-            type="button"
-            color="danger"
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            onClick={async () => {
-              if (
-                !adminEditSystem.allowAdminActions(await askForAdminPassword())
-              ) {
-                return;
-              }
+            <textarea
+              cols={64}
+              rows={4}
+              className="input resize"
+              name="coachnote"
+              id="coachnote"
+              onChange={(e) => {
+                clubOverview.setCoachNote(e.target.value);
+              }}
+              value={clubOverview.coachNote}
+            />
+          </section>
 
-              setDeleteDataDialogOpen(true);
-            }}
-          >
-            Supprimer toutes les données
-          </Button>
+          <section>
+            <h1 className="font-bold text-xl">Démarrage automatique</h1>
+            <p>
+              En activant cette option, RowingBeacon se lancera au démarrage du
+              système
+            </p>
 
-          <Dialog
-            open={deleteDataDialogOpen}
-            onOpenChange={(open) => {
-              setDeleteDataDialogOpen(open);
-            }}
-          >
-            <DialogContent
-              title="Supprimer toutes les données !"
-              className="max-w-xl"
+            {autoStartState === "pending" && <p>Chargement...</p>}
+            {autoStartState === "activated" && (
+              <>
+                <p>
+                  Le démarrage automatique est{" "}
+                  <span className="font-bold underline">activé</span>
+                </p>
+                <Button
+                  type="button"
+                  //eslint-disable-next-line @typescript-eslint/no-misused-promises
+                  onClick={disableAutoStart}
+                  className="mt-2"
+                >
+                  Désactiver le démarrage automatique
+                </Button>
+              </>
+            )}
+            {autoStartState === "not-activated" && (
+              <>
+                <p>
+                  Le démarrage automatique est{" "}
+                  <span className="font-bold underline">désactivé</span>
+                </p>
+
+                <Button
+                  type="button"
+                  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                  onClick={enableAutoStart}
+                  className="mt-2"
+                >
+                  Activer le démarrage automatique
+                </Button>
+              </>
+            )}
+          </section>
+
+          <section>
+            <h1 className="font-bold text-xl mb-2">Actions sensibles</h1>
+
+            <Button
+              type="button"
+              color="danger"
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onClick={async () => {
+                if (
+                  !adminEditSystem.allowAdminActions(
+                    await askForAdminPassword()
+                  )
+                ) {
+                  return;
+                }
+
+                setDeleteDataDialogOpen(true);
+              }}
             >
-              <DeleteDatas />
-            </DialogContent>
-          </Dialog>
-        </section>
+              Supprimer toutes les données
+            </Button>
+
+            <Dialog
+              open={deleteDataDialogOpen}
+              onOpenChange={(open) => {
+                setDeleteDataDialogOpen(open);
+              }}
+            >
+              <DialogContent
+                title="Supprimer toutes les données !"
+                className="max-w-xl"
+              >
+                <DeleteDatas />
+              </DialogContent>
+            </Dialog>
+          </section>
+        </div>
       </div>
     </div>
   );
