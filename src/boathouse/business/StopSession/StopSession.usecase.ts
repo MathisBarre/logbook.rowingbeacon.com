@@ -188,8 +188,8 @@ export class SessionDatabaseRepository implements ISessionDatabaseRepository {
 
       const rowersOnSessionsToSave = sessions.flatMap((session) =>
         session.rowerIds.map((rowerId) => ({
-          session_id: session.id,
-          rower_id: rowerId,
+          sessionId: session.id,
+          rowerId: rowerId,
         }))
       );
 

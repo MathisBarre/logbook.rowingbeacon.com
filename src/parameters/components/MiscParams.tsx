@@ -50,6 +50,52 @@ export const MiscParams = () => {
           </ul>
         </section>
         <section>
+          <h1 className="font-bold text-xl">Système de niveau</h1>
+
+          <p>
+            Si le bateau est de type &quot;1x&quot; et que le rameur n&apos;a
+            pas le niveau suffisant,{" "}
+            <select name="" id="" className="pl-1 py-0 pr-8">
+              <option value="">bloquer le début de la sortie</option>
+              <option value="">
+                afficher une alerte laissant la possibilité de commencer la
+                sortie
+              </option>
+            </select>
+          </p>
+          <p>
+            Si le bateau est de type &quot;2x&quot; et{" "}
+            <select name="" id="" className="pl-1 py-0 pr-8">
+              <option value="">qu&apos;un des rameurs n&apos;a</option>
+              <option value="">que les deux rameurs n&apos;ont</option>
+            </select>{" "}
+            n&apos;a pas le niveau suffisant,{" "}
+            <select name="" id="" className="pl-1 py-0 pr-8">
+              <option value="">bloquer le début de la sortie</option>
+              <option value="">
+                afficher une alerte laissant la possibilité de commencer la
+                sortie
+              </option>
+            </select>
+          </p>
+          <p>
+            Si le bateau est de type &quot;2+&quot; et{" "}
+            <select name="" id="" className="pl-1 py-0 pr-8">
+              <option value="">qu&apos;au moins un des rameurs n&apos;a</option>
+              <option value="">qu&apos;au moins deux rameurs n&apos;ont</option>
+              <option value="">que les trois rameurs n&apos;ont</option>
+            </select>{" "}
+            n&apos;a pas le niveau suffisant,{" "}
+            <select name="" id="" className="pl-1 py-0 pr-8">
+              <option value="">bloquer le début de la sortie</option>
+              <option value="">
+                afficher une alerte laissant la possibilité de commencer la
+                sortie
+              </option>
+            </select>
+          </p>
+        </section>
+        <section>
           <h1 className="font-bold text-xl">La note du coach</h1>
 
           <p>

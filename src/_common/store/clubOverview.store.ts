@@ -296,21 +296,18 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
           const boats = get().clubOverview.boats.filter(
             (boat) => !boat.archivedAt
           );
-          console.log(boats);
           return boats;
         },
         getAllRoutes: () => {
           const routes = get().clubOverview.routes.filter(
             (route) => !route.archivedAt
           );
-          console.log(routes);
           return routes;
         },
         getAllRowers: () => {
           const rowers = get().clubOverview.rowers.filter(
             (rower) => !rower.archivedAt
           );
-          console.log(rowers);
           return rowers;
         },
       }),

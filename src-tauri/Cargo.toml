@@ -1,6 +1,6 @@
 [package]
 name = "rowing-beacon-tauri-app"
-version = "1.13.1"
+version = "1.13.2"
 description = "A Tauri App"
 authors = ["you"]
 license = ""
