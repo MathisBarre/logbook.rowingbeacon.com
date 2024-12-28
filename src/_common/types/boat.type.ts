@@ -29,5 +29,4 @@ export interface Boat {
   name: string;
   isInMaintenance?: boolean;
   type?: BoatTypeEnum;
-  m;
 }

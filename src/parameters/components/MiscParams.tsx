@@ -27,7 +27,8 @@ export const MiscParams = () => {
   const { getIncidents } = useIncidentStore();
   const incidents = getIncidents();
 
-  const { getBoatLevelConfig } = useBoatLevelConfigStore();
+  const { getBoatTypeLevelConfig: getBoatLevelConfig } =
+    useBoatLevelConfigStore();
   const boatLevelConfig = getBoatLevelConfig();
 
   return (

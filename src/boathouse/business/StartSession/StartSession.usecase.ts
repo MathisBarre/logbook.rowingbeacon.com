@@ -1,5 +1,5 @@
 import { fromBoatTypeToNbOfRowers } from "../../../_common/business/boat.rules";
-import { getBoatLevelConfig } from "../../../_common/store/boatLevelConfig.store";
+import { getBoatTypeLevelConfig } from "../../../_common/store/boatLevelConfig.store";
 import { BoatTypeEnum } from "../../../_common/types/boat.type";
 import { Route } from "../../../_common/types/route.type";
 import { toISODateFormat } from "../../../_common/utils/date.utils";
@@ -28,7 +28,7 @@ interface Payload {
 }
 
 interface BoatLevelConfigStore {
-  getBoatLevelConfig(): Record<
+  getBoatTypeLevelConfigs(): Record<
     Exclude<BoatTypeEnum, BoatTypeEnum.OTHER>,
     {
       alert: number;
@@ -171,7 +171,12 @@ export class StartSessionUsecase {
 
   private async handleLevel(payload: SessionToStart) {
     const boat = await this.startSessionRepository.getBoat(payload.boatId);
-    const boatLevelConfig = this.boatLevelConfigStore.getBoatLevelConfig();
-    const specificConfig = getBoatLevelConfig(boat.type, boatLevelConfig);
+    const boatTypeLevelConfigs =
+      this.boatLevelConfigStore.getBoatTypeLevelConfigs();
+    const specificConfig = getBoatTypeLevelConfig(
+      boat.type,
+      boatTypeLevelConfigs
+    );
+    await this.
   }
 }
