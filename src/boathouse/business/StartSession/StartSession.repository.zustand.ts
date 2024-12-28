@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/require-await */
-import { fromBoatTypeToNbOfRowers } from "../../../_common/business/boat.rules";
 import { useClubOverviewStore } from "../../../_common/store/clubOverview.store";
 import { useSessionsStore } from "../../../_common/store/sessions.store";
-import { Boat } from "../../../_common/types/boat.type";
 import { ErrorWithCode } from "../../../_common/utils/error";
-import { IStartSessionRepository } from "./StartSession.usecase";
+import { IStartSessionRepository } from "./StartSession.repository.interface";
 
 export const useGetZustandStartSessionRepository = () => {
   const sessionsStore = useSessionsStore();
@@ -22,16 +20,11 @@ export const useGetZustandStartSessionRepository = () => {
     },
 
     async getBoat(boatId) {
-      const result = clubOverviewStore.getBoatById(boatId);
+      const boat = clubOverviewStore.getBoatById(boatId);
 
-      if (!result) {
+      if (!boat) {
         throw new ErrorWithCode({ code: "BOAT_NOT_FOUND" });
       }
-
-      const boat: Boat = {
-        ...result,
-        rowersQuantity: fromBoatTypeToNbOfRowers(result.type),
-      };
 
       return boat;
     },

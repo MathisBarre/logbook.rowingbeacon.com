@@ -1,3 +1,4 @@
+import { fromBoatTypeToNbOfRowers } from "../../../_common/business/boat.rules";
 import { Route } from "../../../_common/types/route.type";
 import { toISODateFormat } from "../../../_common/utils/date.utils";
 import {
@@ -12,24 +13,7 @@ import {
   isInvalidStartSessionDate,
 } from "./../SessionToStart.business";
 import { getAlreadyOnStartedSessionRowersId } from "./../StartedSession.business";
-import { Boat } from "../../../_common/types/boat.type";
-import { Rower } from "../../../_common/types/rower.type";
-import { StartedSession } from "../StartedSession.business";
-
-export interface IStartSessionRepository {
-  saveSession(payload: {
-    boat: Boat & { rowersQuantity: number | undefined };
-    route: Route | null;
-    rowers: Rower[];
-    startDateTime: string;
-    estimatedEndDateTime?: string | undefined;
-    comment: string;
-  }): Promise<void>;
-  getBoat(boatId: string): Promise<Boat>;
-  getStartedSessions(): Promise<StartedSession[]>;
-  getRowersById(rowersId: string[]): Promise<Rower[]>;
-  getRoute(routeId: string): Promise<Route>;
-}
+import { IStartSessionRepository } from "./StartSession.repository.interface";
 
 interface Params {
   ignoreRowersNumberError: boolean;
@@ -46,14 +30,10 @@ export class StartSessionUsecase {
         ignoreRowersNumberError,
       } = params;
 
-      if (isInvalidStartSessionDate(payload)) {
-        return asError({
-          code: "INVALID_DATETIME",
-          details: {
-            startDatetime: payload.startDatetime,
-            estimatedEndDatetime: payload.estimatedEndDatetime,
-          },
-        });
+      const InvalidPayloadError = this.getInvalidPayloadError(payload);
+
+      if (InvalidPayloadError) {
+        return asError(InvalidPayloadError);
       }
 
       const RowersNumberError = await this.getRowersNumberError(payload);
@@ -78,6 +58,18 @@ export class StartSessionUsecase {
     }
   }
 
+  private getInvalidPayloadError(payload: SessionToStart) {
+    if (isInvalidStartSessionDate(payload)) {
+      return new ErrorWithCode({
+        code: "INVALID_DATETIME",
+        details: {
+          startDatetime: payload.startDatetime,
+          estimatedEndDatetime: payload.estimatedEndDatetime,
+        },
+      });
+    }
+  }
+
   private async getRowersNumberError(payload: SessionToStart) {
     const nbOfRowers = payload.rowersId.length;
 
@@ -93,7 +85,7 @@ export class StartSessionUsecase {
         code: "BAD_AMOUNT_OF_ROWERS",
         details: {
           nbOfRowers,
-          boatRowersQuantity: boat.rowersQuantity,
+          boatRowersQuantity: fromBoatTypeToNbOfRowers(boat.type),
           boatName: boat.name,
         },
       });
@@ -142,7 +134,6 @@ export class StartSessionUsecase {
       boat: {
         id: payload.boatId,
         name: boat.name,
-        rowersQuantity: boat.rowersQuantity,
       },
       route,
       comment: payload.comment,
