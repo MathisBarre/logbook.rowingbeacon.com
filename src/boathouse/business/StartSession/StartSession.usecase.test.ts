@@ -3,7 +3,6 @@ import { beforeAll, describe, expect, it, vi } from "vitest";
 import { IStartSessionRepository } from "./StartSession.repository.interface";
 import { createInMemoryStartSessionRepository } from "./StartSession.repository.inMemory";
 import { StartSessionUsecase } from "./StartSession.usecase";
-
 import { generateIds } from "../../../_common/utils/ids.utils";
 import { asError, asOk, TechnicalError } from "../../../_common/utils/error";
 import { BoatTypeEnum } from "../../../_common/types/boat.type";

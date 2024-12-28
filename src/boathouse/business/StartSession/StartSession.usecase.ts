@@ -1,4 +1,6 @@
 import { fromBoatTypeToNbOfRowers } from "../../../_common/business/boat.rules";
+import { getBoatLevelConfig } from "../../../_common/store/boatLevelConfig.store";
+import { BoatTypeEnum } from "../../../_common/types/boat.type";
 import { Route } from "../../../_common/types/route.type";
 import { toISODateFormat } from "../../../_common/utils/date.utils";
 import {
@@ -25,8 +27,21 @@ interface Payload {
   params: Params;
 }
 
+interface BoatLevelConfigStore {
+  getBoatLevelConfig(): Record<
+    Exclude<BoatTypeEnum, BoatTypeEnum.OTHER>,
+    {
+      alert: number;
+      block: number;
+    }
+  >;
+}
+
 export class StartSessionUsecase {
-  constructor(private readonly boathouseRepository: IStartSessionRepository) {}
+  constructor(
+    private readonly startSessionRepository: IStartSessionRepository,
+    private readonly boatLevelConfigStore: BoatLevelConfigStore
+  ) {}
 
   async execute(payload: Payload) {
     try {
@@ -79,7 +94,7 @@ export class StartSessionUsecase {
   private async getRowersNumberError(payload: SessionToStart) {
     const nbOfRowers = payload.rowersId.length;
 
-    const boat = await this.boathouseRepository.getBoat(payload.boatId);
+    const boat = await this.startSessionRepository.getBoat(payload.boatId);
 
     const notSameRowersAsSeatsInBoat = checkIfNotSameRowersAsSeatsInBoat(
       nbOfRowers,
@@ -99,7 +114,8 @@ export class StartSessionUsecase {
   }
 
   private async getAlreadyOnSessionError(payload: SessionToStart) {
-    const startedSession = await this.boathouseRepository.getStartedSessions();
+    const startedSession =
+      await this.startSessionRepository.getStartedSessions();
 
     const alreadyOnStartedSessionRowersId = getAlreadyOnStartedSessionRowersId(
       payload.rowersId,
@@ -108,7 +124,7 @@ export class StartSessionUsecase {
 
     if (alreadyOnStartedSessionRowersId.length > 0) {
       const alreadyOnStartedSessionRowers =
-        await this.boathouseRepository.getRowersById(
+        await this.startSessionRepository.getRowersById(
           alreadyOnStartedSessionRowersId
         );
 
@@ -122,21 +138,23 @@ export class StartSessionUsecase {
   }
 
   private async saveSession(payload: SessionToStart) {
-    const boat = await this.boathouseRepository.getBoat(payload.boatId);
+    const boat = await this.startSessionRepository.getBoat(payload.boatId);
 
     let route: Route | null = null;
 
     if (payload.routeId) {
-      const _route = await this.boathouseRepository.getRoute(payload.routeId);
+      const _route = await this.startSessionRepository.getRoute(
+        payload.routeId
+      );
 
       route = _route;
     }
 
-    const rowers = await this.boathouseRepository.getRowersById(
+    const rowers = await this.startSessionRepository.getRowersById(
       payload.rowersId
     );
 
-    await this.boathouseRepository.saveSession({
+    await this.startSessionRepository.saveSession({
       boat: {
         id: payload.boatId,
         name: boat.name,
@@ -149,5 +167,11 @@ export class StartSessionUsecase {
         : undefined,
       startDateTime: toISODateFormat(payload.startDatetime),
     });
+  }
+
+  private async handleLevel(payload: SessionToStart) {
+    const boat = await this.startSessionRepository.getBoat(payload.boatId);
+    const boatLevelConfig = this.boatLevelConfigStore.getBoatLevelConfig();
+    const specificConfig = getBoatLevelConfig(boat.type, boatLevelConfig);
   }
 }
