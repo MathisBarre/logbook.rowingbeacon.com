@@ -3,7 +3,7 @@ import { fromBoatTypeToNbOfRowers } from "../../_common/business/boat.rules";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { useSessionsStore } from "../../_common/store/sessions.store";
 import { Boat } from "../../_common/types/boat.type";
-import { asError, asOk } from "../../_common/utils/error";
+import { ErrorWithCode } from "../../_common/utils/error";
 import { IBoathouseRepository } from "./Boathouse.repository.interface";
 import { StartedSession } from "./StartedSession.business";
 
@@ -16,21 +16,17 @@ export const useGetZustandBoathouseRepository = () => {
       const result = clubOverviewStore.getRouteById(routeId);
 
       if (!result) {
-        return asError({
-          code: "NOT_FOUND",
-        });
+        throw new ErrorWithCode({ code: "ROUTE_NOT_FOUND" });
       }
 
-      return asOk(result);
+      return result;
     },
 
     async getBoat(boatId) {
       const result = clubOverviewStore.getBoatById(boatId);
 
       if (!result) {
-        return asError({
-          code: "NOT_FOUND",
-        });
+        throw new ErrorWithCode({ code: "BOAT_NOT_FOUND" });
       }
 
       const boat: Boat = {
@@ -38,24 +34,23 @@ export const useGetZustandBoathouseRepository = () => {
         rowersQuantity: fromBoatTypeToNbOfRowers(result.type),
       };
 
-      return asOk(boat);
+      return boat;
     },
 
     async getStartedSessions() {
       const sessions: StartedSession[] = sessionsStore.getOngoingSessions();
 
-      return asOk(sessions);
+      return sessions;
     },
 
     async getRowersById(rowersId) {
       const rowers = clubOverviewStore.getRowersById(rowersId);
 
-      return asOk(rowers);
+      return rowers;
     },
-    async saveSession(payload) {
-      sessionsStore.startSession(payload);
 
-      return asOk(null);
+    async saveSession(payload) {
+      return sessionsStore.startSession(payload);
     },
   };
 
