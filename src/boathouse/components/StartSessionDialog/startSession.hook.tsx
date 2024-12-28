@@ -1,11 +1,12 @@
 import { useCallback, useState } from "react";
-import { useGetZustandStartSessionRepository } from "../../business/StartSession.repository.zustand";
 import { SessionToStart } from "../../business/SessionToStart.business";
-import { StartSessionUsecase } from "../../business/StartSession.usecase";
+import { useGetZustandStartSessionRepository } from "../../business/StartSession/StartSession.repository.zustand";
+import { StartSessionUsecase } from "../../business/StartSession/StartSession.usecase";
+import { useBoatLevelConfigStore } from "../../../_common/store/boatLevelConfig.store";
 
 interface StartSessionParams {
-  allowNotSameNbOfRowers: boolean;
-  allowToHaveSameRowersAlreadyOnStartedSession: boolean;
+  ignoreRowersNumberError: boolean;
+  ignoreRowersAlreadyOnSessionError: boolean;
 }
 
 export const useStartSession = (onSessionStarted: () => void) => {
@@ -14,6 +15,7 @@ export const useStartSession = (onSessionStarted: () => void) => {
   );
 
   const boathouseRepository = useGetZustandStartSessionRepository();
+  const boatLevelConfigStore = useBoatLevelConfigStore();
 
   const [alert, setAlert] = useState<
     | null
@@ -46,8 +48,12 @@ export const useStartSession = (onSessionStarted: () => void) => {
       setSubmissionError("");
 
       const [error] = await new StartSessionUsecase(
-        boathouseRepository
-      ).execute(startSessionPayload, startSessionParams);
+        boathouseRepository,
+        boatLevelConfigStore
+      ).execute({
+        params: startSessionParams,
+        sessionToStart: startSessionPayload,
+      });
 
       if (!error) {
         onSessionStarted();
@@ -76,8 +82,8 @@ export const useStartSession = (onSessionStarted: () => void) => {
   const startSession = useCallback(
     async (startSessionPayload: SessionToStart) => {
       return _startSession(startSessionPayload, {
-        allowNotSameNbOfRowers: false,
-        allowToHaveSameRowersAlreadyOnStartedSession: false,
+        ignoreRowersNumberError: false,
+        ignoreRowersAlreadyOnSessionError: false,
       });
     },
     [boathouseRepository]
@@ -88,8 +94,8 @@ export const useStartSession = (onSessionStarted: () => void) => {
       setAlert(null);
 
       await _startSession(startSessionPayload, {
-        allowNotSameNbOfRowers: true,
-        allowToHaveSameRowersAlreadyOnStartedSession: false,
+        ignoreRowersNumberError: true,
+        ignoreRowersAlreadyOnSessionError: false,
       });
     },
     []
@@ -100,8 +106,8 @@ export const useStartSession = (onSessionStarted: () => void) => {
       setAlert(null);
 
       await _startSession(startSessionPayload, {
-        allowNotSameNbOfRowers: true,
-        allowToHaveSameRowersAlreadyOnStartedSession: true,
+        ignoreRowersNumberError: true,
+        ignoreRowersAlreadyOnSessionError: true,
       });
     },
     []
