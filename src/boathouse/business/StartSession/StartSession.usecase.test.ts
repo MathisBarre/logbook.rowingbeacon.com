@@ -5,7 +5,7 @@ import { createInMemoryStartSessionRepository } from "./StartSession.repository.
 import { StartSessionUsecase } from "./StartSession.usecase";
 
 import { generateIds } from "../../../_common/utils/ids.utils";
-import { asError, asOk } from "../../../_common/utils/error";
+import { asError, asOk, TechnicalError } from "../../../_common/utils/error";
 import { BoatTypeEnum } from "../../../_common/types/boat.type";
 
 describe("StartSession", () => {
@@ -218,6 +218,22 @@ describe("StartSession", () => {
 
     it("return should be success", () => {
       expect(result).toEqual(asOk(true));
+    });
+  });
+
+  describe("when technical error", () => {
+    beforeAll(async () => {
+      init();
+      vi.spyOn(repository, "saveSession").mockImplementationOnce(() => {
+        throw new Error("DUMMY:error");
+      });
+      result = await getUsecase().execute(happyCasePayload);
+    });
+
+    it("return should be error", () => {
+      expect(result).toEqual(
+        asError(new TechnicalError(new Error("DUMMY:error")))
+      );
     });
   });
 });
