@@ -167,4 +167,57 @@ describe("StartSession", () => {
       expect(result).toEqual(asOk(true));
     });
   });
+
+  describe("when rowers already on session", () => {
+    beforeAll(async () => {
+      init();
+      repository = createInMemoryStartSessionRepository({
+        ...getHappyCaseInMemoryData(),
+        ongoingSessions: [
+          {
+            id: "DUMMY:session",
+            rowers: [{ id: ROWER_ID, name: "DUMMY:rower" }],
+          },
+        ],
+      });
+      result = await getUsecase().execute(happyCasePayload);
+    });
+
+    it("return should be error", () => {
+      expect(result).toEqual(
+        asError({
+          code: "ROWERS_ALREADY_ON_STARTED_SESSION",
+          details: {
+            rowersId: [ROWER_ID],
+          },
+        })
+      );
+    });
+  });
+
+  describe("when rowers already on session, but is ignored", () => {
+    beforeAll(async () => {
+      init();
+      repository = createInMemoryStartSessionRepository({
+        ...getHappyCaseInMemoryData(),
+        ongoingSessions: [
+          {
+            id: "DUMMY:session",
+            rowers: [{ id: ROWER_ID, name: "DUMMY:rower" }],
+          },
+        ],
+      });
+      result = await getUsecase().execute({
+        ...happyCasePayload,
+        params: {
+          ...happyCasePayload.params,
+          ignoreRowersAlreadyOnSessionError: true,
+        },
+      });
+    });
+
+    it("return should be success", () => {
+      expect(result).toEqual(asOk(true));
+    });
+  });
 });
