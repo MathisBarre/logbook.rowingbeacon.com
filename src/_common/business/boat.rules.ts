@@ -1,10 +1,10 @@
-import { v4 } from "uuid";
 import { ZustandSession } from "../store/sessions.store";
 import { Boat, BoatTypeEnum } from "../types/boat.type";
 import { forEnum } from "../utils/utils";
+import { generateId } from "../utils/ids.utils";
 
 export const generateBoatId = () => {
-  return `boat-${v4()}`;
+  return generateId("boat");
 };
 
 export const isBoatAvailable = (
