@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useGetZustandBoathouseRepository } from "../../business/Boathouse.repository.zustand";
+import { useGetZustandStartSessionRepository } from "../../business/StartSession.repository.zustand";
 import { SessionToStart } from "../../business/SessionToStart.business";
 import { StartSessionUsecase } from "../../business/StartSession.usecase";
 
@@ -13,7 +13,7 @@ export const useStartSession = (onSessionStarted: () => void) => {
     undefined
   );
 
-  const boathouseRepository = useGetZustandBoathouseRepository();
+  const boathouseRepository = useGetZustandStartSessionRepository();
 
   const [alert, setAlert] = useState<
     | null

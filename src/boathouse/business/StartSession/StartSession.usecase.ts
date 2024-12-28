@@ -1,18 +1,35 @@
-import { Route } from "../../_common/types/route.type";
-import { toISODateFormat } from "../../_common/utils/date.utils";
+import { Route } from "../../../_common/types/route.type";
+import { toISODateFormat } from "../../../_common/utils/date.utils";
 import {
   asError,
   asOk,
   ErrorWithCode,
   TechnicalError,
-} from "../../_common/utils/error";
-import { checkIfNotSameRowersAsSeatsInBoat } from "./Boat.business";
-import { IBoathouseRepository } from "./Boathouse.repository.interface";
+} from "../../../_common/utils/error";
+import { checkIfNotSameRowersAsSeatsInBoat } from "./../Boat.business";
 import {
   SessionToStart,
   isInvalidStartSessionDate,
-} from "./SessionToStart.business";
-import { getAlreadyOnStartedSessionRowersId } from "./StartedSession.business";
+} from "./../SessionToStart.business";
+import { getAlreadyOnStartedSessionRowersId } from "./../StartedSession.business";
+import { Boat } from "../../../_common/types/boat.type";
+import { Rower } from "../../../_common/types/rower.type";
+import { StartedSession } from "../StartedSession.business";
+
+export interface IStartSessionRepository {
+  saveSession(payload: {
+    boat: Boat & { rowersQuantity: number | undefined };
+    route: Route | null;
+    rowers: Rower[];
+    startDateTime: string;
+    estimatedEndDateTime?: string | undefined;
+    comment: string;
+  }): Promise<void>;
+  getBoat(boatId: string): Promise<Boat>;
+  getStartedSessions(): Promise<StartedSession[]>;
+  getRowersById(rowersId: string[]): Promise<Rower[]>;
+  getRoute(routeId: string): Promise<Route>;
+}
 
 interface Params {
   ignoreRowersNumberError: boolean;
@@ -20,7 +37,7 @@ interface Params {
 }
 
 export class StartSessionUsecase {
-  constructor(private readonly boathouseRepository: IBoathouseRepository) {}
+  constructor(private readonly boathouseRepository: IStartSessionRepository) {}
 
   async execute(payload: SessionToStart, params: Params) {
     try {

@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/require-await */
-import { fromBoatTypeToNbOfRowers } from "../../_common/business/boat.rules";
-import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
-import { useSessionsStore } from "../../_common/store/sessions.store";
-import { Boat } from "../../_common/types/boat.type";
-import { ErrorWithCode } from "../../_common/utils/error";
-import { IBoathouseRepository } from "./Boathouse.repository.interface";
-import { StartedSession } from "./StartedSession.business";
+import { fromBoatTypeToNbOfRowers } from "../../../_common/business/boat.rules";
+import { useClubOverviewStore } from "../../../_common/store/clubOverview.store";
+import { useSessionsStore } from "../../../_common/store/sessions.store";
+import { Boat } from "../../../_common/types/boat.type";
+import { ErrorWithCode } from "../../../_common/utils/error";
+import { IStartSessionRepository } from "./StartSession.usecase";
 
-export const useGetZustandBoathouseRepository = () => {
+export const useGetZustandStartSessionRepository = () => {
   const sessionsStore = useSessionsStore();
   const clubOverviewStore = useClubOverviewStore();
 
-  const repository: IBoathouseRepository = {
+  const repository: IStartSessionRepository = {
     async getRoute(routeId) {
       const result = clubOverviewStore.getRouteById(routeId);
 
@@ -38,15 +37,11 @@ export const useGetZustandBoathouseRepository = () => {
     },
 
     async getStartedSessions() {
-      const sessions: StartedSession[] = sessionsStore.getOngoingSessions();
-
-      return sessions;
+      return sessionsStore.getOngoingSessions();
     },
 
     async getRowersById(rowersId) {
-      const rowers = clubOverviewStore.getRowersById(rowersId);
-
-      return rowers;
+      return clubOverviewStore.getRowersById(rowersId);
     },
 
     async saveSession(payload) {
