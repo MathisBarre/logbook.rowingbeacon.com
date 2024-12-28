@@ -29,7 +29,7 @@ describe("StartSession", () => {
       ignoreRowersNumberError: false,
     },
   };
-  const happyCaseInMemoryData = {
+  const getHappyCaseInMemoryData = () => ({
     routes: [
       {
         id: ROUTE_ID,
@@ -50,12 +50,14 @@ describe("StartSession", () => {
         name: "DUMMY:rower",
       },
     ],
-  };
+  });
 
   const init = () => {
     console.log("init");
     result = null;
-    repository = createInMemoryStartSessionRepository(happyCaseInMemoryData);
+    repository = createInMemoryStartSessionRepository(
+      getHappyCaseInMemoryData()
+    );
   };
 
   const getUsecase = () => new StartSessionUsecase(repository);
