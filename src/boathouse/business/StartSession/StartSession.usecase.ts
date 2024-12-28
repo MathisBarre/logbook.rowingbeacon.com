@@ -20,37 +20,43 @@ interface Params {
   ignoreRowersAlreadyOnSessionError: boolean;
 }
 
+interface Payload {
+  sessionToStart: SessionToStart;
+  params: Params;
+}
+
 export class StartSessionUsecase {
   constructor(private readonly boathouseRepository: IStartSessionRepository) {}
 
-  async execute(payload: SessionToStart, params: Params) {
+  async execute(payload: Payload) {
     try {
+      const sessionToStart = payload.sessionToStart;
       const {
         ignoreRowersAlreadyOnSessionError, //
         ignoreRowersNumberError,
-      } = params;
+      } = payload.params;
 
-      const InvalidPayloadError = this.getInvalidPayloadError(payload);
+      const InvalidPayloadError = this.getInvalidPayloadError(sessionToStart);
 
       if (InvalidPayloadError) {
         return asError(InvalidPayloadError);
       }
 
-      const RowersNumberError = await this.getRowersNumberError(payload);
+      const RowersNumberError = await this.getRowersNumberError(sessionToStart);
 
       if (!ignoreRowersNumberError && RowersNumberError) {
         return asError(RowersNumberError);
       }
 
       const AlreadyOnSessionError = await this.getAlreadyOnSessionError(
-        payload
+        sessionToStart
       );
 
       if (!ignoreRowersAlreadyOnSessionError && AlreadyOnSessionError) {
         return asError(AlreadyOnSessionError);
       }
 
-      await this.saveSession(payload);
+      await this.saveSession(sessionToStart);
 
       return asOk(true);
     } catch (error) {

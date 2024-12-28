@@ -11,6 +11,22 @@ describe("StartSession", () => {
   let result: Awaited<ReturnType<StartSessionUsecase["execute"]>> | null;
 
   const [BOAT_ID, ROUTE_ID, ROWER_ID] = generateIds("test");
+  const startDateTimeStr = "2025-01-01T00:00:00.000Z";
+  const endDateTimeStr = "2025-01-01T02:00:00.000Z";
+  const happyCasePayload = {
+    sessionToStart: {
+      boatId: BOAT_ID,
+      routeId: ROUTE_ID,
+      rowersId: [ROWER_ID],
+      startDatetime: new Date(startDateTimeStr),
+      estimatedEndDatetime: new Date(endDateTimeStr),
+      comment: "DUMMY:comment",
+    },
+    params: {
+      ignoreRowersAlreadyOnSessionError: false,
+      ignoreRowersNumberError: false,
+    },
+  };
 
   const init = () => {
     result = null;
@@ -29,7 +45,12 @@ describe("StartSession", () => {
         },
       ],
       ongoingSessions: [],
-      rowers: [],
+      rowers: [
+        {
+          id: ROWER_ID,
+          name: "DUMMY:rower",
+        },
+      ],
     });
   };
 
@@ -39,25 +60,30 @@ describe("StartSession", () => {
     beforeAll(async () => {
       init();
       vi.spyOn(repository, "saveSession");
-      result = await getUsecase().execute(
-        {
-          boatId: BOAT_ID,
-          routeId: ROUTE_ID,
-          rowersId: [ROWER_ID],
-          startDatetime: new Date("2025-01-01T00:00:00Z"),
-          estimatedEndDatetime: new Date("2025-01-01T02:00:00Z"),
-          comment: "DUMMY:comment",
-        },
-        {
-          ignoreRowersAlreadyOnSessionError: false,
-          ignoreRowersNumberError: false,
-        }
-      );
+      result = await getUsecase().execute(happyCasePayload);
     });
 
     it("should execute save", () => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(repository.saveSession).toHaveBeenCalled();
+      expect(repository.saveSession).toHaveBeenCalledWith({
+        boat: {
+          id: BOAT_ID,
+          name: "DUMMY:boat",
+        },
+        route: {
+          id: ROUTE_ID,
+          name: "DUMMY:route",
+        },
+        rowers: [
+          {
+            id: ROWER_ID,
+            name: "DUMMY:rower",
+          },
+        ],
+        startDateTime: startDateTimeStr,
+        estimatedEndDateTime: endDateTimeStr,
+        comment: "DUMMY:comment",
+      });
     });
 
     it("return should be success", () => {
