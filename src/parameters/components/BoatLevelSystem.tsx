@@ -11,6 +11,7 @@ import Button from "../../_common/components/Button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 
 const useBoatLevelSystemForm = ({
   defaultValues,
@@ -51,14 +52,9 @@ const useBoatLevelSystemForm = ({
   return form;
 };
 
-export const BoatLevelSystem = ({
-  boatId,
-  close,
-}: {
-  boatId: string;
-  close: () => void;
-}) => {
-  const { getBoatLevelConfig } = useBoatLevelConfigStore();
+export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
+  const { getBoatLevelConfig, upsertBoatLevelConfig, deleteBoatLevelConfig } =
+    useBoatLevelConfigStore();
   const boatLevelConfig = getBoatLevelConfig(boatId);
   const form = useBoatLevelSystemForm({
     defaultValues: {
@@ -67,8 +63,43 @@ export const BoatLevelSystem = ({
     },
   });
 
+  const onSubmit = () => {
+    /**
+     * we should use form.handleSubmit bit it does not work, I don't know why
+     */
+    const formValues = form.getValues();
+
+    if (formValues.isActivated) {
+      upsertBoatLevelConfig(boatId, {
+        minimalRowerCategory:
+          formValues.minimalRowerCategory === "null"
+            ? null
+            : formValues.minimalRowerCategory,
+        minimalRowerType:
+          formValues.minimalRowerType === "null"
+            ? null
+            : formValues.minimalRowerType,
+      });
+    } else {
+      deleteBoatLevelConfig(boatId);
+    }
+
+    form.reset({
+      isActivated: formValues.isActivated,
+      minimalRowerCategory: formValues.minimalRowerCategory,
+      minimalRowerType: formValues.minimalRowerType,
+    });
+
+    toast.success("Configuration mise à jour");
+  };
+
   return (
-    <div>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
+      }}
+    >
       <label className="flex gap-2 items-center">
         <input
           type="checkbox"
@@ -121,17 +152,13 @@ export const BoatLevelSystem = ({
 
       <div className="flex justify-end gap-2">
         <Button
-          type="button"
-          onClick={close}
+          type="submit"
           className="flex-1"
-          variant="outlined"
+          disabled={!form.formState.isDirty}
         >
-          Annuler les changements
-        </Button>
-        <Button type="submit" className="flex-1">
           Mettre à jour la configuration
         </Button>
       </div>
-    </div>
+    </form>
   );
 };

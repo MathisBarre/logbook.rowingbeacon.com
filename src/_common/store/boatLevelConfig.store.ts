@@ -169,7 +169,7 @@ export interface IBoatLevelConfigStore {
   boatLevelConfigs: BoatLevelConfig[];
   getBoatTypeLevelConfigs: () => BoatTypeLevelConfigs;
   getBoatLevelConfig: (boatId: string) => BoatLevelConfig | undefined;
-  updateBoatLevelConfig: (
+  upsertBoatLevelConfig: (
     boatId: string,
     boatLevelConfig: {
       minimalRowerCategory?: RowerCategoryEnum | null;
@@ -177,7 +177,6 @@ export interface IBoatLevelConfigStore {
     }
   ) => void;
   deleteBoatLevelConfig: (boatId: string) => void;
-  addBoatLevelConfig: (boatLevelConfig: BoatLevelConfig) => void;
   reset: () => void;
 }
 
@@ -192,14 +191,25 @@ export const useBoatLevelConfigStore = create(
       getBoatLevelConfig(boatId) {
         return get().boatLevelConfigs.find((boat) => boat.boatId === boatId);
       },
-      updateBoatLevelConfig(boatId, boatLevelConfig) {
+      upsertBoatLevelConfig(boatId, boatLevelConfig) {
         set((state) => {
           const currentBoatLevelConfig = state.boatLevelConfigs.find(
             (boat) => boat.boatId === boatId
           );
 
           if (!currentBoatLevelConfig) {
-            return state;
+            return {
+              ...state,
+              boatLevelConfigs: [
+                ...state.boatLevelConfigs,
+                {
+                  boatId,
+                  minimalRowerCategory:
+                    boatLevelConfig.minimalRowerCategory || null,
+                  minimalRowerType: boatLevelConfig.minimalRowerType || null,
+                },
+              ],
+            };
           }
 
           const boatLevelConfigsWithoutCurrent = state.boatLevelConfigs.filter(
@@ -228,14 +238,6 @@ export const useBoatLevelConfigStore = create(
           return {
             ...state,
             boatLevelConfigs,
-          };
-        });
-      },
-      addBoatLevelConfig(boatLevelConfig) {
-        set((state) => {
-          return {
-            ...state,
-            boatLevelConfigs: [...state.boatLevelConfigs, boatLevelConfig],
           };
         });
       },
