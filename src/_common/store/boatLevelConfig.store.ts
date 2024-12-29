@@ -20,8 +20,16 @@ export const getBoatTypeLevelConfig = (
   return specificConfig;
 };
 
-export const isValid = (boatLevelConfig: BoatLevelConfig, rower: Rower) => {
+export const canRowerUseBoat = (
+  boatLevelConfig: BoatLevelConfig,
+  rower: Rower
+) => {
   const { minimalRowerCategory, minimalRowerType } = boatLevelConfig;
+
+  if (rower.category === undefined || rower.type === undefined) {
+    // if rower not configured, he cannot use restricted boat
+    return false;
+  }
 
   const minimalRowerCategoryOrder =
     findRowerCategoryOrder(minimalRowerCategory);
@@ -137,16 +145,18 @@ interface BoatLevelConfig {
   minimalRowerType: RowerTypeEnum;
 }
 
+export interface IBoatLevelConfigStore {
+  boatTypeLevelConfigs: BoatTypeLevelConfigs;
+  boatLevelConfigs: BoatLevelConfig[];
+  getBoatTypeLevelConfigs: () => BoatTypeLevelConfigs;
+  getBoatLevelConfig: (boatId: string) => BoatLevelConfig | undefined;
+  updateBoatLevelConfig: (boatLevelConfig: BoatLevelConfig) => void;
+  deleteBoatLevelConfig: (boatId: string) => void;
+  addBoatLevelConfig: (boatLevelConfig: BoatLevelConfig) => void;
+}
+
 export const useBoatLevelConfigStore = create(
-  persist<{
-    boatTypeLevelConfigs: BoatTypeLevelConfigs;
-    boatLevelConfigs: BoatLevelConfig[];
-    getBoatTypeLevelConfigs: () => BoatTypeLevelConfigs;
-    getBoatLevelConfig: (boatId: string) => BoatLevelConfig | undefined;
-    updateBoatLevelConfig: (boatLevelConfig: BoatLevelConfig) => void;
-    deleteBoatLevelConfig: (boatId: string) => void;
-    addBoatLevelConfig: (boatLevelConfig: BoatLevelConfig) => void;
-  }>(
+  persist<IBoatLevelConfigStore>(
     (set, get) => ({
       boatTypeLevelConfigs: defaultBoatTypeLevelConfigs,
       boatLevelConfigs: [],

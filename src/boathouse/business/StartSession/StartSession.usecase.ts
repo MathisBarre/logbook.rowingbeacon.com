@@ -1,6 +1,9 @@
 import { fromBoatTypeToNbOfRowers } from "../../../_common/business/boat.rules";
-import { getBoatTypeLevelConfig } from "../../../_common/store/boatLevelConfig.store";
-import { BoatTypeEnum } from "../../../_common/types/boat.type";
+import {
+  canRowerUseBoat,
+  getBoatTypeLevelConfig,
+  IBoatLevelConfigStore,
+} from "../../../_common/store/boatLevelConfig.store";
 import { Route } from "../../../_common/types/route.type";
 import { toISODateFormat } from "../../../_common/utils/date.utils";
 import {
@@ -27,20 +30,10 @@ interface Payload {
   params: Params;
 }
 
-interface BoatLevelConfigStore {
-  getBoatTypeLevelConfigs(): Record<
-    Exclude<BoatTypeEnum, BoatTypeEnum.OTHER>,
-    {
-      alert: number;
-      block: number;
-    }
-  >;
-}
-
 export class StartSessionUsecase {
   constructor(
     private readonly startSessionRepository: IStartSessionRepository,
-    private readonly boatLevelConfigStore: BoatLevelConfigStore
+    private readonly boatLevelConfigStore: IBoatLevelConfigStore
   ) {}
 
   async execute(payload: Payload) {
@@ -69,6 +62,12 @@ export class StartSessionUsecase {
 
       if (!ignoreRowersAlreadyOnSessionError && AlreadyOnSessionError) {
         return asError(AlreadyOnSessionError);
+      }
+
+      const RowersLevelError = await this.getRowersLevelError(sessionToStart);
+
+      if (RowersLevelError) {
+        return asError(RowersLevelError);
       }
 
       await this.saveSession(sessionToStart);
@@ -169,14 +168,46 @@ export class StartSessionUsecase {
     });
   }
 
-  private async handleLevel(payload: SessionToStart) {
+  private async getRowersLevelError(payload: SessionToStart) {
     const boat = await this.startSessionRepository.getBoat(payload.boatId);
+    const rowers = await this.startSessionRepository.getRowersById(
+      payload.rowersId
+    );
+    const boatLevelConfig = this.boatLevelConfigStore.getBoatLevelConfig(
+      boat.id
+    );
+
+    if (!boatLevelConfig) {
+      return null;
+    }
+
+    let nbOfInvalidRowers = 0;
+    for (const rower of rowers) {
+      if (!canRowerUseBoat(boatLevelConfig, rower)) {
+        nbOfInvalidRowers++;
+      }
+    }
+
     const boatTypeLevelConfigs =
       this.boatLevelConfigStore.getBoatTypeLevelConfigs();
-    const specificConfig = getBoatTypeLevelConfig(
+    const boatTypeMinimalCorrectRowerConfig = getBoatTypeLevelConfig(
       boat.type,
       boatTypeLevelConfigs
     );
-    await this.
+
+    const isAlerting =
+      nbOfInvalidRowers > boatTypeMinimalCorrectRowerConfig.alert;
+    const isBlock = nbOfInvalidRowers > boatTypeMinimalCorrectRowerConfig.block;
+
+    if (isAlerting || isBlock) {
+      return new ErrorWithCode({
+        code: "ROWERS_LEVEL_ERROR",
+        details: {
+          nbOfInvalidRowers,
+          isAlerting,
+          isBlock,
+        },
+      });
+    }
   }
 }

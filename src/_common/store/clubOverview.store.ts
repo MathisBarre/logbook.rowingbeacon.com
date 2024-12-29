@@ -7,6 +7,7 @@ import {
 } from "./clubOverview.store.functions";
 import { BoatTypeEnum } from "../types/boat.type";
 import { generateBoatId } from "../business/boat.rules";
+import { RowerCategoryEnum, RowerTypeEnum } from "./boatLevelConfig.store";
 
 export interface ClubOverviewState {
   club: {
@@ -28,6 +29,8 @@ export interface ClubOverviewState {
     id: string;
     name: string;
     archivedAt?: string | undefined;
+    type?: RowerTypeEnum | undefined;
+    category?: RowerCategoryEnum | undefined;
   }[];
   levels: {
     id: string;

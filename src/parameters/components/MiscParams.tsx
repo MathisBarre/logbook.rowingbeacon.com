@@ -27,9 +27,8 @@ export const MiscParams = () => {
   const { getIncidents } = useIncidentStore();
   const incidents = getIncidents();
 
-  const { getBoatTypeLevelConfig: getBoatLevelConfig } =
-    useBoatLevelConfigStore();
-  const boatLevelConfig = getBoatLevelConfig();
+  const boatLevelConfigStore = useBoatLevelConfigStore();
+  const boatLevelConfig = boatLevelConfigStore.getBoatTypeLevelConfigs();
 
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">

@@ -6,6 +6,7 @@ import {
 export interface Rower {
   id: string;
   name: string;
-  type: RowerTypeEnum;
-  category: RowerCategoryEnum;
+  archivedAt?: string | undefined;
+  type?: RowerTypeEnum | undefined;
+  category?: RowerCategoryEnum | undefined;
 }
