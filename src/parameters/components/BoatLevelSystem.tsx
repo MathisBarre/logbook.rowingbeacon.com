@@ -50,11 +50,11 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
         restreindre l&apos;usage de ce bateau
       </label>
 
-      <p className="text-xs leading-5 mt-1">
+      <p className="text-sm mt-2 bg-yellow-50 border border-yellow-200 p-2 rounded">
         ⚠️ La restriction ne fonctionnera correctement que si la catégorie et le
         type des rameurs est correctement renseigné. S&apos;il n&apos;est pas
         renseigné pour un rameur, le système considera que le rameur est de la
-        catégorie et le type la plus basse (niveau -1).
+        catégorie et le type la plus basse (niveau 0).
       </p>
 
       <div className={clsx(!activated && "hidden")}>

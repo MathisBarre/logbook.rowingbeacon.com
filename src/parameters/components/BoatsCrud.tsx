@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import {
-  BicepsFlexedIcon,
   ConstructionIcon,
   PencilIcon,
   PlusIcon,
   SearchIcon,
+  ShieldIcon,
   Trash2Icon,
   TypeIcon,
 } from "lucide-react";
@@ -211,7 +211,7 @@ export const BoatCrud = () => {
                       <Dialog>
                         <DialogTrigger asChild>
                           <button className="flex items-center justify-center hover:bg-gray-100 h-12 w-12">
-                            <BicepsFlexedIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
+                            <ShieldIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
                           </button>
                         </DialogTrigger>
                         <DialogContent
