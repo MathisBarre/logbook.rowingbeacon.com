@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import { Label } from "../../_common/components/Label";
 import {
   rowerCategories,
@@ -22,7 +21,6 @@ const useBoatLevelSystemForm = ({
   };
 }) => {
   const StartSessionFormSchema = z.object({
-    isActivated: z.boolean(),
     minimalRowerCategory: z.enum([
       "null",
       RowerCategoryEnum.J10,
@@ -69,7 +67,11 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
      */
     const formValues = form.getValues();
 
-    if (formValues.isActivated) {
+    const isActivated =
+      formValues.minimalRowerCategory !== "null" ||
+      formValues.minimalRowerType !== "null";
+
+    if (isActivated) {
       upsertBoatLevelConfig(boatId, {
         minimalRowerCategory:
           formValues.minimalRowerCategory === "null"
@@ -80,17 +82,25 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
             ? null
             : formValues.minimalRowerType,
       });
+
+      form.reset({
+        minimalRowerCategory: formValues.minimalRowerCategory,
+        minimalRowerType: formValues.minimalRowerType,
+      });
     } else {
-      deleteBoatLevelConfig(boatId);
+      removeRestrictions();
     }
 
-    form.reset({
-      isActivated: formValues.isActivated,
-      minimalRowerCategory: formValues.minimalRowerCategory,
-      minimalRowerType: formValues.minimalRowerType,
-    });
-
     toast.success("Configuration mise à jour");
+  };
+
+  const removeRestrictions = () => {
+    deleteBoatLevelConfig(boatId);
+
+    form.reset({
+      minimalRowerCategory: "null",
+      minimalRowerType: "null",
+    });
   };
 
   return (
@@ -100,25 +110,18 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
         onSubmit();
       }}
     >
-      <label className="flex gap-2 items-center">
-        <input
-          type="checkbox"
-          className="input"
-          {...form.register("isActivated")}
-        />
-        restreindre l&apos;usage de ce bateau
-      </label>
-
-      <p className="text-sm mt-2 bg-yellow-50 border border-yellow-200 p-2 rounded">
-        ⚠️ La restriction ne fonctionnera correctement que si la catégorie et le
-        type des rameurs est correctement renseigné. S&apos;il n&apos;est pas
-        renseigné pour un rameur, le système considera que le rameur est de la
-        catégorie et le type la plus basse (niveau 0).
+      <p className="bg-blue-50 border border-blue-100 p-2 rounded text-sm mb-6">
+        ℹ️ Ces paramètres vous permettent de restreindre l&apos;enregistrement
+        des sorties du bateau à certains rameurs.
+        <br />
+        <br />
+        Configurer une catégorie et/ou un type de rameur minimal alertera le
+        preneur de note ou bloquera l&apos;enregistrement en fonction de la
+        configuration globale du système de niveau (présent dans
+        &quot;paramètres divers&quot;)
       </p>
 
-      <div className={clsx(!form.watch("isActivated") && "hidden")}>
-        <div className="h-4" />
-
+      <div>
         <Label className="flex flex-col gap-1">
           Catégorie de rameur minimale
           <select className="input" {...form.register("minimalRowerCategory")}>
