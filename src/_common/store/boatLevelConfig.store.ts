@@ -48,17 +48,17 @@ export const canRowerUseBoat = (
   }
 
   return (
-    rowerCategoryOrder.order >= minimalRowerCategoryOrder.order &&
-    rowerTypeOrder.order >= minimalRowerTypeOrder.order
+    rowerCategoryOrder >= minimalRowerCategoryOrder &&
+    rowerTypeOrder >= minimalRowerTypeOrder
   );
 };
 
-const findRowerCategoryOrder = (category: RowerCategoryEnum) => {
-  return rowerCategory.find((cat) => cat.category === category);
+const findRowerCategoryOrder = (category: RowerCategoryEnum | null) => {
+  return rowerCategories.find((cat) => cat.category === category)?.order;
 };
 
-const findRowerTypeOrder = (type: RowerTypeEnum) => {
-  return rowerType.find((t) => t.type === type);
+const findRowerTypeOrder = (type: RowerTypeEnum | null) => {
+  return rowerType.find((t) => t.type === type)?.order;
 };
 
 const defaultBoatTypeLevelConfig = { alert: 1, block: -1 };
@@ -87,7 +87,11 @@ export enum RowerTypeEnum {
   COMPETITOR = "competitor",
 }
 
-const rowerType = [
+export const rowerType = [
+  {
+    order: -1,
+    type: null,
+  },
   {
     order: 0,
     type: RowerTypeEnum.RECREATIONAL,
@@ -108,7 +112,11 @@ export enum RowerCategoryEnum {
   SENIOR = "Senior",
 }
 
-const rowerCategory = [
+export const rowerCategories = [
+  {
+    order: -1,
+    category: null,
+  },
   {
     order: 0,
     category: RowerCategoryEnum.J10,
@@ -141,8 +149,8 @@ const rowerCategory = [
 
 interface BoatLevelConfig {
   boatId: string;
-  minimalRowerCategory: RowerCategoryEnum;
-  minimalRowerType: RowerTypeEnum;
+  minimalRowerCategory: RowerCategoryEnum | null;
+  minimalRowerType: RowerTypeEnum | null;
 }
 
 export interface IBoatLevelConfigStore {
@@ -150,7 +158,13 @@ export interface IBoatLevelConfigStore {
   boatLevelConfigs: BoatLevelConfig[];
   getBoatTypeLevelConfigs: () => BoatTypeLevelConfigs;
   getBoatLevelConfig: (boatId: string) => BoatLevelConfig | undefined;
-  updateBoatLevelConfig: (boatLevelConfig: BoatLevelConfig) => void;
+  updateBoatLevelConfig: (
+    boatId: string,
+    boatLevelConfig: {
+      minimalRowerCategory?: RowerCategoryEnum | null;
+      minimalRowerType?: RowerTypeEnum | null;
+    }
+  ) => void;
   deleteBoatLevelConfig: (boatId: string) => void;
   addBoatLevelConfig: (boatLevelConfig: BoatLevelConfig) => void;
 }
@@ -166,14 +180,31 @@ export const useBoatLevelConfigStore = create(
       getBoatLevelConfig(boatId) {
         return get().boatLevelConfigs.find((boat) => boat.boatId === boatId);
       },
-      updateBoatLevelConfig(boatLevelConfig) {
+      updateBoatLevelConfig(boatId, boatLevelConfig) {
         set((state) => {
-          const boatLevelConfigs = state.boatLevelConfigs.filter(
-            (boat) => boat.boatId !== boatLevelConfig.boatId
+          const currentBoatLevelConfig = state.boatLevelConfigs.find(
+            (boat) => boat.boatId === boatId
           );
+
+          if (!currentBoatLevelConfig) {
+            return state;
+          }
+
+          const boatLevelConfigsWithoutCurrent = state.boatLevelConfigs.filter(
+            (boat) => boat.boatId !== boatId
+          );
+
+          const newBoatLevelConfig = {
+            ...currentBoatLevelConfig,
+            ...boatLevelConfig,
+          };
+
           return {
             ...state,
-            boatLevelConfigs: [...boatLevelConfigs, boatLevelConfig],
+            boatLevelConfigs: [
+              ...boatLevelConfigsWithoutCurrent,
+              newBoatLevelConfig,
+            ],
           };
         });
       },

@@ -178,7 +178,7 @@ export class StartSessionUsecase {
     );
 
     if (!boatLevelConfig) {
-      return null;
+      return;
     }
 
     let nbOfInvalidRowers = 0;
@@ -201,7 +201,7 @@ export class StartSessionUsecase {
 
     if (isAlerting || isBlock) {
       return new ErrorWithCode({
-        code: "ROWERS_LEVEL_ERROR",
+        code: "INVALID_ROWERS_LEVEL",
         details: {
           nbOfInvalidRowers,
           isAlerting,

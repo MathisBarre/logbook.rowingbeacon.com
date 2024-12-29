@@ -1,9 +1,35 @@
 import clsx from "clsx";
 import { Label } from "../../_common/components/Label";
-import { useState } from "react";
+import {
+  rowerCategories,
+  RowerCategoryEnum,
+  rowerType,
+  RowerTypeEnum,
+  useBoatLevelConfigStore,
+} from "../../_common/store/boatLevelConfig.store";
 
 export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
-  const [isChecked, setIsChecked] = useState(false);
+  const {
+    getBoatLevelConfig,
+    addBoatLevelConfig,
+    deleteBoatLevelConfig,
+    updateBoatLevelConfig,
+    boatLevelConfigs,
+  } = useBoatLevelConfigStore();
+
+  console.log(boatLevelConfigs);
+
+  const boatLevelConfig = getBoatLevelConfig(boatId);
+
+  const activeBoatLevelConfig = () => {
+    addBoatLevelConfig({
+      boatId,
+      minimalRowerCategory: null,
+      minimalRowerType: null,
+    });
+  };
+
+  const activated = boatLevelConfig !== undefined;
 
   return (
     <div>
@@ -12,8 +38,16 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
           type="checkbox"
           name=""
           id=""
-          checked={isChecked}
-          onChange={() => setIsChecked(!isChecked)}
+          checked={activated}
+          onChange={(e) => {
+            const value = e.target.checked;
+
+            if (value) {
+              activeBoatLevelConfig();
+            } else {
+              deleteBoatLevelConfig(boatId);
+            }
+          }}
           className="input"
         />
         restreindre l&apos;usage de ce bateau
@@ -24,7 +58,7 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
         niveau ne pourront pas l&apos;utiliser
       </p>
 
-      <div className={clsx(!isChecked && "hidden")}>
+      <div className={clsx(!activated && "hidden")}>
         <div className="h-4" />
 
         <hr />
@@ -32,25 +66,47 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
         <div className="h-4" />
 
         <Label className="flex flex-col gap-1">
-          Catégorie minimale
-          <select name="" id="" className="input">
-            <option value="">Aucune catégorie minimale</option>
-            <option value="">J10</option>
-            <option value="">J14</option>
-            <option value="">J16</option>
-            <option value="">J18</option>
-            <option value="">Senior</option>
+          Catégorie rameur minimale
+          <select
+            className="input"
+            value={boatLevelConfig?.minimalRowerCategory || "null"}
+            onChange={(e) => {
+              const value = e.target.value as RowerCategoryEnum | "null";
+              updateBoatLevelConfig(boatId, {
+                minimalRowerCategory: value === "null" ? null : value,
+              });
+            }}
+          >
+            {rowerCategories.map((category, i) => (
+              <option
+                key={category.category}
+                value={category.category || "null"}
+              >
+                {i} - {category.category || "Aucune catégorie minimale"}
+              </option>
+            ))}
           </select>
         </Label>
 
         <div className="h-4" />
 
         <Label className="flex flex-col gap-1">
-          Niveau minimale
-          <select name="" id="" className="input">
-            <option value="">Aucun niveau minimal</option>
-            <option value="">Loisir</option>
-            <option value="">Compétiteur</option>
+          Niveau rameur minimale
+          <select
+            className="input"
+            value={boatLevelConfig?.minimalRowerType || "null"}
+            onChange={(e) => {
+              const value = e.target.value as RowerTypeEnum | "null";
+              updateBoatLevelConfig(boatId, {
+                minimalRowerType: value === "null" ? null : value,
+              });
+            }}
+          >
+            {rowerType.map((type, i) => (
+              <option key={type.type} value={type.type || "null"}>
+                {i} - {type.type || "Aucun niveau minimal"}
+              </option>
+            ))}
           </select>
         </Label>
       </div>
