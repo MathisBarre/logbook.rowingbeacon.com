@@ -14,10 +14,7 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
     addBoatLevelConfig,
     deleteBoatLevelConfig,
     updateBoatLevelConfig,
-    boatLevelConfigs,
   } = useBoatLevelConfigStore();
-
-  console.log(boatLevelConfigs);
 
   const boatLevelConfig = getBoatLevelConfig(boatId);
 
@@ -54,19 +51,17 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
       </label>
 
       <p className="text-xs leading-5 mt-1">
-        ⚠️ En restreignant l&apos;usage du bateau, les rameurs sans catégorie ou
-        niveau ne pourront pas l&apos;utiliser
+        ⚠️ La restriction ne fonctionnera correctement que si la catégorie et le
+        type des rameurs est correctement renseigné. S&apos;il n&apos;est pas
+        renseigné pour un rameur, le système considera que le rameur est de la
+        catégorie et le type la plus basse (niveau -1).
       </p>
 
       <div className={clsx(!activated && "hidden")}>
         <div className="h-4" />
 
-        <hr />
-
-        <div className="h-4" />
-
         <Label className="flex flex-col gap-1">
-          Catégorie rameur minimale
+          Catégorie de rameur minimale
           <select
             className="input"
             value={boatLevelConfig?.minimalRowerCategory || "null"}
@@ -77,12 +72,13 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
               });
             }}
           >
-            {rowerCategories.map((category, i) => (
+            {rowerCategories.map((category) => (
               <option
                 key={category.category}
                 value={category.category || "null"}
               >
-                {i} - {category.category || "Aucune catégorie minimale"}
+                {category.order} -{" "}
+                {category.category || "Aucune catégorie minimale"}
               </option>
             ))}
           </select>
@@ -91,7 +87,7 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
         <div className="h-4" />
 
         <Label className="flex flex-col gap-1">
-          Niveau rameur minimale
+          Type de rameur minimale
           <select
             className="input"
             value={boatLevelConfig?.minimalRowerType || "null"}
@@ -102,9 +98,9 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
               });
             }}
           >
-            {rowerType.map((type, i) => (
+            {rowerType.map((type) => (
               <option key={type.type} value={type.type || "null"}>
-                {i} - {type.type || "Aucun niveau minimal"}
+                {type.order} - {type.type || "Aucun niveau minimal"}
               </option>
             ))}
           </select>

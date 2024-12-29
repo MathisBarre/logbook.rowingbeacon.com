@@ -26,26 +26,11 @@ export const canRowerUseBoat = (
 ) => {
   const { minimalRowerCategory, minimalRowerType } = boatLevelConfig;
 
-  if (rower.category === undefined || rower.type === undefined) {
-    // if rower not configured, he cannot use restricted boat
-    return false;
-  }
-
   const minimalRowerCategoryOrder =
     findRowerCategoryOrder(minimalRowerCategory);
   const rowerCategoryOrder = findRowerCategoryOrder(rower.category);
   const minimalRowerTypeOrder = findRowerTypeOrder(minimalRowerType);
   const rowerTypeOrder = findRowerTypeOrder(rower.type);
-
-  if (
-    minimalRowerCategoryOrder === undefined ||
-    rowerCategoryOrder === undefined ||
-    minimalRowerTypeOrder === undefined ||
-    rowerTypeOrder === undefined
-  ) {
-    // should not happen but if it happens, we don't want to block the session registration
-    return true;
-  }
 
   return (
     rowerCategoryOrder >= minimalRowerCategoryOrder &&
@@ -53,12 +38,14 @@ export const canRowerUseBoat = (
   );
 };
 
-const findRowerCategoryOrder = (category: RowerCategoryEnum | null) => {
-  return rowerCategories.find((cat) => cat.category === category)?.order;
+const findRowerCategoryOrder = (
+  category: RowerCategoryEnum | null | undefined
+) => {
+  return rowerCategories.find((cat) => cat.category === category)?.order || -1;
 };
 
-const findRowerTypeOrder = (type: RowerTypeEnum | null) => {
-  return rowerType.find((t) => t.type === type)?.order;
+const findRowerTypeOrder = (type: RowerTypeEnum | null | undefined) => {
+  return rowerType.find((t) => t.type === type)?.order || -1;
 };
 
 const defaultBoatTypeLevelConfig = { alert: 1, block: -1 };
