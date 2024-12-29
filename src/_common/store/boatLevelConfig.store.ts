@@ -76,16 +76,19 @@ export enum RowerTypeEnum {
 
 export const rowerType = [
   {
-    order: -1,
-    type: null,
-  },
-  {
     order: 0,
-    type: RowerTypeEnum.RECREATIONAL,
+    type: null,
+    label: null,
   },
   {
     order: 1,
+    type: RowerTypeEnum.RECREATIONAL,
+    label: "Loisir",
+  },
+  {
+    order: 2,
     type: RowerTypeEnum.COMPETITOR,
+    label: "Compétition",
   },
 ] as const;
 
@@ -101,35 +104,35 @@ export enum RowerCategoryEnum {
 
 export const rowerCategories = [
   {
-    order: -1,
+    order: 0,
     category: null,
   },
   {
-    order: 0,
+    order: 1,
     category: RowerCategoryEnum.J10,
   },
   {
-    order: 1,
+    order: 2,
     category: RowerCategoryEnum.J12,
   },
   {
-    order: 2,
+    order: 3,
     category: RowerCategoryEnum.J14,
   },
   {
-    order: 3,
+    order: 4,
     category: RowerCategoryEnum.J16,
   },
   {
-    order: 4,
+    order: 5,
     category: RowerCategoryEnum.J18,
   },
   {
-    order: 5,
+    order: 6,
     category: RowerCategoryEnum.U23,
   },
   {
-    order: 6,
+    order: 7,
     category: RowerCategoryEnum.SENIOR,
   },
 ] as const;

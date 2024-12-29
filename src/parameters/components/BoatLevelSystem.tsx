@@ -100,7 +100,7 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
           >
             {rowerType.map((type) => (
               <option key={type.type} value={type.type || "null"}>
-                {type.order} - {type.type || "Aucun niveau minimal"}
+                {type.order} - {type.label || "Aucun type minimal"}
               </option>
             ))}
           </select>
