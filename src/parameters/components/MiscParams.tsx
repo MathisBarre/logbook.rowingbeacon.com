@@ -96,13 +96,11 @@ export const MiscParams = () => {
                       <td>{getTypeLabel(type as BoatTypeEnum)}</td>
                       <td>
                         <select
-                          name=""
-                          id=""
                           className="w-full input cursor-not-allowed opacity-50"
                           disabled
-                          value={config.alert}
+                          value={config.alertFrom || "null"}
                         >
-                          <option value="-1">ne pas alerter</option>
+                          <option value="null">ne pas alerter</option>
                           {Array.from({ length: nbOfRowers }, (_, i) => (
                             <option key={i} value={i + 1}>
                               à partir d&apos;au moins {i + 1} rameur(s)
@@ -112,13 +110,11 @@ export const MiscParams = () => {
                       </td>
                       <td>
                         <select
-                          name=""
-                          id=""
                           className="w-full input cursor-not-allowed opacity-50"
-                          value={config.block}
+                          value={config.blockFrom || "null"}
                           disabled
                         >
-                          <option value="">ne pas bloquer</option>
+                          <option value="null">ne pas bloquer</option>
                           {Array.from({ length: nbOfRowers }, (_, i) => (
                             <option key={i} value={i + 1}>
                               à partir d&apos;au moins {i + 1} rameur(s)

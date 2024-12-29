@@ -3,16 +3,39 @@ import { BoatTypeEnum } from "../types/boat.type";
 import { persist } from "zustand/middleware";
 import { Rower } from "../types/rower.type";
 
+export const whatShouldItDo = (
+  nbOfInvalidRowers: number,
+  boatTypeLevelConfig: BoatTypeLevelConfig
+) => {
+  let whatToDo: "alert" | "block" | "nothing" = "nothing";
+
+  if (
+    boatTypeLevelConfig.alertFrom !== null &&
+    nbOfInvalidRowers >= boatTypeLevelConfig.alertFrom
+  ) {
+    whatToDo = "alert";
+  }
+
+  if (
+    boatTypeLevelConfig.blockFrom !== null &&
+    nbOfInvalidRowers >= boatTypeLevelConfig.blockFrom
+  ) {
+    whatToDo = "block";
+  }
+
+  return whatToDo;
+};
+
 export const getBoatTypeLevelConfig = (
   boatType: BoatTypeEnum | undefined,
   boatTypeLevelConfigs: BoatTypeLevelConfigs
-) => {
+): BoatTypeLevelConfig => {
   if (boatType === undefined) {
     return defaultBoatTypeLevelConfig;
   }
 
   if (boatType === BoatTypeEnum.OTHER) {
-    return { alert: -1, block: -1 };
+    return { alertFrom: null, blockFrom: null };
   }
 
   const specificConfig = boatTypeLevelConfigs[boatType];
@@ -41,18 +64,21 @@ export const canRowerUseBoat = (
 const findRowerCategoryOrder = (
   category: RowerCategoryEnum | null | undefined
 ) => {
-  return rowerCategories.find((cat) => cat.category === category)?.order || -1;
+  return rowerCategories.find((cat) => cat.category === category)?.order || 0;
 };
 
 const findRowerTypeOrder = (type: RowerTypeEnum | null | undefined) => {
-  return rowerType.find((t) => t.type === type)?.order || -1;
+  return rowerType.find((t) => t.type === type)?.order || 0;
 };
 
-const defaultBoatTypeLevelConfig = { alert: 1, block: -1 };
+const defaultBoatTypeLevelConfig: BoatTypeLevelConfig = {
+  alertFrom: 1,
+  blockFrom: null,
+};
 
 interface BoatTypeLevelConfig {
-  alert: number;
-  block: number;
+  alertFrom: number | null;
+  blockFrom: number | null;
 }
 
 type BoatTypeLevelConfigs = Record<
@@ -157,6 +183,7 @@ export interface IBoatLevelConfigStore {
   ) => void;
   deleteBoatLevelConfig: (boatId: string) => void;
   addBoatLevelConfig: (boatLevelConfig: BoatLevelConfig) => void;
+  reset: () => void;
 }
 
 export const useBoatLevelConfigStore = create(
@@ -215,6 +242,12 @@ export const useBoatLevelConfigStore = create(
             ...state,
             boatLevelConfigs: [...state.boatLevelConfigs, boatLevelConfig],
           };
+        });
+      },
+      reset() {
+        set({
+          boatTypeLevelConfigs: defaultBoatTypeLevelConfigs,
+          boatLevelConfigs: [],
         });
       },
     }),

@@ -3,6 +3,7 @@ import {
   canRowerUseBoat,
   getBoatTypeLevelConfig,
   IBoatLevelConfigStore,
+  whatShouldItDo,
 } from "../../../_common/store/boatLevelConfig.store";
 import { Route } from "../../../_common/types/route.type";
 import { toISODateFormat } from "../../../_common/utils/date.utils";
@@ -195,17 +196,17 @@ export class StartSessionUsecase {
       boatTypeLevelConfigs
     );
 
-    const isAlerting =
-      nbOfInvalidRowers > boatTypeMinimalCorrectRowerConfig.alert;
-    const isBlock = nbOfInvalidRowers > boatTypeMinimalCorrectRowerConfig.block;
+    const whatToDo = whatShouldItDo(
+      nbOfInvalidRowers,
+      boatTypeMinimalCorrectRowerConfig
+    );
 
-    if (isAlerting || isBlock) {
+    if (whatToDo !== "nothing") {
       return new ErrorWithCode({
         code: "INVALID_ROWERS_LEVEL",
         details: {
           nbOfInvalidRowers,
-          isAlerting,
-          isBlock,
+          whatToDo,
         },
       });
     }
