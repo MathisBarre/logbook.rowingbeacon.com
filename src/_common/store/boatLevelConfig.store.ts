@@ -124,7 +124,6 @@ export enum RowerCategoryEnum {
   J14 = "J14",
   J16 = "J16",
   J18 = "J18",
-  U23 = "U23",
   SENIOR = "Senior",
 }
 
@@ -152,10 +151,6 @@ export const rowerCategories = [
   {
     order: 5,
     category: RowerCategoryEnum.J18,
-  },
-  {
-    order: 6,
-    category: RowerCategoryEnum.U23,
   },
   {
     order: 7,

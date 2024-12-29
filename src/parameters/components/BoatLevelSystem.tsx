@@ -7,45 +7,73 @@ import {
   RowerTypeEnum,
   useBoatLevelConfigStore,
 } from "../../_common/store/boatLevelConfig.store";
+import Button from "../../_common/components/Button";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
-  const {
-    getBoatLevelConfig,
-    addBoatLevelConfig,
-    deleteBoatLevelConfig,
-    updateBoatLevelConfig,
-  } = useBoatLevelConfigStore();
-
-  const boatLevelConfig = getBoatLevelConfig(boatId);
-
-  const activeBoatLevelConfig = () => {
-    addBoatLevelConfig({
-      boatId,
-      minimalRowerCategory: null,
-      minimalRowerType: null,
-    });
+const useBoatLevelSystemForm = ({
+  defaultValues,
+}: {
+  defaultValues: {
+    minimalRowerCategory: RowerCategoryEnum | null;
+    minimalRowerType: RowerTypeEnum | null;
   };
+}) => {
+  const StartSessionFormSchema = z.object({
+    isActivated: z.boolean(),
+    minimalRowerCategory: z.enum([
+      "null",
+      RowerCategoryEnum.J10,
+      RowerCategoryEnum.J12,
+      RowerCategoryEnum.J14,
+      RowerCategoryEnum.J16,
+      RowerCategoryEnum.J18,
+      RowerCategoryEnum.SENIOR,
+    ]),
+    minimalRowerType: z.enum([
+      "null",
+      RowerTypeEnum.RECREATIONAL,
+      RowerTypeEnum.COMPETITOR,
+    ]),
+  });
 
-  const activated = boatLevelConfig !== undefined;
+  type StartSessionFormValues = z.infer<typeof StartSessionFormSchema>;
+
+  const form = useForm<StartSessionFormValues>({
+    resolver: zodResolver(StartSessionFormSchema),
+    defaultValues: {
+      minimalRowerCategory: defaultValues.minimalRowerCategory || "null",
+      minimalRowerType: defaultValues.minimalRowerType || "null",
+    },
+  });
+
+  return form;
+};
+
+export const BoatLevelSystem = ({
+  boatId,
+  close,
+}: {
+  boatId: string;
+  close: () => void;
+}) => {
+  const { getBoatLevelConfig } = useBoatLevelConfigStore();
+  const boatLevelConfig = getBoatLevelConfig(boatId);
+  const form = useBoatLevelSystemForm({
+    defaultValues: {
+      minimalRowerCategory: boatLevelConfig?.minimalRowerCategory || null,
+      minimalRowerType: boatLevelConfig?.minimalRowerType || null,
+    },
+  });
 
   return (
     <div>
       <label className="flex gap-2 items-center">
         <input
           type="checkbox"
-          name=""
-          id=""
-          checked={activated}
-          onChange={(e) => {
-            const value = e.target.checked;
-
-            if (value) {
-              activeBoatLevelConfig();
-            } else {
-              deleteBoatLevelConfig(boatId);
-            }
-          }}
           className="input"
+          {...form.register("isActivated")}
         />
         restreindre l&apos;usage de ce bateau
       </label>
@@ -57,21 +85,12 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
         catégorie et le type la plus basse (niveau 0).
       </p>
 
-      <div className={clsx(!activated && "hidden")}>
+      <div className={clsx(!form.watch("isActivated") && "hidden")}>
         <div className="h-4" />
 
         <Label className="flex flex-col gap-1">
           Catégorie de rameur minimale
-          <select
-            className="input"
-            value={boatLevelConfig?.minimalRowerCategory || "null"}
-            onChange={(e) => {
-              const value = e.target.value as RowerCategoryEnum | "null";
-              updateBoatLevelConfig(boatId, {
-                minimalRowerCategory: value === "null" ? null : value,
-              });
-            }}
-          >
+          <select className="input" {...form.register("minimalRowerCategory")}>
             {rowerCategories.map((category) => (
               <option
                 key={category.category}
@@ -88,16 +107,7 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
 
         <Label className="flex flex-col gap-1">
           Type de rameur minimale
-          <select
-            className="input"
-            value={boatLevelConfig?.minimalRowerType || "null"}
-            onChange={(e) => {
-              const value = e.target.value as RowerTypeEnum | "null";
-              updateBoatLevelConfig(boatId, {
-                minimalRowerType: value === "null" ? null : value,
-              });
-            }}
-          >
+          <select className="input" {...form.register("minimalRowerType")}>
             {rowerType.map((type) => (
               <option key={type.type} value={type.type || "null"}>
                 {type.order} - {type.label || "Aucun type minimal"}
@@ -105,6 +115,22 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
             ))}
           </select>
         </Label>
+      </div>
+
+      <div className="h-4" />
+
+      <div className="flex justify-end gap-2">
+        <Button
+          type="button"
+          onClick={close}
+          className="flex-1"
+          variant="outlined"
+        >
+          Annuler les changements
+        </Button>
+        <Button type="submit" className="flex-1">
+          Mettre à jour la configuration
+        </Button>
       </div>
     </div>
   );
