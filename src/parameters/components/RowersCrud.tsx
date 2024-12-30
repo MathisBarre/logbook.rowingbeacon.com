@@ -15,32 +15,19 @@ import { Input } from "../../_common/components/Input";
 import { Label } from "../../_common/components/Label";
 import { areStringSimilar } from "../../_common/utils/string.utils";
 import { paginateData } from "../../_common/utils/pagination.utils";
-import { windowConfirm, windowPrompt } from "../../_common/utils/window.utils";
+import { windowConfirm } from "../../_common/utils/window.utils";
 import { DialogContent } from "../../_common/components/Dialog/DialogContent";
 import { Dialog, DialogTrigger } from "../../_common/components/Dialog/Dialog";
 import { useLocalStorage } from "../../_common/utils/useLocalStorage";
 import { ChartBarIcon } from "@heroicons/react/16/solid";
 import { RowerStats } from "./RowerStats";
 import { RowerStatsComparisons } from "./RowerStatsComparisons";
+import { UpdateRower } from "./UpdateRower";
+import { Rower } from "../../_common/types/rower.type";
 
 export const RowersCrud = () => {
   const store = useClubOverviewStore();
   const rowers = store.getAllRowers();
-
-  const updateRowerName = async (rowerId: string, currentName: string) => {
-    const newRowerName = await windowPrompt(
-      "Nouveau nom du rameur",
-      currentName
-    );
-
-    if (!newRowerName) {
-      return;
-    }
-
-    store.updateRowerName(rowerId, newRowerName);
-
-    toast.success("Le nom du rameur a été modifié");
-  };
 
   const deleteRower = async (rower: { id: string; name: string }) => {
     if (
@@ -192,14 +179,9 @@ export const RowersCrud = () => {
                     </DialogContent>
                   </Dialog>
                   <div className="h-full w-[1px] bg-gray-200" />
-                  <button
-                    onClick={async () => {
-                      await updateRowerName(rower.id, rower.name);
-                    }}
-                    className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
-                  >
-                    <PencilIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
-                  </button>
+
+                  <UpdateRowerModal rower={rower} />
+
                   <div className="h-full w-[1px] bg-gray-200" />
                   <button
                     onClick={async () => {
@@ -257,5 +239,30 @@ export const RowersCrud = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const UpdateRowerModal = ({ rower }: { rower: Rower }) => {
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+
+  return (
+    <Dialog open={updateModalOpen} onOpenChange={setUpdateModalOpen}>
+      <DialogTrigger asChild>
+        <button className="flex items-center justify-center hover:bg-gray-100 h-12 w-12">
+          <PencilIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
+        </button>
+      </DialogTrigger>
+      <DialogContent
+        className="max-w-[40rem]"
+        title={`Mettre à jour ${rower.name}`}
+      >
+        <UpdateRower
+          rower={rower}
+          close={() => {
+            setUpdateModalOpen(false);
+          }}
+        />
+      </DialogContent>
+    </Dialog>
   );
 };
