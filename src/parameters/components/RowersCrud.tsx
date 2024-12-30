@@ -24,7 +24,10 @@ import { RowerStats } from "./RowerStats";
 import { RowerStatsComparisons } from "./RowerStatsComparisons";
 import { UpdateRower } from "./UpdateRower";
 import { Rower } from "../../_common/types/rower.type";
-import { sortByCategoryOrder } from "../../_common/store/boatLevelConfig.store";
+import {
+  sortByCategoryOrder,
+  sortByTypeOrder,
+} from "../../_common/store/boatLevelConfig.store";
 import { getRowerTypeLabel } from "../../_common/business/rower.rules";
 
 export const RowersCrud = () => {
@@ -82,11 +85,18 @@ export const RowersCrud = () => {
   );
 
   const sortedRowers = searchedRowers.sort((a, b) => {
-    if (a.category === b.category) {
-      return a.name.localeCompare(b.name);
+    const isSameCategory = a.category === b.category;
+    const isSameType = a.type === b.type;
+
+    if (!isSameCategory) {
+      return sortByCategoryOrder(a.category, b.category);
     }
 
-    return sortByCategoryOrder(a.category, b.category);
+    if (!isSameType) {
+      return sortByTypeOrder(a.type, b.type);
+    }
+
+    return a.name.localeCompare(b.name);
   });
 
   const [pageSize, setPageSize] = useLocalStorage("rower-crud-page-size", 32);
@@ -181,13 +191,13 @@ export const RowersCrud = () => {
                       key={rower.id}
                       className="border rounded flex flex-col"
                     >
-                      <div className="px-4 py-3 flex-1 relative">
-                        <p className="text-nowrap">{rower.name}</p>
-                        {(rower.category || rower.type) && (
-                          <p className="bg-steel-blue-50 border border-steel-blue-100 inline-block px-2 rounded-full text-xs absolute top-2 right-2">
-                            {rower.category}{" "}
-                            {rower.category && rower.type && <>-</>}{" "}
-                            {getRowerTypeLabel(rower.type)}
+                      <div className="px-4 py-3 flex-1 relative flex justify-between items-center gap-4">
+                        <p className="text-nowrap text-ellipsis overflow-hidden">
+                          {rower.name}
+                        </p>
+                        {rower.type && (
+                          <p className="bg-steel-blue-50 border border-steel-blue-100 inline-block px-2 py-1 rounded-full text-xs">
+                            {rower.type && getRowerTypeLabel(rower.type)}
                           </p>
                         )}
                       </div>

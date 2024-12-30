@@ -162,13 +162,20 @@ export const sortByCategoryOrder = (
   a: RowerCategoryEnum | undefined,
   b: RowerCategoryEnum | undefined
 ) => {
-  let aOrder = findRowerCategoryOrder(a);
-  let bOrder = findRowerCategoryOrder(b);
+  const aOrder = findRowerCategoryOrder(a);
+  const bOrder = findRowerCategoryOrder(b);
 
-  if (aOrder === 0) aOrder = 100;
-  if (bOrder === 0) bOrder = 100;
+  return -(aOrder - bOrder);
+};
 
-  return aOrder - bOrder;
+export const sortByTypeOrder = (
+  a: RowerTypeEnum | undefined,
+  b: RowerTypeEnum | undefined
+) => {
+  const aOrder = findRowerTypeOrder(a);
+  const bOrder = findRowerTypeOrder(b);
+
+  return -(aOrder - bOrder);
 };
 
 interface BoatLevelConfig {
