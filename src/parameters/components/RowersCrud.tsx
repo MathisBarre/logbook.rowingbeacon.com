@@ -166,7 +166,10 @@ export const RowersCrud = () => {
             type="button"
             variant="outlined"
             onClick={() =>
-              setBulkEditMode((prev) => ({ ...prev, enabled: !prev.enabled }))
+              setBulkEditMode((prev) => ({
+                enabled: !prev.enabled,
+                selectedRowers: [],
+              }))
             }
           >
             <div className="flex gap-2 items-center">
@@ -178,6 +181,14 @@ export const RowersCrud = () => {
               Édition en masse
             </div>
           </Button>
+
+          {bulkEditMode.enabled && (
+            <>
+              <Button type="button" variant="outlined">
+                Éditer la sélection
+              </Button>
+            </>
+          )}
 
           <div className="relative flex-1">
             <SearchIcon className="absolute h-full w-5 left-3 pt-[0.125rem]" />
