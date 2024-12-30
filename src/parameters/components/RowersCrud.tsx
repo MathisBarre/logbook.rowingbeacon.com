@@ -24,6 +24,8 @@ import { RowerStats } from "./RowerStats";
 import { RowerStatsComparisons } from "./RowerStatsComparisons";
 import { UpdateRower } from "./UpdateRower";
 import { Rower } from "../../_common/types/rower.type";
+import { sortByCategoryOrder } from "../../_common/store/boatLevelConfig.store";
+import { getRowerTypeLabel } from "../../_common/business/rower.rules";
 
 export const RowersCrud = () => {
   const store = useClubOverviewStore();
@@ -79,9 +81,13 @@ export const RowersCrud = () => {
     areStringSimilar(rower.name, search)
   );
 
-  const sortedRowers = searchedRowers.sort((a, b) =>
-    a.name.localeCompare(b.name)
-  );
+  const sortedRowers = searchedRowers.sort((a, b) => {
+    if (a.category === b.category) {
+      return a.name.localeCompare(b.name);
+    }
+
+    return sortByCategoryOrder(a.category, b.category);
+  });
 
   const [pageSize, setPageSize] = useLocalStorage("rower-crud-page-size", 32);
 
@@ -155,44 +161,68 @@ export const RowersCrud = () => {
           </div>
         </div>
         <div className="flex-1 relative">
-          <div className="overflow-y-auto absolute inset-0 border p-4 rounded">
+          <div className="overflow-y-auto absolute inset-0 border p-4 pt-0 rounded">
             <div className="grid gap-4 grid-cols-4 ">
-              {paginatedRowers.map((rower) => (
-                <div
-                  key={rower.id}
-                  className="border rounded flex items-center"
-                >
-                  <p className="text-nowrap px-4 flex-1">{rower.name}</p>
-                  <div className="h-full w-[1px] bg-gray-200" />
+              {paginatedRowers.map((rower, i) => {
+                const newRowerCategory =
+                  sortedRowers[i - 1]?.category !== rower.category;
 
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <button className="flex items-center justify-center hover:bg-gray-100 h-12 w-12">
-                        <ChartBarIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
-                      </button>
-                    </DialogTrigger>
-                    <DialogContent
-                      className="max-w-[32rem]"
-                      title={`Statistiques de ${rower.name}`}
+                return (
+                  <>
+                    {newRowerCategory && (
+                      <div
+                        className="col-span-4 bg-gray-100 text-gray-900 p-2 -mx-4 px-4 sticky top-0 z-10"
+                        key={rower.category}
+                      >
+                        {rower.category || "Sans catégorie"}
+                      </div>
+                    )}
+                    <div
+                      key={rower.id}
+                      className="border rounded flex flex-col"
                     >
-                      <RowerStats rowerId={rower.id} />
-                    </DialogContent>
-                  </Dialog>
-                  <div className="h-full w-[1px] bg-gray-200" />
+                      <div className="px-4 py-3 flex-1 relative">
+                        <p className="text-nowrap">{rower.name}</p>
+                        {(rower.category || rower.type) && (
+                          <p className="bg-steel-blue-50 border border-steel-blue-100 inline-block px-2 rounded-full text-xs absolute top-2 right-2">
+                            {rower.category}{" "}
+                            {rower.category && rower.type && <>-</>}{" "}
+                            {getRowerTypeLabel(rower.type)}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex w-full border-t">
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <button className="flex items-center justify-center hover:bg-gray-100 h-10 flex-1">
+                              <ChartBarIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
+                            </button>
+                          </DialogTrigger>
+                          <DialogContent
+                            className="max-w-[32rem]"
+                            title={`Statistiques de ${rower.name}`}
+                          >
+                            <RowerStats rowerId={rower.id} />
+                          </DialogContent>
+                        </Dialog>
+                        <div className="h-full w-[1px] bg-gray-200" />
 
-                  <UpdateRowerModal rower={rower} />
+                        <UpdateRowerModal rower={rower} />
 
-                  <div className="h-full w-[1px] bg-gray-200" />
-                  <button
-                    onClick={async () => {
-                      await deleteRower(rower);
-                    }}
-                    className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
-                  >
-                    <Trash2Icon className="h-4 w-4 cursor-pointer text-error-900" />
-                  </button>
-                </div>
-              ))}
+                        <div className="h-full w-[1px] bg-gray-200" />
+                        <button
+                          onClick={async () => {
+                            await deleteRower(rower);
+                          }}
+                          className="flex items-center justify-center hover:bg-gray-100 h-10 flex-1"
+                        >
+                          <Trash2Icon className="h-4 w-4 cursor-pointer text-error-900" />
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -248,7 +278,7 @@ const UpdateRowerModal = ({ rower }: { rower: Rower }) => {
   return (
     <Dialog open={updateModalOpen} onOpenChange={setUpdateModalOpen}>
       <DialogTrigger asChild>
-        <button className="flex items-center justify-center hover:bg-gray-100 h-12 w-12">
+        <button className="flex items-center justify-center hover:bg-gray-100 h-10 flex-1">
           <PencilIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
         </button>
       </DialogTrigger>

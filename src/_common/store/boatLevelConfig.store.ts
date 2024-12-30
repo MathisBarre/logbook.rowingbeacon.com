@@ -158,6 +158,19 @@ export const rowerCategories = [
   },
 ] as const;
 
+export const sortByCategoryOrder = (
+  a: RowerCategoryEnum | undefined,
+  b: RowerCategoryEnum | undefined
+) => {
+  let aOrder = findRowerCategoryOrder(a);
+  let bOrder = findRowerCategoryOrder(b);
+
+  if (aOrder === 0) aOrder = 100;
+  if (bOrder === 0) bOrder = 100;
+
+  return aOrder - bOrder;
+};
+
 interface BoatLevelConfig {
   boatId: string;
   minimalRowerCategory: RowerCategoryEnum | null;
