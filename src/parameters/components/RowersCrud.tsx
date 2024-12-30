@@ -286,7 +286,7 @@ export const RowersCrud = () => {
                       )}
 
                       {bulkEditMode.enabled && (
-                        <div className="h-10 border-t flex items-center justify-center gap-2">
+                        <div className="h-10 box-content border-t flex items-center justify-center gap-2">
                           <Label
                             className={clsx(
                               "flex items-center justify-center gap-2 h-full w-full",
