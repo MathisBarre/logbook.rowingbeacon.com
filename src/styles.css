@@ -62,6 +62,10 @@
 }
 
 @layer base {
+  * {
+    box-sizing: border-box;
+  }
+
   :root {
     font-size: var(--root-font-size);
     @apply font-sans;

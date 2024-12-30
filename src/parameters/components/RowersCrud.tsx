@@ -29,6 +29,7 @@ import {
   sortByTypeOrder,
 } from "../../_common/store/boatLevelConfig.store";
 import { getRowerTypeLabel } from "../../_common/business/rower.rules";
+import clsx from "clsx";
 
 export const RowersCrud = () => {
   const store = useClubOverviewStore();
@@ -110,6 +111,11 @@ export const RowersCrud = () => {
 
   const [textareaContent, setTextareaContent] = useState("");
 
+  const [bulkEditMode, setBulkEditMode] = useState({
+    enabled: false,
+    selectedRowers: [] as string[],
+  });
+
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
       <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between h-12">
@@ -156,6 +162,23 @@ export const RowersCrud = () => {
             </DialogContent>
           </Dialog>
 
+          <Button
+            type="button"
+            variant="outlined"
+            onClick={() =>
+              setBulkEditMode((prev) => ({ ...prev, enabled: !prev.enabled }))
+            }
+          >
+            <div className="flex gap-2 items-center">
+              <input
+                type="checkbox"
+                checked={bulkEditMode.enabled}
+                className="input"
+              />
+              Édition en masse
+            </div>
+          </Button>
+
           <div className="relative flex-1">
             <SearchIcon className="absolute h-full w-5 left-3 pt-[0.125rem]" />
             <Input
@@ -189,7 +212,7 @@ export const RowersCrud = () => {
                     )}
                     <div
                       key={rower.id}
-                      className="border rounded flex flex-col"
+                      className="border rounded flex flex-col relative overflow-hidden"
                     >
                       <div className="px-4 py-3 flex-1 relative flex justify-between items-center gap-4">
                         <p className="text-nowrap text-ellipsis overflow-hidden">
@@ -201,34 +224,68 @@ export const RowersCrud = () => {
                           </p>
                         )}
                       </div>
-                      <div className="flex w-full border-t">
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <button className="flex items-center justify-center hover:bg-gray-100 h-10 flex-1">
-                              <ChartBarIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
-                            </button>
-                          </DialogTrigger>
-                          <DialogContent
-                            className="max-w-[32rem]"
-                            title={`Statistiques de ${rower.name}`}
+                      {!bulkEditMode.enabled && (
+                        <div className="flex w-full border-t">
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <button className="flex items-center justify-center hover:bg-gray-100 h-10 flex-1">
+                                <ChartBarIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
+                              </button>
+                            </DialogTrigger>
+                            <DialogContent
+                              className="max-w-[32rem]"
+                              title={`Statistiques de ${rower.name}`}
+                            >
+                              <RowerStats rowerId={rower.id} />
+                            </DialogContent>
+                          </Dialog>
+                          <div className="h-full w-[1px] bg-gray-200" />
+
+                          <UpdateRowerModal rower={rower} />
+
+                          <div className="h-full w-[1px] bg-gray-200" />
+                          <button
+                            onClick={async () => {
+                              await deleteRower(rower);
+                            }}
+                            className="flex items-center justify-center hover:bg-gray-100 h-10 flex-1"
                           >
-                            <RowerStats rowerId={rower.id} />
-                          </DialogContent>
-                        </Dialog>
-                        <div className="h-full w-[1px] bg-gray-200" />
+                            <Trash2Icon className="h-4 w-4 cursor-pointer text-error-900" />
+                          </button>
+                        </div>
+                      )}
 
-                        <UpdateRowerModal rower={rower} />
-
-                        <div className="h-full w-[1px] bg-gray-200" />
-                        <button
-                          onClick={async () => {
-                            await deleteRower(rower);
-                          }}
-                          className="flex items-center justify-center hover:bg-gray-100 h-10 flex-1"
-                        >
-                          <Trash2Icon className="h-4 w-4 cursor-pointer text-error-900" />
-                        </button>
-                      </div>
+                      {bulkEditMode.enabled && (
+                        <div className="h-10 border-t flex items-center justify-center gap-2">
+                          <Label
+                            className={clsx(
+                              "flex items-center justify-center gap-2 h-full w-full",
+                              bulkEditMode.selectedRowers.includes(rower.id)
+                                ? "bg-steel-blue-100"
+                                : "bg-white"
+                            )}
+                          >
+                            <input
+                              type="checkbox"
+                              className="input"
+                              checked={bulkEditMode.selectedRowers.includes(
+                                rower.id
+                              )}
+                              onChange={(e) => {
+                                setBulkEditMode((prev) => ({
+                                  ...prev,
+                                  selectedRowers: e.target.checked
+                                    ? [...prev.selectedRowers, rower.id]
+                                    : prev.selectedRowers.filter(
+                                        (r) => r !== rower.id
+                                      ),
+                                }));
+                              }}
+                            />
+                            Sélectionner
+                          </Label>
+                        </div>
+                      )}
                     </div>
                   </>
                 );
