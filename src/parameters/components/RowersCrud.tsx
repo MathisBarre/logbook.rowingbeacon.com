@@ -30,6 +30,7 @@ import {
 } from "../../_common/store/boatLevelConfig.store";
 import { getRowerTypeLabel } from "../../_common/business/rower.rules";
 import clsx from "clsx";
+import { BulkUpdateRower } from "./BulkUpdateRower";
 
 export const RowersCrud = () => {
   const store = useClubOverviewStore();
@@ -184,9 +185,24 @@ export const RowersCrud = () => {
 
           {bulkEditMode.enabled && (
             <>
-              <Button type="button" variant="outlined">
-                Éditer la sélection
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button type="button" variant="outlined">
+                    Éditer la sélection
+                  </Button>
+                </DialogTrigger>
+                <DialogContent
+                  className="max-w-[40rem]"
+                  title={`Mettre à jour ${bulkEditMode.selectedRowers.length} rameurs`}
+                >
+                  <BulkUpdateRower
+                    rowersIds={bulkEditMode.selectedRowers}
+                    close={() => {
+                      setBulkEditMode((prev) => ({ ...prev, enabled: false }));
+                    }}
+                  />
+                </DialogContent>
+              </Dialog>
             </>
           )}
 

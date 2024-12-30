@@ -44,6 +44,11 @@ type UpdateRowerDto = Omit<
   "id" | "archivedAt"
 >;
 
+type BulkUpdateRowerDto = Omit<
+  ClubOverviewState["rowers"][number],
+  "id" | "archivedAt" | "name"
+>;
+
 export interface ClubOverviewStoreState {
   clubOverview: ClubOverviewState;
   coachNote: string;
@@ -69,6 +74,7 @@ export interface ClubOverviewStoreState {
   getAllRoutes: () => ClubOverviewState["routes"];
 
   updateRower: (rowerId: string, rower: UpdateRowerDto) => void;
+  updateRowers: (rowerIds: string[], rower: BulkUpdateRowerDto) => void;
   archiveRower: (rowerId: string) => void;
   addRower: (rowerName: string) => void;
   getRowersById: (rowersId: string[]) => ClubOverviewState["rowers"];
@@ -261,6 +267,17 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
               ...state.clubOverview,
               rowers: state.clubOverview.rowers.map((r) =>
                 r.id === rowerId ? { ...r, ...rower } : r
+              ),
+            },
+          }));
+        },
+
+        updateRowers: (rowerIds: string[], rower: BulkUpdateRowerDto) => {
+          set((state) => ({
+            clubOverview: {
+              ...state.clubOverview,
+              rowers: state.clubOverview.rowers.map((r) =>
+                rowerIds.includes(r.id) ? { ...r, ...rower } : r
               ),
             },
           }));
