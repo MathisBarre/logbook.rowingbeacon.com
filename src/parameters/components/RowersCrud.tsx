@@ -10,7 +10,7 @@ import {
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { toast } from "sonner";
 import Button from "../../_common/components/Button";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Input } from "../../_common/components/Input";
 import { Label } from "../../_common/components/Label";
 import { areStringSimilar } from "../../_common/utils/string.utils";
@@ -197,11 +197,14 @@ export const RowersCrud = () => {
           <div className="overflow-y-auto absolute inset-0 border p-4 pt-0 rounded">
             <div className="grid gap-4 grid-cols-4 ">
               {paginatedRowers.map((rower, i) => {
+                const lastCategory = paginatedRowers[i - 1]?.category;
+                const currentCategory = rower.category;
+
                 const newRowerCategory =
-                  sortedRowers[i - 1]?.category !== rower.category;
+                  i === 0 || lastCategory !== currentCategory;
 
                 return (
-                  <>
+                  <Fragment key={rower.id}>
                     {newRowerCategory && (
                       <div
                         className="col-span-4 bg-gray-100 text-gray-900 p-2 -mx-4 px-4 sticky top-0 z-10"
@@ -287,7 +290,7 @@ export const RowersCrud = () => {
                         </div>
                       )}
                     </div>
-                  </>
+                  </Fragment>
                 );
               })}
             </div>
