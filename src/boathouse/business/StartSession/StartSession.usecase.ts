@@ -154,6 +154,15 @@ export class StartSessionUsecase {
       payload.rowersId
     );
 
+    if (rowers.length === 0) {
+      throw new ErrorWithCode({
+        code: "NO_ROWERS",
+        details: {
+          rowersId: payload.rowersId,
+        },
+      });
+    }
+
     await this.startSessionRepository.saveSession({
       boat: {
         id: payload.boatId,

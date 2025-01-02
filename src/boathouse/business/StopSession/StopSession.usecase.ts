@@ -13,6 +13,7 @@ import {
   DBSessionOnRowers,
   DBSessions,
 } from "../../../_common/database/schema";
+import { toast } from "sonner";
 
 interface ISessionStore {
   getOngoingSession(sessionId: string):
@@ -115,6 +116,8 @@ class StopSession {
 
     const incidentId = generateIncidenId();
 
+    console.log("session id", ongoingSessionInStore.id);
+
     const [saveSessionError] =
       await this.sessionDatabaseRepository.saveSessions([
         {
@@ -193,9 +196,21 @@ export class SessionDatabaseRepository implements ISessionDatabaseRepository {
         }))
       );
 
-      console.log("rowersOnSessionsToSave", rowersOnSessionsToSave);
-
-      await drizzle.insert(DBSessionOnRowers).values(rowersOnSessionsToSave);
+      try {
+        if (rowersOnSessionsToSave.length > 0) {
+          await drizzle
+            .insert(DBSessionOnRowers)
+            .values(rowersOnSessionsToSave);
+        } else {
+          console.log("⚠️ No rowers to save on session");
+        }
+      } catch (e) {
+        console.error("❌ Failed to save rowers on session");
+        console.error(e);
+        toast.warning(
+          "Aucun rameur n'a été enregistré pour cette session. Si c'est une erreur, veuillez contacter le support."
+        );
+      }
 
       console.log("✅ Session(s) saved");
 
