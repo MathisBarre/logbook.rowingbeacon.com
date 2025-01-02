@@ -265,11 +265,7 @@ export const BoatCrud = () => {
                         }}
                       >
                         {boathTypeWithLabel.map((type) => (
-                          <option
-                            key={type.type}
-                            value={type.type}
-                            selected={type.type === boat.type}
-                          >
+                          <option key={type.type} value={type.type}>
                             {type.label}
                           </option>
                         ))}
