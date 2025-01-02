@@ -6,7 +6,6 @@ import { StartSessionUsecase } from "./StartSession.usecase";
 import { generateIds } from "../../../_common/utils/ids.utils";
 import { asError, asOk, TechnicalError } from "../../../_common/utils/error";
 import { BoatTypeEnum } from "../../../_common/types/boat.type";
-import { useStore } from "zustand";
 import { boatLevelConfigStoreCore } from "../../../_common/store/boatLevelConfig.store";
 
 describe("StartSession", () => {
@@ -54,19 +53,18 @@ describe("StartSession", () => {
   });
 
   const init = () => {
-    console.log("init");
     result = null;
     repository = createInMemoryStartSessionRepository(
       getHappyCaseInMemoryData()
     );
   };
 
-  const boatLevelConfigStore = useStore(boatLevelConfigStoreCore);
+  const boatLevelConfigStore = boatLevelConfigStoreCore.getState();
 
   const getUsecase = () =>
     new StartSessionUsecase(repository, boatLevelConfigStore);
 
-  describe("when everythin is ok (happy path)", () => {
+  describe("when everything is ok (happy path)", () => {
     beforeAll(async () => {
       init();
       vi.spyOn(repository, "saveSession");
