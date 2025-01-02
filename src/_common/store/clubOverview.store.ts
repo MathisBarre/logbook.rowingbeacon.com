@@ -32,11 +32,6 @@ export interface ClubOverviewState {
     type?: RowerTypeEnum | undefined;
     category?: RowerCategoryEnum | undefined;
   }[];
-  levels: {
-    id: string;
-    name: string;
-    position: number;
-  }[];
 }
 
 type UpdateRowerDto = Omit<
@@ -93,7 +88,6 @@ const defaultClubOverviewState: ClubOverviewState = {
   boats: [],
   routes: [],
   rowers: [],
-  levels: [],
 };
 
 export const useClubOverviewStore = create<ClubOverviewStoreState>()(

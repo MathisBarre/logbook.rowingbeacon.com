@@ -1,16 +1,17 @@
 import { Label } from "../../_common/components/Label";
 import {
+  boatLevelConfigStoreCore,
   rowerCategories,
   RowerCategoryEnum,
   rowerType,
   RowerTypeEnum,
-  useBoatLevelConfigStore,
 } from "../../_common/store/boatLevelConfig.store";
 import Button from "../../_common/components/Button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { useStore } from "zustand";
 
 const useBoatLevelSystemForm = ({
   defaultValues,
@@ -52,7 +53,8 @@ const useBoatLevelSystemForm = ({
 
 export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
   const { getBoatLevelConfig, upsertBoatLevelConfig, deleteBoatLevelConfig } =
-    useBoatLevelConfigStore();
+    useStore(boatLevelConfigStoreCore);
+
   const boatLevelConfig = getBoatLevelConfig(boatId);
   const form = useBoatLevelSystemForm({
     defaultValues: {

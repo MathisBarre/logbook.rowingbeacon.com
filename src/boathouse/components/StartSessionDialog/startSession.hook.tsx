@@ -2,7 +2,8 @@ import { useCallback, useState } from "react";
 import { SessionToStart } from "../../business/SessionToStart.business";
 import { useGetZustandStartSessionRepository } from "../../business/StartSession/StartSession.repository.zustand";
 import { StartSessionUsecase } from "../../business/StartSession/StartSession.usecase";
-import { useBoatLevelConfigStore } from "../../../_common/store/boatLevelConfig.store";
+import { boatLevelConfigStoreCore } from "../../../_common/store/boatLevelConfig.store";
+import { useStore } from "zustand";
 
 interface StartSessionParams {
   ignoreRowersNumberError: boolean;
@@ -15,7 +16,7 @@ export const useStartSession = (onSessionStarted: () => void) => {
   );
 
   const boathouseRepository = useGetZustandStartSessionRepository();
-  const boatLevelConfigStore = useBoatLevelConfigStore();
+  const boatLevelConfigStore = useStore(boatLevelConfigStoreCore);
 
   const [alert, setAlert] = useState<
     | null

@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { createStore } from "zustand/vanilla";
 import { BoatTypeEnum } from "../types/boat.type";
 import { persist } from "zustand/middleware";
 import { Rower } from "../types/rower.type";
@@ -200,7 +200,7 @@ export interface IBoatLevelConfigStore {
   reset: () => void;
 }
 
-export const useBoatLevelConfigStore = create(
+export const boatLevelConfigStoreCore = createStore(
   persist<IBoatLevelConfigStore>(
     (set, get) => ({
       boatTypeLevelConfigs: defaultBoatTypeLevelConfigs,

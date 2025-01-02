@@ -16,7 +16,8 @@ import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
 import useIncidentStore from "../../_common/store/incident.store";
 import { BoatTypeEnum, getTypeLabel } from "../../_common/types/boat.type";
 import { fromBoatTypeToNbOfRowers } from "../../_common/business/boat.rules";
-import { useBoatLevelConfigStore } from "../../_common/store/boatLevelConfig.store";
+import { useStore } from "zustand";
+import { boatLevelConfigStoreCore as _boatLevelConfigStore } from "../../_common/store/boatLevelConfig.store";
 
 export const MiscParams = () => {
   const [deleteDataDialogOpen, setDeleteDataDialogOpen] = useState(false);
@@ -27,7 +28,7 @@ export const MiscParams = () => {
   const { getIncidents } = useIncidentStore();
   const incidents = getIncidents();
 
-  const boatLevelConfigStore = useBoatLevelConfigStore();
+  const boatLevelConfigStore = useStore(_boatLevelConfigStore);
   const boatLevelConfig = boatLevelConfigStore.getBoatTypeLevelConfigs();
 
   return (
