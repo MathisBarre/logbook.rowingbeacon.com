@@ -178,6 +178,7 @@ export const RowersCrud = () => {
                 type="checkbox"
                 checked={bulkEditMode.enabled}
                 className="input"
+                readOnly
               />
               Édition en masse
             </div>
