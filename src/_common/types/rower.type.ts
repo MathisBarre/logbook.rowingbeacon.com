@@ -1,7 +1,7 @@
 import {
   RowerCategoryEnum,
   RowerTypeEnum,
-} from "../store/boatLevelConfig.store";
+} from "../store/boatLevelConfig.business";
 
 export interface Rower {
   id: string;
