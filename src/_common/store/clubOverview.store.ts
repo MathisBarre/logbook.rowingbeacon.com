@@ -7,7 +7,7 @@ import {
 } from "./clubOverview.store.functions";
 import { BoatTypeEnum } from "../types/boat.type";
 import { generateBoatId } from "../business/boat.rules";
-import { RowerCategoryEnum, RowerTypeEnum } from "./boatLevelConfig.store";
+import { RowerCategoryEnum, RowerTypeEnum } from "./boatLevelConfig.business";
 
 export interface ClubOverviewState {
   club: {

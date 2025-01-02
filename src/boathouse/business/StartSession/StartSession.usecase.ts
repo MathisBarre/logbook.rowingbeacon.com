@@ -1,10 +1,10 @@
 import { fromBoatTypeToNbOfRowers } from "../../../_common/business/boat.rules";
+import { IBoatLevelConfigStore } from "../../../_common/store/boatLevelConfig.store";
 import {
   canRowerUseBoat,
   getBoatTypeLevelConfig,
-  IBoatLevelConfigStore,
   whatShouldItDo,
-} from "../../../_common/store/boatLevelConfig.store";
+} from "../../../_common/store/boatLevelConfig.business";
 import { Route } from "../../../_common/types/route.type";
 import { toISODateFormat } from "../../../_common/utils/date.utils";
 import {

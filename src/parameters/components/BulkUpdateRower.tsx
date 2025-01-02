@@ -1,16 +1,16 @@
 import { Label } from "../../_common/components/Label";
-import {
-  rowerCategories,
-  RowerCategoryEnum,
-  rowerType,
-  RowerTypeEnum,
-} from "../../_common/store/boatLevelConfig.store";
 import Button from "../../_common/components/Button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { toast } from "sonner";
+import {
+  rowerCategories,
+  RowerCategoryEnum,
+  rowerType,
+  RowerTypeEnum,
+} from "../../_common/store/boatLevelConfig.business";
 
 const useBulkUpdateRowerForm = () => {
   const BulkUpdateRowerSchema = z.object({

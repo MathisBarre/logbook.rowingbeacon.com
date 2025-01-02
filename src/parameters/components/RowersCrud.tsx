@@ -24,13 +24,13 @@ import { RowerStats } from "./RowerStats";
 import { RowerStatsComparisons } from "./RowerStatsComparisons";
 import { UpdateRower } from "./UpdateRower";
 import { Rower } from "../../_common/types/rower.type";
-import {
-  sortByCategoryOrder,
-  sortByTypeOrder,
-} from "../../_common/store/boatLevelConfig.store";
 import { getRowerTypeLabel } from "../../_common/business/rower.rules";
 import clsx from "clsx";
 import { BulkUpdateRower } from "./BulkUpdateRower";
+import {
+  sortByCategoryOrder,
+  sortByTypeOrder,
+} from "../../_common/store/boatLevelConfig.business";
 
 export const RowersCrud = () => {
   const store = useClubOverviewStore();

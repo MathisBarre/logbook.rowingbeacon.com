@@ -1,17 +1,17 @@
 import { Label } from "../../_common/components/Label";
-import {
-  boatLevelConfigStoreCore,
-  rowerCategories,
-  RowerCategoryEnum,
-  rowerType,
-  RowerTypeEnum,
-} from "../../_common/store/boatLevelConfig.store";
+import { boatLevelConfigStoreCore } from "../../_common/store/boatLevelConfig.store";
 import Button from "../../_common/components/Button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useStore } from "zustand";
+import {
+  rowerCategories,
+  RowerCategoryEnum,
+  rowerType,
+  RowerTypeEnum,
+} from "../../_common/store/boatLevelConfig.business";
 
 const useBoatLevelSystemForm = ({
   defaultValues,
