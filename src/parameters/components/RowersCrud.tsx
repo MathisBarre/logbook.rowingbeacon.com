@@ -223,7 +223,7 @@ export const RowersCrud = () => {
         </div>
         <div className="flex-1 relative">
           <div className="overflow-y-auto absolute inset-0 border p-4 pt-0 rounded">
-            <div className="grid gap-4 grid-cols-4 ">
+            <div className="grid gap-4 grid-cols-3">
               {paginatedRowers.map((rower, i) => {
                 const lastCategory = paginatedRowers[i - 1]?.category;
                 const currentCategory = rower.category;
@@ -235,7 +235,7 @@ export const RowersCrud = () => {
                   <Fragment key={rower.id}>
                     {newRowerCategory && (
                       <div
-                        className="col-span-4 bg-gray-100 text-gray-900 p-2 -mx-4 px-4 sticky top-0 z-10"
+                        className="col-span-3 bg-gray-100 text-gray-900 p-2 -mx-4 px-4 sticky top-0 z-10"
                         key={rower.category}
                       >
                         {rower.category || "Sans catégorie"}
@@ -243,23 +243,26 @@ export const RowersCrud = () => {
                     )}
                     <div
                       key={rower.id}
-                      className="border rounded flex flex-col relative overflow-hidden"
+                      className="border rounded flex relative overflow-hidden"
                     >
-                      <div className="px-4 py-3 flex-1 relative flex justify-between items-center gap-4">
-                        <p className="text-nowrap text-ellipsis overflow-hidden">
-                          {rower.name}
-                        </p>
-                        {rower.type && (
-                          <p className="bg-steel-blue-50 border border-steel-blue-100 inline-block px-2 py-1 rounded-full text-xs">
-                            {rower.type && getRowerTypeLabel(rower.type)}
+                      <div className="flex-1 relative">
+                        <div className="absolute inset-0 flex justify-between items-center gap-4 px-4">
+                          <p className="text-nowrap text-ellipsis overflow-hidden">
+                            {rower.name}
                           </p>
-                        )}
+                          {rower.type && (
+                            <p className="bg-steel-blue-50 border border-steel-blue-100 inline-block px-2 py-1 rounded-full text-xs">
+                              {rower.type && getRowerTypeLabel(rower.type)}
+                            </p>
+                          )}
+                        </div>
                       </div>
                       {!bulkEditMode.enabled && (
-                        <div className="flex w-full border-t">
+                        <div className="flex">
+                          <div className="h-full w-[1px] bg-gray-200" />
                           <Dialog>
                             <DialogTrigger asChild>
-                              <button className="flex items-center justify-center hover:bg-gray-100 h-10 flex-1">
+                              <button className="flex items-center justify-center hover:bg-gray-100 aspect-square h-12">
                                 <ChartBarIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
                               </button>
                             </DialogTrigger>
@@ -271,15 +274,13 @@ export const RowersCrud = () => {
                             </DialogContent>
                           </Dialog>
                           <div className="h-full w-[1px] bg-gray-200" />
-
                           <UpdateRowerModal rower={rower} />
-
                           <div className="h-full w-[1px] bg-gray-200" />
                           <button
                             onClick={async () => {
                               await deleteRower(rower);
                             }}
-                            className="flex items-center justify-center hover:bg-gray-100 h-10 flex-1"
+                            className="flex items-center justify-center hover:bg-gray-100 aspect-square h-12"
                           >
                             <Trash2Icon className="h-4 w-4 cursor-pointer text-error-900" />
                           </button>
@@ -287,10 +288,10 @@ export const RowersCrud = () => {
                       )}
 
                       {bulkEditMode.enabled && (
-                        <div className="h-10 box-content border-t flex items-center justify-center gap-2">
+                        <div className="h-12 box-content border-l flex items-center justify-center gap-2">
                           <Label
                             className={clsx(
-                              "flex items-center justify-center gap-2 h-full w-full",
+                              "flex items-center justify-center gap-2 h-full w-full px-5",
                               bulkEditMode.selectedRowers.includes(rower.id)
                                 ? "bg-steel-blue-100"
                                 : "bg-white"
@@ -376,7 +377,7 @@ const UpdateRowerModal = ({ rower }: { rower: Rower }) => {
   return (
     <Dialog open={updateModalOpen} onOpenChange={setUpdateModalOpen}>
       <DialogTrigger asChild>
-        <button className="flex items-center justify-center hover:bg-gray-100 h-10 flex-1">
+        <button className="flex items-center justify-center hover:bg-gray-100 aspect-square h-12">
           <PencilIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
         </button>
       </DialogTrigger>
