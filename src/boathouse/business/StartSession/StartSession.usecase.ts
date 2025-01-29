@@ -24,7 +24,7 @@ import { IStartSessionRepository } from "./StartSession.repository.interface";
 interface Params {
   ignoreRowersNumberError: boolean;
   ignoreRowersAlreadyOnSessionError: boolean;
-  ignoreRowersLevelError: boolean;
+  ignoreRowersLevelError?: boolean;
 }
 
 interface Payload {
@@ -44,7 +44,7 @@ export class StartSessionUsecase {
       const {
         ignoreRowersAlreadyOnSessionError, //
         ignoreRowersNumberError,
-        ignoreRowersLevelError,
+        ignoreRowersLevelError = false,
       } = payload.params;
 
       const InvalidPayloadError = this.getInvalidPayloadError(sessionToStart);
