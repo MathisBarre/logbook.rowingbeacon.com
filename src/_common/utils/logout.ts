@@ -1,6 +1,8 @@
+import { useStore } from "zustand";
 import { useOnboardingStore } from "../../onboarding/onboarding.store";
 import { getDatabase } from "../database/database";
 import { DBSessionOnRowers, DBSessions } from "../database/schema";
+import { boatLevelConfigStoreCore } from "../store/boatLevelConfig.store";
 import { useClubOverviewStore } from "../store/clubOverview.store";
 import useIncidentStore from "../store/incident.store";
 import { useSessionsStore } from "../store/sessions.store";
@@ -10,6 +12,7 @@ export const useLogout = () => {
   const clubOverviewStore = useClubOverviewStore();
   const incidentStore = useIncidentStore();
   const setIsOnboardingDone = useOnboardingStore((state) => state.setOnboarded);
+  const boatLevelConfigStore = useStore(boatLevelConfigStoreCore);
 
   return async () => {
     const { drizzle } = await getDatabase();
@@ -20,6 +23,8 @@ export const useLogout = () => {
     sessionStore.reset();
     clubOverviewStore.reset();
     incidentStore.reset();
+    boatLevelConfigStore.reset();
+
     setIsOnboardingDone(false);
   };
 };

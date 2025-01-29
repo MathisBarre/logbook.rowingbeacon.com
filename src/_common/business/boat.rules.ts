@@ -1,10 +1,10 @@
-import { v4 } from "uuid";
 import { ZustandSession } from "../store/sessions.store";
 import { Boat, BoatTypeEnum } from "../types/boat.type";
 import { forEnum } from "../utils/utils";
+import { generateId } from "../utils/ids.utils";
 
 export const generateBoatId = () => {
-  return `boat-${v4()}`;
+  return generateId("boat");
 };
 
 export const isBoatAvailable = (
@@ -61,7 +61,7 @@ export const fromBoatTypeToNbOfRowers = (type?: BoatTypeEnum) => {
     TWO_ROWERS_COXED: () => 3,
     FOUR_ROWERS_COXLESS: () => 4,
     FOUR_ROWERS_COXED: () => 5,
-    EIGHT_ROWERS_COXED: () => 8,
+    EIGHT_ROWERS_COXED: () => 9,
     OTHER: () => undefined,
   });
 };

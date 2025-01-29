@@ -7,6 +7,7 @@ import {
 } from "./clubOverview.store.functions";
 import { BoatTypeEnum } from "../types/boat.type";
 import { generateBoatId } from "../business/boat.rules";
+import { RowerCategoryEnum, RowerTypeEnum } from "./boatLevelConfig.business";
 
 export interface ClubOverviewState {
   club: {
@@ -28,8 +29,20 @@ export interface ClubOverviewState {
     id: string;
     name: string;
     archivedAt?: string | undefined;
+    type?: RowerTypeEnum | undefined;
+    category?: RowerCategoryEnum | undefined;
   }[];
 }
+
+type UpdateRowerDto = Omit<
+  ClubOverviewState["rowers"][number],
+  "id" | "archivedAt"
+>;
+
+type BulkUpdateRowerDto = Omit<
+  ClubOverviewState["rowers"][number],
+  "id" | "archivedAt" | "name"
+>;
 
 export interface ClubOverviewStoreState {
   clubOverview: ClubOverviewState;
@@ -55,7 +68,8 @@ export interface ClubOverviewStoreState {
   ) => ClubOverviewState["routes"][number] | undefined;
   getAllRoutes: () => ClubOverviewState["routes"];
 
-  updateRowerName: (rowerId: string, name: string) => void;
+  updateRower: (rowerId: string, rower: UpdateRowerDto) => void;
+  updateRowers: (rowerIds: string[], rower: BulkUpdateRowerDto) => void;
   archiveRower: (rowerId: string) => void;
   addRower: (rowerName: string) => void;
   getRowersById: (rowersId: string[]) => ClubOverviewState["rowers"];
@@ -241,12 +255,23 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
           }));
         },
 
-        updateRowerName: (rowerId: string, name: string) => {
+        updateRower: (rowerId: string, rower: UpdateRowerDto) => {
           set((state) => ({
             clubOverview: {
               ...state.clubOverview,
-              rowers: state.clubOverview.rowers.map((rower) =>
-                rower.id === rowerId ? { ...rower, name } : rower
+              rowers: state.clubOverview.rowers.map((r) =>
+                r.id === rowerId ? { ...r, ...rower } : r
+              ),
+            },
+          }));
+        },
+
+        updateRowers: (rowerIds: string[], rower: BulkUpdateRowerDto) => {
+          set((state) => ({
+            clubOverview: {
+              ...state.clubOverview,
+              rowers: state.clubOverview.rowers.map((r) =>
+                rowerIds.includes(r.id) ? { ...r, ...rower } : r
               ),
             },
           }));

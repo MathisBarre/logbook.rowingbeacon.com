@@ -91,6 +91,7 @@ export const StartSessionForm = ({
     fixInputs,
     alert,
     acceptToHaveSameRowersAlreadyOnStartedSession,
+    acceptToHaveInvalidRowersLevel,
   } = useStartSession(onSessionStarted);
 
   const formatValuesForSubmission = (values: StartSessionFormValues) => {
@@ -137,7 +138,7 @@ export const StartSessionForm = ({
                     {alert.details.boatRowersQuantity} rameur(s)
                   </span>
                   .
-                  <br /> Souhaitez-vous continuer ?
+                  <br /> Souhaitez-vous tout de même continuer ?
                 </>
               )}
               onStartSessionClick={() => {
@@ -160,7 +161,7 @@ export const StartSessionForm = ({
                   alert.details.alreadyOnSessionRowers;
 
                 if (alreadyOnSessionRowers === null) {
-                  return "Certains rameurs ont déjà commencé une autre sortie. Souhaitez-vous continuer ?";
+                  return "Certains rameurs ont déjà commencé une autre sortie. Souhaitez-vous tout de même continuer ?";
                 }
 
                 const plural = alreadyOnSessionRowers.length > 1;
@@ -178,7 +179,7 @@ export const StartSessionForm = ({
                       : alreadyOnSessionRowers[0].name}
                     {plural ? " ont" : " a"} déjà commencé une autre sortie.
                     <br />
-                    Souhaitez-vous continuer ?
+                    Souhaitez-vous tout de même continuer ?
                   </>
                 );
               }}
@@ -191,6 +192,48 @@ export const StartSessionForm = ({
                   );
                 });
               }}
+              onFixSessionClick={() => {
+                fixInputs();
+              }}
+            />
+          )}
+
+          {alert?.code === "INVALID_ROWERS_LEVEL" && (
+            <StartSessionAlert
+              TextContent={() => {
+                const nb = alert.details.nbOfInvalidRowers;
+                return (
+                  <>
+                    {nb === 1 ? (
+                      <>
+                        <span className="font-bold">1</span> rameur n&apos;a pas
+                        le niveau requis pour ce bateau.
+                      </>
+                    ) : (
+                      <>
+                        <span className="font-bold">{nb}</span> rameurs
+                        n&apos;ont pas le niveau requis pour ce bateau.
+                      </>
+                    )}
+                    <br />
+                    {alert.details.whatToDo === "alert" &&
+                      "Souhaitez-vous tout de même continuer"}
+                  </>
+                );
+              }}
+              onStartSessionClick={
+                alert.details.whatToDo === "block"
+                  ? null
+                  : () => {
+                      acceptToHaveInvalidRowersLevel(
+                        formatValuesForSubmission(form.getValues())
+                      ).catch(() => {
+                        console.error(
+                          "Failed to accept invalid rowers level on started session"
+                        );
+                      });
+                    }
+              }
               onFixSessionClick={() => {
                 fixInputs();
               }}
@@ -299,7 +342,7 @@ const StartSessionAlert = ({
   onFixSessionClick,
 }: {
   TextContent: () => React.ReactNode;
-  onStartSessionClick: () => void;
+  onStartSessionClick: (() => void) | null;
   onFixSessionClick: () => void;
 }) => {
   return (
@@ -313,15 +356,17 @@ const StartSessionAlert = ({
           <Button className="w-60" type="button" onClick={onFixSessionClick}>
             Corriger les informations
           </Button>
-          <Button
-            className="w-60"
-            type="button"
-            variant="outlined"
-            color="danger"
-            onClick={onStartSessionClick}
-          >
-            Commencer la sortie
-          </Button>
+          {onStartSessionClick !== null && (
+            <Button
+              className="w-60"
+              type="button"
+              variant="outlined"
+              color="danger"
+              onClick={onStartSessionClick}
+            >
+              Commencer la sortie
+            </Button>
+          )}
         </div>
       </div>
     </div>

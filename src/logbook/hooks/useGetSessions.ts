@@ -58,9 +58,11 @@ export const useGetLastSessions = (payload: {
 
       setNumberOfPages(numberOfPages);
 
+      const skip = (currentPage - 1) * pageSize;
+
       const data = await sessionRepository.getSessions({
         maxPageSize: pageSize,
-        skip: (currentPage - 1) * pageSize,
+        skip,
         order: {
           startDateTime: "DESC",
         },
@@ -96,7 +98,7 @@ export const useGetLastSessions = (payload: {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [currentPage, pageSize, clubOverview]);
 
   useEffect(() => {
     fetchSessions().catch((e) => {

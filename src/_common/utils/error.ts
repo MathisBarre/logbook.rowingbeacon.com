@@ -16,6 +16,12 @@ export class ErrorWithCode<
   }
 }
 
+export class TechnicalError extends ErrorWithCode<"TECHNICAL_ERROR"> {
+  constructor(error: unknown) {
+    super({ code: "TECHNICAL_ERROR", message: getErrorMessage(error) });
+  }
+}
+
 export type SimpleResult<
   ErrorCode extends string,
   SuccessType,

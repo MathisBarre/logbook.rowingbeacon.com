@@ -10,37 +10,31 @@ import {
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { toast } from "sonner";
 import Button from "../../_common/components/Button";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Input } from "../../_common/components/Input";
 import { Label } from "../../_common/components/Label";
 import { areStringSimilar } from "../../_common/utils/string.utils";
 import { paginateData } from "../../_common/utils/pagination.utils";
-import { windowConfirm, windowPrompt } from "../../_common/utils/window.utils";
+import { windowConfirm } from "../../_common/utils/window.utils";
 import { DialogContent } from "../../_common/components/Dialog/DialogContent";
 import { Dialog, DialogTrigger } from "../../_common/components/Dialog/Dialog";
 import { useLocalStorage } from "../../_common/utils/useLocalStorage";
 import { ChartBarIcon } from "@heroicons/react/16/solid";
 import { RowerStats } from "./RowerStats";
 import { RowerStatsComparisons } from "./RowerStatsComparisons";
+import { UpdateRower } from "./UpdateRower";
+import { Rower } from "../../_common/types/rower.type";
+import { getRowerTypeLabel } from "../../_common/business/rower.rules";
+import clsx from "clsx";
+import { BulkUpdateRower } from "./BulkUpdateRower";
+import {
+  sortByCategoryOrder,
+  sortByTypeOrder,
+} from "../../_common/store/boatLevelConfig.business";
 
 export const RowersCrud = () => {
   const store = useClubOverviewStore();
   const rowers = store.getAllRowers();
-
-  const updateRowerName = async (rowerId: string, currentName: string) => {
-    const newRowerName = await windowPrompt(
-      "Nouveau nom du rameur",
-      currentName
-    );
-
-    if (!newRowerName) {
-      return;
-    }
-
-    store.updateRowerName(rowerId, newRowerName);
-
-    toast.success("Le nom du rameur a été modifié");
-  };
 
   const deleteRower = async (rower: { id: string; name: string }) => {
     if (
@@ -92,9 +86,20 @@ export const RowersCrud = () => {
     areStringSimilar(rower.name, search)
   );
 
-  const sortedRowers = searchedRowers.sort((a, b) =>
-    a.name.localeCompare(b.name)
-  );
+  const sortedRowers = searchedRowers.sort((a, b) => {
+    const isSameCategory = a.category === b.category;
+    const isSameType = a.type === b.type;
+
+    if (!isSameCategory) {
+      return sortByCategoryOrder(a.category, b.category);
+    }
+
+    if (!isSameType) {
+      return sortByTypeOrder(a.type, b.type);
+    }
+
+    return a.name.localeCompare(b.name);
+  });
 
   const [pageSize, setPageSize] = useLocalStorage("rower-crud-page-size", 32);
 
@@ -106,6 +111,11 @@ export const RowersCrud = () => {
   });
 
   const [textareaContent, setTextareaContent] = useState("");
+
+  const [bulkEditMode, setBulkEditMode] = useState({
+    enabled: false,
+    selectedRowers: [] as string[],
+  });
 
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
@@ -153,6 +163,50 @@ export const RowersCrud = () => {
             </DialogContent>
           </Dialog>
 
+          <Button
+            type="button"
+            variant="outlined"
+            onClick={() =>
+              setBulkEditMode((prev) => ({
+                enabled: !prev.enabled,
+                selectedRowers: [],
+              }))
+            }
+          >
+            <div className="flex gap-2 items-center">
+              <input
+                type="checkbox"
+                checked={bulkEditMode.enabled}
+                className="input"
+                readOnly
+              />
+              Édition en masse
+            </div>
+          </Button>
+
+          {bulkEditMode.enabled && (
+            <>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button type="button" variant="outlined">
+                    Éditer la sélection
+                  </Button>
+                </DialogTrigger>
+                <DialogContent
+                  className="max-w-[40rem]"
+                  title={`Mettre à jour ${bulkEditMode.selectedRowers.length} rameurs`}
+                >
+                  <BulkUpdateRower
+                    rowersIds={bulkEditMode.selectedRowers}
+                    close={() => {
+                      setBulkEditMode((prev) => ({ ...prev, enabled: false }));
+                    }}
+                  />
+                </DialogContent>
+              </Dialog>
+            </>
+          )}
+
           <div className="relative flex-1">
             <SearchIcon className="absolute h-full w-5 left-3 pt-[0.125rem]" />
             <Input
@@ -168,49 +222,106 @@ export const RowersCrud = () => {
           </div>
         </div>
         <div className="flex-1 relative">
-          <div className="overflow-y-auto absolute inset-0 border p-4 rounded">
-            <div className="grid gap-4 grid-cols-4 ">
-              {paginatedRowers.map((rower) => (
-                <div
-                  key={rower.id}
-                  className="border rounded flex items-center"
-                >
-                  <p className="text-nowrap px-4 flex-1">{rower.name}</p>
-                  <div className="h-full w-[1px] bg-gray-200" />
+          <div className="overflow-y-auto absolute inset-0 border p-4 pt-0 rounded">
+            <div className="grid gap-4 grid-cols-3">
+              {paginatedRowers.map((rower, i) => {
+                const lastCategory = paginatedRowers[i - 1]?.category;
+                const currentCategory = rower.category;
 
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <button className="flex items-center justify-center hover:bg-gray-100 h-12 w-12">
-                        <ChartBarIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
-                      </button>
-                    </DialogTrigger>
-                    <DialogContent
-                      className="max-w-[32rem]"
-                      title={`Statistiques de ${rower.name}`}
+                const newRowerCategory =
+                  i === 0 || lastCategory !== currentCategory;
+
+                return (
+                  <Fragment key={rower.id}>
+                    {newRowerCategory && (
+                      <div
+                        className="col-span-3 bg-gray-100 text-gray-900 p-2 -mx-4 px-4 sticky top-0 z-10"
+                        key={rower.category}
+                      >
+                        {rower.category || "Sans catégorie"}
+                      </div>
+                    )}
+                    <div
+                      key={rower.id}
+                      className="border rounded flex relative overflow-hidden"
                     >
-                      <RowerStats rowerId={rower.id} />
-                    </DialogContent>
-                  </Dialog>
-                  <div className="h-full w-[1px] bg-gray-200" />
-                  <button
-                    onClick={async () => {
-                      await updateRowerName(rower.id, rower.name);
-                    }}
-                    className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
-                  >
-                    <PencilIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
-                  </button>
-                  <div className="h-full w-[1px] bg-gray-200" />
-                  <button
-                    onClick={async () => {
-                      await deleteRower(rower);
-                    }}
-                    className="flex items-center justify-center hover:bg-gray-100 h-12 w-12"
-                  >
-                    <Trash2Icon className="h-4 w-4 cursor-pointer text-error-900" />
-                  </button>
-                </div>
-              ))}
+                      <div className="flex-1 relative">
+                        <div className="absolute inset-0 flex justify-between items-center gap-4 px-4">
+                          <p className="text-nowrap text-ellipsis overflow-hidden">
+                            {rower.name}
+                          </p>
+                          {rower.type && (
+                            <p className="bg-steel-blue-50 border border-steel-blue-100 inline-block px-2 py-1 rounded-full text-xs">
+                              {rower.type && getRowerTypeLabel(rower.type)}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      {!bulkEditMode.enabled && (
+                        <div className="flex">
+                          <div className="h-full w-[1px] bg-gray-200" />
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <button className="flex items-center justify-center hover:bg-gray-100 aspect-square h-12">
+                                <ChartBarIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
+                              </button>
+                            </DialogTrigger>
+                            <DialogContent
+                              className="max-w-[32rem]"
+                              title={`Statistiques de ${rower.name}`}
+                            >
+                              <RowerStats rowerId={rower.id} />
+                            </DialogContent>
+                          </Dialog>
+                          <div className="h-full w-[1px] bg-gray-200" />
+                          <UpdateRowerModal rower={rower} />
+                          <div className="h-full w-[1px] bg-gray-200" />
+                          <button
+                            onClick={async () => {
+                              await deleteRower(rower);
+                            }}
+                            className="flex items-center justify-center hover:bg-gray-100 aspect-square h-12"
+                          >
+                            <Trash2Icon className="h-4 w-4 cursor-pointer text-error-900" />
+                          </button>
+                        </div>
+                      )}
+
+                      {bulkEditMode.enabled && (
+                        <div className="h-12 box-content border-l flex items-center justify-center gap-2">
+                          <Label
+                            className={clsx(
+                              "flex items-center justify-center gap-2 h-full w-full px-5",
+                              bulkEditMode.selectedRowers.includes(rower.id)
+                                ? "bg-steel-blue-100"
+                                : "bg-white"
+                            )}
+                          >
+                            <input
+                              type="checkbox"
+                              className="input"
+                              checked={bulkEditMode.selectedRowers.includes(
+                                rower.id
+                              )}
+                              onChange={(e) => {
+                                setBulkEditMode((prev) => ({
+                                  ...prev,
+                                  selectedRowers: e.target.checked
+                                    ? [...prev.selectedRowers, rower.id]
+                                    : prev.selectedRowers.filter(
+                                        (r) => r !== rower.id
+                                      ),
+                                }));
+                              }}
+                            />
+                            Sélectionner
+                          </Label>
+                        </div>
+                      )}
+                    </div>
+                  </Fragment>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -257,5 +368,30 @@ export const RowersCrud = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const UpdateRowerModal = ({ rower }: { rower: Rower }) => {
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+
+  return (
+    <Dialog open={updateModalOpen} onOpenChange={setUpdateModalOpen}>
+      <DialogTrigger asChild>
+        <button className="flex items-center justify-center hover:bg-gray-100 aspect-square h-12">
+          <PencilIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
+        </button>
+      </DialogTrigger>
+      <DialogContent
+        className="max-w-[40rem]"
+        title={`Mettre à jour ${rower.name}`}
+      >
+        <UpdateRower
+          rower={rower}
+          close={() => {
+            setUpdateModalOpen(false);
+          }}
+        />
+      </DialogContent>
+    </Dialog>
   );
 };

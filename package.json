@@ -1,7 +1,7 @@
 {
   "name": "boathouse.rowingbeacon.com",
   "private": true,
-  "version": "1.13.2",
+  "version": "1.14.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -39,7 +39,6 @@
     "drizzle-orm": "^0.38.0",
     "jssha": "^3.3.1",
     "lucide-react": "^0.412.0",
-    "lz-string": "^1.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.46.2",
@@ -48,7 +47,6 @@
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^10.0.0",
-    "vercel": "^37.14.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
     "zod": "^3.22.2",
     "zustand": "^4.5.2"

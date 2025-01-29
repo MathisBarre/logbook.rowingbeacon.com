@@ -15,6 +15,9 @@ import {
   isToday,
   isTomorrow,
 } from "../../../_common/utils/date.utils";
+import { useStore } from "zustand";
+import { boatLevelConfigStoreCore } from "../../../_common/store/boatLevelConfig.store";
+import { getRowerTypeTranslation } from "../../../_common/store/boatLevelConfig.business";
 
 interface BoatListContentProps {
   search: string;
@@ -241,13 +244,30 @@ const BoatRowDefault = memo(
     boat: Boat;
     onBoatRowClick: (boat: Boat) => void;
   }) => {
+    const boatLevelConfigStore = useStore(boatLevelConfigStoreCore);
+    const boatLevelConfig = boatLevelConfigStore.getBoatLevelConfig(boat.id);
+
     return (
       <div key={boat.id} className="flex">
         <div
-          className="px-2 py-1 hover:bg-gray-100 cursor-pointer font-mono font-medium text-gray-700 tracking-tighter select-none flex-1"
+          className="px-2 py-1 hover:bg-gray-100 cursor-pointer font-mono font-medium text-gray-700 tracking-tighter select-none flex-1 flex justify-between"
           onClick={() => onBoatRowClick(boat)}
         >
           <span className="select-none">{boat.name}</span>
+
+          <div className="flex gap-1 items-center">
+            {boatLevelConfig?.minimalRowerCategory && (
+              <p className="bg-steel-blue-50 border border-steel-blue-100 inline-block px-2 py-1 rounded-full text-xs">
+                {boatLevelConfig?.minimalRowerCategory}
+              </p>
+            )}
+
+            {boatLevelConfig?.minimalRowerType && (
+              <p className="bg-steel-blue-50 border border-steel-blue-100 inline-block px-2 py-1 rounded-full text-xs">
+                {getRowerTypeTranslation(boatLevelConfig?.minimalRowerType)}
+              </p>
+            )}
+          </div>
         </div>
       </div>
     );

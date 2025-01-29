@@ -1,11 +1,14 @@
 import { useCallback, useState } from "react";
-import { useGetZustandBoathouseRepository } from "../../business/Boathouse.repository.zustand";
 import { SessionToStart } from "../../business/SessionToStart.business";
-import { StartSessionUsecase } from "../../business/StartSession.usecase";
+import { useGetZustandStartSessionRepository } from "../../business/StartSession/StartSession.repository.zustand";
+import { StartSessionUsecase } from "../../business/StartSession/StartSession.usecase";
+import { boatLevelConfigStoreCore } from "../../../_common/store/boatLevelConfig.store";
+import { useStore } from "zustand";
 
 interface StartSessionParams {
-  allowNotSameNbOfRowers: boolean;
-  allowToHaveSameRowersAlreadyOnStartedSession: boolean;
+  ignoreRowersNumberError: boolean;
+  ignoreRowersAlreadyOnSessionError: boolean;
+  ignoreRowersLevelError: boolean;
 }
 
 export const useStartSession = (onSessionStarted: () => void) => {
@@ -13,7 +16,8 @@ export const useStartSession = (onSessionStarted: () => void) => {
     undefined
   );
 
-  const boathouseRepository = useGetZustandBoathouseRepository();
+  const boathouseRepository = useGetZustandStartSessionRepository();
+  const boatLevelConfigStore = useStore(boatLevelConfigStoreCore);
 
   const [alert, setAlert] = useState<
     | null
@@ -36,6 +40,13 @@ export const useStartSession = (onSessionStarted: () => void) => {
             | null;
         };
       }
+    | {
+        code: "INVALID_ROWERS_LEVEL";
+        details: {
+          nbOfInvalidRowers: number;
+          whatToDo: "alert" | "block";
+        };
+      }
   >(null);
 
   const _startSession = useCallback(
@@ -46,8 +57,12 @@ export const useStartSession = (onSessionStarted: () => void) => {
       setSubmissionError("");
 
       const [error] = await new StartSessionUsecase(
-        boathouseRepository
-      ).execute(startSessionPayload, startSessionParams);
+        boathouseRepository,
+        boatLevelConfigStore
+      ).execute({
+        params: startSessionParams,
+        sessionToStart: startSessionPayload,
+      });
 
       if (!error) {
         onSessionStarted();
@@ -68,6 +83,13 @@ export const useStartSession = (onSessionStarted: () => void) => {
         });
       }
 
+      if (error.code === "INVALID_ROWERS_LEVEL") {
+        return setAlert({
+          code: error.code,
+          details: error.details,
+        });
+      }
+
       return setSubmissionError(error.message);
     },
     [boathouseRepository]
@@ -76,8 +98,9 @@ export const useStartSession = (onSessionStarted: () => void) => {
   const startSession = useCallback(
     async (startSessionPayload: SessionToStart) => {
       return _startSession(startSessionPayload, {
-        allowNotSameNbOfRowers: false,
-        allowToHaveSameRowersAlreadyOnStartedSession: false,
+        ignoreRowersNumberError: false,
+        ignoreRowersAlreadyOnSessionError: false,
+        ignoreRowersLevelError: false,
       });
     },
     [boathouseRepository]
@@ -88,8 +111,9 @@ export const useStartSession = (onSessionStarted: () => void) => {
       setAlert(null);
 
       await _startSession(startSessionPayload, {
-        allowNotSameNbOfRowers: true,
-        allowToHaveSameRowersAlreadyOnStartedSession: false,
+        ignoreRowersNumberError: true,
+        ignoreRowersAlreadyOnSessionError: false,
+        ignoreRowersLevelError: false,
       });
     },
     []
@@ -100,8 +124,22 @@ export const useStartSession = (onSessionStarted: () => void) => {
       setAlert(null);
 
       await _startSession(startSessionPayload, {
-        allowNotSameNbOfRowers: true,
-        allowToHaveSameRowersAlreadyOnStartedSession: true,
+        ignoreRowersNumberError: true,
+        ignoreRowersAlreadyOnSessionError: true,
+        ignoreRowersLevelError: false,
+      });
+    },
+    []
+  );
+
+  const acceptToHaveInvalidRowersLevel = useCallback(
+    async (startSessionPayload: SessionToStart) => {
+      setAlert(null);
+
+      await _startSession(startSessionPayload, {
+        ignoreRowersNumberError: true,
+        ignoreRowersAlreadyOnSessionError: true,
+        ignoreRowersLevelError: true,
       });
     },
     []
@@ -115,9 +153,9 @@ export const useStartSession = (onSessionStarted: () => void) => {
     startSession,
     startSessionError,
     alert,
-    badAmountOfRowersAlert: alert?.code === "BAD_AMOUNT_OF_ROWERS",
-    acceptBadAmountOfRowers,
     fixInputs,
+    acceptBadAmountOfRowers,
     acceptToHaveSameRowersAlreadyOnStartedSession,
+    acceptToHaveInvalidRowersLevel,
   };
 };

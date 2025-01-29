@@ -1,3 +1,4 @@
+import { useStore } from "zustand";
 import {
   getBoatsByType,
   getTypelessBoats,
@@ -6,6 +7,9 @@ import {
 import { FormLabel } from "../../../_common/components/Form";
 import { useSessionsStore } from "../../../_common/store/sessions.store";
 import { Boat } from "../../../_common/types/boat.type";
+import { boatLevelConfigStoreCore } from "../../../_common/store/boatLevelConfig.store";
+import { getRowerTypeTranslation } from "../../../_common/store/boatLevelConfig.business";
+import { useMemo } from "react";
 
 interface BoatsSectionProps {
   boats: Boat[];
@@ -16,7 +20,42 @@ interface BoatsSectionProps {
   onChange: (value: { id: string; name: string; type?: string }) => void;
 }
 
-export const BoatSection = ({ boats, onChange, value }: BoatsSectionProps) => {
+export const BoatSection = ({
+  boats: _boats,
+  onChange,
+  value,
+}: BoatsSectionProps) => {
+  const boatLevelConfigStore = useStore(boatLevelConfigStoreCore);
+
+  const boats = useMemo(
+    () =>
+      _boats.map((boat) => {
+        const boatLevelConfig = boatLevelConfigStore.getBoatLevelConfig(
+          boat.id
+        );
+
+        const append = [];
+
+        if (boatLevelConfig?.minimalRowerCategory) {
+          append.push(boatLevelConfig?.minimalRowerCategory);
+        }
+
+        if (boatLevelConfig?.minimalRowerType) {
+          append.push(
+            getRowerTypeTranslation(boatLevelConfig?.minimalRowerType)
+          );
+        }
+
+        return {
+          ...boat,
+          name: `${boat.name} ${
+            append.length > 0 ? `(${append.join(" - ")})` : ""
+          }`,
+        };
+      }),
+    [_boats, boatLevelConfigStore]
+  );
+
   return (
     <div className="flex flex-col gap-1 flex-1">
       <FormLabel>Bateau</FormLabel>
@@ -62,9 +101,9 @@ export const BoatSection = ({ boats, onChange, value }: BoatsSectionProps) => {
           boats={getBoatsByType(boats, ["EIGHT_ROWERS_COXED"])}
         />
 
-        <Optgroup label="Autre" boats={getBoatsByType(boats, ["OTHER"])} />
+        <Optgroup label="Autre" boats={getBoatsByType(_boats, ["OTHER"])} />
 
-        <Optgroup label="Type non précisé" boats={getTypelessBoats(boats)} />
+        <Optgroup label="Type non précisé" boats={getTypelessBoats(_boats)} />
       </select>
     </div>
   );

@@ -1,14 +1,15 @@
 import { describe, it, expect } from "vitest";
 import { checkIfNotSameRowersAsSeatsInBoat } from "./Boat.business";
-import { Boat } from "../../_common/types/boat.type";
+import { Boat, BoatTypeEnum } from "../../_common/types/boat.type";
 
 describe("Boat Business Logic", () => {
+  const BOAT_TYPE = BoatTypeEnum.FOUR_ROWERS_COXLESS;
   const ROWER_QUANTITY = 4;
 
   const boat: Boat = {
     id: "1",
     name: "Test Boat",
-    rowersQuantity: ROWER_QUANTITY,
+    type: BOAT_TYPE,
   };
 
   describe("notSameRowersAsSeatsInBoat", () => {
