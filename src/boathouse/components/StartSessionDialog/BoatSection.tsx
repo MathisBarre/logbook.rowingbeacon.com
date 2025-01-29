@@ -37,16 +37,12 @@ export const BoatSection = ({
         const append = [];
 
         if (boatLevelConfig?.minimalRowerCategory) {
-          append.push(
-            boatLevelConfig?.minimalRowerCategory?.toLocaleLowerCase()
-          );
+          append.push(boatLevelConfig?.minimalRowerCategory);
         }
 
         if (boatLevelConfig?.minimalRowerType) {
           append.push(
-            getRowerTypeTranslation(
-              boatLevelConfig?.minimalRowerType
-            )?.toLocaleLowerCase()
+            getRowerTypeTranslation(boatLevelConfig?.minimalRowerType)
           );
         }
 

@@ -94,8 +94,8 @@ const getOptions = (rowers: Rower[], searchInput: string) => {
   return rowers
     .map((rower) => {
       const append = [
-        getRowerTypeTranslation(rower.type),
         rower.category,
+        getRowerTypeTranslation(rower.type),
       ].filter(Boolean);
       return {
         value: rower.id,
