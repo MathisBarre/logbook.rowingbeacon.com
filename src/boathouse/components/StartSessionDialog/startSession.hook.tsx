@@ -8,6 +8,7 @@ import { useStore } from "zustand";
 interface StartSessionParams {
   ignoreRowersNumberError: boolean;
   ignoreRowersAlreadyOnSessionError: boolean;
+  ignoreRowersLevelError: boolean;
 }
 
 export const useStartSession = (onSessionStarted: () => void) => {
@@ -37,6 +38,13 @@ export const useStartSession = (onSessionStarted: () => void) => {
                 name: string;
               }[]
             | null;
+        };
+      }
+    | {
+        code: "INVALID_ROWERS_LEVEL";
+        details: {
+          nbOfInvalidRowers: number;
+          whatToDo: "alert" | "block";
         };
       }
   >(null);
@@ -75,6 +83,13 @@ export const useStartSession = (onSessionStarted: () => void) => {
         });
       }
 
+      if (error.code === "INVALID_ROWERS_LEVEL") {
+        return setAlert({
+          code: error.code,
+          details: error.details,
+        });
+      }
+
       return setSubmissionError(error.message);
     },
     [boathouseRepository]
@@ -85,6 +100,7 @@ export const useStartSession = (onSessionStarted: () => void) => {
       return _startSession(startSessionPayload, {
         ignoreRowersNumberError: false,
         ignoreRowersAlreadyOnSessionError: false,
+        ignoreRowersLevelError: false,
       });
     },
     [boathouseRepository]
@@ -97,6 +113,7 @@ export const useStartSession = (onSessionStarted: () => void) => {
       await _startSession(startSessionPayload, {
         ignoreRowersNumberError: true,
         ignoreRowersAlreadyOnSessionError: false,
+        ignoreRowersLevelError: false,
       });
     },
     []
@@ -109,6 +126,20 @@ export const useStartSession = (onSessionStarted: () => void) => {
       await _startSession(startSessionPayload, {
         ignoreRowersNumberError: true,
         ignoreRowersAlreadyOnSessionError: true,
+        ignoreRowersLevelError: false,
+      });
+    },
+    []
+  );
+
+  const acceptToHaveInvalidRowersLevel = useCallback(
+    async (startSessionPayload: SessionToStart) => {
+      setAlert(null);
+
+      await _startSession(startSessionPayload, {
+        ignoreRowersNumberError: true,
+        ignoreRowersAlreadyOnSessionError: true,
+        ignoreRowersLevelError: true,
       });
     },
     []
@@ -122,9 +153,9 @@ export const useStartSession = (onSessionStarted: () => void) => {
     startSession,
     startSessionError,
     alert,
-    badAmountOfRowersAlert: alert?.code === "BAD_AMOUNT_OF_ROWERS",
-    acceptBadAmountOfRowers,
     fixInputs,
+    acceptBadAmountOfRowers,
     acceptToHaveSameRowersAlreadyOnStartedSession,
+    acceptToHaveInvalidRowersLevel,
   };
 };
