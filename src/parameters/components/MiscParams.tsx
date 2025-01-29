@@ -97,9 +97,19 @@ export const MiscParams = () => {
                       <td>{getTypeLabel(type as BoatTypeEnum)}</td>
                       <td>
                         <select
-                          className="w-full input cursor-not-allowed opacity-50"
-                          disabled
+                          className="w-full input"
                           value={config.alertFrom || "null"}
+                          onChange={(e) => {
+                            const value = parseInt(e.target.value);
+
+                            boatLevelConfigStore.updateBoatTypeLevelConfigs(
+                              type as Exclude<BoatTypeEnum, BoatTypeEnum.OTHER>,
+                              {
+                                ...config,
+                                alertFrom: value === 0 ? null : value,
+                              }
+                            );
+                          }}
                         >
                           <option value="null">ne pas alerter</option>
                           {Array.from({ length: nbOfRowers }, (_, i) => (
@@ -111,9 +121,19 @@ export const MiscParams = () => {
                       </td>
                       <td>
                         <select
-                          className="w-full input cursor-not-allowed opacity-50"
+                          className="w-full input"
                           value={config.blockFrom || "null"}
-                          disabled
+                          onChange={(e) => {
+                            const value = parseInt(e.target.value);
+
+                            boatLevelConfigStore.updateBoatTypeLevelConfigs(
+                              type as Exclude<BoatTypeEnum, BoatTypeEnum.OTHER>,
+                              {
+                                ...config,
+                                blockFrom: value === 0 ? null : value,
+                              }
+                            );
+                          }}
                         >
                           <option value="null">ne pas bloquer</option>
                           {Array.from({ length: nbOfRowers }, (_, i) => (

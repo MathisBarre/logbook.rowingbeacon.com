@@ -6,10 +6,16 @@ import {
   defaultBoatTypeLevelConfigs,
   RowerCategoryEnum,
   RowerTypeEnum,
+  BoatTypeLevelConfig,
 } from "./boatLevelConfig.business";
+import { BoatTypeEnum } from "../types/boat.type";
 
 export interface IBoatLevelConfigStore {
   boatTypeLevelConfigs: BoatTypeLevelConfigs;
+  updateBoatTypeLevelConfigs: (
+    boatType: Exclude<BoatTypeEnum, BoatTypeEnum.OTHER>,
+    boatTypeLevelConfig: BoatTypeLevelConfig
+  ) => void;
   boatLevelConfigs: BoatLevelConfig[];
   getBoatTypeLevelConfigs: () => BoatTypeLevelConfigs;
   getBoatLevelConfig: (boatId: string) => BoatLevelConfig | undefined;
@@ -31,6 +37,17 @@ export const boatLevelConfigStoreCore = createStore(
       boatLevelConfigs: [],
       getBoatTypeLevelConfigs: () => {
         return get().boatTypeLevelConfigs;
+      },
+      updateBoatTypeLevelConfigs(boatType, boatTypeLevelConfig) {
+        set((state) => {
+          return {
+            ...state,
+            boatTypeLevelConfigs: {
+              ...state.boatTypeLevelConfigs,
+              [boatType]: boatTypeLevelConfig,
+            },
+          };
+        });
       },
       getBoatLevelConfig(boatId) {
         return get().boatLevelConfigs.find((boat) => boat.boatId === boatId);

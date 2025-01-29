@@ -216,7 +216,8 @@ export const StartSessionForm = ({
                       </>
                     )}
                     <br />
-                    Souhaitez-vous tout de même continuer ?
+                    {alert.details.whatToDo === "alert" &&
+                      "Souhaitez-vous tout de même continuer"}
                   </>
                 );
               }}
