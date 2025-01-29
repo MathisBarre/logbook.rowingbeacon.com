@@ -6,6 +6,7 @@ import {
   areStringSimilar,
   simplifyString,
 } from "../../../_common/utils/string.utils";
+import { getRowerTypeTranslation } from "../../../_common/store/boatLevelConfig.business";
 
 interface RowersSectionProps {
   rowers: Rower[];
@@ -79,10 +80,18 @@ const isArrayOfOptions = (
 
 const getOptions = (rowers: Rower[], searchInput: string) => {
   return rowers
-    .map((rower) => ({
-      value: rower.id,
-      label: rower.name,
-    }))
+    .map((rower) => {
+      const append = [
+        getRowerTypeTranslation(rower.type),
+        rower.category,
+      ].filter(Boolean);
+      return {
+        value: rower.id,
+        label: `${rower.name} ${
+          append.length > 0 ? `(${append.join(" - ")})` : ""
+        }`,
+      };
+    })
     .filter((option) => areStringSimilar(option.label, searchInput))
     .sort((a, b) => a.label.localeCompare(b.label))
     .sort((a, b) => {
