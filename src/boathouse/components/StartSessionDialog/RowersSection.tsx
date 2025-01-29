@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Label } from "../../../_common/components/Label";
 import { ReactSelect } from "../../../_common/components/ReactSelect";
 import { Rower } from "../../../_common/types/rower.type";
@@ -7,6 +7,7 @@ import {
   simplifyString,
 } from "../../../_common/utils/string.utils";
 import { getRowerTypeTranslation } from "../../../_common/store/boatLevelConfig.business";
+import { components } from "react-select";
 
 interface RowersSectionProps {
   rowers: Rower[];
@@ -23,6 +24,16 @@ interface RowersSectionProps {
   errorMessage?: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const MenuList = (props: any) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+  const limitedChildren = React.Children.toArray(props.children).slice(0, 5);
+
+  return (
+    <components.MenuList {...props}>{limitedChildren}</components.MenuList>
+  );
+};
+
 export const RowersSection = ({
   rowers,
   onChange,
@@ -35,6 +46,7 @@ export const RowersSection = ({
     <div className="flex flex-col gap-1">
       <Label>Rameurs</Label>
       <ReactSelect
+        components={{ MenuList }}
         maxMenuHeight={208}
         isMulti
         name="rowersIds"
@@ -114,6 +126,5 @@ const getOptions = (rowers: Rower[], searchInput: string) => {
       }
 
       return 0;
-    })
-    .slice(0, 5);
+    });
 };
