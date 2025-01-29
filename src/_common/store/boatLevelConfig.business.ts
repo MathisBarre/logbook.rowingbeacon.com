@@ -98,6 +98,12 @@ export enum RowerTypeEnum {
   COMPETITOR = "competitor",
 }
 
+export const getRowerTypeTranslation = (
+  type: RowerTypeEnum | null | undefined
+) => {
+  return rowerType.find((t) => t.type === type)?.label || type;
+};
+
 export const rowerType = [
   {
     order: 0,
