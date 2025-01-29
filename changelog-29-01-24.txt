@@ -1,0 +1,22 @@
+
+- Commencer une sortie -> Remplacement du champ "Date de fin" par "Durée estimée"
+- Parcours -> La selection du parcours est maintenant optionnel lors de la création d'une sortie
+- Parcours -> Si aucun parcours n'est configuré, le champ "Parcours" est maintenant caché
+- Historique des sessions -> Possibilité de supprimer une session
+- Historique des sessions -> L'historique reste maintenant intact lorsqu'un bateau / parcours / rameur est supprimé
+- Bateaux -> Les bateaux sont maintenant groupés par type
+- Bateaux -> Affichage des incidents d'un bateau dans la modale informative
+- Statistiques -> Ajout de statistiques globales au club
+- Statistiques d'un rameur -> Ajout des bateaux les plus utilisés
+- Statistiques d'un rameur -> Ajout des partenaire les plus fréquents
+- Bateaux -> ajout d'un champ de recherche
+- Bateaux -> possibilité d'ajouter des bateaux en groupe avec un type prédéfini
+- Rameurs -> possibilité de faire des modification groupés sur les rameurs existants
+
+Système de niveau.
+
+Vous pouvez maintenant restreindre l'enregistrement des sorties pour un bateau à certains rameurs.
+
+- Une catégorie (J10 à Senior) et un type (loisir ou compétition) peuvent être définis pour chaque rameur (optionnellement)
+- Une catégorie minimum requise (J10 à Senior) et un type minimum requis (loisir ou compétition) peuvent être définis pour chaque bateau
+- La logique de restriction peut être configurée par type de bateau (1x, 2x, 4x/-, 8-) et permet d'alerter l'utilisateur ou de bloquer totalement la sortie si les conditions de niveau ne sont pas respectées
