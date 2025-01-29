@@ -1,17 +1,16 @@
-
+- Statistiques -> Ajout de statistiques globales du club
 - Commencer une sortie -> Remplacement du champ "Date de fin" par "Durée estimée"
-- Parcours -> La selection du parcours est maintenant optionnel lors de la création d'une sortie
-- Parcours -> Si aucun parcours n'est configuré, le champ "Parcours" est maintenant caché
 - Historique des sessions -> Possibilité de supprimer une session
 - Historique des sessions -> L'historique reste maintenant intact lorsqu'un bateau / parcours / rameur est supprimé
+- Parcours -> La sélection du parcours est maintenant optionnelle lors de la création d'une sortie
+- Parcours -> Si aucun parcours n'est configuré, le champ "Parcours" est maintenant caché
 - Bateaux -> Les bateaux sont maintenant groupés par type
 - Bateaux -> Affichage des incidents d'un bateau dans la modale informative
-- Statistiques -> Ajout de statistiques globales au club
+- Bateaux -> Ajout d'un champ de recherche
+- Bateaux -> Possibilité d'ajouter des bateaux en groupe avec un type prédéfini
+- Rameurs -> Possibilité de faire des modifications groupées sur les rameurs existants
 - Statistiques d'un rameur -> Ajout des bateaux les plus utilisés
-- Statistiques d'un rameur -> Ajout des partenaire les plus fréquents
-- Bateaux -> ajout d'un champ de recherche
-- Bateaux -> possibilité d'ajouter des bateaux en groupe avec un type prédéfini
-- Rameurs -> possibilité de faire des modification groupés sur les rameurs existants
+- Statistiques d'un rameur -> Ajout des partenaires les plus fréquents
 
 Système de niveau.
 
