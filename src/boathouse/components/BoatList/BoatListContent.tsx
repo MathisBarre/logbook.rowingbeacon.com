@@ -17,7 +17,13 @@ import {
 } from "../../../_common/utils/date.utils";
 import { useStore } from "zustand";
 import { boatLevelConfigStoreCore } from "../../../_common/store/boatLevelConfig.store";
-import { getRowerTypeTranslation } from "../../../_common/store/boatLevelConfig.business";
+import {
+  getRowerTypeTranslation,
+  rowerCategories,
+  RowerCategoryEnum,
+  rowerType,
+  RowerTypeEnum,
+} from "../../../_common/store/boatLevelConfig.business";
 
 interface BoatListContentProps {
   search: string;
@@ -236,6 +242,42 @@ const UnusuableBoatRow = memo(({ boat }: { boat: Boat }) => {
   );
 });
 
+const getTypeFromTo = (minimalType: RowerTypeEnum | null | undefined) => {
+  if (!minimalType) {
+    return null;
+  }
+
+  const lastRowerType = rowerType.reduce((acc, curr) => {
+    return curr.order > acc.order ? curr : acc;
+  }).type;
+
+  if (minimalType === lastRowerType) {
+    return getRowerTypeTranslation(minimalType);
+  }
+
+  return `${getRowerTypeTranslation(minimalType)} à ${getRowerTypeTranslation(
+    lastRowerType
+  )}`;
+};
+
+const getLevelConfigFromTo = (
+  minimalLevelConfig: RowerCategoryEnum | null | undefined
+) => {
+  if (!minimalLevelConfig) {
+    return null;
+  }
+
+  const lastRowerCategory = rowerCategories.reduce((acc, curr) => {
+    return curr.order > acc.order ? curr : acc;
+  }).category;
+
+  if (minimalLevelConfig === lastRowerCategory) {
+    return minimalLevelConfig;
+  }
+
+  return `${minimalLevelConfig} à ${lastRowerCategory}`;
+};
+
 const BoatRowDefault = memo(
   ({
     boat,
@@ -247,6 +289,11 @@ const BoatRowDefault = memo(
     const boatLevelConfigStore = useStore(boatLevelConfigStoreCore);
     const boatLevelConfig = boatLevelConfigStore.getBoatLevelConfig(boat.id);
 
+    const boatTypeFromTo = getTypeFromTo(boatLevelConfig?.minimalRowerType);
+    const boatLevelConfigFromTo = getLevelConfigFromTo(
+      boatLevelConfig?.minimalRowerCategory
+    );
+
     return (
       <div key={boat.id} className="flex">
         <div
@@ -256,15 +303,15 @@ const BoatRowDefault = memo(
           <span className="select-none">{boat.name}</span>
 
           <div className="flex gap-1 items-center">
-            {boatLevelConfig?.minimalRowerCategory && (
-              <p className="bg-steel-blue-50 border border-steel-blue-100 inline-block px-2 py-1 rounded-full text-xs">
-                {boatLevelConfig?.minimalRowerCategory}
+            {boatTypeFromTo && (
+              <p className="bg-rose-50 border border-rose-300 inline-block px-2 py-1 rounded-full text-xs">
+                {boatTypeFromTo}
               </p>
             )}
 
-            {boatLevelConfig?.minimalRowerType && (
-              <p className="bg-steel-blue-50 border border-steel-blue-100 inline-block px-2 py-1 rounded-full text-xs">
-                {getRowerTypeTranslation(boatLevelConfig?.minimalRowerType)}
+            {boatLevelConfigFromTo && (
+              <p className="bg-purple-50 border border-purple-300 inline-block px-2 py-1 rounded-full text-xs">
+                {boatLevelConfigFromTo}
               </p>
             )}
           </div>

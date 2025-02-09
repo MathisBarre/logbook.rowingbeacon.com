@@ -18,6 +18,9 @@ export default {
       blue: colors.blue,
       yellow: colors.yellow,
       black: colors.black,
+      purple: colors.purple,
+      green: colors.green,
+      rose: colors.rose,
       "steel-blue": {
         50: "#f3f6fc",
         100: "#e7eef7",
