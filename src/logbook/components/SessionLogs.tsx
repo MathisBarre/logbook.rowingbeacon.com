@@ -77,7 +77,7 @@ export const SessionLogs = () => {
         </Dialog>
       </div>
 
-      <div className="absolute l-0 t-0 b-0 w-1 h-full bg-steel-blue-800 z-10"></div>
+      <div className="absolute l-0 t-0 b-0 w-2 h-full bg-steel-blue-800 z-10"></div>
 
       <SessionHistoryTable
         sessionsInTableList={sessions}
@@ -86,13 +86,9 @@ export const SessionLogs = () => {
         refresh={refresh}
       />
 
-      <section className="border-t z-10 p-2 bottom-4 right-6 flex justify-center items-center gap-4">
-        <p className="italic text-center px-8">
-          Page {currentPage} sur {numberOfPages}
-        </p>
+      <section className="absolute z-10 p-2 bottom-0 left-0 rounded flex justify-center items-center gap-4 bg-steel-blue-800 text-white">
         <div className="flex justify-center gap-2 flex-1 ">
           <Button
-            className="flex-1"
             type="button"
             variant="outlined"
             onClick={prev}
@@ -101,7 +97,6 @@ export const SessionLogs = () => {
             <ChevronLeftIcon />
           </Button>
           <Button
-            className="flex-1"
             type="button"
             variant="outlined"
             onClick={next}
@@ -110,6 +105,9 @@ export const SessionLogs = () => {
             <ChevronRightIcon />
           </Button>
         </div>
+        <p className="italic text-center px-4">
+          Page {currentPage} sur {numberOfPages}
+        </p>
       </section>
     </div>
   );

@@ -45,7 +45,7 @@ export function SessionHistoryTable({
   const adminEditSystem = useAdminEditModeSystem();
 
   return (
-    <div className="overflow-auto">
+    <div className="overflow-auto pb-20">
       {sessionsInTableList.length === 0 && !loading && !errorMessage && (
         <p className="text-center py-16">Aucune session</p>
       )}
