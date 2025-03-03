@@ -41,8 +41,6 @@ const Button = ({
         onClick={onClick}
         type={type}
         className={cn([
-          className,
-
           // primary - primary
           isColorPrimary &&
             isPrimary &&
@@ -85,6 +83,8 @@ const Button = ({
           isColorDanger && isOutlined && loading && "dashed-error",
 
           disabled && "opacity-50 cursor-not-allowed",
+          className,
+          "flex justify-center items-center",
         ])}
         role={role}
       >

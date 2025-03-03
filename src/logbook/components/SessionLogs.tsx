@@ -77,6 +77,8 @@ export const SessionLogs = () => {
         </Dialog>
       </div>
 
+      <div className="absolute l-0 t-0 b-0 w-1 h-full bg-steel-blue-800 z-10"></div>
+
       <SessionHistoryTable
         sessionsInTableList={sessions}
         loading={loading}
@@ -84,12 +86,13 @@ export const SessionLogs = () => {
         refresh={refresh}
       />
 
-      <section className="shadow border py-4 px-8 absolute z-10 bg-white p-2 rounded bottom-4 left-1/2 -translate-x-1/2">
-        <p className="italic text-center">
+      <section className="border-t z-10 p-2 bottom-4 right-6 flex justify-center items-center gap-4">
+        <p className="italic text-center px-8">
           Page {currentPage} sur {numberOfPages}
         </p>
-        <div className="flex justify-center gap-4 mt-4">
+        <div className="flex justify-center gap-2 flex-1 ">
           <Button
+            className="flex-1"
             type="button"
             variant="outlined"
             onClick={prev}
@@ -98,6 +101,7 @@ export const SessionLogs = () => {
             <ChevronLeftIcon />
           </Button>
           <Button
+            className="flex-1"
             type="button"
             variant="outlined"
             onClick={next}
