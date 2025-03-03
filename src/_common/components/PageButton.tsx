@@ -1,8 +1,5 @@
 import { cn } from "../utils/utils";
-import {
-  askForAdminPassword,
-  useAdminEditModeSystem,
-} from "../store/adminEditMode.system";
+import { useAdminEditModeSystem } from "../store/adminEditMode.system";
 import { AdminPage } from "../store/navigation.store";
 
 const PageButton = ({
