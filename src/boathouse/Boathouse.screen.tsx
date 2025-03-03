@@ -12,6 +12,7 @@ import { useClubOverviewStore } from "../_common/store/clubOverview.store";
 import { Boat } from "../_common/types/boat.type";
 
 import { windowAlert } from "../_common/utils/window.utils";
+import { WarehouseIcon, WavesIcon } from "lucide-react";
 
 function BoathouseScreen() {
   const sessionStore = useSessionsStore();
@@ -62,6 +63,7 @@ function BoathouseScreen() {
           label="Bateaux disponibles"
           boats={availableBoats}
           onBoatRowClick={onBoatRowClick}
+          icon={<WarehouseIcon />}
         />
       </div>
 
@@ -80,6 +82,7 @@ function BoathouseScreen() {
             setIsStopSessionModalOpen(true);
             setSessionToStop(session);
           }}
+          icon={<WavesIcon />}
         />
       </div>
 
