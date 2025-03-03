@@ -9,7 +9,7 @@ import { SimpleAlertDialog } from "./SimpleAlertDialog";
 import Button from "./Button";
 import { useState } from "react";
 import useNavigationStore from "../store/navigation.store";
-import { BookIcon, LockIcon, ShipIcon } from "lucide-react";
+import { BookIcon, ShipIcon } from "lucide-react";
 import logo from "../../_common/images/logo.svg";
 import { Popover, PopoverContent, PopoverTrigger } from "./Popover";
 import PageButton from "./PageButton";
@@ -48,6 +48,16 @@ export const NavigationBar = () => {
           </PopoverTrigger>
           <PopoverContent asChild>
             <div className="flex flex-col p-2 gap-2 rounded  w-48">
+              <button
+                type="button"
+                className="text-sm font-medium text-error-800 hover:bg-error-100 border-error-100 bg-error-50 border rounded flex p-2 gap-2 items-center "
+                onClick={() => {
+                  setIsLogoutAlertOpen(true);
+                }}
+              >
+                <ArrowLeftStartOnRectangleIcon className="h-4 w-4" />
+                Fermer l&apos;application
+              </button>
               <div className=" text-sm font-medium text-steel-blue-800 flex items-center justify-center rounded bg-steel-blue-50 border border-steel-blue-100">
                 <button
                   className="h-8 w-8 hover:bg-steel-blue-200 border-r border-steel-blue-100"
@@ -69,16 +79,19 @@ export const NavigationBar = () => {
                   +
                 </button>
               </div>
-              <button
+              <Button
+                className="py-2 text-sm font-medium"
+                variant="outlined"
                 type="button"
-                className="text-sm font-medium text-error-800 hover:bg-error-100 border-error-100 bg-error-50 border rounded flex p-2 gap-2 items-center "
                 onClick={() => {
-                  setIsLogoutAlertOpen(true);
+                  setPage("parameters");
                 }}
               >
-                <ArrowLeftStartOnRectangleIcon className="h-4 w-4" />
-                Fermer l&apos;application
-              </button>
+                Configuration{" "}
+                <span className="bg-gray-100 border border-gray-300 p-1 rounded ml-2 text-gray-600 text-xs">
+                  ctrl + z
+                </span>
+              </Button>
             </div>
           </PopoverContent>
         </Popover>
@@ -98,14 +111,6 @@ export const NavigationBar = () => {
             setPage={setPage}
             icon={<BookIcon className="h-4 w-4" />}
             label="Logbook"
-          />
-
-          <PageButton
-            page="parameters"
-            currentPage={page}
-            setPage={setPage}
-            icon={<LockIcon className="h-4 w-4" />}
-            label="Gestion"
           />
         </div>
       </div>

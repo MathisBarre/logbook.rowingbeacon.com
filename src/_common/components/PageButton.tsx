@@ -11,18 +11,20 @@ const PageButton = ({
   setPage,
   icon,
   label,
+  className,
 }: {
   page: AdminPage;
   currentPage: AdminPage;
   setPage: (page: AdminPage) => void;
   icon: React.ReactNode;
   label: string;
+  className?: string;
 }) => {
   const adminEditSystem = useAdminEditModeSystem();
 
   const handleClick = async () => {
     if (page === "parameters" && adminEditSystem) {
-      if (adminEditSystem.allowAdminActions(await askForAdminPassword())) {
+      if (await adminEditSystem.askForAdminAccess()) {
         setPage(page);
       }
     } else {
@@ -36,7 +38,8 @@ const PageButton = ({
       onClick={handleClick}
       className={cn(
         "text-sm font-medium text-steel-blue-800 hover:bg-gray-200 flex-1 shadow-md rounded bg-white border overflow-hidden",
-        currentPage === page && " border-steel-blue-900 bg-gray-100 bg-pattern "
+        currentPage === page && " border-steel-blue-900 bg-gray-100 bg-pattern",
+        className
       )}
     >
       <div className="flex items-center justify-center gap-2 bg-radial-white h-full w-full">

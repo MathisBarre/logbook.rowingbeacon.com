@@ -3,10 +3,7 @@ import { getTime } from "../../_common/utils/date.utils";
 import Loading from "../../_common/components/Loading";
 import { Trash2Icon } from "lucide-react";
 import { useRemoveSession } from "../hooks/useRemoveSession";
-import {
-  askForAdminPassword,
-  useAdminEditModeSystem,
-} from "../../_common/store/adminEditMode.system";
+import { useAdminEditModeSystem } from "../../_common/store/adminEditMode.system";
 import { toast } from "sonner";
 
 export interface SessionInTable {
@@ -73,9 +70,7 @@ export function SessionHistoryTable({
               className="absolute bottom-2 right-2 text-error-800 underline text-sm cursor-pointer"
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onClick={async () => {
-                if (
-                  adminEditSystem.allowAdminActions(await askForAdminPassword())
-                ) {
+                if (await adminEditSystem.askForAdminAccess()) {
                   await removeSession(session.id);
                   await refresh();
                   toast.success("La session a été supprimée");

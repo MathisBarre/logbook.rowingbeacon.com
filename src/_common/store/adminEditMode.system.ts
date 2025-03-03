@@ -48,7 +48,15 @@ export const useAdminEditModeSystem = () => {
     toast.error("Mot de passe incorrect");
   };
 
-  const allowAdminActions = (pswd: string | null): boolean => {
+  const askForAdminAccess = async (pswd?: string | null): Promise<boolean> => {
+    if (pswd === undefined) {
+      pswd = await askForAdminPassword();
+    }
+
+    if (pswd === null) {
+      return false;
+    }
+
     if (isAdminPassword(pswd)) {
       return true;
     } else {
@@ -62,7 +70,7 @@ export const useAdminEditModeSystem = () => {
     startAdminEditMode,
     alertUserIsNotAdmin: wrongAdminPassword,
     closeApp: close,
-    allowAdminActions,
+    askForAdminAccess,
     isAdminPassword,
     setAdminPassword,
   };

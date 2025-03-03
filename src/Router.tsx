@@ -1,5 +1,6 @@
 import { NavigationBar } from "./_common/components/NavigationBar";
 import useNavigationStore from "./_common/store/navigation.store";
+import { useAdminShortcut } from "./_common/utils/adminShortcut";
 import { forEnum } from "./_common/utils/utils";
 import BoathouseScreen from "./boathouse/Boathouse.screen";
 import { LogbookScreen } from "./logbook/Logbook.screen";
@@ -12,7 +13,12 @@ export function Router() {
   const setIsOnboardingDone = useOnboardingStore((state) => state.setOnboarded);
   const {
     navigation: { page },
+    setPage,
   } = useNavigationStore();
+
+  useAdminShortcut(() => {
+    setPage("parameters");
+  });
 
   if (!isOnboardingDone) {
     return <Onboarding setIsOnboardingDone={setIsOnboardingDone} />;

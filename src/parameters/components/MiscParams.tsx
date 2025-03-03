@@ -1,10 +1,7 @@
 import Button from "../../_common/components/Button";
 import { useEffect, useState } from "react";
 import { Dialog, DialogContent } from "../../_common/components/Dialog/Dialog";
-import {
-  askForAdminPassword,
-  useAdminEditModeSystem,
-} from "../../_common/store/adminEditMode.system";
+import { useAdminEditModeSystem } from "../../_common/store/adminEditMode.system";
 import { DeleteDatas } from "./DeleteDatas";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { useAutoStart } from "../hooks/useAutoStart";
@@ -220,11 +217,7 @@ export const MiscParams = () => {
               color="danger"
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onClick={async () => {
-                if (
-                  !adminEditSystem.allowAdminActions(
-                    await askForAdminPassword()
-                  )
-                ) {
+                if (!(await adminEditSystem.askForAdminAccess())) {
                   return;
                 }
 

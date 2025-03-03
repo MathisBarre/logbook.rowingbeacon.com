@@ -10,10 +10,7 @@ import {
   FileUpIcon,
   LogsIcon,
 } from "lucide-react";
-import {
-  askForAdminPassword,
-  useAdminEditModeSystem,
-} from "../../_common/store/adminEditMode.system";
+import { useAdminEditModeSystem } from "../../_common/store/adminEditMode.system";
 
 export const SessionLogs = () => {
   const {
@@ -45,9 +42,7 @@ export const SessionLogs = () => {
           className="bg-gray-100 rounded flex items-center justify-center px-4 text-gray-700 py-1 text-sm h-full"
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onClick={async () => {
-            if (
-              !adminEditSystem.allowAdminActions(await askForAdminPassword())
-            ) {
+            if (!(await adminEditSystem.askForAdminAccess())) {
               return;
             }
 
@@ -76,8 +71,6 @@ export const SessionLogs = () => {
           </DialogContent>
         </Dialog>
       </div>
-
-      <div className="absolute l-0 t-0 b-0 w-2 h-full bg-steel-blue-800 z-10"></div>
 
       <SessionHistoryTable
         sessionsInTableList={sessions}
@@ -108,7 +101,47 @@ export const SessionLogs = () => {
         <p className="italic text-center px-4">
           Page {currentPage} sur {numberOfPages}
         </p>
+
+        <div className="absolute left-2 -top-2 w-2 h-2 z-10 -rotate-90">
+          <svg
+            width="4"
+            height="4"
+            viewBox="0 0 4 4"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M0 4C0 2 2 0 4 0H0V4Z" fill="#22426A" />
+          </svg>
+        </div>
       </section>
+
+      {/* DECORATIONS */}
+      <div className="absolute l-0 t-0 b-0 w-2 h-full bg-steel-blue-800 z-10"></div>
+
+      <div className="absolute left-2 top-12 w-2 h-2 z-10">
+        <svg
+          width="4"
+          height="4"
+          viewBox="0 0 4 4"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M0 4C0 2 2 0 4 0H0V4Z" fill="#22426A" />
+        </svg>
+      </div>
+
+      <div className="absolute left-2 top-12 w-2 h-2 z-10">
+        <svg
+          width="4"
+          height="4"
+          viewBox="0 0 4 4"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M0 4C0 2 2 0 4 0H0V4Z" fill="#22426A" />
+        </svg>
+      </div>
+      {/* DECORATIONS */}
     </div>
   );
 };
