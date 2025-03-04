@@ -112,7 +112,7 @@ export const seriousnessCategories = [
   {
     order: 0,
     type: null,
-    label: "Non catégorisé",
+    label: null,
   },
   {
     order: 1,
@@ -122,7 +122,7 @@ export const seriousnessCategories = [
   {
     order: 2,
     type: SeriousnessCategoryEnum.COMPETITOR,
-    label: "Compétition",
+    label: "Compétiteur",
   },
 ] as const;
 

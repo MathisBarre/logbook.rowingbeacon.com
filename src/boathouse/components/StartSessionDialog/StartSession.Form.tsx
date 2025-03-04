@@ -21,6 +21,7 @@ import {
   seriousnessCategories,
 } from "../../../_common/store/boatLevelConfig.business";
 import { cn } from "../../../_common/utils/utils";
+import { LevelVisualizer } from "./LevelVisualizer";
 
 const StartSessionFormSchema = z.object({
   boat: z.object({
@@ -245,73 +246,59 @@ export const StartSessionForm = ({
             />
           )}
 
-          <div className="flex gap-6">
-            <FormField
-              name="boat"
-              control={form.control}
-              render={({ field }) => (
-                <BoatSection
-                  boats={startSessionData.boats}
-                  onChange={field.onChange}
-                  value={field.value}
-                />
-              )}
-            />
+          <div className="flex gap-2 flex-col">
+            <div className="flex gap-6">
+              <FormField
+                name="boat"
+                control={form.control}
+                render={({ field }) => (
+                  <BoatSection
+                    boats={startSessionData.boats}
+                    onChange={field.onChange}
+                    value={field.value}
+                  />
+                )}
+              />
 
-            <FormField
-              name="route"
-              control={form.control}
-              render={({ field }) => (
-                <RouteSection
-                  routes={startSessionData.routes}
-                  onChange={(newValue) =>
-                    field.onChange({ target: { value: newValue } })
-                  }
-                  value={field.value}
-                />
-              )}
-            />
-          </div>
+              <FormField
+                name="route"
+                control={form.control}
+                render={({ field }) => (
+                  <RouteSection
+                    routes={startSessionData.routes}
+                    onChange={(newValue) =>
+                      field.onChange({ target: { value: newValue } })
+                    }
+                    value={field.value}
+                  />
+                )}
+              />
+            </div>
 
-          <div className="flex gap-4 flex-col">
             <div className="flex-1 flex flex-col gap-1">
-              <p>Ce bateau nécessite une catégorie d&apos;age minimume :</p>
-              <ol className="flex flex-wrap border-collapse">
-                {ageCategories.map((ageCategory) => {
-                  const isSelected = ageCategory.order === 2;
-                  return (
-                    <li
-                      key={ageCategory.order}
-                      className={cn(
-                        isSelected
-                          ? "bg-steel-blue-600 text-white"
-                          : "bg-gray-100",
-                        "first:rounded-l last:rounded-r flex items-center flex-col flex-1 text-center justify-center relative border border-gray-300 -mx-1 first:mx-0 last:mx-0"
-                      )}
-                    >
-                      <p className={cn("text-xs p-1")}>
-                        Niv {ageCategory.order}
-                      </p>
-                      <div
-                        className={cn(
-                          isSelected
-                            ? "bg-gray-300 h-[1px] w-full"
-                            : "bg-gray-300 h-[1px] w-full"
-                        )}
-                      />
-                      <p className="text-sm font-bold p-2">
-                        {ageCategory.category || <span>Aucun</span>}
-                      </p>
+              <p className="text-sm text-gray-500">
+                Ce bateau nécessite au moins 2 rameurs avec au minimum les
+                niveaux suivants :
+              </p>
+              <div className="flex gap-2">
+                <LevelVisualizer
+                  wrapperClassnames="flex-[4]"
+                  levels={seriousnessCategories.map((s) => ({
+                    label: s.label || "Aucun",
+                    order: s.order,
+                  }))}
+                  selectedLevelOrder={2}
+                />
 
-                      {isSelected && (
-                        <div>
-                          <ChevronUpIcon className="text-steel-blue-600 absolute bottom-0 left-1/2 translate-y-full -translate-x-1/2"></ChevronUpIcon>
-                        </div>
-                      )}
-                    </li>
-                  );
-                })}
-              </ol>
+                <LevelVisualizer
+                  wrapperClassnames="flex-[8]"
+                  levels={ageCategories.map((a) => ({
+                    label: String(a.category || "Aucun"),
+                    order: a.order,
+                  }))}
+                  selectedLevelOrder={2}
+                />
+              </div>
             </div>
           </div>
 
