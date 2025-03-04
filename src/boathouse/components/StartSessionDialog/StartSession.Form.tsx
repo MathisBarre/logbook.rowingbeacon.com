@@ -13,7 +13,7 @@ import Button from "../../../_common/components/Button";
 import { dateStringSchema } from "../../../_common/utils/commonSchema";
 import { ErrorBlock } from "../../../_common/components/ErrorBlock";
 import { useStartSession } from "./startSession.hook";
-import { CircleAlertIcon } from "lucide-react";
+import { ArrowUpIcon, ChevronUpIcon, CircleAlertIcon } from "lucide-react";
 import { replaceLastOccurrence } from "../../../_common/utils/string.utils";
 import { addMinutes } from "../../../_common/utils/date.utils";
 import {
@@ -290,29 +290,40 @@ export const StartSessionForm = ({
             <div className="flex-1 flex flex-col gap-1">
               <p>Ce bateau nécessite une catégorie d&apos;age minimume :</p>
               <ol className="flex gap-3 flex-wrap">
-                {ageCategories.map((ageCategory) => (
-                  <li
-                    key={ageCategory.order}
-                    className={cn(
-                      ageCategory.order === 2
-                        ? "bg-steel-blue-600 text-white"
-                        : "bg-gray-200",
-                      "rounded flex items-center flex-col flex-1 text-center justify-center"
-                    )}
-                  >
-                    <p className={cn("text-xs p-1")}>Niv {ageCategory.order}</p>
-                    <div
+                {ageCategories.map((ageCategory) => {
+                  const isSelected = ageCategory.order === 2;
+                  return (
+                    <li
+                      key={ageCategory.order}
                       className={cn(
-                        ageCategory.order === 2
-                          ? "bg-gray-300 h-[1px] w-full"
-                          : "bg-gray-300 h-[1px] w-full"
+                        isSelected
+                          ? "bg-steel-blue-600 text-white"
+                          : "bg-gray-200",
+                        "rounded flex items-center flex-col flex-1 text-center justify-center relative"
                       )}
-                    />
-                    <p className="text-sm font-bold p-2">
-                      {ageCategory.category || <span>Aucun</span>}
-                    </p>
-                  </li>
-                ))}
+                    >
+                      <p className={cn("text-xs p-1")}>
+                        Niv {ageCategory.order}
+                      </p>
+                      <div
+                        className={cn(
+                          isSelected
+                            ? "bg-gray-300 h-[1px] w-full"
+                            : "bg-gray-300 h-[1px] w-full"
+                        )}
+                      />
+                      <p className="text-sm font-bold p-2">
+                        {ageCategory.category || <span>Aucun</span>}
+                      </p>
+
+                      {isSelected && (
+                        <div>
+                          <ChevronUpIcon className="text-steel-blue-600 absolute bottom-0 left-1/2 translate-y-full -translate-x-1/2"></ChevronUpIcon>
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
               </ol>
             </div>
           </div>
