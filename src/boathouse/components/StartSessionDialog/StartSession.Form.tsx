@@ -274,22 +274,9 @@ export const StartSessionForm = ({
           </div>
 
           <div className="flex gap-4 flex-col">
-            <div className="flex-1">
-              <p>Ce bateau nécessite une catégorie minimume :</p>
-              <ol className="list-decimal list-inside">
-                {seriousnessCategories.map((seriousness) => (
-                  <li
-                    key={seriousness.order}
-                    className={cn(seriousness.order === 2 && "underline")}
-                  >
-                    {seriousness.label}
-                  </li>
-                ))}
-              </ol>
-            </div>
             <div className="flex-1 flex flex-col gap-1">
               <p>Ce bateau nécessite une catégorie d&apos;age minimume :</p>
-              <ol className="flex gap-3 flex-wrap">
+              <ol className="flex flex-wrap border-collapse">
                 {ageCategories.map((ageCategory) => {
                   const isSelected = ageCategory.order === 2;
                   return (
@@ -298,8 +285,8 @@ export const StartSessionForm = ({
                       className={cn(
                         isSelected
                           ? "bg-steel-blue-600 text-white"
-                          : "bg-gray-200",
-                        "rounded flex items-center flex-col flex-1 text-center justify-center relative"
+                          : "bg-gray-100",
+                        "first:rounded-l last:rounded-r flex items-center flex-col flex-1 text-center justify-center relative border border-gray-300 -mx-1 first:mx-0 last:mx-0"
                       )}
                     >
                       <p className={cn("text-xs p-1")}>
