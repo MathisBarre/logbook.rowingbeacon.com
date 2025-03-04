@@ -297,20 +297,18 @@ export const StartSessionForm = ({
                       ageCategory.order === 2
                         ? "bg-steel-blue-600 text-white"
                         : "bg-gray-200",
-                      "p-2 gap-2 rounded flex items-center flex-col flex-1 text-center justify-center"
+                      "rounded flex items-center flex-col flex-1 text-center justify-center"
                     )}
                   >
-                    <p
+                    <p className={cn("text-xs p-1")}>Niv {ageCategory.order}</p>
+                    <div
                       className={cn(
                         ageCategory.order === 2
-                          ? "bg-steel-blue-600 text-white border-gray-300"
-                          : "bg-gray-200 border-gray-500",
-                        "border rounded-sm px-2 py-1 text-xs"
+                          ? "bg-gray-300 h-[1px] w-full"
+                          : "bg-gray-300 h-[1px] w-full"
                       )}
-                    >
-                      Niv {ageCategory.order}
-                    </p>
-                    <p className="text-sm font-bold">
+                    />
+                    <p className="text-sm font-bold p-2">
                       {ageCategory.category || <span>Aucun</span>}
                     </p>
                   </li>
