@@ -112,7 +112,7 @@ export const seriousnessCategories = [
   {
     order: 0,
     type: null,
-    label: null,
+    label: "Non catégorisé",
   },
   {
     order: 1,

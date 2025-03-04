@@ -1,5 +1,9 @@
 import { SimpleDialog } from "../../../_common/components/SimpleDialog";
-import { seriousnessCategories } from "../../../_common/store/boatLevelConfig.business";
+import {
+  ageCategories,
+  seriousnessCategories,
+} from "../../../_common/store/boatLevelConfig.business";
+import { cn } from "../../../_common/utils/utils";
 import { StartSessionFormDataWrapper } from "./StartSessionForm.DataWrapper";
 
 interface StartSessionDialogProps {
@@ -30,10 +34,6 @@ export function StartSessionDialog({
       onOpenChange={(v) => v === false && setIsOpen(false)}
       title="Commencer une sortie"
     >
-      <p>Ce bateau necéssite d'un niveau minimum</p>
-      {seriousnessCategories}
-      <p>Ce bateau necéssite un type minimum</p>
-      <div className="h-4" />
       <StartSessionFormDataWrapper
         closeAction={() => setIsOpen(false)}
         defaultBoat={defaultBoat}

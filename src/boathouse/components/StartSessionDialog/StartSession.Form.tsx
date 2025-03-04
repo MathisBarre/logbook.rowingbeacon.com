@@ -16,6 +16,11 @@ import { useStartSession } from "./startSession.hook";
 import { CircleAlertIcon } from "lucide-react";
 import { replaceLastOccurrence } from "../../../_common/utils/string.utils";
 import { addMinutes } from "../../../_common/utils/date.utils";
+import {
+  ageCategories,
+  seriousnessCategories,
+} from "../../../_common/store/boatLevelConfig.business";
+import { cn } from "../../../_common/utils/utils";
 
 const StartSessionFormSchema = z.object({
   boat: z.object({
@@ -266,6 +271,52 @@ export const StartSessionForm = ({
                 />
               )}
             />
+          </div>
+
+          <div className="flex gap-4 flex-col">
+            <div className="flex-1">
+              <p>Ce bateau nécessite une catégorie minimume :</p>
+              <ol className="list-decimal list-inside">
+                {seriousnessCategories.map((seriousness) => (
+                  <li
+                    key={seriousness.order}
+                    className={cn(seriousness.order === 2 && "underline")}
+                  >
+                    {seriousness.label}
+                  </li>
+                ))}
+              </ol>
+            </div>
+            <div className="flex-1 flex flex-col gap-1">
+              <p>Ce bateau nécessite une catégorie d&apos;age minimume :</p>
+              <ol className="flex gap-3 flex-wrap">
+                {ageCategories.map((ageCategory) => (
+                  <li
+                    key={ageCategory.order}
+                    className={cn(
+                      ageCategory.order === 2
+                        ? "font-bold bg-steel-blue-600 text-white"
+                        : "bg-gray-200",
+                      "px-1 rounded-sm flex items-center"
+                    )}
+                  >
+                    <p
+                      className={cn(
+                        ageCategory.order === 2
+                          ? "font-bold bg-steel-blue-600 text-white border-steel-blue-900"
+                          : "bg-gray-200 border-gray-500",
+                        "px-2 shadow border rounded-sm text-sm -mt-2 -mb-2 py-1"
+                      )}
+                    >
+                      Niv {ageCategory.order}
+                    </p>
+                    <p className="px-2">
+                      {ageCategory.category || "Non catégorisé"}
+                    </p>
+                  </li>
+                ))}
+              </ol>
+            </div>
           </div>
 
           <FormField
