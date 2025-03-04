@@ -276,10 +276,6 @@ export const StartSessionForm = ({
             </div>
 
             <div className="flex-1 flex flex-col gap-1">
-              <p className="text-sm text-gray-500">
-                Ce bateau nécessite au moins 2 rameurs avec au minimum les
-                niveaux suivants :
-              </p>
               <div className="flex gap-2">
                 <LevelVisualizer
                   wrapperClassnames="flex-[4]"
@@ -302,18 +298,24 @@ export const StartSessionForm = ({
             </div>
           </div>
 
-          <FormField
-            name="selectedRowersOptions"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <RowersSection
-                rowers={startSessionData.rowers}
-                onChange={(newValue) => field.onChange(newValue)}
-                values={field.value}
-                errorMessage={fieldState.error?.message}
-              />
-            )}
-          />
+          <div>
+            <FormField
+              name="selectedRowersOptions"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <RowersSection
+                  rowers={startSessionData.rowers}
+                  onChange={(newValue) => field.onChange(newValue)}
+                  values={field.value}
+                  errorMessage={fieldState.error?.message}
+                />
+              )}
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Il est nécessaire de selectionner au moins 2 rameurs aux niveaux
+              du bateau ou des niveaux supérieurs.
+            </p>
+          </div>
 
           <div className="flex gap-6">
             <FormField
