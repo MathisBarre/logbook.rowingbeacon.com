@@ -6,27 +6,27 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { toast } from "sonner";
 import {
-  rowerCategories,
-  RowerCategoryEnum,
-  rowerType,
-  RowerTypeEnum,
+  ageCategories,
+  AgeCategoryEnum,
+  seriousnessCategories,
+  SeriousnessCategoryEnum,
 } from "../../_common/store/boatLevelConfig.business";
 
 const useBulkUpdateRowerForm = () => {
   const BulkUpdateRowerSchema = z.object({
     category: z.enum([
       "null",
-      RowerCategoryEnum.J10,
-      RowerCategoryEnum.J12,
-      RowerCategoryEnum.J14,
-      RowerCategoryEnum.J16,
-      RowerCategoryEnum.J18,
-      RowerCategoryEnum.SENIOR,
+      AgeCategoryEnum.J10,
+      AgeCategoryEnum.J12,
+      AgeCategoryEnum.J14,
+      AgeCategoryEnum.J16,
+      AgeCategoryEnum.J18,
+      AgeCategoryEnum.SENIOR,
     ]),
     type: z.enum([
       "null",
-      RowerTypeEnum.RECREATIONAL,
-      RowerTypeEnum.COMPETITOR,
+      SeriousnessCategoryEnum.RECREATIONAL,
+      SeriousnessCategoryEnum.COMPETITOR,
     ]),
   });
 
@@ -77,7 +77,7 @@ export const BulkUpdateRower = ({
         <Label className="flex flex-col gap-1">
           Catégorie
           <select className="input" {...form.register("category")}>
-            {rowerCategories.map((category) => (
+            {ageCategories.map((category) => (
               <option
                 key={category.category}
                 value={category.category || "null"}
@@ -91,7 +91,7 @@ export const BulkUpdateRower = ({
         <Label className="flex flex-col gap-1">
           Type
           <select className="input" {...form.register("type")}>
-            {rowerType.map((type) => (
+            {seriousnessCategories.map((type) => (
               <option key={type.type} value={type.type || "null"}>
                 {type.label || "Aucun type"}
               </option>

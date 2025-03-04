@@ -1,6 +1,6 @@
 import {
-  RowerCategoryEnum,
-  RowerTypeEnum,
+  AgeCategoryEnum,
+  SeriousnessCategoryEnum,
 } from "../../_common/store/boatLevelConfig.business";
 import { BoatTypeEnum, getBoatTypeLabel } from "../../_common/types/boat.type";
 import {
@@ -21,8 +21,8 @@ export interface BoatInTable {
   name: string;
   isInMaintenance: boolean;
   type: BoatTypeEnum;
-  minimumRowerType: RowerTypeEnum;
-  minimumRowerCategory: RowerCategoryEnum;
+  minimumRowerType: SeriousnessCategoryEnum;
+  minimumRowerCategory: AgeCategoryEnum;
 }
 
 const boats: BoatInTable[] = generateBoats(100);

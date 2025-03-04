@@ -7,34 +7,34 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useStore } from "zustand";
 import {
-  rowerCategories,
-  RowerCategoryEnum,
-  rowerType,
-  RowerTypeEnum,
+  ageCategories,
+  AgeCategoryEnum,
+  seriousnessCategories,
+  SeriousnessCategoryEnum,
 } from "../../_common/store/boatLevelConfig.business";
 
 const useBoatLevelSystemForm = ({
   defaultValues,
 }: {
   defaultValues: {
-    minimalRowerCategory: RowerCategoryEnum | null;
-    minimalRowerType: RowerTypeEnum | null;
+    minimalRowerCategory: AgeCategoryEnum | null;
+    minimalRowerType: SeriousnessCategoryEnum | null;
   };
 }) => {
   const StartSessionFormSchema = z.object({
     minimalRowerCategory: z.enum([
       "null",
-      RowerCategoryEnum.J10,
-      RowerCategoryEnum.J12,
-      RowerCategoryEnum.J14,
-      RowerCategoryEnum.J16,
-      RowerCategoryEnum.J18,
-      RowerCategoryEnum.SENIOR,
+      AgeCategoryEnum.J10,
+      AgeCategoryEnum.J12,
+      AgeCategoryEnum.J14,
+      AgeCategoryEnum.J16,
+      AgeCategoryEnum.J18,
+      AgeCategoryEnum.SENIOR,
     ]),
     minimalRowerType: z.enum([
       "null",
-      RowerTypeEnum.RECREATIONAL,
-      RowerTypeEnum.COMPETITOR,
+      SeriousnessCategoryEnum.RECREATIONAL,
+      SeriousnessCategoryEnum.COMPETITOR,
     ]),
   });
 
@@ -127,7 +127,7 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
         <Label className="flex flex-col gap-1">
           Catégorie de rameur minimale
           <select className="input" {...form.register("minimalRowerCategory")}>
-            {rowerCategories.map((category) => (
+            {ageCategories.map((category) => (
               <option
                 key={category.category}
                 value={category.category || "null"}
@@ -144,7 +144,7 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
         <Label className="flex flex-col gap-1">
           Type de rameur minimale
           <select className="input" {...form.register("minimalRowerType")}>
-            {rowerType.map((type) => (
+            {seriousnessCategories.map((type) => (
               <option key={type.type} value={type.type || "null"}>
                 {type.order} - {type.label || "Aucun type minimal"}
               </option>

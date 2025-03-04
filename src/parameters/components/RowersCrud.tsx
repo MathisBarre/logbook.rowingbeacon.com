@@ -28,7 +28,7 @@ import { getRowerTypeLabel } from "../../_common/business/rower.rules";
 import clsx from "clsx";
 import { BulkUpdateRower } from "./BulkUpdateRower";
 import {
-  sortByCategoryOrder,
+  sortByAgeCategoryOrder,
   sortByTypeOrder,
 } from "../../_common/store/boatLevelConfig.business";
 
@@ -91,7 +91,7 @@ export const RowersCrud = () => {
     const isSameType = a.type === b.type;
 
     if (!isSameCategory) {
-      return sortByCategoryOrder(a.category, b.category);
+      return sortByAgeCategoryOrder(a.category, b.category);
     }
 
     if (!isSameType) {

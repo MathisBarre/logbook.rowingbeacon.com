@@ -4,8 +4,8 @@ import {
   BoatLevelConfig,
   BoatTypeLevelConfigs,
   defaultBoatTypeLevelConfigs,
-  RowerCategoryEnum,
-  RowerTypeEnum,
+  AgeCategoryEnum,
+  SeriousnessCategoryEnum,
   BoatTypeLevelConfig,
 } from "./boatLevelConfig.business";
 import { BoatTypeEnum } from "../types/boat.type";
@@ -22,8 +22,8 @@ export interface IBoatLevelConfigStore {
   upsertBoatLevelConfig: (
     boatId: string,
     boatLevelConfig: {
-      minimalRowerCategory?: RowerCategoryEnum | null;
-      minimalRowerType?: RowerTypeEnum | null;
+      minimalRowerCategory?: AgeCategoryEnum | null;
+      minimalRowerType?: SeriousnessCategoryEnum | null;
     }
   ) => void;
   deleteBoatLevelConfig: (boatId: string) => void;

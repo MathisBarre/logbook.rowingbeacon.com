@@ -8,7 +8,7 @@ import { FormLabel } from "../../../_common/components/Form";
 import { useSessionsStore } from "../../../_common/store/sessions.store";
 import { Boat } from "../../../_common/types/boat.type";
 import { boatLevelConfigStoreCore } from "../../../_common/store/boatLevelConfig.store";
-import { getRowerTypeTranslation } from "../../../_common/store/boatLevelConfig.business";
+import { getSeriousnessTypeTranslation } from "../../../_common/store/boatLevelConfig.business";
 import { useMemo } from "react";
 
 interface BoatsSectionProps {
@@ -42,7 +42,7 @@ export const BoatSection = ({
 
         if (boatLevelConfig?.minimalRowerType) {
           append.push(
-            getRowerTypeTranslation(boatLevelConfig?.minimalRowerType)
+            getSeriousnessTypeTranslation(boatLevelConfig?.minimalRowerType)
           );
         }
 

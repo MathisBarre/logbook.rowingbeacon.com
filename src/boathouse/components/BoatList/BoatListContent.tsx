@@ -18,11 +18,11 @@ import {
 import { useStore } from "zustand";
 import { boatLevelConfigStoreCore } from "../../../_common/store/boatLevelConfig.store";
 import {
-  getRowerTypeTranslation,
-  rowerCategories,
-  RowerCategoryEnum,
-  rowerType,
-  RowerTypeEnum,
+  getSeriousnessTypeTranslation,
+  ageCategories,
+  AgeCategoryEnum,
+  seriousnessCategories,
+  SeriousnessCategoryEnum,
 } from "../../../_common/store/boatLevelConfig.business";
 
 interface BoatListContentProps {
@@ -242,32 +242,34 @@ const UnusuableBoatRow = memo(({ boat }: { boat: Boat }) => {
   );
 });
 
-const getTypeFromTo = (minimalType: RowerTypeEnum | null | undefined) => {
+const getTypeFromTo = (
+  minimalType: SeriousnessCategoryEnum | null | undefined
+) => {
   if (!minimalType) {
     return null;
   }
 
-  const lastRowerType = rowerType.reduce((acc, curr) => {
+  const lastRowerType = seriousnessCategories.reduce((acc, curr) => {
     return curr.order > acc.order ? curr : acc;
   }).type;
 
   if (minimalType === lastRowerType) {
-    return getRowerTypeTranslation(minimalType);
+    return getSeriousnessTypeTranslation(minimalType);
   }
 
-  return `${getRowerTypeTranslation(minimalType)} à ${getRowerTypeTranslation(
-    lastRowerType
-  )}`;
+  return `${getSeriousnessTypeTranslation(
+    minimalType
+  )} à ${getSeriousnessTypeTranslation(lastRowerType)}`;
 };
 
 const getLevelConfigFromTo = (
-  minimalLevelConfig: RowerCategoryEnum | null | undefined
+  minimalLevelConfig: AgeCategoryEnum | null | undefined
 ) => {
   if (!minimalLevelConfig) {
     return null;
   }
 
-  const lastRowerCategory = rowerCategories.reduce((acc, curr) => {
+  const lastRowerCategory = ageCategories.reduce((acc, curr) => {
     return curr.order > acc.order ? curr : acc;
   }).category;
 

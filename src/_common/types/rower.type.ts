@@ -1,12 +1,12 @@
 import {
-  RowerCategoryEnum,
-  RowerTypeEnum,
+  AgeCategoryEnum,
+  SeriousnessCategoryEnum,
 } from "../store/boatLevelConfig.business";
 
 export interface Rower {
   id: string;
   name: string;
   archivedAt?: string | undefined;
-  type?: RowerTypeEnum | undefined;
-  category?: RowerCategoryEnum | undefined;
+  type?: SeriousnessCategoryEnum | undefined;
+  category?: AgeCategoryEnum | undefined;
 }

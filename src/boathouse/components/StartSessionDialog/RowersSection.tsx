@@ -6,7 +6,7 @@ import {
   areStringSimilar,
   simplifyString,
 } from "../../../_common/utils/string.utils";
-import { getRowerTypeTranslation } from "../../../_common/store/boatLevelConfig.business";
+import { getSeriousnessTypeTranslation } from "../../../_common/store/boatLevelConfig.business";
 import { components } from "react-select";
 
 interface RowersSectionProps {
@@ -95,7 +95,7 @@ const getOptions = (rowers: Rower[], searchInput: string) => {
     .map((rower) => {
       const append = [
         rower.category,
-        getRowerTypeTranslation(rower.type),
+        getSeriousnessTypeTranslation(rower.type),
       ].filter(Boolean);
       return {
         value: rower.id,

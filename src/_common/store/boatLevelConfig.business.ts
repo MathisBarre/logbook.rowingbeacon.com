@@ -47,11 +47,10 @@ export const canRowerUseBoat = (
 ) => {
   const { minimalRowerCategory, minimalRowerType } = boatLevelConfig;
 
-  const minimalRowerCategoryOrder =
-    findRowerCategoryOrder(minimalRowerCategory);
-  const rowerCategoryOrder = findRowerCategoryOrder(rower.category);
-  const minimalRowerTypeOrder = findRowerTypeOrder(minimalRowerType);
-  const rowerTypeOrder = findRowerTypeOrder(rower.type);
+  const minimalRowerCategoryOrder = findAgeCategoryOrder(minimalRowerCategory);
+  const rowerCategoryOrder = findAgeCategoryOrder(rower.category);
+  const minimalRowerTypeOrder = findSeriousnessCategoryOrder(minimalRowerType);
+  const rowerTypeOrder = findSeriousnessCategoryOrder(rower.type);
 
   return (
     rowerCategoryOrder >= minimalRowerCategoryOrder &&
@@ -59,14 +58,19 @@ export const canRowerUseBoat = (
   );
 };
 
-export const findRowerCategoryOrder = (
-  category: RowerCategoryEnum | null | undefined
+export const findAgeCategoryOrder = (
+  ageCategory: AgeCategoryEnum | null | undefined
 ) => {
-  return rowerCategories.find((cat) => cat.category === category)?.order || 0;
+  return ageCategories.find((cat) => cat.category === ageCategory)?.order || 0;
 };
 
-export const findRowerTypeOrder = (type: RowerTypeEnum | null | undefined) => {
-  return rowerType.find((t) => t.type === type)?.order || 0;
+export const findSeriousnessCategoryOrder = (
+  seriousnessCategory: SeriousnessCategoryEnum | null | undefined
+) => {
+  return (
+    seriousnessCategories.find((t) => t.type === seriousnessCategory)?.order ||
+    0
+  );
 };
 
 export const defaultBoatTypeLevelConfig: BoatTypeLevelConfig = {
@@ -93,18 +97,18 @@ export const defaultBoatTypeLevelConfigs: BoatTypeLevelConfigs = {
   [BoatTypeEnum.EIGHT_ROWERS_COXED]: defaultBoatTypeLevelConfig,
 };
 
-export enum RowerTypeEnum {
+export enum SeriousnessCategoryEnum {
   RECREATIONAL = "recreational",
   COMPETITOR = "competitor",
 }
 
-export const getRowerTypeTranslation = (
-  type: RowerTypeEnum | null | undefined
+export const getSeriousnessTypeTranslation = (
+  type: SeriousnessCategoryEnum | null | undefined
 ) => {
-  return rowerType.find((t) => t.type === type)?.label || type;
+  return seriousnessCategories.find((t) => t.type === type)?.label || type;
 };
 
-export const rowerType = [
+export const seriousnessCategories = [
   {
     order: 0,
     type: null,
@@ -112,17 +116,17 @@ export const rowerType = [
   },
   {
     order: 1,
-    type: RowerTypeEnum.RECREATIONAL,
+    type: SeriousnessCategoryEnum.RECREATIONAL,
     label: "Loisir",
   },
   {
     order: 2,
-    type: RowerTypeEnum.COMPETITOR,
+    type: SeriousnessCategoryEnum.COMPETITOR,
     label: "Compétition",
   },
 ] as const;
 
-export enum RowerCategoryEnum {
+export enum AgeCategoryEnum {
   J10 = "J10",
   J12 = "J12",
   J14 = "J14",
@@ -131,59 +135,59 @@ export enum RowerCategoryEnum {
   SENIOR = "Senior",
 }
 
-export const rowerCategories = [
+export const ageCategories = [
   {
     order: 0,
     category: null,
   },
   {
     order: 1,
-    category: RowerCategoryEnum.J10,
+    category: AgeCategoryEnum.J10,
   },
   {
     order: 2,
-    category: RowerCategoryEnum.J12,
+    category: AgeCategoryEnum.J12,
   },
   {
     order: 3,
-    category: RowerCategoryEnum.J14,
+    category: AgeCategoryEnum.J14,
   },
   {
     order: 4,
-    category: RowerCategoryEnum.J16,
+    category: AgeCategoryEnum.J16,
   },
   {
     order: 5,
-    category: RowerCategoryEnum.J18,
+    category: AgeCategoryEnum.J18,
   },
   {
     order: 7,
-    category: RowerCategoryEnum.SENIOR,
+    category: AgeCategoryEnum.SENIOR,
   },
 ] as const;
 
-export const sortByCategoryOrder = (
-  a: RowerCategoryEnum | undefined,
-  b: RowerCategoryEnum | undefined
+export const sortByAgeCategoryOrder = (
+  a: AgeCategoryEnum | undefined,
+  b: AgeCategoryEnum | undefined
 ) => {
-  const aOrder = findRowerCategoryOrder(a);
-  const bOrder = findRowerCategoryOrder(b);
+  const aOrder = findAgeCategoryOrder(a);
+  const bOrder = findAgeCategoryOrder(b);
 
   return -(aOrder - bOrder);
 };
 
 export const sortByTypeOrder = (
-  a: RowerTypeEnum | undefined,
-  b: RowerTypeEnum | undefined
+  a: SeriousnessCategoryEnum | undefined,
+  b: SeriousnessCategoryEnum | undefined
 ) => {
-  const aOrder = findRowerTypeOrder(a);
-  const bOrder = findRowerTypeOrder(b);
+  const aOrder = findSeriousnessCategoryOrder(a);
+  const bOrder = findSeriousnessCategoryOrder(b);
 
   return -(aOrder - bOrder);
 };
 
 export interface BoatLevelConfig {
   boatId: string;
-  minimalRowerCategory: RowerCategoryEnum | null;
-  minimalRowerType: RowerTypeEnum | null;
+  minimalRowerCategory: AgeCategoryEnum | null;
+  minimalRowerType: SeriousnessCategoryEnum | null;
 }
