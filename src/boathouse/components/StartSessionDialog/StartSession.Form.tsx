@@ -295,23 +295,23 @@ export const StartSessionForm = ({
                     key={ageCategory.order}
                     className={cn(
                       ageCategory.order === 2
-                        ? "font-bold bg-steel-blue-600 text-white"
+                        ? "bg-steel-blue-600 text-white"
                         : "bg-gray-200",
-                      "px-1 rounded-sm flex items-center"
+                      "p-2 gap-2 rounded flex items-center flex-col flex-1 text-center justify-center"
                     )}
                   >
                     <p
                       className={cn(
                         ageCategory.order === 2
-                          ? "font-bold bg-steel-blue-600 text-white border-steel-blue-900"
+                          ? "bg-steel-blue-600 text-white border-gray-300"
                           : "bg-gray-200 border-gray-500",
-                        "px-2 shadow border rounded-sm text-sm -mt-2 -mb-2 py-1"
+                        "border rounded-sm px-2 py-1 text-xs"
                       )}
                     >
                       Niv {ageCategory.order}
                     </p>
-                    <p className="px-2">
-                      {ageCategory.category || "Non catégorisé"}
+                    <p className="text-sm font-bold">
+                      {ageCategory.category || <span>Aucun</span>}
                     </p>
                   </li>
                 ))}
