@@ -35,7 +35,7 @@ import { BoatLevelSystem } from "./BoatLevelSystem";
 
 export const BoatCrud = () => {
   const store = useClubOverviewStore();
-  const boats = store.getAllBoats();
+  const boats = store.DEPRECATED_getAllBoats();
   const [search, setSearch] = useState("");
   const searchedBoats = boats.filter((boat) =>
     areStringSimilar(boat.name, search)

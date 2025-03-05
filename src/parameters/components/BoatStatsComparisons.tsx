@@ -44,7 +44,7 @@ const useGetBoatsStats = () => {
     [] as { count: number; totalDuration: number; boatId: string }[]
   );
 
-  const { getAllBoats } = useClubOverviewStore();
+  const { DEPRECATED_getAllBoats: getAllBoats } = useClubOverviewStore();
 
   useEffect(() => {
     getBoatsStats()

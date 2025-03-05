@@ -61,7 +61,7 @@ export interface ClubOverviewStoreState {
   toggleBoatIsInMaintenance: (boatId: string) => void;
   addBoat: (boat: { name: string; type?: BoatTypeEnum }) => void;
   archiveBoat: (boatId: string) => void;
-  getAllBoats: () => ClubOverviewState["boats"];
+  DEPRECATED_getAllBoats: () => ClubOverviewState["boats"];
 
   updateRouteName: (routeId: string, name: string) => void;
   archiveRoute: (routeId: string) => void;
@@ -320,7 +320,7 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
           });
         },
 
-        getAllBoats: () => {
+        DEPRECATED_getAllBoats: () => {
           const boats = get().clubOverview.boats.filter(
             (boat) => !boat.archivedAt
           );

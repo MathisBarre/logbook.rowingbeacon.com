@@ -13,14 +13,17 @@ import Button from "../../../_common/components/Button";
 import { dateStringSchema } from "../../../_common/utils/commonSchema";
 import { ErrorBlock } from "../../../_common/components/ErrorBlock";
 import { useStartSession } from "./startSession.hook";
-import { ArrowUpIcon, ChevronUpIcon, CircleAlertIcon } from "lucide-react";
+import { CircleAlertIcon } from "lucide-react";
 import { replaceLastOccurrence } from "../../../_common/utils/string.utils";
 import { addMinutes } from "../../../_common/utils/date.utils";
 import {
   ageCategories,
+  AgeCategoryEnum,
+  findAgeCategoryOrder,
+  findSeriousnessCategoryOrder,
   seriousnessCategories,
+  SeriousnessCategoryEnum,
 } from "../../../_common/store/boatLevelConfig.business";
-import { cn } from "../../../_common/utils/utils";
 import { LevelVisualizer } from "./LevelVisualizer";
 
 const StartSessionFormSchema = z.object({
@@ -28,13 +31,20 @@ const StartSessionFormSchema = z.object({
     id: z.string(),
     name: z.string(),
     type: z.string().optional(),
+    seriousnessCategory: z.nativeEnum(SeriousnessCategoryEnum),
+    ageCategory: z.nativeEnum(AgeCategoryEnum),
   }),
   route: z.object({
     id: z.string(),
     name: z.string(),
   }),
   selectedRowersOptions: z
-    .array(z.object({ id: z.string(), name: z.string() }))
+    .array(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+      })
+    )
     .min(1, { message: "Veuillez sélectionner au moins un rameur" }),
   startDateTime: dateStringSchema,
   durationValue: z.enum([
@@ -66,6 +76,8 @@ interface StartSessionFormProps {
     boats: {
       id: string;
       name: string;
+      ageCategory: AgeCategoryEnum;
+      seriousnessCategory: SeriousnessCategoryEnum;
     }[];
     rowers: {
       id: string;
@@ -283,7 +295,9 @@ export const StartSessionForm = ({
                     label: s.label || "Aucun",
                     order: s.order,
                   }))}
-                  selectedLevelOrder={2}
+                  selectedLevelOrder={findSeriousnessCategoryOrder(
+                    form.watch("boat.seriousnessCategory")
+                  )}
                 />
 
                 <LevelVisualizer
@@ -292,7 +306,9 @@ export const StartSessionForm = ({
                     label: String(a.category || "Aucun"),
                     order: a.order,
                   }))}
-                  selectedLevelOrder={2}
+                  selectedLevelOrder={findAgeCategoryOrder(
+                    form.watch("boat.ageCategory")
+                  )}
                 />
               </div>
             </div>

@@ -9,7 +9,11 @@ import { Boat } from "../../_common/types/boat.type";
 import { generateSessionId } from "../../_common/business/session.rules";
 
 export const useGenerateFakeData = () => {
-  const { getAllRoutes, getAllBoats, getAllRowers } = useClubOverviewStore();
+  const {
+    getAllRoutes,
+    DEPRECATED_getAllBoats: getAllBoats,
+    getAllRowers,
+  } = useClubOverviewStore();
   const sessionDatabaseRepository = new SessionDatabaseRepository();
 
   return async function generateFakeData() {

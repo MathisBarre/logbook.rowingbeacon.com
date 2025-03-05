@@ -16,7 +16,8 @@ import { WarehouseIcon, WavesIcon } from "lucide-react";
 
 function BoathouseScreen() {
   const sessionStore = useSessionsStore();
-  const { coachNote, getAllBoats } = useClubOverviewStore();
+  const { coachNote, DEPRECATED_getAllBoats: getAllBoats } =
+    useClubOverviewStore();
   const boats = getAllBoats();
   const { availableBoats, boatsInUse } = useSortBoats(boats || []);
 
