@@ -2,6 +2,7 @@ import { StartSessionForm } from "./StartSession.Form";
 import { getCurrentDateTime } from "../../../_common/utils/date.utils";
 import { useClubOverviewStore } from "../../../_common/store/clubOverview.store";
 import { defaultRoute } from "./RouteSection";
+import { useBoatLevelConfigStore } from "../../../_common/store/boatLevelConfig.store";
 
 interface StartSessionFormDataWrapperProps {
   closeAction: () => void;
@@ -26,13 +27,22 @@ export const StartSessionFormDataWrapper = ({
   };
 
   const { getAllBoats, getAllRoutes, getAllRowers } = useClubOverviewStore();
+  const { getBoatLevelConfig } = useBoatLevelConfigStore();
 
   return (
     <div className="flex flex-col gap-4">
       <StartSessionForm
         isLoading={false}
         startSessionData={{
-          boats: getAllBoats(),
+          boats: getAllBoats().map((boat) => {
+            const boatLevelConfig = getBoatLevelConfig(boat.id);
+            return {
+              ...boat,
+              minimalRowerCategory:
+                boatLevelConfig?.minimalRowerCategory || null,
+              minimalRowerType: boatLevelConfig?.minimalRowerType || null,
+            };
+          }),
           routes: getAllRoutes(),
           rowers: getAllRowers(),
         }}

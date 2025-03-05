@@ -13,14 +13,15 @@ import Button from "../../../_common/components/Button";
 import { dateStringSchema } from "../../../_common/utils/commonSchema";
 import { ErrorBlock } from "../../../_common/components/ErrorBlock";
 import { useStartSession } from "./startSession.hook";
-import { ArrowUpIcon, ChevronUpIcon, CircleAlertIcon } from "lucide-react";
+import { CircleAlertIcon } from "lucide-react";
 import { replaceLastOccurrence } from "../../../_common/utils/string.utils";
 import { addMinutes } from "../../../_common/utils/date.utils";
 import {
   ageCategories,
+  AgeCategoryEnum,
   seriousnessCategories,
+  SeriousnessCategoryEnum,
 } from "../../../_common/store/boatLevelConfig.business";
-import { cn } from "../../../_common/utils/utils";
 import { LevelVisualizer } from "./LevelVisualizer";
 
 const StartSessionFormSchema = z.object({
@@ -28,6 +29,8 @@ const StartSessionFormSchema = z.object({
     id: z.string(),
     name: z.string(),
     type: z.string().optional(),
+    seriousnessCategory: z.nativeEnum(SeriousnessCategoryEnum).nullable(),
+    ageCategory: z.nativeEnum(AgeCategoryEnum).nullable(),
   }),
   route: z.object({
     id: z.string(),
@@ -66,6 +69,8 @@ interface StartSessionFormProps {
     boats: {
       id: string;
       name: string;
+      seriousnessCategory: SeriousnessCategoryEnum | null;
+      ageCategory: AgeCategoryEnum | null;
     }[];
     rowers: {
       id: string;
