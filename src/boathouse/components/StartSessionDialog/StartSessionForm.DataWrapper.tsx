@@ -25,11 +25,7 @@ export const StartSessionFormDataWrapper = ({
     comment: "",
   };
 
-  const {
-    DEPRECATED_getAllBoats: getAllBoats,
-    getAllRoutes,
-    getAllRowers,
-  } = useClubOverviewStore();
+  const { getAllBoats, getAllRoutes, getAllRowers } = useClubOverviewStore();
 
   return (
     <div className="flex flex-col gap-4">
