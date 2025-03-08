@@ -6,18 +6,35 @@ import {
 } from "../../../_common/business/boat.rules";
 import { FormLabel } from "../../../_common/components/Form";
 import { useSessionsStore } from "../../../_common/store/sessions.store";
-import { Boat } from "../../../_common/types/boat.type";
+import { Boat, BoatTypeEnum } from "../../../_common/types/boat.type";
 import { boatLevelConfigStoreCore } from "../../../_common/store/boatLevelConfig.store";
-import { getSeriousnessTypeTranslation } from "../../../_common/store/boatLevelConfig.business";
+import {
+  AgeCategoryEnum,
+  getSeriousnessTypeTranslation,
+  SeriousnessCategoryEnum,
+} from "../../../_common/store/boatLevelConfig.business";
 import { useMemo } from "react";
 
 interface BoatsSectionProps {
-  boats: Boat[];
+  boats: {
+    id: string;
+    name: string;
+    isInMaintenance: boolean;
+    type: BoatTypeEnum;
+    ageCategory: AgeCategoryEnum | null;
+    seriousnessCategory: SeriousnessCategoryEnum | null;
+  }[];
   value: {
     id: string;
     name: string;
   };
-  onChange: (value: { id: string; name: string; type?: string }) => void;
+  onChange: (value: {
+    id: string;
+    name: string;
+    type?: string;
+    ageCategory?: AgeCategoryEnum | null;
+    seriousnessCategory?: SeriousnessCategoryEnum | null;
+  }) => void;
 }
 
 export const BoatSection = ({
@@ -30,20 +47,14 @@ export const BoatSection = ({
   const boats = useMemo(
     () =>
       _boats.map((boat) => {
-        const boatLevelConfig = boatLevelConfigStore.getBoatLevelConfig(
-          boat.id
-        );
-
         const append = [];
 
-        if (boatLevelConfig?.minimalRowerCategory) {
-          append.push(boatLevelConfig?.minimalRowerCategory);
+        if (boat.ageCategory) {
+          append.push(boat.ageCategory);
         }
 
-        if (boatLevelConfig?.minimalRowerType) {
-          append.push(
-            getSeriousnessTypeTranslation(boatLevelConfig?.minimalRowerType)
-          );
+        if (boat.seriousnessCategory) {
+          append.push(getSeriousnessTypeTranslation(boat.seriousnessCategory));
         }
 
         return {
@@ -69,11 +80,7 @@ export const BoatSection = ({
           const boat = boats.find((boat) => boat.id === boatId);
 
           if (boat) {
-            onChange({
-              id: boat.id,
-              name: boat.name,
-              type: boat.type,
-            });
+            onChange(boat);
           }
         }}
         value={value.id}

@@ -19,6 +19,8 @@ import { addMinutes } from "../../../_common/utils/date.utils";
 import {
   ageCategories,
   AgeCategoryEnum,
+  findAgeCategoryOrder,
+  findSeriousnessCategoryOrder,
   seriousnessCategories,
   SeriousnessCategoryEnum,
 } from "../../../_common/store/boatLevelConfig.business";
@@ -124,6 +126,8 @@ export const StartSessionForm = ({
       comment: values.comment,
     };
   };
+
+  console.log(form.watch("boat"));
 
   return (
     <div>
@@ -288,7 +292,9 @@ export const StartSessionForm = ({
                     label: s.label || "Aucun",
                     order: s.order,
                   }))}
-                  selectedLevelOrder={2}
+                  selectedLevelOrder={findSeriousnessCategoryOrder(
+                    form.watch("boat.seriousnessCategory")
+                  )}
                 />
 
                 <LevelVisualizer
@@ -297,7 +303,9 @@ export const StartSessionForm = ({
                     label: String(a.category || "Aucun"),
                     order: a.order,
                   }))}
-                  selectedLevelOrder={2}
+                  selectedLevelOrder={findAgeCategoryOrder(
+                    form.watch("boat.ageCategory")
+                  )}
                 />
               </div>
             </div>

@@ -29,6 +29,8 @@ export const StartSessionFormDataWrapper = ({
   const { getAllBoats, getAllRoutes, getAllRowers } = useClubOverviewStore();
   const { getBoatLevelConfig } = useBoatLevelConfigStore();
 
+  const defaultBoatLevelConfig = getBoatLevelConfig(defaultBoat.id);
+
   return (
     <div className="flex flex-col gap-4">
       <StartSessionForm
@@ -38,9 +40,8 @@ export const StartSessionFormDataWrapper = ({
             const boatLevelConfig = getBoatLevelConfig(boat.id);
             return {
               ...boat,
-              minimalRowerCategory:
-                boatLevelConfig?.minimalRowerCategory || null,
-              minimalRowerType: boatLevelConfig?.minimalRowerType || null,
+              ageCategory: boatLevelConfig?.minimalRowerCategory || null,
+              seriousnessCategory: boatLevelConfig?.minimalRowerType || null,
             };
           }),
           routes: getAllRoutes(),
@@ -52,6 +53,12 @@ export const StartSessionFormDataWrapper = ({
         }}
         values={{
           ...defaultValues,
+          boat: {
+            ...defaultValues.boat,
+            ageCategory: defaultBoatLevelConfig?.minimalRowerCategory || null,
+            seriousnessCategory:
+              defaultBoatLevelConfig?.minimalRowerType || null,
+          },
         }}
       />
     </div>

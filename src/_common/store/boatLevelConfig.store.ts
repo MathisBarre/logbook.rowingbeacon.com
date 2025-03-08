@@ -9,6 +9,7 @@ import {
   BoatTypeLevelConfig,
 } from "./boatLevelConfig.business";
 import { BoatTypeEnum } from "../types/boat.type";
+import { useStore } from "zustand";
 
 export interface IBoatLevelConfigStore {
   boatTypeLevelConfigs: BoatTypeLevelConfigs;
@@ -114,3 +115,5 @@ export const boatLevelConfigStoreCore = createStore(
     }
   )
 );
+
+export const useBoatLevelConfigStore = () => useStore(boatLevelConfigStoreCore);
