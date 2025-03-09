@@ -1,4 +1,3 @@
-import { ZustandSession } from "../store/sessions.store";
 import { forEnum } from "../utils/utils";
 import { generateId } from "../utils/ids.utils";
 
@@ -33,7 +32,7 @@ export const generateBoatId = () => {
 
 export const isBoatAvailable = (
   boat: Boat,
-  ongoingSessions: ZustandSession[]
+  ongoingSessions: { boat: { id: string } }[]
 ) => {
   return !ongoingSessions.some((session) => session.boat.id === boat.id);
 };
