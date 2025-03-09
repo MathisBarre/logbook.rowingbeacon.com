@@ -3,7 +3,7 @@ import {
   getAlreadyOnStartedSessionRowersId,
   StartedSession,
 } from "./StartedSession.business";
-import { Rower } from "../../_common/types/rower.type";
+import { Rower } from "../../_common/business/rower.rules";
 
 describe("getRowersAlreadyOnStartedSession", () => {
   it("should return empty array when no rowers are on session", () => {

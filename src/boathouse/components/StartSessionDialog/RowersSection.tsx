@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Label } from "../../../_common/components/Label";
 import { ReactSelect } from "../../../_common/components/ReactSelect";
-import { Rower } from "../../../_common/types/rower.type";
+import { Rower } from "../../../_common/business/rower.rules";
 import {
   areStringSimilar,
   simplifyString,

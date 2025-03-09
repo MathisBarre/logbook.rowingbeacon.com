@@ -5,7 +5,7 @@ import {
   getBoatTypeLevelConfig,
   whatShouldItDo,
 } from "../../../_common/store/boatLevelConfig.business";
-import { Route } from "../../../_common/types/route.type";
+import { Route } from "../../../_common/business/route.rules";
 import { toISODateFormat } from "../../../_common/utils/date.utils";
 import {
   asError,

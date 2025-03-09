@@ -1,5 +1,5 @@
 import { BoatTypeEnum } from "../business/boat.rules";
-import { Rower } from "../types/rower.type";
+import { Rower } from "../business/rower.rules";
 
 export const whatShouldItDo = (
   nbOfInvalidRowers: number,

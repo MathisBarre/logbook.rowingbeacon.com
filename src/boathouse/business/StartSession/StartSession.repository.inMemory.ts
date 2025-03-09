@@ -1,7 +1,7 @@
 import { generateSessionId } from "../../../_common/business/session.rules";
 import { Boat } from "../../../_common/business/boat.rules";
-import { Route } from "../../../_common/types/route.type";
-import { Rower } from "../../../_common/types/rower.type";
+import { Route } from "../../../_common/business/route.rules";
+import { Rower } from "../../../_common/business/rower.rules";
 import { ErrorWithCode } from "../../../_common/utils/error";
 import { StartedSession } from "../StartedSession.business";
 import { IStartSessionRepository } from "./StartSession.repository.interface";

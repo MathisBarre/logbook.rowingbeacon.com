@@ -23,7 +23,7 @@ import { ChartBarIcon } from "@heroicons/react/16/solid";
 import { RowerStats } from "./RowerStats";
 import { RowerStatsComparisons } from "./RowerStatsComparisons";
 import { UpdateRower } from "./UpdateRower";
-import { Rower } from "../../_common/types/rower.type";
+import { Rower } from "../../_common/business/rower.rules";
 import { getRowerTypeLabel } from "../../_common/business/rower.rules";
 import clsx from "clsx";
 import { BulkUpdateRower } from "./BulkUpdateRower";

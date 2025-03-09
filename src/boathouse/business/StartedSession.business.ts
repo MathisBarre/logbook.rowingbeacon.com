@@ -1,4 +1,4 @@
-import { Rower } from "../../_common/types/rower.type";
+import { Rower } from "../../_common/business/rower.rules";
 
 export interface StartedSession {
   id: string;

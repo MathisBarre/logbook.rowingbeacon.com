@@ -1,5 +1,5 @@
 import { Label } from "../../../_common/components/Label";
-import { Route } from "../../../_common/types/route.type";
+import { Route } from "../../../_common/business/route.rules";
 
 export const defaultRoute: Route = {
   id: "null",

@@ -3,7 +3,7 @@ import Button from "../../_common/components/Button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Rower } from "../../_common/types/rower.type";
+import { Rower } from "../../_common/business/rower.rules";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { toast } from "sonner";
 import {
