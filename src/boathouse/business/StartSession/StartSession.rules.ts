@@ -1,5 +1,6 @@
 import {
   Boat,
+  BoatTypeEnum,
   getBoatNumberOfRowers,
 } from "../../../_common/business/boat.rules";
 import { Rower } from "../../../_common/business/rower.rules";
@@ -71,4 +72,21 @@ export const whatShouldItDo = (
   }
 
   return whatToDo;
+};
+
+export const getNbOfMissingRowers = (
+  boatType: BoatTypeEnum | undefined,
+  nbOfRowers: number
+) => {
+  if (boatType === undefined) {
+    return 0;
+  }
+
+  const boatNumberOfRowers = getBoatNumberOfRowers(boatType);
+
+  if (boatNumberOfRowers === undefined) {
+    return 0;
+  }
+
+  return Math.max(boatNumberOfRowers - nbOfRowers, 0);
 };

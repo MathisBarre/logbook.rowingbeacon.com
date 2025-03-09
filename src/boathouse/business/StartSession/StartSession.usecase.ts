@@ -4,7 +4,7 @@ import {
   canRowerUseBoat,
   getBoatTypeLevelConfig,
 } from "../../../_common/store/boatLevelConfig.rules";
-import { whatShouldItDo } from "./StartSession.rules";
+import { getNbOfMissingRowers, whatShouldItDo } from "./StartSession.rules";
 import { Route } from "../../../_common/business/route.rules";
 import { toISODateFormat } from "../../../_common/utils/date.utils";
 import {
@@ -200,11 +200,7 @@ export class StartSessionUsecase {
       }
     }
 
-    // consider missing rowers as invalid
-    const boatNumberOfRowers = getBoatNumberOfRowers(boat.type);
-    const nbOfMissingRowers = boatNumberOfRowers
-      ? Math.max(boatNumberOfRowers - rowers.length, 0)
-      : 0;
+    const nbOfMissingRowers = getNbOfMissingRowers(boat.type, rowers.length);
     nbOfInvalidRowers += nbOfMissingRowers;
 
     const boatTypeLevelConfigs =
