@@ -7,11 +7,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useStore } from "zustand";
 import {
-  ageCategories,
-  AgeCategoryEnum,
   seriousnessCategories,
   SeriousnessCategoryEnum,
-} from "../../_common/store/boatLevelConfig.business";
+} from "../../_common/business/seriousness.rules";
+import { AGE_CATEGORIES } from "../../_common/business/ageCategory.rules";
+import { AgeCategoryEnum } from "../../_common/business/ageCategory.rules";
 
 const useBoatLevelSystemForm = ({
   defaultValues,
@@ -127,7 +127,7 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
         <Label className="flex flex-col gap-1">
           Catégorie de rameur minimale
           <select className="input" {...form.register("minimalRowerCategory")}>
-            {ageCategories.map((category) => (
+            {AGE_CATEGORIES.map((category) => (
               <option
                 key={category.category}
                 value={category.category || "null"}

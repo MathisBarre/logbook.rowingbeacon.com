@@ -1,9 +1,7 @@
 import { v4 } from "uuid";
 import { forEnum } from "../utils/utils";
-import {
-  SeriousnessCategoryEnum,
-  AgeCategoryEnum,
-} from "../store/boatLevelConfig.business";
+import { SeriousnessCategoryEnum } from "./seriousness.rules";
+import { AgeCategoryEnum } from "./ageCategory.rules";
 
 /**
  * ----- Typing -----

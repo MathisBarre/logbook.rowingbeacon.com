@@ -1,35 +1,62 @@
+import {
+  AgeCategoryEnum,
+  findAgeCategoryOrder,
+} from "../business/ageCategory.rules";
 import { BoatTypeEnum } from "../business/boat.rules";
 import { Rower } from "../business/rower.rules";
+import {
+  findSeriousnessCategoryOrder,
+  SeriousnessCategoryEnum,
+} from "../business/seriousness.rules";
 
-export const whatShouldItDo = (
-  nbOfInvalidRowers: number,
-  boatTypeLevelConfig: BoatTypeLevelConfig
-) => {
-  let whatToDo: "alert" | "block" | "nothing" = "nothing";
+/**
+ * ----- Typing -----
+ */
 
-  if (
-    boatTypeLevelConfig.alertFrom !== null &&
-    nbOfInvalidRowers >= boatTypeLevelConfig.alertFrom
-  ) {
-    whatToDo = "alert";
-  }
+export interface BoatTypeLevelConfig {
+  alertFrom: number | null;
+  blockFrom: number | null;
+}
 
-  if (
-    boatTypeLevelConfig.blockFrom !== null &&
-    nbOfInvalidRowers >= boatTypeLevelConfig.blockFrom
-  ) {
-    whatToDo = "block";
-  }
+export type BoatTypeLevelConfigs = Record<
+  Exclude<BoatTypeEnum, BoatTypeEnum.OTHER>,
+  BoatTypeLevelConfig
+>;
 
-  return whatToDo;
+export interface BoatLevelConfig {
+  boatId: string;
+  minimalRowerCategory: AgeCategoryEnum | null;
+  minimalRowerType: SeriousnessCategoryEnum | null;
+}
+
+/**
+ * ----- Constant -----
+ */
+
+export const DEFAULT_BOAT_TYPE_LEVEL_CONFIG: BoatTypeLevelConfig = {
+  alertFrom: 1,
+  blockFrom: null,
 };
+
+export const DEFAULT_BOAT_TYPE_LEVEL_CONFIGS: BoatTypeLevelConfigs = {
+  [BoatTypeEnum.ONE_ROWER_COXLESS]: DEFAULT_BOAT_TYPE_LEVEL_CONFIG,
+  [BoatTypeEnum.TWO_ROWERS_COXLESS]: DEFAULT_BOAT_TYPE_LEVEL_CONFIG,
+  [BoatTypeEnum.TWO_ROWERS_COXED]: DEFAULT_BOAT_TYPE_LEVEL_CONFIG,
+  [BoatTypeEnum.FOUR_ROWERS_COXLESS]: DEFAULT_BOAT_TYPE_LEVEL_CONFIG,
+  [BoatTypeEnum.FOUR_ROWERS_COXED]: DEFAULT_BOAT_TYPE_LEVEL_CONFIG,
+  [BoatTypeEnum.EIGHT_ROWERS_COXED]: DEFAULT_BOAT_TYPE_LEVEL_CONFIG,
+};
+
+/**
+ * ----- Utils -----
+ */
 
 export const getBoatTypeLevelConfig = (
   boatType: BoatTypeEnum | undefined,
   boatTypeLevelConfigs: BoatTypeLevelConfigs
 ): BoatTypeLevelConfig => {
   if (boatType === undefined) {
-    return defaultBoatTypeLevelConfig;
+    return DEFAULT_BOAT_TYPE_LEVEL_CONFIG;
   }
 
   if (boatType === BoatTypeEnum.OTHER) {
@@ -40,6 +67,10 @@ export const getBoatTypeLevelConfig = (
 
   return specificConfig;
 };
+
+/**
+ * ----- Business rules -----
+ */
 
 export const canRowerUseBoat = (
   boatLevelConfig: BoatLevelConfig,
@@ -57,137 +88,3 @@ export const canRowerUseBoat = (
     rowerTypeOrder >= minimalRowerTypeOrder
   );
 };
-
-export const findAgeCategoryOrder = (
-  ageCategory: AgeCategoryEnum | null | undefined
-) => {
-  return ageCategories.find((cat) => cat.category === ageCategory)?.order || 0;
-};
-
-export const findSeriousnessCategoryOrder = (
-  seriousnessCategory: SeriousnessCategoryEnum | null | undefined
-) => {
-  return (
-    seriousnessCategories.find((t) => t.type === seriousnessCategory)?.order ||
-    0
-  );
-};
-
-export const defaultBoatTypeLevelConfig: BoatTypeLevelConfig = {
-  alertFrom: 1,
-  blockFrom: null,
-};
-
-export interface BoatTypeLevelConfig {
-  alertFrom: number | null;
-  blockFrom: number | null;
-}
-
-export type BoatTypeLevelConfigs = Record<
-  Exclude<BoatTypeEnum, BoatTypeEnum.OTHER>,
-  BoatTypeLevelConfig
->;
-
-export const defaultBoatTypeLevelConfigs: BoatTypeLevelConfigs = {
-  [BoatTypeEnum.ONE_ROWER_COXLESS]: defaultBoatTypeLevelConfig,
-  [BoatTypeEnum.TWO_ROWERS_COXLESS]: defaultBoatTypeLevelConfig,
-  [BoatTypeEnum.TWO_ROWERS_COXED]: defaultBoatTypeLevelConfig,
-  [BoatTypeEnum.FOUR_ROWERS_COXLESS]: defaultBoatTypeLevelConfig,
-  [BoatTypeEnum.FOUR_ROWERS_COXED]: defaultBoatTypeLevelConfig,
-  [BoatTypeEnum.EIGHT_ROWERS_COXED]: defaultBoatTypeLevelConfig,
-};
-
-export enum SeriousnessCategoryEnum {
-  RECREATIONAL = "recreational",
-  COMPETITOR = "competitor",
-}
-
-export const getSeriousnessTypeTranslation = (
-  type: SeriousnessCategoryEnum | null | undefined
-) => {
-  return seriousnessCategories.find((t) => t.type === type)?.label || type;
-};
-
-export const seriousnessCategories = [
-  {
-    order: 0,
-    type: null,
-    label: null,
-  },
-  {
-    order: 1,
-    type: SeriousnessCategoryEnum.RECREATIONAL,
-    label: "Loisir",
-  },
-  {
-    order: 2,
-    type: SeriousnessCategoryEnum.COMPETITOR,
-    label: "Compétiteur",
-  },
-] as const;
-
-export enum AgeCategoryEnum {
-  J10 = "J10",
-  J12 = "J12",
-  J14 = "J14",
-  J16 = "J16",
-  J18 = "J18",
-  SENIOR = "Senior",
-}
-
-export const ageCategories = [
-  {
-    order: 0,
-    category: null,
-  },
-  {
-    order: 1,
-    category: AgeCategoryEnum.J10,
-  },
-  {
-    order: 2,
-    category: AgeCategoryEnum.J12,
-  },
-  {
-    order: 3,
-    category: AgeCategoryEnum.J14,
-  },
-  {
-    order: 4,
-    category: AgeCategoryEnum.J16,
-  },
-  {
-    order: 5,
-    category: AgeCategoryEnum.J18,
-  },
-  {
-    order: 7,
-    category: AgeCategoryEnum.SENIOR,
-  },
-] as const;
-
-export const sortByAgeCategoryOrder = (
-  a: AgeCategoryEnum | undefined,
-  b: AgeCategoryEnum | undefined
-) => {
-  const aOrder = findAgeCategoryOrder(a);
-  const bOrder = findAgeCategoryOrder(b);
-
-  return -(aOrder - bOrder);
-};
-
-export const sortByTypeOrder = (
-  a: SeriousnessCategoryEnum | undefined,
-  b: SeriousnessCategoryEnum | undefined
-) => {
-  const aOrder = findSeriousnessCategoryOrder(a);
-  const bOrder = findSeriousnessCategoryOrder(b);
-
-  return -(aOrder - bOrder);
-};
-
-export interface BoatLevelConfig {
-  boatId: string;
-  minimalRowerCategory: AgeCategoryEnum | null;
-  minimalRowerType: SeriousnessCategoryEnum | null;
-}

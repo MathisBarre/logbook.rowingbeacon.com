@@ -3,11 +3,11 @@ import { persist } from "zustand/middleware";
 import {
   BoatLevelConfig,
   BoatTypeLevelConfigs,
-  defaultBoatTypeLevelConfigs,
-  AgeCategoryEnum,
-  SeriousnessCategoryEnum,
+  DEFAULT_BOAT_TYPE_LEVEL_CONFIGS,
   BoatTypeLevelConfig,
 } from "./boatLevelConfig.business";
+import { SeriousnessCategoryEnum } from "../business/seriousness.rules";
+import { AgeCategoryEnum } from "../business/ageCategory.rules";
 import { BoatTypeEnum } from "../business/boat.rules";
 import { useStore } from "zustand";
 
@@ -34,7 +34,7 @@ export interface IBoatLevelConfigStore {
 export const boatLevelConfigStoreCore = createStore(
   persist<IBoatLevelConfigStore>(
     (set, get) => ({
-      boatTypeLevelConfigs: defaultBoatTypeLevelConfigs,
+      boatTypeLevelConfigs: DEFAULT_BOAT_TYPE_LEVEL_CONFIGS,
       boatLevelConfigs: [],
       getBoatTypeLevelConfigs: () => {
         return get().boatTypeLevelConfigs;
@@ -105,7 +105,7 @@ export const boatLevelConfigStoreCore = createStore(
       },
       reset() {
         set({
-          boatTypeLevelConfigs: defaultBoatTypeLevelConfigs,
+          boatTypeLevelConfigs: DEFAULT_BOAT_TYPE_LEVEL_CONFIGS,
           boatLevelConfigs: [],
         });
       },

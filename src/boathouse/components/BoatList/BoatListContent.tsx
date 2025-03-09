@@ -19,11 +19,11 @@ import { useStore } from "zustand";
 import { boatLevelConfigStoreCore } from "../../../_common/store/boatLevelConfig.store";
 import {
   getSeriousnessTypeTranslation,
-  ageCategories,
-  AgeCategoryEnum,
   seriousnessCategories,
   SeriousnessCategoryEnum,
-} from "../../../_common/store/boatLevelConfig.business";
+} from "../../../_common/business/seriousness.rules";
+import { AGE_CATEGORIES } from "../../../_common/business/ageCategory.rules";
+import { AgeCategoryEnum } from "../../../_common/business/ageCategory.rules";
 
 interface BoatListContentProps {
   search: string;
@@ -269,7 +269,7 @@ const getLevelConfigFromTo = (
     return null;
   }
 
-  const lastRowerCategory = ageCategories.reduce((acc, curr) => {
+  const lastRowerCategory = AGE_CATEGORIES.reduce((acc, curr) => {
     return curr.order > acc.order ? curr : acc;
   }).category;
 

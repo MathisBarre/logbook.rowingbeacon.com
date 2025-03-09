@@ -7,11 +7,11 @@ import { Rower } from "../../_common/business/rower.rules";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { toast } from "sonner";
 import {
-  ageCategories,
-  AgeCategoryEnum,
   seriousnessCategories,
   SeriousnessCategoryEnum,
-} from "../../_common/store/boatLevelConfig.business";
+} from "../../_common/business/seriousness.rules";
+import { AGE_CATEGORIES } from "../../_common/business/ageCategory.rules";
+import { AgeCategoryEnum } from "../../_common/business/ageCategory.rules";
 
 const useUpdateRowerForm = ({
   defaultValues,
@@ -108,7 +108,7 @@ export const UpdateRower = ({
         <Label className="flex flex-col gap-1">
           Catégorie
           <select className="input" {...form.register("category")}>
-            {ageCategories.map((category) => (
+            {AGE_CATEGORIES.map((category) => (
               <option
                 key={category.category}
                 value={category.category || "null"}

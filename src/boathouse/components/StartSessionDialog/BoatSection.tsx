@@ -9,10 +9,10 @@ import { useSessionsStore } from "../../../_common/store/sessions.store";
 import { Boat } from "../../../_common/business/boat.rules";
 import { boatLevelConfigStoreCore } from "../../../_common/store/boatLevelConfig.store";
 import {
-  AgeCategoryEnum,
   getSeriousnessTypeTranslation,
   SeriousnessCategoryEnum,
-} from "../../../_common/store/boatLevelConfig.business";
+} from "../../../_common/business/seriousness.rules";
+import { AgeCategoryEnum } from "../../../_common/business/ageCategory.rules";
 import { useMemo } from "react";
 
 interface BoatsSectionProps {

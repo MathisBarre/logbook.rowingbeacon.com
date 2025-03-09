@@ -6,7 +6,7 @@ import {
   areStringSimilar,
   simplifyString,
 } from "../../../_common/utils/string.utils";
-import { getSeriousnessTypeTranslation } from "../../../_common/store/boatLevelConfig.business";
+import { getSeriousnessTypeTranslation } from "../../../_common/business/seriousness.rules";
 import { components } from "react-select";
 
 interface RowersSectionProps {

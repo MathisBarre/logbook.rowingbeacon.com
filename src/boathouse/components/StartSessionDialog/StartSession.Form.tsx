@@ -16,15 +16,15 @@ import { useStartSession } from "./startSession.hook";
 import { CircleAlertIcon } from "lucide-react";
 import { replaceLastOccurrence } from "../../../_common/utils/string.utils";
 import { addMinutes } from "../../../_common/utils/date.utils";
+import { getBoatTypeLevelConfig } from "../../../_common/store/boatLevelConfig.business";
 import {
-  ageCategories,
-  AgeCategoryEnum,
-  findAgeCategoryOrder,
-  findSeriousnessCategoryOrder,
-  getBoatTypeLevelConfig,
   seriousnessCategories,
   SeriousnessCategoryEnum,
-} from "../../../_common/store/boatLevelConfig.business";
+} from "../../../_common/business/seriousness.rules";
+import { findSeriousnessCategoryOrder } from "../../../_common/business/seriousness.rules";
+import { findAgeCategoryOrder } from "../../../_common/business/ageCategory.rules";
+import { AGE_CATEGORIES } from "../../../_common/business/ageCategory.rules";
+import { AgeCategoryEnum } from "../../../_common/business/ageCategory.rules";
 import { LevelVisualizer } from "./LevelVisualizer";
 import { useBoatLevelConfigStore } from "../../../_common/store/boatLevelConfig.store";
 import { BoatTypeEnum } from "../../../_common/business/boat.rules";
@@ -322,7 +322,7 @@ export const StartSessionForm = ({
 
                 <LevelVisualizer
                   wrapperClassnames="flex-[8]"
-                  levels={ageCategories.map((a) => ({
+                  levels={AGE_CATEGORIES.map((a) => ({
                     label: String(a.category || "Aucun"),
                     order: a.order,
                   }))}

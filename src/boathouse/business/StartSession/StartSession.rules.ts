@@ -3,6 +3,7 @@ import {
   getBoatNumberOfRowers,
 } from "../../../_common/business/boat.rules";
 import { Rower } from "../../../_common/business/rower.rules";
+import { BoatTypeLevelConfig } from "../../../_common/store/boatLevelConfig.business";
 
 export const checkIfNotSameRowersAsSeatsInBoat = (
   nbOfRowers: number,
@@ -48,4 +49,26 @@ export const getAlreadyOnStartedSessionRowersId = (
       startedSession.rowers.some((rower) => rower.id === rowerId)
     )
   );
+};
+export const whatShouldItDo = (
+  nbOfInvalidRowers: number,
+  boatTypeLevelConfig: BoatTypeLevelConfig
+) => {
+  let whatToDo: "alert" | "block" | "nothing" = "nothing";
+
+  if (
+    boatTypeLevelConfig.alertFrom !== null &&
+    nbOfInvalidRowers >= boatTypeLevelConfig.alertFrom
+  ) {
+    whatToDo = "alert";
+  }
+
+  if (
+    boatTypeLevelConfig.blockFrom !== null &&
+    nbOfInvalidRowers >= boatTypeLevelConfig.blockFrom
+  ) {
+    whatToDo = "block";
+  }
+
+  return whatToDo;
 };

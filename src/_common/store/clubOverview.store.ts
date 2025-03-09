@@ -7,10 +7,8 @@ import {
 } from "./clubOverview.store.functions";
 import { BoatTypeEnum } from "../business/boat.rules";
 import { generateBoatId } from "../business/boat.rules";
-import {
-  AgeCategoryEnum,
-  SeriousnessCategoryEnum,
-} from "./boatLevelConfig.business";
+import { SeriousnessCategoryEnum } from "../business/seriousness.rules";
+import { AgeCategoryEnum } from "../business/ageCategory.rules";
 
 export interface ClubOverviewState {
   club: {

@@ -27,10 +27,8 @@ import { Rower } from "../../_common/business/rower.rules";
 import { getRowerTypeLabel } from "../../_common/business/rower.rules";
 import clsx from "clsx";
 import { BulkUpdateRower } from "./BulkUpdateRower";
-import {
-  sortByAgeCategoryOrder,
-  sortByTypeOrder,
-} from "../../_common/store/boatLevelConfig.business";
+import { sortByTypeOrder } from "../../_common/business/seriousness.rules";
+import { sortByAgeCategoryOrder } from "../../_common/business/ageCategory.rules";
 
 export const RowersCrud = () => {
   const store = useClubOverviewStore();
