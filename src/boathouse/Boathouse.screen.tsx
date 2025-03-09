@@ -9,7 +9,7 @@ import { BoatsList } from "./components/BoatList/BoatList";
 import { StartSessionDialog } from "./components/StartSessionDialog/StartSession.Dialog";
 import { StopSessionDialog } from "./components/StopSessionDialog/StopSession.Dialog";
 import { useClubOverviewStore } from "../_common/store/clubOverview.store";
-import { Boat } from "../_common/types/boat.type";
+import { Boat } from "../_common/business/boat.rules";
 
 import { windowAlert } from "../_common/utils/window.utils";
 import { WarehouseIcon, WavesIcon } from "lucide-react";

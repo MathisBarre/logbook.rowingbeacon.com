@@ -5,7 +5,7 @@ import {
   updateBoatNameFn,
   updateBoatTypeFn,
 } from "./clubOverview.store.functions";
-import { BoatTypeEnum } from "../types/boat.type";
+import { BoatTypeEnum } from "../business/boat.rules";
 import { generateBoatId } from "../business/boat.rules";
 import {
   AgeCategoryEnum,

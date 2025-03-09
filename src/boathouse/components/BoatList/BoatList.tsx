@@ -1,7 +1,7 @@
 import { ReactNode, useState } from "react";
 import { BoatListWrapper } from "./BoatListWrapper";
 import { BoatListContent } from "./BoatListContent";
-import { Boat } from "../../../_common/types/boat.type";
+import { Boat } from "../../../_common/business/boat.rules";
 
 interface BoatListProps {
   boats: Boat[];

@@ -1,4 +1,4 @@
-import { BoatTypeEnum } from "../types/boat.type";
+import { BoatTypeEnum } from "../business/boat.rules";
 import { ClubOverviewState } from "./clubOverview.store";
 
 export const updateBoatTypeFn = (

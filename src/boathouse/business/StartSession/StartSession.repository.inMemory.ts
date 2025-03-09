@@ -1,5 +1,5 @@
 import { generateSessionId } from "../../../_common/business/session.rules";
-import { Boat } from "../../../_common/types/boat.type";
+import { Boat } from "../../../_common/business/boat.rules";
 import { Route } from "../../../_common/types/route.type";
 import { Rower } from "../../../_common/types/rower.type";
 import { ErrorWithCode } from "../../../_common/utils/error";

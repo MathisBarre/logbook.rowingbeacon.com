@@ -1,7 +1,31 @@
 import { ZustandSession } from "../store/sessions.store";
-import { Boat, BoatTypeEnum } from "../types/boat.type";
 import { forEnum } from "../utils/utils";
 import { generateId } from "../utils/ids.utils";
+
+/**
+ * ----- Typing -----
+ */
+
+export enum BoatTypeEnum {
+  "ONE_ROWER_COXLESS" = "ONE_ROWER_COXLESS",
+  "TWO_ROWERS_COXLESS" = "TWO_ROWERS_COXLESS",
+  "TWO_ROWERS_COXED" = "TWO_ROWERS_COXED",
+  "FOUR_ROWERS_COXLESS" = "FOUR_ROWERS_COXLESS",
+  "FOUR_ROWERS_COXED" = "FOUR_ROWERS_COXED",
+  "EIGHT_ROWERS_COXED" = "EIGHT_ROWERS_COXED",
+  "OTHER" = "OTHER",
+}
+
+export interface Boat {
+  id: string;
+  name: string;
+  isInMaintenance?: boolean;
+  type?: BoatTypeEnum;
+}
+
+/**
+ * ----- Business rules -----
+ */
 
 export const generateBoatId = () => {
   return generateId("boat");
@@ -19,6 +43,7 @@ export const getBoatsByType = (boats: Boat[], types: string[]) => {
     if (boat.type === undefined) {
       return false;
     }
+
     return types.includes(boat.type);
   });
 };
@@ -50,7 +75,7 @@ export const sortBoatsByTypeAndName = (boats: Boat[]) => {
   });
 };
 
-export const fromBoatTypeToNbOfRowers = (type?: BoatTypeEnum) => {
+export const getBoatNumberOfRowers = (type?: BoatTypeEnum) => {
   if (!type) {
     return undefined;
   }
@@ -65,3 +90,19 @@ export const fromBoatTypeToNbOfRowers = (type?: BoatTypeEnum) => {
     OTHER: () => undefined,
   });
 };
+
+export const getTypeLabel = (type: BoatTypeEnum | undefined) => {
+  return (
+    boathTypeWithLabel.find((t) => t.type === type)?.label || "LABEL_NOT_FOUND"
+  );
+};
+
+export const boathTypeWithLabel = [
+  { type: BoatTypeEnum.ONE_ROWER_COXLESS, label: "1x" },
+  { type: BoatTypeEnum.TWO_ROWERS_COXLESS, label: "2x / 2-" },
+  { type: BoatTypeEnum.TWO_ROWERS_COXED, label: "2+" },
+  { type: BoatTypeEnum.FOUR_ROWERS_COXLESS, label: "4x / 4-" },
+  { type: BoatTypeEnum.FOUR_ROWERS_COXED, label: "4+" },
+  { type: BoatTypeEnum.EIGHT_ROWERS_COXED, label: "8x / 8+" },
+  { type: BoatTypeEnum.OTHER, label: "Autre" },
+];

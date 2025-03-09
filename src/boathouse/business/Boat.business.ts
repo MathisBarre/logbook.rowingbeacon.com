@@ -1,11 +1,11 @@
-import { fromBoatTypeToNbOfRowers } from "../../_common/business/boat.rules";
-import { Boat } from "../../_common/types/boat.type";
+import { getBoatNumberOfRowers } from "../../_common/business/boat.rules";
+import { Boat } from "../../_common/business/boat.rules";
 
 export const checkIfNotSameRowersAsSeatsInBoat = (
   nbOfRowers: number,
   boat: Boat
 ) => {
-  const rowersQuantity = fromBoatTypeToNbOfRowers(boat.type);
+  const rowersQuantity = getBoatNumberOfRowers(boat.type);
 
   if (rowersQuantity === undefined) {
     return false;

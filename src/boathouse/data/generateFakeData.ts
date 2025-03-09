@@ -4,8 +4,8 @@ import {
 } from "../business/StopSession/StopSession.usecase";
 import { generateIncidenId } from "../../_common/business/incident.rules";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
-import { fromBoatTypeToNbOfRowers } from "../../_common/business/boat.rules";
-import { Boat } from "../../_common/types/boat.type";
+import { getBoatNumberOfRowers } from "../../_common/business/boat.rules";
+import { Boat } from "../../_common/business/boat.rules";
 import { generateSessionId } from "../../_common/business/session.rules";
 
 export const useGenerateFakeData = () => {
@@ -119,7 +119,7 @@ function createSession(
   const boat = boats[Math.floor(Math.random() * boats.length)];
   const route = routes[Math.floor(Math.random() * routes.length)];
 
-  const nbOfRowers = fromBoatTypeToNbOfRowers(boat.type);
+  const nbOfRowers = getBoatNumberOfRowers(boat.type);
 
   const selectedRowers = rowers
     .sort(() => 0.5 - Math.random())

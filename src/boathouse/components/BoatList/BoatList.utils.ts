@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react";
-import { Boat, BoatTypeEnum } from "../../../_common/types/boat.type";
+import { Boat, BoatTypeEnum } from "../../../_common/business/boat.rules";
 import {
   getBoatsByType,
   getTypelessBoats,

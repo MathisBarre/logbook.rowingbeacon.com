@@ -1,6 +1,6 @@
 import { describe, it } from "vitest";
 import { updateBoatTypeFn } from "./clubOverview.store.functions";
-import { BoatTypeEnum } from "../types/boat.type";
+import { BoatTypeEnum } from "../business/boat.rules";
 
 describe.concurrent("clubOverview.store.functions", () => {
   it("updateBoatTypeFn", ({ expect }) => {

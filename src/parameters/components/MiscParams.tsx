@@ -11,8 +11,8 @@ import { getDatabase } from "../../_common/database/database";
 import { DBSessions } from "../../_common/database/schema";
 import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
 import useIncidentStore from "../../_common/store/incident.store";
-import { BoatTypeEnum, getTypeLabel } from "../../_common/types/boat.type";
-import { fromBoatTypeToNbOfRowers } from "../../_common/business/boat.rules";
+import { BoatTypeEnum, getTypeLabel } from "../../_common/business/boat.rules";
+import { getBoatNumberOfRowers } from "../../_common/business/boat.rules";
 import { useStore } from "zustand";
 import { boatLevelConfigStoreCore as _boatLevelConfigStore } from "../../_common/store/boatLevelConfig.store";
 
@@ -81,7 +81,7 @@ export const MiscParams = () => {
               </thead>
               <tbody>
                 {Object.entries(boatLevelConfig).map(([type, config]) => {
-                  const nbOfRowers = fromBoatTypeToNbOfRowers(
+                  const nbOfRowers = getBoatNumberOfRowers(
                     type as BoatTypeEnum
                   );
 

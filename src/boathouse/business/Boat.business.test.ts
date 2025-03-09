@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { checkIfNotSameRowersAsSeatsInBoat } from "./Boat.business";
-import { Boat, BoatTypeEnum } from "../../_common/types/boat.type";
+import { Boat, BoatTypeEnum } from "../../_common/business/boat.rules";
 
 describe("Boat Business Logic", () => {
   const BOAT_TYPE = BoatTypeEnum.FOUR_ROWERS_COXLESS;

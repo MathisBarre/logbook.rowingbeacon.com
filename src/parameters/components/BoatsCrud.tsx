@@ -14,7 +14,7 @@ import {
   boathTypeWithLabel,
   BoatTypeEnum,
   getTypeLabel,
-} from "../../_common/types/boat.type";
+} from "../../_common/business/boat.rules";
 import { sortBoatsByTypeAndName } from "../../_common/business/boat.rules";
 import { cn } from "../../_common/utils/utils";
 import {

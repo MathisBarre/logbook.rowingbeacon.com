@@ -5,7 +5,7 @@ import { createInMemoryStartSessionRepository } from "./StartSession.repository.
 import { StartSessionUsecase } from "./StartSession.usecase";
 import { generateIds } from "../../../_common/utils/ids.utils";
 import { asError, asOk, TechnicalError } from "../../../_common/utils/error";
-import { BoatTypeEnum } from "../../../_common/types/boat.type";
+import { BoatTypeEnum } from "../../../_common/business/boat.rules";
 import { boatLevelConfigStoreCore } from "../../../_common/store/boatLevelConfig.store";
 
 describe("StartSession", () => {

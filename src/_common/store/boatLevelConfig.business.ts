@@ -1,4 +1,4 @@
-import { BoatTypeEnum } from "../types/boat.type";
+import { BoatTypeEnum } from "../business/boat.rules";
 import { Rower } from "../types/rower.type";
 
 export const whatShouldItDo = (

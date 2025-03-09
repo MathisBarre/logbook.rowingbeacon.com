@@ -14,7 +14,7 @@ import { generateRowerId } from "../_common/business/rower.rules";
 import { generateRoutesId } from "../_common/business/route.rules";
 import { logStr } from "../_common/utils/utils";
 import { windowAlert } from "../_common/utils/window.utils";
-import { BoatTypeEnum } from "../_common/types/boat.type";
+import { BoatTypeEnum } from "../_common/business/boat.rules";
 import { hashPassword } from "../_common/utils/password";
 import { useGenerateFakeData } from "../boathouse/data/generateFakeData";
 import { useState } from "react";

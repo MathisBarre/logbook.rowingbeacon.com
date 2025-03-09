@@ -1,4 +1,4 @@
-import { fromBoatTypeToNbOfRowers } from "../../../_common/business/boat.rules";
+import { getBoatNumberOfRowers } from "../../../_common/business/boat.rules";
 import { IBoatLevelConfigStore } from "../../../_common/store/boatLevelConfig.store";
 import {
   canRowerUseBoat,
@@ -108,7 +108,7 @@ export class StartSessionUsecase {
         code: "BAD_AMOUNT_OF_ROWERS",
         details: {
           nbOfRowers,
-          boatRowersQuantity: fromBoatTypeToNbOfRowers(boat.type),
+          boatRowersQuantity: getBoatNumberOfRowers(boat.type),
           boatName: boat.name,
         },
       });

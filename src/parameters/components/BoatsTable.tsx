@@ -2,7 +2,8 @@ import {
   AgeCategoryEnum,
   SeriousnessCategoryEnum,
 } from "../../_common/store/boatLevelConfig.business";
-import { BoatTypeEnum, getBoatTypeLabel } from "../../_common/types/boat.type";
+import { getBoatTypeLabel } from "../../_common/types/boat.type";
+import { BoatTypeEnum } from "../../_common/business/boat.rules";
 import {
   createColumnHelper,
   flexRender,

@@ -27,8 +27,8 @@ import {
 } from "../../../_common/store/boatLevelConfig.business";
 import { LevelVisualizer } from "./LevelVisualizer";
 import { useBoatLevelConfigStore } from "../../../_common/store/boatLevelConfig.store";
-import { BoatTypeEnum } from "../../../_common/types/boat.type";
-import { fromBoatTypeToNbOfRowers } from "../../../_common/business/boat.rules";
+import { BoatTypeEnum } from "../../../_common/business/boat.rules";
+import { getBoatNumberOfRowers } from "../../../_common/business/boat.rules";
 
 const StartSessionFormSchema = z.object({
   boat: z.object({
@@ -139,7 +139,7 @@ export const StartSessionForm = ({
     selectedBoat.type || BoatTypeEnum.OTHER,
     boatTypeLevelConfigs
   ).blockFrom;
-  const numberOfRowers = fromBoatTypeToNbOfRowers(selectedBoat.type);
+  const numberOfRowers = getBoatNumberOfRowers(selectedBoat.type);
   const minimumValidRower =
     numberOfRowers === undefined || blockFromXRowers === null
       ? 0

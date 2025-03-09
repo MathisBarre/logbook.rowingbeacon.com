@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import { memo } from "react";
-import { Boat } from "../../../_common/types/boat.type";
+import { Boat } from "../../../_common/business/boat.rules";
 import { useSearchInBoats } from "./BoatList.utils";
 import {
   useSessionsStore,

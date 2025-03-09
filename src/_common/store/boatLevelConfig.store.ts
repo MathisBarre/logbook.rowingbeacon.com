@@ -8,7 +8,7 @@ import {
   SeriousnessCategoryEnum,
   BoatTypeLevelConfig,
 } from "./boatLevelConfig.business";
-import { BoatTypeEnum } from "../types/boat.type";
+import { BoatTypeEnum } from "../business/boat.rules";
 import { useStore } from "zustand";
 
 export interface IBoatLevelConfigStore {

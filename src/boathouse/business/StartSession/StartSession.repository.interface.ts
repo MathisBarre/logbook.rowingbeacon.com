@@ -1,4 +1,4 @@
-import { Boat } from "../../../_common/types/boat.type";
+import { Boat } from "../../../_common/business/boat.rules";
 import { Route } from "../../../_common/types/route.type";
 import { Rower } from "../../../_common/types/rower.type";
 import { StartedSession } from "../StartedSession.business";
