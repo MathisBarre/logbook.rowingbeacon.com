@@ -3,7 +3,7 @@ import {
   getBoatNumberOfRowers,
 } from "../../../_common/business/boat.rules";
 import { Rower } from "../../../_common/business/rower.rules";
-import { BoatTypeLevelConfig } from "../../../_common/store/boatLevelConfig.business";
+import { BoatTypeLevelConfig } from "../../../_common/store/boatLevelConfig.rules";
 
 export const checkIfNotSameRowersAsSeatsInBoat = (
   nbOfRowers: number,

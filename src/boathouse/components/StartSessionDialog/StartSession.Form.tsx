@@ -19,7 +19,7 @@ import { addMinutes } from "../../../_common/utils/date.utils";
 import {
   getBoatTypeLevelConfig,
   getMinimumValidRowersNeeded,
-} from "../../../_common/store/boatLevelConfig.business";
+} from "../../../_common/store/boatLevelConfig.rules";
 import {
   seriousnessCategories,
   SeriousnessCategoryEnum,

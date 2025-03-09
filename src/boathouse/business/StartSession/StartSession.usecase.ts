@@ -3,7 +3,7 @@ import { IBoatLevelConfigStore } from "../../../_common/store/boatLevelConfig.st
 import {
   canRowerUseBoat,
   getBoatTypeLevelConfig,
-} from "../../../_common/store/boatLevelConfig.business";
+} from "../../../_common/store/boatLevelConfig.rules";
 import { whatShouldItDo } from "./StartSession.rules";
 import { Route } from "../../../_common/business/route.rules";
 import { toISODateFormat } from "../../../_common/utils/date.utils";

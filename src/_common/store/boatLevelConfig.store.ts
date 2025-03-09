@@ -5,7 +5,7 @@ import {
   BoatTypeLevelConfigs,
   DEFAULT_BOAT_TYPE_LEVEL_CONFIGS,
   BoatTypeLevelConfig,
-} from "./boatLevelConfig.business";
+} from "./boatLevelConfig.rules";
 import { SeriousnessCategoryEnum } from "../business/seriousness.rules";
 import { AgeCategoryEnum } from "../business/ageCategory.rules";
 import { BoatTypeEnum } from "../business/boat.rules";
