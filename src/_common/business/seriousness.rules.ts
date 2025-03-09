@@ -13,7 +13,7 @@ export enum SeriousnessCategoryEnum {
 
 export const getSeriousnessTypeTranslation = (
   type: SeriousnessCategoryEnum | null | undefined
-) => {
+): string => {
   return seriousnessCategories.find((t) => t.type === type)?.label || type;
 };
 

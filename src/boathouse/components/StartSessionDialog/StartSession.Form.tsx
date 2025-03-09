@@ -303,8 +303,9 @@ export const StartSessionForm = ({
               />
             </div>
 
-            <div className="flex-1 flex flex-col gap-1">
-              <div className="flex gap-2">
+            {(selectedBoat.ageCategory !== null ||
+              selectedBoat.seriousnessCategory !== null) && (
+              <div className="flex gap-2 flex-1">
                 <LevelVisualizer
                   wrapperClassnames="flex-[4]"
                   levels={seriousnessCategories.map((s) => ({
@@ -327,7 +328,7 @@ export const StartSessionForm = ({
                   )}
                 />
               </div>
-            </div>
+            )}
           </div>
 
           <div>
@@ -346,8 +347,7 @@ export const StartSessionForm = ({
             {minimumValidRower > 0 && (
               <p className="text-xs text-gray-500 mt-1">
                 Il est nécessaire de sélectionner au moins {minimumValidRower}{" "}
-                rameur(s) ayant le niveau requis pour ce bateau ou des niveaux
-                supérieurs.
+                rameur(s) ayant au moins les niveaux requis pour ce bateau.
               </p>
             )}
           </div>

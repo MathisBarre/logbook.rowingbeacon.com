@@ -7,7 +7,7 @@ import {
   ZustandSession,
 } from "../../../_common/store/sessions.store";
 import { useAdminEditModeSystem } from "../../../_common/store/adminEditMode.system";
-import { cn } from "../../../_common/utils/utils";
+import { cn, forEnum } from "../../../_common/utils/utils";
 
 import {
   formatDate,
@@ -17,11 +17,7 @@ import {
 } from "../../../_common/utils/date.utils";
 import { useStore } from "zustand";
 import { boatLevelConfigStoreCore } from "../../../_common/store/boatLevelConfig.store";
-import {
-  getSeriousnessTypeTranslation,
-  seriousnessCategories,
-  SeriousnessCategoryEnum,
-} from "../../../_common/business/seriousness.rules";
+import { SeriousnessCategoryEnum } from "../../../_common/business/seriousness.rules";
 import { AGE_CATEGORIES } from "../../../_common/business/ageCategory.rules";
 import { AgeCategoryEnum } from "../../../_common/business/ageCategory.rules";
 
@@ -242,24 +238,17 @@ const UnusuableBoatRow = memo(({ boat }: { boat: Boat }) => {
   );
 });
 
-const getTypeFromTo = (
-  minimalType: SeriousnessCategoryEnum | null | undefined
+const getSeriousnessLabel = (
+  seriousnessCategory: SeriousnessCategoryEnum | null | undefined
 ) => {
-  if (!minimalType) {
-    return null;
+  if (!seriousnessCategory) {
+    return;
   }
 
-  const lastRowerType = seriousnessCategories.reduce((acc, curr) => {
-    return curr.order > acc.order ? curr : acc;
-  }).type;
-
-  if (minimalType === lastRowerType) {
-    return getSeriousnessTypeTranslation(minimalType);
-  }
-
-  return `${getSeriousnessTypeTranslation(
-    minimalType
-  )} à ${getSeriousnessTypeTranslation(lastRowerType)}`;
+  return forEnum(seriousnessCategory, {
+    competitor: () => "Bateau de compétition",
+    recreational: () => "Bateau loisir",
+  });
 };
 
 const getLevelConfigFromTo = (
@@ -277,7 +266,7 @@ const getLevelConfigFromTo = (
     return minimalLevelConfig;
   }
 
-  return `${minimalLevelConfig} à ${lastRowerCategory}`;
+  return `À partir de ${minimalLevelConfig}`;
 };
 
 const BoatRowDefault = memo(
@@ -291,7 +280,9 @@ const BoatRowDefault = memo(
     const boatLevelConfigStore = useStore(boatLevelConfigStoreCore);
     const boatLevelConfig = boatLevelConfigStore.getBoatLevelConfig(boat.id);
 
-    const boatTypeFromTo = getTypeFromTo(boatLevelConfig?.minimalRowerType);
+    const boatTypeFromTo = getSeriousnessLabel(
+      boatLevelConfig?.minimalRowerType
+    );
     const boatLevelConfigFromTo = getLevelConfigFromTo(
       boatLevelConfig?.minimalRowerCategory
     );
@@ -306,13 +297,13 @@ const BoatRowDefault = memo(
 
           <div className="flex gap-1 items-center">
             {boatTypeFromTo && (
-              <p className="bg-rose-50 border border-rose-300 inline-block px-2 py-1 rounded-full text-xs">
+              <p className="bg-steel-blue-50 border border-steel-blue-200 inline-block px-2 py-1 rounded-full text-xs">
                 {boatTypeFromTo}
               </p>
             )}
 
             {boatLevelConfigFromTo && (
-              <p className="bg-purple-50 border border-purple-300 inline-block px-2 py-1 rounded-full text-xs">
+              <p className="bg-steel-blue-50 border border-steel-blue-200 inline-block px-2 py-1 rounded-full text-xs">
                 {boatLevelConfigFromTo}
               </p>
             )}
