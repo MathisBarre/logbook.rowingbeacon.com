@@ -200,6 +200,13 @@ export class StartSessionUsecase {
       }
     }
 
+    // consider missing rowers as invalid
+    const boatNumberOfRowers = getBoatNumberOfRowers(boat.type);
+    const nbOfMissingRowers = boatNumberOfRowers
+      ? Math.max(boatNumberOfRowers - rowers.length, 0)
+      : 0;
+    nbOfInvalidRowers += nbOfMissingRowers;
+
     const boatTypeLevelConfigs =
       this.boatLevelConfigStore.getBoatTypeLevelConfigs();
     const boatTypeMinimalCorrectRowerConfig = getBoatTypeLevelConfig(
