@@ -4,7 +4,7 @@ import { useAdminShortcut } from "./_common/utils/adminShortcut";
 import { forEnum } from "./_common/utils/utils";
 import BoathouseScreen from "./boathouse/Boathouse.screen";
 import { LogbookScreen } from "./logbook/Logbook.screen";
-import { Onboarding } from "./onboarding/Onboarding";
+import { OnboardingScreen } from "./onboarding/Onboarding.screen";
 import { useOnboardingStore } from "./onboarding/onboarding.store";
 import { ParametersScreen } from "./parameters/Parameters.screen";
 
@@ -21,7 +21,7 @@ export function Router() {
   });
 
   if (!isOnboardingDone) {
-    return <Onboarding setIsOnboardingDone={setIsOnboardingDone} />;
+    return <OnboardingScreen setIsOnboardingDone={setIsOnboardingDone} />;
   }
 
   return (

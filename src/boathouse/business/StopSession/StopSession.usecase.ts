@@ -15,7 +15,7 @@ import {
 } from "../../../_common/database/schema";
 import { toast } from "sonner";
 
-interface ISessionStore {
+interface ISessionRepository {
   getOngoingSession(sessionId: string):
     | {
         id: string;
@@ -66,7 +66,7 @@ interface IIncidentStore {
 
 class StopSession {
   constructor(
-    private readonly sessionStore: ISessionStore,
+    private readonly sessionStore: ISessionRepository,
     private readonly sessionDatabaseRepository: ISessionDatabaseRepository,
     private readonly incidentStore: IIncidentStore
   ) {}

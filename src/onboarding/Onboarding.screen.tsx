@@ -28,7 +28,7 @@ const OnboardingFormSchema = z.object({
 
 type OnboardingFormValues = z.infer<typeof OnboardingFormSchema>;
 
-export const Onboarding = ({
+export const OnboardingScreen = ({
   setIsOnboardingDone,
 }: {
   setIsOnboardingDone: (isOnboardingDone: boolean) => void;
