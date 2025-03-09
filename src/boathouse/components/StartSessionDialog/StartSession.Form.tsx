@@ -21,16 +21,20 @@ import {
   AgeCategoryEnum,
   findAgeCategoryOrder,
   findSeriousnessCategoryOrder,
+  getBoatTypeLevelConfig,
   seriousnessCategories,
   SeriousnessCategoryEnum,
 } from "../../../_common/store/boatLevelConfig.business";
 import { LevelVisualizer } from "./LevelVisualizer";
+import { useBoatLevelConfigStore } from "../../../_common/store/boatLevelConfig.store";
+import { BoatTypeEnum } from "../../../_common/types/boat.type";
+import { fromBoatTypeToNbOfRowers } from "../../../_common/business/boat.rules";
 
 const StartSessionFormSchema = z.object({
   boat: z.object({
     id: z.string(),
     name: z.string(),
-    type: z.string().optional(),
+    type: z.nativeEnum(BoatTypeEnum),
     seriousnessCategory: z.nativeEnum(SeriousnessCategoryEnum).nullable(),
     ageCategory: z.nativeEnum(AgeCategoryEnum).nullable(),
   }),
@@ -71,6 +75,7 @@ interface StartSessionFormProps {
     boats: {
       id: string;
       name: string;
+      type: BoatTypeEnum;
       seriousnessCategory: SeriousnessCategoryEnum | null;
       ageCategory: AgeCategoryEnum | null;
     }[];
@@ -127,7 +132,25 @@ export const StartSessionForm = ({
     };
   };
 
-  console.log(form.watch("boat"));
+  const { boatTypeLevelConfigs } = useBoatLevelConfigStore();
+
+  const selectedBoat = form.watch("boat");
+  const blockFromXRowers = getBoatTypeLevelConfig(
+    selectedBoat.type || BoatTypeEnum.OTHER,
+    boatTypeLevelConfigs
+  ).blockFrom;
+  const numberOfRowers = fromBoatTypeToNbOfRowers(selectedBoat.type);
+  const minimumValidRower =
+    numberOfRowers === undefined || blockFromXRowers === null
+      ? 0
+      : numberOfRowers - (blockFromXRowers - 1);
+
+  console.log(numberOfRowers, blockFromXRowers, minimumValidRower);
+
+  /**
+   * Si j'ai un bateau 4 places et que je bloque s'il y a 3 rameurs invalides ou plus, alors il me faut au moins 2 rameurs valides
+   * 4 places - (3-1) rameurs invalides = 1 rameur valide
+   */
 
   return (
     <div>
@@ -325,8 +348,9 @@ export const StartSessionForm = ({
               )}
             />
             <p className="text-xs text-gray-500 mt-1">
-              Il est nécessaire de selectionner au moins 2 rameurs aux niveaux
-              du bateau ou des niveaux supérieurs.
+              Il est nécessaire de sélectionner au moins {minimumValidRower}{" "}
+              rameur(s) ayant le niveau requis pour ce bateau ou des niveaux
+              supérieurs.
             </p>
           </div>
 

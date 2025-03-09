@@ -24,7 +24,7 @@ import {
 } from "../../_common/components/Dialog/Dialog";
 import Button from "../../_common/components/Button";
 import { Label } from "../../_common/components/Label";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { toast } from "sonner";
 import { ChartBarIcon } from "@heroicons/react/16/solid";
 import { BoatStats } from "./BoatStats";
@@ -174,7 +174,7 @@ export const BoatCrud = () => {
                 const newBoatType = sortedBoats[i - 1]?.type !== boat.type;
 
                 return (
-                  <>
+                  <Fragment key={boat.id}>
                     {newBoatType && (
                       <div
                         className="col-span-2 bg-gray-100 text-gray-900 p-2 -mx-4 px-4 sticky top-0"
@@ -286,7 +286,7 @@ export const BoatCrud = () => {
                         <Trash2Icon className="h-4 w-4 cursor-pointer text-error-900" />
                       </EditButton>
                     </div>
-                  </>
+                  </Fragment>
                 );
               })}
             </div>

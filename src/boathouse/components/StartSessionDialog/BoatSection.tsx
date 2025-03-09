@@ -6,7 +6,7 @@ import {
 } from "../../../_common/business/boat.rules";
 import { FormLabel } from "../../../_common/components/Form";
 import { useSessionsStore } from "../../../_common/store/sessions.store";
-import { Boat, BoatTypeEnum } from "../../../_common/types/boat.type";
+import { Boat } from "../../../_common/types/boat.type";
 import { boatLevelConfigStoreCore } from "../../../_common/store/boatLevelConfig.store";
 import {
   AgeCategoryEnum,
@@ -19,8 +19,6 @@ interface BoatsSectionProps {
   boats: {
     id: string;
     name: string;
-    isInMaintenance: boolean;
-    type: BoatTypeEnum;
     ageCategory: AgeCategoryEnum | null;
     seriousnessCategory: SeriousnessCategoryEnum | null;
   }[];
