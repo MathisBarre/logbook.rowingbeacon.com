@@ -1,7 +1,7 @@
 import { Boat } from "../../../_common/business/boat.rules";
 import { Route } from "../../../_common/business/route.rules";
 import { Rower } from "../../../_common/business/rower.rules";
-import { StartedSession } from "../StartedSession.business";
+import { StartedSession } from "./StartSession.rules";
 
 export interface SaveSessionPayload {
   boat: Boat;

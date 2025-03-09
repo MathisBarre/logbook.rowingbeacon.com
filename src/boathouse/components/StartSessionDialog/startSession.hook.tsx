@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { SessionToStart } from "../../business/SessionToStart.business";
+import { SessionToStart } from "../../business/StartSession/StartSession.rules";
 import { useGetZustandStartSessionRepository } from "../../business/StartSession/StartSession.repository.zustand";
 import { StartSessionUsecase } from "../../business/StartSession/StartSession.usecase";
 import { boatLevelConfigStoreCore } from "../../../_common/store/boatLevelConfig.store";

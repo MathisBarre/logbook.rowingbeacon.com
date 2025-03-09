@@ -13,12 +13,12 @@ import {
   ErrorWithCode,
   TechnicalError,
 } from "../../../_common/utils/error";
-import { checkIfNotSameRowersAsSeatsInBoat } from "./../Boat.business";
+import { checkIfNotSameRowersAsSeatsInBoat } from "./StartSession.rules";
 import {
   SessionToStart,
   isInvalidStartSessionDate,
-} from "./../SessionToStart.business";
-import { getAlreadyOnStartedSessionRowersId } from "./../StartedSession.business";
+} from "./StartSession.rules";
+import { getAlreadyOnStartedSessionRowersId } from "./StartSession.rules";
 import { IStartSessionRepository } from "./StartSession.repository.interface";
 
 interface Params {
