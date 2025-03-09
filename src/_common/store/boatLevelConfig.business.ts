@@ -88,3 +88,17 @@ export const canRowerUseBoat = (
     rowerTypeOrder >= minimalRowerTypeOrder
   );
 };
+
+export const getMinimumValidRowersNeeded = (
+  blockFrom: number | null,
+  numberOfRowers: number | undefined
+) => {
+  const neverBlock = blockFrom === null;
+  const boatWithUnknownNbRowers = numberOfRowers === undefined;
+
+  if (neverBlock || boatWithUnknownNbRowers) {
+    return 0;
+  }
+
+  return numberOfRowers - (blockFrom - 1);
+};

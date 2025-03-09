@@ -16,7 +16,10 @@ import { useStartSession } from "./startSession.hook";
 import { CircleAlertIcon } from "lucide-react";
 import { replaceLastOccurrence } from "../../../_common/utils/string.utils";
 import { addMinutes } from "../../../_common/utils/date.utils";
-import { getBoatTypeLevelConfig } from "../../../_common/store/boatLevelConfig.business";
+import {
+  getBoatTypeLevelConfig,
+  getMinimumValidRowersNeeded,
+} from "../../../_common/store/boatLevelConfig.business";
 import {
   seriousnessCategories,
   SeriousnessCategoryEnum,
@@ -140,17 +143,10 @@ export const StartSessionForm = ({
     boatTypeLevelConfigs
   ).blockFrom;
   const numberOfRowers = getBoatNumberOfRowers(selectedBoat.type);
-  const minimumValidRower =
-    numberOfRowers === undefined || blockFromXRowers === null
-      ? 0
-      : numberOfRowers - (blockFromXRowers - 1);
-
-  console.log(numberOfRowers, blockFromXRowers, minimumValidRower);
-
-  /**
-   * Si j'ai un bateau 4 places et que je bloque s'il y a 3 rameurs invalides ou plus, alors il me faut au moins 2 rameurs valides
-   * 4 places - (3-1) rameurs invalides = 1 rameur valide
-   */
+  const minimumValidRower = getMinimumValidRowersNeeded(
+    blockFromXRowers,
+    numberOfRowers
+  );
 
   return (
     <div>
@@ -347,11 +343,13 @@ export const StartSessionForm = ({
                 />
               )}
             />
-            <p className="text-xs text-gray-500 mt-1">
-              Il est nécessaire de sélectionner au moins {minimumValidRower}{" "}
-              rameur(s) ayant le niveau requis pour ce bateau ou des niveaux
-              supérieurs.
-            </p>
+            {minimumValidRower > 0 && (
+              <p className="text-xs text-gray-500 mt-1">
+                Il est nécessaire de sélectionner au moins {minimumValidRower}{" "}
+                rameur(s) ayant le niveau requis pour ce bateau ou des niveaux
+                supérieurs.
+              </p>
+            )}
           </div>
 
           <div className="flex gap-6">
