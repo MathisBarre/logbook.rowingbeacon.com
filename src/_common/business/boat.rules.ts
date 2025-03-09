@@ -22,9 +22,25 @@ export interface Boat {
   type?: BoatTypeEnum;
 }
 
+export interface BoatWithoutUndefined {
+  id: string;
+  name: string;
+  isInMaintenance: boolean;
+  type: BoatTypeEnum;
+}
+
 /**
  * ----- Business rules -----
  */
+
+export const getBoatWithoutUndefined = (boat: Boat): BoatWithoutUndefined => {
+  return {
+    id: boat.id,
+    name: boat.name,
+    isInMaintenance: boat.isInMaintenance || false,
+    type: boat.type || BoatTypeEnum.OTHER,
+  };
+};
 
 export const generateBoatId = () => {
   return generateId("boat");

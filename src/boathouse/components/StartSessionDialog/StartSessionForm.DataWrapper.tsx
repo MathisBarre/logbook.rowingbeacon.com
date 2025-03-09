@@ -3,13 +3,17 @@ import { getCurrentDateTime } from "../../../_common/utils/date.utils";
 import { useClubOverviewStore } from "../../../_common/store/clubOverview.store";
 import { defaultRoute } from "./RouteSection";
 import { useBoatLevelConfigStore } from "../../../_common/store/boatLevelConfig.store";
+import {
+  BoatTypeEnum,
+  getBoatWithoutUndefined,
+} from "../../../_common/business/boat.rules";
 
 interface StartSessionFormDataWrapperProps {
   closeAction: () => void;
   defaultBoat: {
     id: string;
     name: string;
-    type?: string;
+    type?: BoatTypeEnum;
   };
 }
 
@@ -39,7 +43,7 @@ export const StartSessionFormDataWrapper = ({
           boats: getAllBoats().map((boat) => {
             const boatLevelConfig = getBoatLevelConfig(boat.id);
             return {
-              ...boat,
+              ...getBoatWithoutUndefined(boat),
               ageCategory: boatLevelConfig?.minimalRowerCategory || null,
               seriousnessCategory: boatLevelConfig?.minimalRowerType || null,
             };
@@ -54,7 +58,7 @@ export const StartSessionFormDataWrapper = ({
         values={{
           ...defaultValues,
           boat: {
-            ...defaultValues.boat,
+            ...getBoatWithoutUndefined(defaultValues.boat),
             ageCategory: defaultBoatLevelConfig?.minimalRowerCategory || null,
             seriousnessCategory:
               defaultBoatLevelConfig?.minimalRowerType || null,

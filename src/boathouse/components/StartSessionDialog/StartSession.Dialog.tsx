@@ -1,9 +1,4 @@
 import { SimpleDialog } from "../../../_common/components/SimpleDialog";
-import {
-  ageCategories,
-  seriousnessCategories,
-} from "../../../_common/store/boatLevelConfig.business";
-import { cn } from "../../../_common/utils/utils";
 import { StartSessionFormDataWrapper } from "./StartSessionForm.DataWrapper";
 
 interface StartSessionDialogProps {
