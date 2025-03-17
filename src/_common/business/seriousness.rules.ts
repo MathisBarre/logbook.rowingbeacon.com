@@ -2,7 +2,7 @@ export const findSeriousnessCategoryOrder = (
   seriousnessCategory: SeriousnessCategoryEnum | null | undefined
 ) => {
   return (
-    seriousnessCategories.find((t) => t.type === seriousnessCategory)?.order ||
+    SERIOUSNESS_CATEGORIES.find((t) => t.type === seriousnessCategory)?.order ||
     0
   );
 };
@@ -14,10 +14,10 @@ export enum SeriousnessCategoryEnum {
 export const getSeriousnessTypeTranslation = (
   type: SeriousnessCategoryEnum | null | undefined
 ): string => {
-  return seriousnessCategories.find((t) => t.type === type)?.label || type;
+  return SERIOUSNESS_CATEGORIES.find((t) => t.type === type)?.label || type;
 };
 
-export const seriousnessCategories = [
+export const SERIOUSNESS_CATEGORIES = [
   {
     order: 0,
     type: null,

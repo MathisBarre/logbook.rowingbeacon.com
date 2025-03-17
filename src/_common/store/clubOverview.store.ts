@@ -72,7 +72,11 @@ export interface ClubOverviewStoreState {
   updateRower: (rowerId: string, rower: UpdateRowerDto) => void;
   updateRowers: (rowerIds: string[], rower: BulkUpdateRowerDto) => void;
   archiveRower: (rowerId: string) => void;
-  addRower: (rowerName: string) => void;
+  addRower: (
+    rowerName: string,
+    category?: AgeCategoryEnum | null,
+    type?: SeriousnessCategoryEnum | null
+  ) => void;
   getRowersById: (rowersId: string[]) => ClubOverviewState["rowers"];
   getRowerById: (rowerId: string) => ClubOverviewState["rowers"][0] | undefined;
   getAllRowers: () => ClubOverviewState["rowers"];
@@ -294,7 +298,11 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
           }));
         },
 
-        addRower: (rowerName: string) => {
+        addRower: (
+          rowerName: string,
+          category?: AgeCategoryEnum | null,
+          type?: SeriousnessCategoryEnum | null
+        ) => {
           set((state) => ({
             clubOverview: {
               ...state.clubOverview,
@@ -303,6 +311,8 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
                 {
                   id: Math.random().toString(),
                   name: rowerName,
+                  category: category || undefined,
+                  type: type || undefined,
                 },
               ],
             },

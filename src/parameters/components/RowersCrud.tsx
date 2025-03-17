@@ -29,6 +29,12 @@ import clsx from "clsx";
 import { BulkUpdateRower } from "./BulkUpdateRower";
 import { sortByTypeOrder } from "../../_common/business/seriousness.rules";
 import { sortByAgeCategoryOrder } from "../../_common/business/ageCategory.rules";
+import { AGE_CATEGORIES } from "../../_common/business/ageCategory.rules";
+import { AgeCategoryEnum } from "../../_common/business/ageCategory.rules";
+import {
+  SERIOUSNESS_CATEGORIES,
+  SeriousnessCategoryEnum,
+} from "../../_common/business/seriousness.rules";
 
 export const RowersCrud = () => {
   const store = useClubOverviewStore();
@@ -47,6 +53,11 @@ export const RowersCrud = () => {
     toast.success("Le rameur a été supprimé");
   };
 
+  const [defaultCategory, setDefaultCategory] =
+    useState<AgeCategoryEnum | null>(null);
+  const [defaultType, setDefaultType] =
+    useState<SeriousnessCategoryEnum | null>(null);
+
   const addRowers = () => {
     const rowers = textareaContent
       .split("\n")
@@ -59,7 +70,7 @@ export const RowersCrud = () => {
     try {
       for (const rower of rowers) {
         if (rower) {
-          store.addRower(rower);
+          store.addRower(rower, defaultCategory, defaultType);
           rowerAdded++;
         }
       }
@@ -133,17 +144,65 @@ export const RowersCrud = () => {
               </Button>
             </DialogTrigger>
             <DialogContent title="Ajouter des rameurs">
-              <Label>Ajouter un ou plusieurs rameurs (un par ligne)</Label>
-              <textarea
-                className="input flex w-full mb-4 resize-y min-h-16 placeholder:text-gray-300"
-                rows={10}
-                placeholder={"Rameur 1 \nRameur 2 \nRameur 3"}
-                value={textareaContent}
-                onChange={(e) => setTextareaContent(e.target.value)}
-              />
-              <Button type="button" className="w-full" onClick={addRowers}>
-                Ajouter le ou les rameurs
-              </Button>
+              <div className="flex flex-col gap-4">
+                <Label className="flex flex-col gap-1">
+                  Ajouter un ou plusieurs rameurs (un par ligne)
+                  <textarea
+                    className="input flex w-full resize-y min-h-16 placeholder:text-gray-300"
+                    rows={10}
+                    placeholder={"Rameur 1 \nRameur 2 \nRameur 3"}
+                    value={textareaContent}
+                    onChange={(e) => setTextareaContent(e.target.value)}
+                  />
+                </Label>
+
+                <Label className="flex flex-col gap-1">
+                  Catégorie par défaut
+                  <select
+                    className="input"
+                    value={defaultCategory || ""}
+                    onChange={(e) =>
+                      setDefaultCategory(
+                        (e.target.value as AgeCategoryEnum) || null
+                      )
+                    }
+                  >
+                    <option value="">Aucune catégorie</option>
+                    {AGE_CATEGORIES.map((category) => (
+                      <option
+                        key={category.category}
+                        value={category.category || ""}
+                      >
+                        {category.category || "Aucune catégorie"}
+                      </option>
+                    ))}
+                  </select>
+                </Label>
+
+                <Label className="flex flex-col gap-1">
+                  Type par défaut
+                  <select
+                    className="input"
+                    value={defaultType || ""}
+                    onChange={(e) =>
+                      setDefaultType(
+                        (e.target.value as SeriousnessCategoryEnum) || null
+                      )
+                    }
+                  >
+                    <option value="">Aucun type</option>
+                    {SERIOUSNESS_CATEGORIES.map((type) => (
+                      <option key={type.type} value={type.type || ""}>
+                        {type.label || "Aucun type"}
+                      </option>
+                    ))}
+                  </select>
+                </Label>
+
+                <Button type="button" className="w-full" onClick={addRowers}>
+                  Ajouter le ou les rameurs
+                </Button>
+              </div>
             </DialogContent>
           </Dialog>
 

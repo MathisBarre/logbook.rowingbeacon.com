@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useStore } from "zustand";
 import {
-  seriousnessCategories,
+  SERIOUSNESS_CATEGORIES,
   SeriousnessCategoryEnum,
 } from "../../_common/business/seriousness.rules";
 import { AGE_CATEGORIES } from "../../_common/business/ageCategory.rules";
@@ -144,7 +144,7 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
         <Label className="flex flex-col gap-1">
           Type de rameur minimale
           <select className="input" {...form.register("minimalRowerType")}>
-            {seriousnessCategories.map((type) => (
+            {SERIOUSNESS_CATEGORIES.map((type) => (
               <option key={type.type} value={type.type || "null"}>
                 {type.order} - {type.label || "Aucun type minimal"}
               </option>

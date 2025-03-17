@@ -21,7 +21,7 @@ import {
   getMinimumValidRowersNeeded,
 } from "../../../_common/store/boatLevelConfig.rules";
 import {
-  seriousnessCategories,
+  SERIOUSNESS_CATEGORIES,
   SeriousnessCategoryEnum,
 } from "../../../_common/business/seriousness.rules";
 import { findSeriousnessCategoryOrder } from "../../../_common/business/seriousness.rules";
@@ -308,7 +308,7 @@ export const StartSessionForm = ({
               <div className="flex gap-2 flex-1">
                 <LevelVisualizer
                   wrapperClassnames="flex-[4]"
-                  levels={seriousnessCategories.map((s) => ({
+                  levels={SERIOUSNESS_CATEGORIES.map((s) => ({
                     label: s.label || "Aucun",
                     order: s.order,
                   }))}

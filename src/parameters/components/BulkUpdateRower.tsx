@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { toast } from "sonner";
 import {
-  seriousnessCategories,
+  SERIOUSNESS_CATEGORIES,
   SeriousnessCategoryEnum,
 } from "../../_common/business/seriousness.rules";
 import { AGE_CATEGORIES } from "../../_common/business/ageCategory.rules";
@@ -91,7 +91,7 @@ export const BulkUpdateRower = ({
         <Label className="flex flex-col gap-1">
           Type
           <select className="input" {...form.register("type")}>
-            {seriousnessCategories.map((type) => (
+            {SERIOUSNESS_CATEGORIES.map((type) => (
               <option key={type.type} value={type.type || "null"}>
                 {type.label || "Aucun type"}
               </option>
