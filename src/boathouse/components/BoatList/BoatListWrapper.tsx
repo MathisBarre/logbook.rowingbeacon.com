@@ -36,7 +36,7 @@ export const BoatListWrapper = ({
         </div>
       </div>
 
-      <div className="absolute left-2 top-12 w-2 h-2 z-20">
+      <div className="absolute left-[8px] top-12 w-2 h-2 z-20">
         <svg
           width="4"
           height="4"
