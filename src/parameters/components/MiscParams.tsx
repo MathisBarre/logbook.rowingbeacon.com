@@ -11,22 +11,17 @@ import { getDatabase } from "../../_common/database/database";
 import { DBSessions } from "../../_common/database/schema";
 import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
 import useIncidentStore from "../../_common/store/incident.store";
-import { BoatTypeEnum, getTypeLabel } from "../../_common/business/boat.rules";
-import { getBoatNumberOfRowers } from "../../_common/business/boat.rules";
-import { useStore } from "zustand";
-import { boatLevelConfigStoreCore as _boatLevelConfigStore } from "../../_common/store/boatLevelConfig.store";
+import { BoatLevelConfigModal } from "./BoatLevelConfigModal";
 
 export const MiscParams = () => {
   const [deleteDataDialogOpen, setDeleteDataDialogOpen] = useState(false);
+  const [boatLevelConfigOpen, setBoatLevelConfigOpen] = useState(false);
   const adminEditSystem = useAdminEditModeSystem();
   const clubOverview = useClubOverviewStore();
   const { autoStartState, enableAutoStart, disableAutoStart } = useAutoStart();
   const { count, totalDuration } = useMiscStats();
   const { getIncidents } = useIncidentStore();
   const incidents = getIncidents();
-
-  const boatLevelConfigStore = useStore(_boatLevelConfigStore);
-  const boatLevelConfig = boatLevelConfigStore.getBoatTypeLevelConfigs();
 
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
@@ -54,98 +49,7 @@ export const MiscParams = () => {
               <li>Nombre d&apos;incidents : {incidents.length}</li>
             </ul>
           </section>
-          <section>
-            <h1 className="font-bold text-xl">Système de niveau</h1>
 
-            <div className="h-4" />
-
-            <p>
-              <span className="font-bold">Alerte à partir de</span> : afficher
-              une alerte lorsque x rameurs ou plus n&apos;ont pas les critères
-              requis pour le bateau selectionné
-            </p>
-
-            <p>
-              <span className="font-bold">Bloquage à partir de</span> : bloquer
-              l&apos;utilisation du bateau si x rameurs ou plus n&apos;ont pas
-              les critères requis pour le bateau selectionné
-            </p>
-
-            <table className="table mt-4">
-              <thead>
-                <tr>
-                  <th className="text-left pr-4">Type de bateau</th>
-                  <th className="text-left pr-4">Alerte</th>
-                  <th className="text-left pr-4">Bloquage</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.entries(boatLevelConfig).map(([type, config]) => {
-                  const nbOfRowers = getBoatNumberOfRowers(
-                    type as BoatTypeEnum
-                  );
-
-                  if (!nbOfRowers) {
-                    return null;
-                  }
-
-                  return (
-                    <tr key={type}>
-                      <td>{getTypeLabel(type as BoatTypeEnum)}</td>
-                      <td>
-                        <select
-                          className="w-full input"
-                          value={config.alertFrom || "null"}
-                          onChange={(e) => {
-                            const value = parseInt(e.target.value);
-
-                            boatLevelConfigStore.updateBoatTypeLevelConfigs(
-                              type as Exclude<BoatTypeEnum, BoatTypeEnum.OTHER>,
-                              {
-                                ...config,
-                                alertFrom: value === 0 ? null : value,
-                              }
-                            );
-                          }}
-                        >
-                          <option value="null">ne pas alerter</option>
-                          {Array.from({ length: nbOfRowers }, (_, i) => (
-                            <option key={i} value={i + 1}>
-                              à partir d&apos;au moins {i + 1} rameur(s)
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-                      <td>
-                        <select
-                          className="w-full input"
-                          value={config.blockFrom || "null"}
-                          onChange={(e) => {
-                            const value = parseInt(e.target.value);
-
-                            boatLevelConfigStore.updateBoatTypeLevelConfigs(
-                              type as Exclude<BoatTypeEnum, BoatTypeEnum.OTHER>,
-                              {
-                                ...config,
-                                blockFrom: value === 0 ? null : value,
-                              }
-                            );
-                          }}
-                        >
-                          <option value="null">ne pas bloquer</option>
-                          {Array.from({ length: nbOfRowers }, (_, i) => (
-                            <option key={i} value={i + 1}>
-                              à partir d&apos;au moins {i + 1} rameur(s)
-                            </option>
-                          ))}
-                        </select>{" "}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </section>
           <section>
             <h1 className="font-bold text-xl">La note du coach</h1>
 
@@ -164,6 +68,22 @@ export const MiscParams = () => {
               }}
               value={clubOverview.coachNote}
             />
+          </section>
+
+          <section>
+            <h1 className="font-bold text-xl">Système de niveau</h1>
+            <p className="mb-4">
+              Configurez les seuils d&apos;alerte et de blocage pour chaque type
+              de bateau en fonction du nombre de rameurs qui n&apos;ont pas les
+              critères requis.
+            </p>
+            <Button
+              type="button"
+              onClick={() => setBoatLevelConfigOpen(true)}
+              className="mt-2"
+            >
+              Configurer les niveaux des bateaux
+            </Button>
           </section>
 
           <section>
@@ -243,6 +163,11 @@ export const MiscParams = () => {
           </section>
         </div>
       </div>
+
+      <BoatLevelConfigModal
+        isOpen={boatLevelConfigOpen}
+        onOpenChange={setBoatLevelConfigOpen}
+      />
     </div>
   );
 };
