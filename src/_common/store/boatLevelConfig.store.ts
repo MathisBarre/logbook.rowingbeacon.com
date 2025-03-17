@@ -29,6 +29,7 @@ export interface IBoatLevelConfigStore {
   ) => void;
   deleteBoatLevelConfig: (boatId: string) => void;
   reset: () => void;
+  resetBoatTypeLevelConfigs: () => void;
 }
 
 export const boatLevelConfigStoreCore = createStore(
@@ -108,6 +109,12 @@ export const boatLevelConfigStoreCore = createStore(
           boatTypeLevelConfigs: DEFAULT_BOAT_TYPE_LEVEL_CONFIGS,
           boatLevelConfigs: [],
         });
+      },
+      resetBoatTypeLevelConfigs() {
+        set((state) => ({
+          ...state,
+          boatTypeLevelConfigs: DEFAULT_BOAT_TYPE_LEVEL_CONFIGS,
+        }));
       },
     }),
     {

@@ -1,8 +1,8 @@
 import { Dialog, DialogContent } from "../../_common/components/Dialog/Dialog";
 import { BoatTypeEnum, getTypeLabel } from "../../_common/business/boat.rules";
 import { getBoatNumberOfRowers } from "../../_common/business/boat.rules";
-import { useStore } from "zustand";
-import { boatLevelConfigStoreCore as _boatLevelConfigStore } from "../../_common/store/boatLevelConfig.store";
+import { useBoatLevelConfigStore } from "../../_common/store/boatLevelConfig.store";
+import Button from "../../_common/components/Button";
 
 interface BoatLevelConfigModalProps {
   isOpen: boolean;
@@ -13,7 +13,7 @@ export function BoatLevelConfigModal({
   isOpen,
   onOpenChange,
 }: BoatLevelConfigModalProps) {
-  const boatLevelConfigStore = useStore(_boatLevelConfigStore);
+  const boatLevelConfigStore = useBoatLevelConfigStore();
   const boatLevelConfig = boatLevelConfigStore.getBoatTypeLevelConfigs();
 
   return (
@@ -35,7 +35,7 @@ export function BoatLevelConfigModal({
             critères requis pour le bateau selectionné
           </p>
 
-          <table className="table mt-4">
+          <table className="mt-4 w-full">
             <thead>
               <tr>
                 <th className="text-left pr-4">Type de bateau</th>
@@ -107,6 +107,17 @@ export function BoatLevelConfigModal({
               })}
             </tbody>
           </table>
+          <div className="flex justify-end mt-6">
+            <Button
+              type="button"
+              variant="outlined"
+              onClick={() => {
+                boatLevelConfigStore.resetBoatTypeLevelConfigs();
+              }}
+            >
+              Réinitialiser la configuration des types de bateaux
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
