@@ -13,8 +13,10 @@ export enum SeriousnessCategoryEnum {
 
 export const getSeriousnessTypeTranslation = (
   type: SeriousnessCategoryEnum | null | undefined
-): string => {
-  return SERIOUSNESS_CATEGORIES.find((t) => t.type === type)?.label || type;
+): string | null => {
+  return (
+    SERIOUSNESS_CATEGORIES.find((t) => t.type === type)?.label || type || null
+  );
 };
 
 export const SERIOUSNESS_CATEGORIES = [
