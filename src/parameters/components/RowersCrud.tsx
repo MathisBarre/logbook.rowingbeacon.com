@@ -167,7 +167,6 @@ export const RowersCrud = () => {
                       )
                     }
                   >
-                    <option value="">Aucune catégorie</option>
                     {AGE_CATEGORIES.map((category) => (
                       <option
                         key={category.category}
@@ -190,7 +189,6 @@ export const RowersCrud = () => {
                       )
                     }
                   >
-                    <option value="">Aucun type</option>
                     {SERIOUSNESS_CATEGORIES.map((type) => (
                       <option key={type.type} value={type.type || ""}>
                         {type.label || "Aucun type"}
