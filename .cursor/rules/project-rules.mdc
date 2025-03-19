@@ -1,0 +1,14 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+If needed, you can find the "cn" function in the src/_common/utils/utils.ts file.
+
+Don't import date library. Create pure function in src/_common/utils/date.ts.
+
+The icon library is lucide-react, don't install another one.
+
+The componenets reused accross the app can be found in the src/_common/components folder
+
+Don't install shadcn components with cli. Copy paste.
