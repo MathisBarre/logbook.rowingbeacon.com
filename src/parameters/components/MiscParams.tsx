@@ -54,7 +54,7 @@ export const MiscParams = () => {
       <div className="flex-1 relative">
         <div className="p-6 flex flex-col absolute inset-0 overflow-auto">
           <section className="pb-8">
-            <h1 className="font-bold text-xl mb-4 text-gray-900">
+            <h1 className="font-bold text-xl mb-2 text-gray-900">
               Statistiques du club
             </h1>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -76,115 +76,128 @@ export const MiscParams = () => {
             </div>
           </section>
 
-          <section className="py-8">
-            <h1 className="font-bold text-xl mb-1 text-gray-900">
-              La note du coach
-            </h1>
-            <p className="text-gray-500 mb-4">
-              Cette note sera affichée en haut de la page &quot;Boathouse&quot;
-            </p>
-            <textarea
-              cols={64}
-              rows={4}
-              className="w-full p-3 border rounded-md focus:ring-2 focus:ring-steel-blue-500 focus:border-steel-blue-500 resize-none bg-gray-50"
-              name="coachnote"
-              id="coachnote"
-              onChange={(e) => {
-                clubOverview.setCoachNote(e.target.value);
-              }}
-              value={clubOverview.coachNote}
-              placeholder="Écrivez votre note ici..."
-            />
-          </section>
+          <div className="flex flex-col flex-1">
+            <section className="flex flex-col flex-1 min-h-0">
+              <h1 className="font-bold text-xl mb-1 text-gray-900">
+                La note du coach
+              </h1>
+              <p className="text-gray-500 mb-2">
+                Cette note sera affichée en haut de la page
+                &quot;Boathouse&quot;
+              </p>
+              <textarea
+                className="flex-1 min-h-32 p-3 border rounded-md focus:ring-2 focus:ring-steel-blue-500 focus:border-steel-blue-500 resize-none bg-gray-50"
+                name="coachnote"
+                id="coachnote"
+                onChange={(e) => {
+                  clubOverview.setCoachNote(e.target.value);
+                }}
+                value={clubOverview.coachNote}
+                placeholder="Écrivez votre note ici..."
+              />
+            </section>
+          </div>
 
-          <section className="py-8">
-            <h1 className="font-bold text-xl mb-1 text-gray-900">
-              Système de niveau
-            </h1>
-            <p className="text-gray-500 mb-4">
-              Configurez les seuils d&apos;alerte et de blocage pour chaque type
-              de bateau en fonction du nombre de rameurs qui n&apos;ont pas les
-              critères requis.
-            </p>
-            <Button
-              type="button"
-              onClick={() => setBoatLevelConfigOpen(true)}
-              className="w-full md:w-auto"
-            >
-              Configurer les niveaux des bateaux
-            </Button>
-          </section>
-
-          <section className="py-8">
-            <h1 className="font-bold text-xl mb-1 text-gray-900">
-              Démarrage automatique
-            </h1>
-            <p className="text-gray-500 mb-4">
-              En activant cette option, RowingBeacon se lancera au démarrage du
-              système
-            </p>
-
-            {autoStartState === "pending" && (
-              <div className="flex items-center gap-2 text-gray-500">
-                <ClockIcon className="w-5 h-5 animate-spin" />
-                <p>Chargement...</p>
-              </div>
-            )}
-            {autoStartState === "activated" && (
-              <div className="space-y-3">
-                <p className="text-green-600 font-medium">
-                  Le démarrage automatique est activé
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8">
+            <section className="flex flex-col h-full">
+              <div className="flex-1">
+                <h1 className="font-bold text-xl mb-1 text-gray-900">
+                  Système de niveau
+                </h1>
+                <p className="text-gray-500 mb-4">
+                  Configurez les seuils d&apos;alerte et de blocage pour chaque
+                  type de bateau en fonction du nombre de rameurs qui n&apos;ont
+                  pas les critères requis.
                 </p>
+              </div>
+              <Button
+                type="button"
+                onClick={() => setBoatLevelConfigOpen(true)}
+                className="w-full mt-4"
+              >
+                Configurer les niveaux des bateaux
+              </Button>
+            </section>
+
+            <section className="flex flex-col h-full">
+              <div className="flex-1">
+                <h1 className="font-bold text-xl mb-1 text-gray-900">
+                  Démarrage automatique
+                </h1>
+                <p className="text-gray-500 mb-4">
+                  En activant cette option, RowingBeacon se lancera au démarrage
+                  du système
+                </p>
+
+                {autoStartState === "pending" && (
+                  <div className="flex items-center gap-2 text-gray-500">
+                    <ClockIcon className="w-5 h-5 animate-spin" />
+                    <p>Chargement...</p>
+                  </div>
+                )}
+                {autoStartState === "activated" && (
+                  <div>
+                    <p className="text-green-600 font-medium">
+                      Le démarrage automatique est activé
+                    </p>
+                  </div>
+                )}
+                {autoStartState === "not-activated" && (
+                  <div>
+                    <p className="text-gray-600 font-medium">
+                      Le démarrage automatique est désactivé
+                    </p>
+                  </div>
+                )}
+              </div>
+              {autoStartState === "activated" && (
                 <Button
                   type="button"
                   // eslint-disable-next-line @typescript-eslint/no-misused-promises
                   onClick={disableAutoStart}
-                  className="w-full md:w-auto"
+                  className="w-full mt-4"
                 >
                   Désactiver le démarrage automatique
                 </Button>
-              </div>
-            )}
-            {autoStartState === "not-activated" && (
-              <div className="space-y-3">
-                <p className="text-gray-600 font-medium">
-                  Le démarrage automatique est désactivé
-                </p>
+              )}
+              {autoStartState === "not-activated" && (
                 <Button
                   type="button"
                   // eslint-disable-next-line @typescript-eslint/no-misused-promises
                   onClick={enableAutoStart}
-                  className="w-full md:w-auto"
+                  className="w-full mt-4"
                 >
                   Activer le démarrage automatique
                 </Button>
-              </div>
-            )}
-          </section>
+              )}
+            </section>
 
-          <section className="pt-8">
-            <h1 className="font-bold text-xl mb-1 text-gray-900">
-              Actions sensibles
-            </h1>
-            <p className="text-gray-500 mb-4">
-              Attention : ces actions peuvent avoir des conséquences
-              irréversibles
-            </p>
-            <Button
-              type="button"
-              color="danger"
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              onClick={async () => {
-                if (!(await adminEditSystem.askForAdminAccess())) {
-                  return;
-                }
-                setDeleteDataDialogOpen(true);
-              }}
-              className="w-full md:w-auto"
-            >
-              Supprimer toutes les données
-            </Button>
-          </section>
+            <section className="flex flex-col h-full">
+              <div className="flex-1">
+                <h1 className="font-bold text-xl mb-1 text-gray-900">
+                  Actions sensibles
+                </h1>
+                <p className="text-gray-500 mb-4">
+                  Attention : ces actions peuvent avoir des conséquences
+                  irréversibles
+                </p>
+              </div>
+              <Button
+                type="button"
+                color="danger"
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                onClick={async () => {
+                  if (!(await adminEditSystem.askForAdminAccess())) {
+                    return;
+                  }
+                  setDeleteDataDialogOpen(true);
+                }}
+                className="w-full mt-4"
+              >
+                Supprimer toutes les données
+              </Button>
+            </section>
+          </div>
         </div>
       </div>
 
