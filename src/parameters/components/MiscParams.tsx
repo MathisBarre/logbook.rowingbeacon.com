@@ -12,6 +12,33 @@ import { DBSessions } from "../../_common/database/schema";
 import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
 import useIncidentStore from "../../_common/store/incident.store";
 import { BoatLevelConfigModal } from "./BoatLevelConfigModal";
+import {
+  ClockIcon,
+  ExclamationTriangleIcon,
+  UserGroupIcon,
+} from "@heroicons/react/24/outline";
+
+const StatCard = ({
+  title,
+  value,
+  icon: Icon,
+}: {
+  title: string;
+  value: string;
+  icon: React.ElementType;
+}) => {
+  return (
+    <div className="bg-white rounded-lg shadow-sm border p-4 flex items-center gap-4">
+      <div className="p-3 bg-steel-blue-50 rounded-lg">
+        <Icon className="w-6 h-6 text-steel-blue-600" />
+      </div>
+      <div>
+        <h3 className="text-sm text-gray-500 font-medium">{title}</h3>
+        <p className="text-xl font-semibold text-gray-900">{value}</p>
+      </div>
+    </div>
+  );
+};
 
 export const MiscParams = () => {
   const [deleteDataDialogOpen, setDeleteDataDialogOpen] = useState(false);
@@ -21,7 +48,6 @@ export const MiscParams = () => {
   const { autoStartState, enableAutoStart, disableAutoStart } = useAutoStart();
   const { count, totalDuration } = useMiscStats();
   const { getIncidents } = useIncidentStore();
-  const incidents = getIncidents();
 
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
@@ -34,20 +60,24 @@ export const MiscParams = () => {
       <div className="flex-1 relative">
         <div className="p-4 flex flex-col gap-8 absolute inset-0 overflow-auto">
           <section>
-            <h1 className="font-bold text-xl">Statistiques du club</h1>
-
-            <ul>
-              <li>Nombre de sessions : {count}</li>
-              <li>
-                Temps total passé sur l&apos;eau :{" "}
-                {millisecondToDayHourMinutes(totalDuration)}
-              </li>
-              <li>
-                Moyenne temps / sessions :{" "}
-                {millisecondToDayHourMinutes(totalDuration / count || 0)}
-              </li>
-              <li>Nombre d&apos;incidents : {incidents.length}</li>
-            </ul>
+            <h1 className="font-bold text-xl mb-4">Statistiques du club</h1>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <StatCard
+                title="Sessions"
+                value={count.toString()}
+                icon={UserGroupIcon}
+              />
+              <StatCard
+                title="Temps total sur l'eau"
+                value={millisecondToDayHourMinutes(totalDuration)}
+                icon={ClockIcon}
+              />
+              <StatCard
+                title="Moyenne temps / session"
+                value={millisecondToDayHourMinutes(totalDuration / count || 0)}
+                icon={ClockIcon}
+              />
+            </div>
           </section>
 
           <section>
