@@ -12,6 +12,12 @@ import { DBSessions } from "../../_common/database/schema";
 import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
 import { BoatLevelConfigModal } from "./BoatLevelConfigModal";
 import { ClockIcon, UserGroupIcon } from "@heroicons/react/24/outline";
+import { DateRangePicker } from "../../_common/components/DateRangePicker";
+import {
+  DateRange,
+  getThisMonth,
+  getThisWeek,
+} from "../../_common/utils/date.utils";
 
 const StatCard = ({
   title,
@@ -43,6 +49,24 @@ export const MiscParams = () => {
   const { autoStartState, enableAutoStart, disableAutoStart } = useAutoStart();
   const { count, totalDuration } = useMiscStats();
 
+  const [date, setDate] = useState<DateRange>({
+    from: new Date(),
+    to: new Date(),
+  });
+
+  const presets = [
+    {
+      id: "this-week",
+      label: "Cette semaine",
+      dateRange: getThisWeek(),
+    },
+    {
+      id: "this-month",
+      label: "Ce mois",
+      dateRange: getThisMonth(),
+    },
+  ];
+
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
       <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between h-12">
@@ -54,9 +78,17 @@ export const MiscParams = () => {
       <div className="flex-1 relative">
         <div className="p-6 flex flex-col absolute inset-0 overflow-auto">
           <section className="pb-8">
-            <h1 className="font-bold text-xl mb-2 text-gray-900">
-              Statistiques du club
-            </h1>
+            <div className="flex justify-between items-center">
+              <h1 className="font-bold text-xl mb-2 text-gray-900">
+                Statistiques du club
+              </h1>
+              <DateRangePicker
+                className="mb-4"
+                date={date}
+                onDateChange={setDate}
+                presets={presets}
+              />
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <StatCard
                 title="Sessions"
