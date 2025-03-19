@@ -10,13 +10,8 @@ import { getErrorMessage } from "../../_common/utils/error";
 import { getDatabase } from "../../_common/database/database";
 import { DBSessions } from "../../_common/database/schema";
 import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
-import useIncidentStore from "../../_common/store/incident.store";
 import { BoatLevelConfigModal } from "./BoatLevelConfigModal";
-import {
-  ClockIcon,
-  ExclamationTriangleIcon,
-  UserGroupIcon,
-} from "@heroicons/react/24/outline";
+import { ClockIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 
 const StatCard = ({
   title,
@@ -47,20 +42,21 @@ export const MiscParams = () => {
   const clubOverview = useClubOverviewStore();
   const { autoStartState, enableAutoStart, disableAutoStart } = useAutoStart();
   const { count, totalDuration } = useMiscStats();
-  const { getIncidents } = useIncidentStore();
 
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
       <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between h-12">
-        <h1 className="text-base ml-2 flex gap-2 items-center">
+        <h1 className="text-base ml-2 flex gap-2 items-center font-medium">
           Paramètres divers
         </h1>
       </div>
 
       <div className="flex-1 relative">
-        <div className="p-4 flex flex-col gap-8 absolute inset-0 overflow-auto">
-          <section>
-            <h1 className="font-bold text-xl mb-4">Statistiques du club</h1>
+        <div className="p-6 flex flex-col absolute inset-0 overflow-auto">
+          <section className="pb-8">
+            <h1 className="font-bold text-xl mb-4 text-gray-900">
+              Statistiques du club
+            </h1>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <StatCard
                 title="Sessions"
@@ -80,29 +76,32 @@ export const MiscParams = () => {
             </div>
           </section>
 
-          <section>
-            <h1 className="font-bold text-xl">La note du coach</h1>
-
-            <p>
+          <section className="py-8">
+            <h1 className="font-bold text-xl mb-1 text-gray-900">
+              La note du coach
+            </h1>
+            <p className="text-gray-500 mb-4">
               Cette note sera affichée en haut de la page &quot;Boathouse&quot;
             </p>
-
             <textarea
               cols={64}
               rows={4}
-              className="input resize"
+              className="w-full p-3 border rounded-md focus:ring-2 focus:ring-steel-blue-500 focus:border-steel-blue-500 resize-none bg-gray-50"
               name="coachnote"
               id="coachnote"
               onChange={(e) => {
                 clubOverview.setCoachNote(e.target.value);
               }}
               value={clubOverview.coachNote}
+              placeholder="Écrivez votre note ici..."
             />
           </section>
 
-          <section>
-            <h1 className="font-bold text-xl">Système de niveau</h1>
-            <p className="mb-4">
+          <section className="py-8">
+            <h1 className="font-bold text-xl mb-1 text-gray-900">
+              Système de niveau
+            </h1>
+            <p className="text-gray-500 mb-4">
               Configurez les seuils d&apos;alerte et de blocage pour chaque type
               de bateau en fonction du nombre de rameurs qui n&apos;ont pas les
               critères requis.
@@ -110,58 +109,67 @@ export const MiscParams = () => {
             <Button
               type="button"
               onClick={() => setBoatLevelConfigOpen(true)}
-              className="mt-2"
+              className="w-full md:w-auto"
             >
               Configurer les niveaux des bateaux
             </Button>
           </section>
 
-          <section>
-            <h1 className="font-bold text-xl">Démarrage automatique</h1>
-            <p>
+          <section className="py-8">
+            <h1 className="font-bold text-xl mb-1 text-gray-900">
+              Démarrage automatique
+            </h1>
+            <p className="text-gray-500 mb-4">
               En activant cette option, RowingBeacon se lancera au démarrage du
               système
             </p>
 
-            {autoStartState === "pending" && <p>Chargement...</p>}
+            {autoStartState === "pending" && (
+              <div className="flex items-center gap-2 text-gray-500">
+                <ClockIcon className="w-5 h-5 animate-spin" />
+                <p>Chargement...</p>
+              </div>
+            )}
             {autoStartState === "activated" && (
-              <>
-                <p>
-                  Le démarrage automatique est{" "}
-                  <span className="font-bold underline">activé</span>
+              <div className="space-y-3">
+                <p className="text-green-600 font-medium">
+                  Le démarrage automatique est activé
                 </p>
                 <Button
                   type="button"
-                  //eslint-disable-next-line @typescript-eslint/no-misused-promises
+                  // eslint-disable-next-line @typescript-eslint/no-misused-promises
                   onClick={disableAutoStart}
-                  className="mt-2"
+                  className="w-full md:w-auto"
                 >
                   Désactiver le démarrage automatique
                 </Button>
-              </>
+              </div>
             )}
             {autoStartState === "not-activated" && (
-              <>
-                <p>
-                  Le démarrage automatique est{" "}
-                  <span className="font-bold underline">désactivé</span>
+              <div className="space-y-3">
+                <p className="text-gray-600 font-medium">
+                  Le démarrage automatique est désactivé
                 </p>
-
                 <Button
                   type="button"
                   // eslint-disable-next-line @typescript-eslint/no-misused-promises
                   onClick={enableAutoStart}
-                  className="mt-2"
+                  className="w-full md:w-auto"
                 >
                   Activer le démarrage automatique
                 </Button>
-              </>
+              </div>
             )}
           </section>
 
-          <section>
-            <h1 className="font-bold text-xl mb-2">Actions sensibles</h1>
-
+          <section className="pt-8">
+            <h1 className="font-bold text-xl mb-1 text-gray-900">
+              Actions sensibles
+            </h1>
+            <p className="text-gray-500 mb-4">
+              Attention : ces actions peuvent avoir des conséquences
+              irréversibles
+            </p>
             <Button
               type="button"
               color="danger"
@@ -170,29 +178,29 @@ export const MiscParams = () => {
                 if (!(await adminEditSystem.askForAdminAccess())) {
                   return;
                 }
-
                 setDeleteDataDialogOpen(true);
               }}
+              className="w-full md:w-auto"
             >
               Supprimer toutes les données
             </Button>
-
-            <Dialog
-              open={deleteDataDialogOpen}
-              onOpenChange={(open) => {
-                setDeleteDataDialogOpen(open);
-              }}
-            >
-              <DialogContent
-                title="Supprimer toutes les données !"
-                className="max-w-xl"
-              >
-                <DeleteDatas />
-              </DialogContent>
-            </Dialog>
           </section>
         </div>
       </div>
+
+      <Dialog
+        open={deleteDataDialogOpen}
+        onOpenChange={(open) => {
+          setDeleteDataDialogOpen(open);
+        }}
+      >
+        <DialogContent
+          title="Supprimer toutes les données !"
+          className="max-w-xl"
+        >
+          <DeleteDatas />
+        </DialogContent>
+      </Dialog>
 
       <BoatLevelConfigModal
         isOpen={boatLevelConfigOpen}
