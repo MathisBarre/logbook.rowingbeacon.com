@@ -9,18 +9,24 @@ import {
 } from "../_common/business/boat.rules";
 import { getSeasonDate } from "../_common/utils/seasons";
 import { useGlobalStats } from "./utils/getGlobalStats";
+import { SeasonSelector } from "./components/SeasonSelector";
+import { useState } from "react";
+
 export const StatsScreen = () => {
-  const seasonDate = getSeasonDate();
+  const [selectedSeason, setSelectedSeason] = useState<{
+    startDate: Date;
+    endDate: Date;
+  }>(getSeasonDate(new Date()));
 
   const { count, totalDuration } = useGlobalStats({
-    startDate: seasonDate.startDate,
-    endDate: seasonDate.endDate,
+    startDate: selectedSeason.startDate,
+    endDate: selectedSeason.endDate,
   });
 
   // Generate fake data for the chart
   const chartData = useSessionsByMonthStackedByBoatType({
-    startDate: seasonDate.startDate,
-    endDate: seasonDate.endDate,
+    startDate: selectedSeason.startDate,
+    endDate: selectedSeason.endDate,
   });
 
   // Format month names
@@ -52,6 +58,11 @@ export const StatsScreen = () => {
 
   return (
     <div className="p-4 gap-4 flex flex-col h-full">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-semibold text-gray-900">Statistiques</h1>
+        <SeasonSelector value={selectedSeason} onChange={setSelectedSeason} />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <StatCard
           title="Sessions"

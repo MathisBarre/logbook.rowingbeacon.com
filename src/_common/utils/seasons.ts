@@ -1,8 +1,11 @@
-const NEW_SEASON_START_BEGINNING_OF_MONTH = 8;
+export const NEW_SEASON_START_BEGINNING_OF_MONTH = 8;
 
-export const getSeasonDate = (
-  date: Date = new Date()
-): { startDate: Date; endDate: Date } => {
+export interface Season {
+  startDate: Date;
+  endDate: Date;
+}
+
+export const getSeasonDate = (date: Date = new Date()): Season => {
   const year = date.getFullYear();
   const month = date.getMonth();
   const seasonStartMonth = NEW_SEASON_START_BEGINNING_OF_MONTH;
