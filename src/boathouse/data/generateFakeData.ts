@@ -69,6 +69,20 @@ function batch<T>(data: T[], size: number): T[][] {
   return batches;
 }
 
+function getSeasonalActivityMultiplier(date: Date): number {
+  const month = date.getMonth();
+  // Summer vacation (July): significantly reduced activity
+  if (month === 6) return 0.3;
+  // Beginning of season (August-September): high activity
+  if (month === 7 || month === 8) return 1.2;
+  // Early winter (November-December): reduced activity
+  if (month === 10 || month === 11) return 0.6;
+  // Spring (March-April): increased activity
+  if (month === 2 || month === 3) return 1.3;
+  // Rest of the year: normal activity
+  return 1;
+}
+
 function createSessions(
   date: Date,
   timeOfDay: "morning" | "afternoon" | "evening" | "day",
@@ -78,11 +92,15 @@ function createSessions(
 ): SessionToSave[] {
   const nbOfBoats = boats.length;
 
-  let percentage = 0.3;
+  let basePercentage = 0.3;
 
   if (timeOfDay === "morning" || timeOfDay === "afternoon") {
-    percentage = 0.5;
+    basePercentage = 0.5;
   }
+
+  // Apply seasonal multiplier
+  const seasonalMultiplier = getSeasonalActivityMultiplier(date);
+  const percentage = basePercentage * seasonalMultiplier;
 
   const nbOfSessions = Math.floor(nbOfBoats * percentage);
 
