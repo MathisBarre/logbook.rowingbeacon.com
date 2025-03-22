@@ -1,4 +1,6 @@
-export const NEW_SEASON_START_BEGINNING_OF_MONTH = 8;
+import { addDays } from "./date.utils";
+
+export const NEW_SEASON_START_BEGINNING_OF_MONTH = 7;
 
 export interface Season {
   startDate: Date;
@@ -11,14 +13,12 @@ export const getSeasonDate = (date: Date = new Date()): Season => {
   const seasonStartMonth = NEW_SEASON_START_BEGINNING_OF_MONTH;
 
   const startYear = month >= seasonStartMonth ? year : year - 1;
-  const endYear = month >= seasonStartMonth ? year : year;
+
+  const startDate = new Date(startYear, seasonStartMonth, 1);
+  const endDate = addDays(new Date(startYear + 1, seasonStartMonth, 1), -1);
 
   return {
-    startDate: new Date(startYear, seasonStartMonth - 1, 1),
-    endDate: new Date(
-      endYear,
-      month >= seasonStartMonth ? 11 : 6,
-      month >= seasonStartMonth ? 31 : 31
-    ),
+    startDate,
+    endDate,
   };
 };

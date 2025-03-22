@@ -6,6 +6,18 @@ import { Boat } from "../../_common/business/boat.rules";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { getSessionsInPeriod } from "./getSessionByPeriod";
 
+export const getOneEmptyBarChartStackItemByMonth = () => {
+  const result: BarChartStackItem[] = [];
+  for (let i = 0; i < 12; i++) {
+    result.push({
+      month: i,
+      stackAmount: 0,
+      stackLabel: "OTHER",
+    });
+  }
+  return result;
+};
+
 export const getSessionsByMonthStackedByBoatType = async (
   {
     startDate,
@@ -43,7 +55,7 @@ export const getSessionsByMonthStackedByBoatType = async (
     });
   });
 
-  return result;
+  return [...getOneEmptyBarChartStackItemByMonth(), ...result];
 };
 
 export const useSessionsByMonthStackedByBoatType = ({

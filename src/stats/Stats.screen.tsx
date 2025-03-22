@@ -54,7 +54,7 @@ export const StatsScreen = () => {
 
   // Format number of sessions
   const formatAmount = (amount: number) =>
-    `${amount} séance${amount > 1 ? "s" : ""}`;
+    `${amount} sortie${amount > 1 ? "s" : ""}`;
 
   return (
     <div className="p-4 gap-4 flex flex-col h-full">
@@ -88,7 +88,6 @@ export const StatsScreen = () => {
             formatMonth={formatMonth}
             formatAmount={formatAmount}
             formatStackLabel={formatStackLabel}
-            theme="light"
             sortStacks={(a, b) => {
               const aNbRowers = getBoatNumberOfRowers(a as BoatTypeEnum);
               const bNbRowers = getBoatNumberOfRowers(b as BoatTypeEnum);

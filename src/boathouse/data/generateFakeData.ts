@@ -14,12 +14,14 @@ export const useGenerateFakeData = () => {
 
   return async function generateFakeData() {
     const data: SessionToSave[] = [];
-    const startDate = new Date("2024-01-01");
+    const nbOfDays = 500;
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 500);
     const routes = getAllRoutes();
     const boats = getAllBoats();
     const rowers = getAllRowers();
 
-    for (let i = 0; i < 365; i++) {
+    for (let i = 0; i < nbOfDays; i++) {
       const currentDate = new Date(startDate);
       currentDate.setDate(startDate.getDate() + i);
 

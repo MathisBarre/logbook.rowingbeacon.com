@@ -20,7 +20,6 @@ interface StackedBarChartProps {
   data: BarChartStackItem[];
   formatMonth?: (month: number) => string;
   formatAmount?: (amount: number) => string;
-  theme?: "light" | "dark";
   sortStacks?: (a: string, b: string) => number;
   formatStackLabel?: (label: string) => string;
 }
@@ -39,7 +38,6 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
   data,
   formatMonth = (month) => `Month ${month}`,
   formatAmount = (amount) => amount.toString(),
-  theme = "light",
   sortStacks,
   formatStackLabel,
 }) => {
@@ -77,24 +75,31 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
   const colors = React.useMemo(() => {
     // Define base blue colors for each category
     const blueShades = [
-      "#93C5FD", // Light blue for J10
-      "#60A5FA", // Slightly darker for J12
-      "#3B82F6", // Medium blue for J14
-      "#2563EB", // Darker blue for J16
-      "#1D4ED8", // Darkest blue for Senior
+      "#2a61b4",
+      "#2a71b4",
+      "#2a81b4",
+      "#2a91b4",
+      "#2aa1b4",
+      "#2ab1b4",
+      "#2ac1b4",
+      "#2ad1b4",
+      "#2ae1b4",
+      "#2af1b4",
+      "#2af1a4",
+      "#2af194",
+      "#2af184",
+      "#2af174",
+      "#2af164",
+      "#2af154",
     ];
 
     return uniqueLabels.map((label, index) => {
-      if (theme === "dark") {
-        // For dark theme, use brighter shades
-        return blueShades[index].replace(")", ", 0.8)");
-      }
       return blueShades[index];
     });
-  }, [uniqueLabels, theme]);
+  }, [uniqueLabels]);
 
-  const textColor = theme === "dark" ? "#fff" : "#000";
-  const gridColor = theme === "dark" ? "#333" : "#ddd";
+  const textColor = "#000";
+  const gridColor = "#ddd";
 
   // Custom tooltip component
   const CustomTooltip: React.FC<TooltipProps> = ({
@@ -108,8 +113,8 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
       return (
         <div
           style={{
-            backgroundColor: theme === "dark" ? "#1f2937" : "#fff",
-            border: `1px solid ${theme === "dark" ? "#374151" : "#e5e7eb"}`,
+            backgroundColor: "#fff",
+            border: `1px solid #e5e7eb`,
             borderRadius: "4px",
             padding: "8px",
             color: textColor,

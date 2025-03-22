@@ -292,14 +292,18 @@ const generateBoats = () => {
       name = `${last2xBoatGenerated++} ${
         rowingBrands[generateNumberBetween(0, rowingBrands.length - 1)]
       }`;
-      type = BoatTypeEnum.TWO_ROWERS_COXLESS;
+      type = [BoatTypeEnum.TWO_ROWERS_COXLESS, BoatTypeEnum.TWO_ROWERS_COXED][
+        generateNumberBetween(0, 1)
+      ];
     }
 
     if (shouldGenerate4x) {
       name = `${last4xBoatGenerated++} ${
         rowingBrands[generateNumberBetween(0, rowingBrands.length - 1)]
       }`;
-      type = BoatTypeEnum.FOUR_ROWERS_COXLESS;
+      type = [BoatTypeEnum.FOUR_ROWERS_COXLESS, BoatTypeEnum.FOUR_ROWERS_COXED][
+        generateNumberBetween(0, 1)
+      ];
     }
 
     if (shouldGenerate8x) {

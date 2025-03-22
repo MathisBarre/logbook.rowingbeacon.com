@@ -4,7 +4,7 @@ import { getDatabase } from "../../_common/database/database";
 import { DBSessions } from "../../_common/database/schema";
 import { useEffect } from "react";
 import { useState } from "react";
-
+import { asc, desc } from "drizzle-orm";
 interface SeasonSelectorProps {
   value: Season;
   onChange: (date: Season) => void;
@@ -15,7 +15,7 @@ const getFirstRegisteredSessionDate = async () => {
   const firstSession = await drizzle
     .select()
     .from(DBSessions)
-    .orderBy(DBSessions.startDateTime)
+    .orderBy(asc(DBSessions.startDateTime))
     .limit(1);
   return firstSession[0].startDateTime;
 };
@@ -25,7 +25,7 @@ const getLastRegisteredSessionDate = async () => {
   const lastSession = await drizzle
     .select()
     .from(DBSessions)
-    .orderBy(DBSessions.startDateTime)
+    .orderBy(desc(DBSessions.startDateTime))
     .limit(1);
   return lastSession[0].startDateTime;
 };
@@ -39,12 +39,12 @@ export const SeasonSelector = ({ value, onChange }: SeasonSelectorProps) => {
       const lastSession = await getLastRegisteredSessionDate();
 
       const seasons = [];
-      let currentYear = new Date(firstSession).getFullYear();
+      const iDate = new Date(firstSession);
 
-      while (currentYear <= new Date(lastSession).getFullYear()) {
-        seasons.push(getSeasonDate(new Date(firstSession)));
+      while (iDate <= new Date(lastSession)) {
+        seasons.push(getSeasonDate(iDate));
 
-        currentYear++;
+        iDate.setFullYear(iDate.getFullYear() + 1);
       }
 
       setSeasons(seasons);
@@ -64,7 +64,8 @@ export const SeasonSelector = ({ value, onChange }: SeasonSelectorProps) => {
           key={season.startDate.toISOString()}
           value={season.startDate.toISOString()}
         >
-          {season.startDate.getFullYear()} - {season.endDate.getFullYear()}
+          Saison {season.startDate.getFullYear()} -{" "}
+          {season.endDate.getFullYear()}
         </option>
       ))}
     </select>
