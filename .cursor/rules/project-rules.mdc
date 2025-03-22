@@ -10,3 +10,5 @@ use tailwind and react
 use radix ui if possible (not strict)
 
 you can find "cn" util in src/_common/utils/utils.ts
+
+code logic should be organize with easily readable short functions, pure functions are preferred
