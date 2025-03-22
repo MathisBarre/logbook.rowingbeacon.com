@@ -1,5 +1,5 @@
 import Button from "../../_common/components/Button";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Dialog, DialogContent } from "../../_common/components/Dialog/Dialog";
 import { useAdminEditModeSystem } from "../../_common/store/adminEditMode.system";
 import { DeleteDatas } from "./DeleteDatas";
@@ -12,6 +12,8 @@ import { DBSessions } from "../../_common/database/schema";
 import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
 import { BoatLevelConfigModal } from "./BoatLevelConfigModal";
 import { ClockIcon, UserGroupIcon } from "@heroicons/react/24/outline";
+import { StackedBarChart } from "../../_common/components/StackedBarChart";
+import { generateRowingSessionData } from "../../_common/utils/chartData.utils";
 
 const StatCard = ({
   title,
@@ -43,6 +45,32 @@ export const MiscParams = () => {
   const { autoStartState, enableAutoStart, disableAutoStart } = useAutoStart();
   const { count, totalDuration } = useMiscStats();
 
+  // Generate fake data for the chart
+  const chartData = useMemo(() => generateRowingSessionData(), []);
+
+  // Format month names
+  const formatMonth = (month: number) => {
+    const months = [
+      "Janvier",
+      "Février",
+      "Mars",
+      "Avril",
+      "Mai",
+      "Juin",
+      "Juillet",
+      "Août",
+      "Septembre",
+      "Octobre",
+      "Novembre",
+      "Décembre",
+    ];
+    return months[month - 1];
+  };
+
+  // Format number of sessions
+  const formatAmount = (amount: number) =>
+    `${amount} séance${amount > 1 ? "s" : ""}`;
+
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
       <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between h-12">
@@ -72,6 +100,20 @@ export const MiscParams = () => {
                 title="Moyenne temps / session"
                 value={millisecondToDayHourMinutes(totalDuration / count || 0)}
                 icon={ClockIcon}
+              />
+            </div>
+          </section>
+
+          <section className="pb-8">
+            <h1 className="font-bold text-xl mb-2 text-gray-900">
+              Statistiques par mois
+            </h1>
+            <div className="bg-white rounded-lg shadow-sm border p-4">
+              <StackedBarChart
+                data={chartData}
+                formatMonth={formatMonth}
+                formatAmount={formatAmount}
+                theme="light"
               />
             </div>
           </section>
