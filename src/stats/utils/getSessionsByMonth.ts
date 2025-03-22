@@ -1,33 +1,10 @@
-import { and, gte, lte } from "drizzle-orm";
-import { getDatabase } from "../../_common/database/database";
-import { DBSessions } from "../../_common/database/schema";
 import { BarChartStackItem } from "../components/StackedBarChart";
 import { useState } from "react";
 import { useEffect } from "react";
 import { getErrorMessage } from "../../_common/utils/error";
 import { Boat } from "../../_common/business/boat.rules";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
-export const getSessionsInPeriod = async ({
-  startDate,
-  endDate,
-}: {
-  startDate: Date;
-  endDate: Date;
-}) => {
-  const { drizzle } = await getDatabase();
-
-  const sessions = await drizzle
-    .select()
-    .from(DBSessions)
-    .where(
-      and(
-        gte(DBSessions.startDateTime, startDate.toISOString()),
-        lte(DBSessions.endDateTime, endDate.toISOString())
-      )
-    );
-
-  return sessions;
-};
+import { getSessionsInPeriod } from "./getSessionByPeriod";
 
 export const getSessionsByMonthStackedByBoatType = async (
   {

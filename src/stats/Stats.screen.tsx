@@ -1,10 +1,5 @@
-import { useEffect, useState } from "react";
 import { millisecondToDayHourMinutes } from "../_common/utils/time.utils";
 import { UserGroupIcon, ClockIcon } from "@heroicons/react/24/outline";
-import { toast } from "sonner";
-import { getErrorMessage } from "../_common/utils/error";
-import { getDatabase } from "../_common/database/database";
-import { DBSessions } from "../_common/database/schema";
 import { StackedBarChart } from "./components/StackedBarChart";
 import { useSessionsByMonthStackedByBoatType } from "./utils/getSessionsByMonth";
 import {
@@ -12,13 +7,20 @@ import {
   getBoatNumberOfRowers,
   getTypeLabel,
 } from "../_common/business/boat.rules";
+import { getSeasonDate } from "../_common/utils/seasons";
+import { useGlobalStats } from "./utils/getGlobalStats";
 export const StatsScreen = () => {
-  const { count, totalDuration } = useMiscStats();
+  const seasonDate = getSeasonDate();
+
+  const { count, totalDuration } = useGlobalStats({
+    startDate: seasonDate.startDate,
+    endDate: seasonDate.endDate,
+  });
 
   // Generate fake data for the chart
   const chartData = useSessionsByMonthStackedByBoatType({
-    startDate: new Date("2020-01-01"),
-    endDate: new Date("2030-12-31"),
+    startDate: seasonDate.startDate,
+    endDate: seasonDate.endDate,
   });
 
   // Format month names
@@ -108,39 +110,4 @@ const StatCard = ({
       </div>
     </div>
   );
-};
-
-const useMiscStats = () => {
-  const [stats, setStats] = useState({ count: 0, totalDuration: 0 });
-
-  useEffect(() => {
-    getMiscStats()
-      .then(setStats)
-      .catch((e) => toast.error(getErrorMessage(e)));
-  }, []);
-
-  return stats;
-};
-
-const getMiscStats = async (): Promise<{
-  count: number;
-  totalDuration: number;
-}> => {
-  const { drizzle } = await getDatabase();
-
-  const sessions = await drizzle.select().from(DBSessions);
-
-  const count = sessions.length;
-  const totalDuration = sessions.reduce((acc: number, session) => {
-    if (!session?.startDateTime || !session?.endDateTime) {
-      return acc;
-    }
-
-    const start = new Date(session.startDateTime);
-    const end = new Date(session.endDateTime);
-    const duration = end.getTime() - start.getTime();
-    return acc + duration;
-  }, 0);
-
-  return { count, totalDuration };
 };
