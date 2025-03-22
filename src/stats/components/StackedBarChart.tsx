@@ -21,6 +21,8 @@ interface StackedBarChartProps {
   formatMonth?: (month: number) => string;
   formatAmount?: (amount: number) => string;
   theme?: "light" | "dark";
+  sortStacks?: (a: string, b: string) => number;
+  formatStackLabel?: (label: string) => string;
 }
 
 interface TooltipProps {
@@ -38,6 +40,8 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
   formatMonth = (month) => `Month ${month}`,
   formatAmount = (amount) => amount.toString(),
   theme = "light",
+  sortStacks,
+  formatStackLabel,
 }) => {
   // Transform data for stacked bar chart
   const transformedData = React.useMemo(() => {
@@ -60,10 +64,14 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
     });
   }, [data]);
 
-  // Get unique labels for the stacks
+  // Get unique labels for the stacks and sort them if sortStacks is provided
   const uniqueLabels = React.useMemo(() => {
-    return Array.from(new Set(data.map((item) => item.stackLabel)));
-  }, [data]);
+    const labels = Array.from(new Set(data.map((item) => item.stackLabel)));
+    if (sortStacks) {
+      return labels.sort(sortStacks);
+    }
+    return labels;
+  }, [data, sortStacks]);
 
   // Generate colors for each stack based on theme
   const colors = React.useMemo(() => {
@@ -149,7 +157,7 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
               dataKey={label}
               stackId="a"
               fill={colors[index]}
-              name={label}
+              name={formatStackLabel ? formatStackLabel(label) : label}
             />
           ))}
         </BarChart>

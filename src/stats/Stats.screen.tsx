@@ -7,6 +7,11 @@ import { getDatabase } from "../_common/database/database";
 import { DBSessions } from "../_common/database/schema";
 import { StackedBarChart } from "./components/StackedBarChart";
 import { useSessionsByMonthStackedByBoatType } from "./utils/getSessionsByMonth";
+import {
+  BoatTypeEnum,
+  getBoatNumberOfRowers,
+  getTypeLabel,
+} from "../_common/business/boat.rules";
 export const StatsScreen = () => {
   const { count, totalDuration } = useMiscStats();
 
@@ -33,6 +38,10 @@ export const StatsScreen = () => {
       "Décembre",
     ];
     return months[month];
+  };
+
+  const formatStackLabel = (label: string) => {
+    return getTypeLabel(label as BoatTypeEnum);
   };
 
   // Format number of sessions
@@ -65,7 +74,13 @@ export const StatsScreen = () => {
             data={chartData}
             formatMonth={formatMonth}
             formatAmount={formatAmount}
+            formatStackLabel={formatStackLabel}
             theme="light"
+            sortStacks={(a, b) => {
+              const aNbRowers = getBoatNumberOfRowers(a as BoatTypeEnum);
+              const bNbRowers = getBoatNumberOfRowers(b as BoatTypeEnum);
+              return (aNbRowers || 0) - (bNbRowers || 0);
+            }}
           />
         </div>
       </div>
