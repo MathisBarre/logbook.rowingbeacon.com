@@ -9,7 +9,7 @@ import { SimpleAlertDialog } from "./SimpleAlertDialog";
 import Button from "./Button";
 import { useState } from "react";
 import useNavigationStore from "../store/navigation.store";
-import { BookIcon, LockIcon, ShipIcon } from "lucide-react";
+import { BookIcon, LockIcon, ShipIcon, BarChartIcon } from "lucide-react";
 import logo from "../../_common/images/logo.svg";
 import { Popover, PopoverContent, PopoverTrigger } from "./Popover";
 import PageButton from "./PageButton";
@@ -98,6 +98,14 @@ export const NavigationBar = () => {
             setPage={setPage}
             icon={<BookIcon className="h-4 w-4" />}
             label="Logbook"
+          />
+
+          <PageButton
+            page="stats"
+            currentPage={page}
+            setPage={setPage}
+            icon={<BarChartIcon className="h-4 w-4" />}
+            label="Statistiques"
           />
 
           <PageButton

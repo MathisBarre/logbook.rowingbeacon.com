@@ -7,7 +7,7 @@ import { LogbookScreen } from "./logbook/Logbook.screen";
 import { OnboardingScreen } from "./onboarding/Onboarding.screen";
 import { useOnboardingStore } from "./onboarding/onboarding.store";
 import { ParametersScreen } from "./parameters/Parameters.screen";
-
+import { StatsScreen } from "./stats/Stats.screen";
 export function Router() {
   const isOnboardingDone = useOnboardingStore((state) => state.isOnboarded);
   const setIsOnboardingDone = useOnboardingStore((state) => state.setOnboarded);
@@ -30,6 +30,7 @@ export function Router() {
         boathouse: () => <BoathouseScreen />,
         logbook: () => <LogbookScreen />,
         parameters: () => <ParametersScreen />,
+        stats: () => <StatsScreen />,
       })}
     </AppTemplate>
   );

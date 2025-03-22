@@ -10,14 +10,14 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-interface DataItem {
+export interface BarChartStackItem {
   month: number;
-  amount: number;
-  label: string;
+  stackAmount: number;
+  stackLabel: string;
 }
 
 interface StackedBarChartProps {
-  data: DataItem[];
+  data: BarChartStackItem[];
   formatMonth?: (month: number) => string;
   formatAmount?: (amount: number) => string;
   theme?: "light" | "dark";
@@ -47,17 +47,22 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
       if (!acc[monthKey]) {
         acc[monthKey] = { month: monthKey } as Record<string, number>;
       }
-      acc[monthKey][item.label] = item.amount;
+      acc[monthKey][item.stackLabel] = item.stackAmount;
       return acc;
     }, {} as Record<number, Record<string, number>>);
 
-    // Convert to array and sort by month
-    return Object.values(monthlyData).sort((a, b) => a.month - b.month);
+    // Convert to array and sort by month, starting from August (8)
+    return Object.values(monthlyData).sort((a, b) => {
+      // Adjust month comparison to start from August
+      const monthA = a.month >= 7 ? a.month : a.month + 12;
+      const monthB = b.month >= 7 ? b.month : b.month + 12;
+      return monthA - monthB;
+    });
   }, [data]);
 
   // Get unique labels for the stacks
   const uniqueLabels = React.useMemo(() => {
-    return Array.from(new Set(data.map((item) => item.label)));
+    return Array.from(new Set(data.map((item) => item.stackLabel)));
   }, [data]);
 
   // Generate colors for each stack based on theme
