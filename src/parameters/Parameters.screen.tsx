@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { RowersCrud } from "./components/RowersCrud";
 import { forEnum } from "../_common/utils/utils";
-import { RoutesCrud } from "./components/RoutesCrud";
 import { BoatCrud } from "./components/BoatsCrud";
 import { MiscParams } from "./components/MiscParams";
 
-type Page = "rowers" | "routes" | "boats" | "misc";
+type Page = "rowers" | "boats" | "misc";
 
 export const ParametersScreen = () => {
   const [page, setPage] = useState<Page>("rowers");
@@ -15,7 +14,6 @@ export const ParametersScreen = () => {
       <div className="flex-1 relative">
         {forEnum(page, {
           rowers: () => <RowersCrud />,
-          routes: () => <RoutesCrud />,
           boats: () => <BoatCrud />,
           misc: () => <MiscParams />,
         })}
@@ -25,12 +23,6 @@ export const ParametersScreen = () => {
         <NavigationButton
           label="Paramètres divers"
           page="misc"
-          currentPage={page}
-          setPage={setPage}
-        />
-        <NavigationButton
-          label="Parcours"
-          page="routes"
           currentPage={page}
           setPage={setPage}
         />
@@ -68,7 +60,7 @@ const NavigationButton = ({
         setPage(page);
       }}
       className={
-        "rounded text-sm font-medium shadow-md bg-white text-steel-blue-800 hover:bg-gray-50 flex-1 h-8" +
+        "rounded text-sm font-medium shadow-md bg-white text-steel-blue-800 hover:bg-gray-50 flex-1 h-10" +
         (currentPage === page
           ? " border border-steel-blue-800 border-opacity-75"
           : "")

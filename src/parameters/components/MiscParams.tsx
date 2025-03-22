@@ -6,11 +6,13 @@ import { DeleteDatas } from "./DeleteDatas";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { useAutoStart } from "../hooks/useAutoStart";
 import { BoatLevelConfigModal } from "./BoatLevelConfigModal";
+import { RouteConfigModal } from "./RouteConfigModal";
 import { ClockIcon } from "@heroicons/react/24/outline";
 
 export const MiscParams = () => {
   const [deleteDataDialogOpen, setDeleteDataDialogOpen] = useState(false);
   const [boatLevelConfigOpen, setBoatLevelConfigOpen] = useState(false);
+  const [routeConfigOpen, setRouteConfigOpen] = useState(false);
   const adminEditSystem = useAdminEditModeSystem();
   const clubOverview = useClubOverviewStore();
   const { autoStartState, enableAutoStart, disableAutoStart } = useAutoStart();
@@ -47,7 +49,25 @@ export const MiscParams = () => {
             </section>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 pt-8">
+            <section className="flex flex-col h-full">
+              <div className="flex-1">
+                <h1 className="font-bold text-xl mb-1 text-gray-900">
+                  Gestion des parcours
+                </h1>
+                <p className="text-gray-500 mb-4">
+                  Gérez les parcours disponibles pour les sorties
+                </p>
+              </div>
+              <Button
+                type="button"
+                onClick={() => setRouteConfigOpen(true)}
+                className="w-full mt-4"
+              >
+                Configurer les parcours
+              </Button>
+            </section>
+
             <section className="flex flex-col h-full">
               <div className="flex-1">
                 <h1 className="font-bold text-xl mb-1 text-gray-900">
@@ -167,6 +187,11 @@ export const MiscParams = () => {
       <BoatLevelConfigModal
         isOpen={boatLevelConfigOpen}
         onOpenChange={setBoatLevelConfigOpen}
+      />
+
+      <RouteConfigModal
+        isOpen={routeConfigOpen}
+        onOpenChange={setRouteConfigOpen}
       />
     </div>
   );
