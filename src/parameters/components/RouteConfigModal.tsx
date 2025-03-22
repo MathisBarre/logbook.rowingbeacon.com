@@ -2,8 +2,13 @@ import { PencilIcon, Trash2Icon } from "lucide-react";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { toast } from "sonner";
 import Button from "../../_common/components/Button";
-import { windowConfirm } from "../../_common/utils/window.utils";
-import { Dialog, DialogContent } from "../../_common/components/Dialog/Dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogDescription,
+  DialogFooter,
+} from "../../_common/components/Dialog/Dialog";
 import { Input } from "../../_common/components/Input";
 import { useState } from "react";
 
@@ -23,6 +28,13 @@ export const RouteConfigModal = ({
     id: string;
     name: string;
   } | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<{
+    isOpen: boolean;
+    route: { id: string; name: string } | null;
+  }>({
+    isOpen: false,
+    route: null,
+  });
 
   const handleUpdateRouteName = (newName: string) => {
     if (!editingRoute) return;
@@ -38,17 +50,15 @@ export const RouteConfigModal = ({
     setNewRouteName("");
   };
 
-  const deleteRoute = async (route: { id: string; name: string }) => {
-    if (
-      !(await windowConfirm(
-        `Voulez-vous archiver le parcours "${route.name}" ? Il ne sera plus possible de renseigner des sorties avec ce parcours, mais les données enregistrées ne seront pas impactées.`
-      ))
-    ) {
-      return;
-    }
+  const deleteRoute = (route: { id: string; name: string }) => {
+    setConfirmDelete({ isOpen: true, route });
+  };
 
-    store.archiveRoute(route.id);
-    toast.success("Le parcours a été supprimé");
+  const handleConfirmDelete = () => {
+    if (!confirmDelete.route) return;
+    store.archiveRoute(confirmDelete.route.id);
+    toast.success("Le parcours a été archivé");
+    setConfirmDelete({ isOpen: false, route: null });
   };
 
   return (
@@ -131,6 +141,39 @@ export const RouteConfigModal = ({
           </div>
         </div>
       </DialogContent>
+      <Dialog
+        open={confirmDelete.isOpen}
+        onOpenChange={(open) =>
+          setConfirmDelete({ isOpen: open, route: confirmDelete.route })
+        }
+      >
+        <DialogContent className="max-w-xl" title="Archiver le parcours">
+          <DialogHeader>
+            <DialogDescription className="mb-4">
+              Voulez-vous archiver le parcours &quot;{confirmDelete.route?.name}
+              &quot; ? Il ne sera plus possible de renseigner des sorties avec
+              ce parcours, mais les données enregistrées ne seront pas
+              impactées.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outlined"
+              onClick={() => setConfirmDelete({ isOpen: false, route: null })}
+            >
+              Annuler
+            </Button>
+            <Button
+              type="button"
+              variant="primary"
+              onClick={handleConfirmDelete}
+            >
+              Archiver
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Dialog>
   );
 };
