@@ -49,7 +49,7 @@ export const StatsScreen = () => {
     `${amount} séance${amount > 1 ? "s" : ""}`;
 
   return (
-    <div className="p-4 gap-4 flex flex-col">
+    <div className="p-4 gap-4 flex flex-col h-full">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <StatCard
           title="Sessions"
@@ -68,7 +68,7 @@ export const StatsScreen = () => {
         />
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex gap-4 flex-1">
         <div className="bg-white rounded-lg shadow-sm border p-4 flex-1">
           <StackedBarChart
             data={chartData}
