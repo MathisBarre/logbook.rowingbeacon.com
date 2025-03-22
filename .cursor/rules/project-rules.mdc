@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+use yarn classic
+
+use tailwind and react
+
+use radix ui if possible (not strict)
+
+you can find "cn" util in src/_common/utils/utils.ts
