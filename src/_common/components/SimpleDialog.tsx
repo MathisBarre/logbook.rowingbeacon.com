@@ -23,7 +23,7 @@ export const SimpleDialog = ({
       <DialogContent
         title={title}
         subtitle={subtitle}
-        className={cn(className)}
+        className={cn("bg-white", className)}
       >
         {children}
       </DialogContent>
