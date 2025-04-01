@@ -322,7 +322,6 @@ export const RowersCrud = () => {
                               </button>
                             </DialogTrigger>
                             <DialogContent
-                              className="max-w-[32rem]"
                               title={`Statistiques de ${rower.name}`}
                             >
                               <RowerStats rowerId={rower.id} />
