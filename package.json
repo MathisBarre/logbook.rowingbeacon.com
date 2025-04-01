@@ -42,6 +42,7 @@
     "lucide-react": "^0.412.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-error-boundary": "^5.0.0",
     "react-hook-form": "^7.46.2",
     "react-select": "^5.8.0",
     "recharts": "^2.15.1",
