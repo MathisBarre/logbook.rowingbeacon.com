@@ -3,7 +3,8 @@ import {
   UserGroupIcon,
   ClockIcon,
   ChartBarIcon,
-} from "@heroicons/react/24/outline";
+  CalculatorIcon,
+} from "@heroicons/react/16/solid";
 import { StackedBarChart } from "./components/StackedBarChart";
 import { useSessionsByMonthStackedByBoatType } from "./utils/getSessionsByMonth";
 import {
@@ -103,7 +104,7 @@ export const StatsScreen = () => {
             <StatCard
               title="Moyenne temps / session"
               value={millisecondToDayHourMinutes(totalDuration / count || 0)}
-              icon={ClockIcon}
+              icon={CalculatorIcon}
             />
           </div>
 

@@ -7,6 +7,7 @@ interface SeasonSelectorProps {
   firstDataAt: Date;
   lastDataAt: Date;
   disabled?: boolean;
+  className?: string;
 }
 
 export const SeasonSelector = ({
@@ -15,6 +16,7 @@ export const SeasonSelector = ({
   firstDataAt,
   lastDataAt,
   disabled,
+  className,
 }: SeasonSelectorProps) => {
   const seasons = useMemo(
     () => getSeasons(firstDataAt, lastDataAt),
@@ -26,7 +28,11 @@ export const SeasonSelector = ({
       disabled={disabled}
       value={value.startDate.toISOString()}
       onChange={(e) => onChange(getSeasonDate(new Date(e.target.value)))}
-      className={cn("input", disabled && "opacity-50 cursor-not-allowed")}
+      className={cn(
+        "input",
+        disabled && "opacity-50 cursor-not-allowed",
+        className
+      )}
     >
       {seasons.map((season) => (
         <option

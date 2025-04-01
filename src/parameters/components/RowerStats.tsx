@@ -30,6 +30,7 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
       <div className="flex items-center gap-2 mb-4">
         {isLoadingDates && <Loading />}
         <SeasonSelector
+          className="w-full"
           value={selectedSeason}
           onChange={setSelectedSeason}
           firstDataAt={firstSession || new Date()}
@@ -38,7 +39,7 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         <div className="bg-white rounded-lg shadow-sm border p-4 flex items-center gap-4">
           <div className="p-3 bg-steel-blue-50 rounded-lg">
             <ChartBarIcon className="w-6 h-6 text-steel-blue-600" />
