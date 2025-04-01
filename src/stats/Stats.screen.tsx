@@ -1,5 +1,9 @@
 import { millisecondToDayHourMinutes } from "../_common/utils/time.utils";
-import { UserGroupIcon, ClockIcon } from "@heroicons/react/24/outline";
+import {
+  UserGroupIcon,
+  ClockIcon,
+  ChartBarIcon,
+} from "@heroicons/react/24/outline";
 import { StackedBarChart } from "./components/StackedBarChart";
 import { useSessionsByMonthStackedByBoatType } from "./utils/getSessionsByMonth";
 import {
@@ -57,7 +61,16 @@ export const StatsScreen = () => {
     `${amount} sortie${amount > 1 ? "s" : ""}`;
 
   return (
-    <div className="p-4 gap-4 flex flex-col h-full">
+    <div className="p-4 gap-4 flex flex-col h-full relative">
+      <div className="absolute inset-0 bg-white z-10 backdrop-blur-sm bg-opacity-10">
+        <div className="flex justify-center items-center h-full flex-col gap-4">
+          <ChartBarIcon className="w-16 h-16 text-gray-900" />
+          <p className="text-xl font-semibold text-gray-900 text-center max-w-sm text-balance">
+            Aucune session enregistrée pour le moment
+          </p>
+        </div>
+      </div>
+
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-semibold text-gray-900">Statistiques</h1>
         <SeasonSelector value={selectedSeason} onChange={setSelectedSeason} />

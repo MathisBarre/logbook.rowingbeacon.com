@@ -21,7 +21,12 @@ export function Router() {
   });
 
   if (!isOnboardingDone) {
-    return <OnboardingScreen setIsOnboardingDone={setIsOnboardingDone} />;
+    return (
+      <OnboardingScreen
+        setIsOnboardingDone={setIsOnboardingDone}
+        setPage={setPage}
+      />
+    );
   }
 
   return (

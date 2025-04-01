@@ -18,6 +18,7 @@ import { BoatTypeEnum } from "../_common/business/boat.rules";
 import { hashPassword } from "../_common/utils/password";
 import { useGenerateFakeData } from "../boathouse/data/generateFakeData";
 import { useState } from "react";
+import { AdminPage } from "../_common/store/navigation.store";
 
 const OnboardingFormSchema = z.object({
   clubPassword: z.string(),
@@ -30,8 +31,10 @@ type OnboardingFormValues = z.infer<typeof OnboardingFormSchema>;
 
 export const OnboardingScreen = ({
   setIsOnboardingDone,
+  setPage,
 }: {
   setIsOnboardingDone: (isOnboardingDone: boolean) => void;
+  setPage: (page: AdminPage) => void;
 }) => {
   const { setClubOverview } = useClubOverviewStore();
 
@@ -61,6 +64,7 @@ export const OnboardingScreen = ({
           onSubmit={form.handleSubmit((values) => {
             setClubOverview(formatFormValues(values));
             setIsOnboardingDone(true);
+            setPage("boathouse");
           })}
         >
           <article className="flex flex-col gap-1 items-start bg-blue-100 border-l-4 border-blue-500 p-4 rounded text-blue-950 my-4">
