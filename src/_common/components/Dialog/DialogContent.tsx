@@ -27,7 +27,7 @@ export const DialogContent = React.forwardRef<
       }}
       ref={ref}
       className={cn(
-        "w-[48rem] max-h-[calc(100vh-4rem)] max-w-[calc(100vw-4rem)] bg-white bg-opacity-100 fixed z-50 grid border overflow-x-hidden overflow-y-auto shadow-lg sm:rounded-lg dialog-animation position-centered",
+        "w-[48rem] max-h-[calc(100vh-4rem)] max-w-[calc(100vw-4rem)] bg-white fixed z-50 grid border overflow-x-hidden overflow-y-auto shadow-lg sm:rounded-lg dialog-animation position-centered",
         className
       )}
       {...props}

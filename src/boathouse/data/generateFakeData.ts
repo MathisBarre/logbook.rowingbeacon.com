@@ -14,12 +14,14 @@ export const useGenerateFakeData = () => {
 
   return async function generateFakeData() {
     const data: SessionToSave[] = [];
-    const startDate = new Date("2024-01-01");
+    const nbOfDays = 500;
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 500);
     const routes = getAllRoutes();
     const boats = getAllBoats();
     const rowers = getAllRowers();
 
-    for (let i = 0; i < 365; i++) {
+    for (let i = 0; i < nbOfDays; i++) {
       const currentDate = new Date(startDate);
       currentDate.setDate(startDate.getDate() + i);
 
@@ -69,6 +71,20 @@ function batch<T>(data: T[], size: number): T[][] {
   return batches;
 }
 
+function getSeasonalActivityMultiplier(date: Date): number {
+  const month = date.getMonth();
+  // Summer vacation (July): significantly reduced activity
+  if (month === 6) return 0.3;
+  // Beginning of season (August-September): high activity
+  if (month === 7 || month === 8) return 1.2;
+  // Early winter (November-December): reduced activity
+  if (month === 10 || month === 11) return 0.6;
+  // Spring (March-April): increased activity
+  if (month === 2 || month === 3) return 1.3;
+  // Rest of the year: normal activity
+  return 1;
+}
+
 function createSessions(
   date: Date,
   timeOfDay: "morning" | "afternoon" | "evening" | "day",
@@ -78,11 +94,15 @@ function createSessions(
 ): SessionToSave[] {
   const nbOfBoats = boats.length;
 
-  let percentage = 0.3;
+  let basePercentage = 0.3;
 
   if (timeOfDay === "morning" || timeOfDay === "afternoon") {
-    percentage = 0.5;
+    basePercentage = 0.5;
   }
+
+  // Apply seasonal multiplier
+  const seasonalMultiplier = getSeasonalActivityMultiplier(date);
+  const percentage = basePercentage * seasonalMultiplier;
 
   const nbOfSessions = Math.floor(nbOfBoats * percentage);
 
@@ -93,6 +113,40 @@ function createSessions(
   }
 
   return sessions;
+}
+
+function getSeason(date: Date): "summer" | "winter" | "neutral" {
+  const month = date.getMonth();
+  // Summer season is from May to July (months 4-6)
+  if (month >= 4 && month <= 6) return "summer";
+  // Neutral season is from August to November (months 7-10)
+  if (month >= 7 && month <= 10) return "neutral";
+  // Winter season is from December to April (months 11-3)
+  return "winter";
+}
+
+function getSeasonalBoat(boats: Boat[], date: Date): Boat {
+  const season = getSeason(date);
+  const filteredBoats = boats.filter((boat) => {
+    const nbRowers = getBoatNumberOfRowers(boat.type);
+    if (!nbRowers) return false;
+
+    if (season === "summer") {
+      // In summer, prefer 4+ rower boats (90% chance)
+      return Math.random() < 0.9 ? nbRowers >= 4 : nbRowers < 4;
+    } else if (season === "winter") {
+      // In winter, prefer 1-2 rower boats (90% chance)
+      return Math.random() < 0.9 ? nbRowers <= 2 : nbRowers > 2;
+    } else {
+      // In neutral season (August-November), no preference
+      return true;
+    }
+  });
+
+  // If no boats match the criteria, fall back to random selection
+  return filteredBoats.length > 0
+    ? filteredBoats[Math.floor(Math.random() * filteredBoats.length)]
+    : boats[Math.floor(Math.random() * boats.length)];
 }
 
 function createSession(
@@ -116,7 +170,7 @@ function createSession(
     startDateTime.setHours(16 + Math.random() * 6);
   }
 
-  const boat = boats[Math.floor(Math.random() * boats.length)];
+  const boat = getSeasonalBoat(boats, date);
   const route = routes[Math.floor(Math.random() * routes.length)];
 
   const nbOfRowers = getBoatNumberOfRowers(boat.type);

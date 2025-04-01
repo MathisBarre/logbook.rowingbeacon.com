@@ -1,208 +1,198 @@
 import Button from "../../_common/components/Button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Dialog, DialogContent } from "../../_common/components/Dialog/Dialog";
 import { useAdminEditModeSystem } from "../../_common/store/adminEditMode.system";
 import { DeleteDatas } from "./DeleteDatas";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { useAutoStart } from "../hooks/useAutoStart";
-import { toast } from "sonner";
-import { getErrorMessage } from "../../_common/utils/error";
-import { getDatabase } from "../../_common/database/database";
-import { DBSessions } from "../../_common/database/schema";
-import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
-import useIncidentStore from "../../_common/store/incident.store";
 import { BoatLevelConfigModal } from "./BoatLevelConfigModal";
+import { RouteConfigModal } from "./RouteConfigModal";
+import { ClockIcon } from "@heroicons/react/24/outline";
 
 export const MiscParams = () => {
   const [deleteDataDialogOpen, setDeleteDataDialogOpen] = useState(false);
   const [boatLevelConfigOpen, setBoatLevelConfigOpen] = useState(false);
+  const [routeConfigOpen, setRouteConfigOpen] = useState(false);
   const adminEditSystem = useAdminEditModeSystem();
   const clubOverview = useClubOverviewStore();
   const { autoStartState, enableAutoStart, disableAutoStart } = useAutoStart();
-  const { count, totalDuration } = useMiscStats();
-  const { getIncidents } = useIncidentStore();
-  const incidents = getIncidents();
 
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
       <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between h-12">
-        <h1 className="text-base ml-2 flex gap-2 items-center">
+        <h1 className="text-base ml-2 flex gap-2 items-center font-medium">
           Paramètres divers
         </h1>
       </div>
 
       <div className="flex-1 relative">
-        <div className="p-4 flex flex-col gap-8 absolute inset-0 overflow-auto">
-          <section>
-            <h1 className="font-bold text-xl">Statistiques du club</h1>
+        <div className="p-6 flex flex-col absolute inset-0 overflow-auto">
+          <div className="flex flex-col flex-1">
+            <section className="flex flex-col flex-1 min-h-0">
+              <h1 className="font-bold text-xl mb-1 text-gray-900">
+                La note du coach
+              </h1>
+              <p className="text-gray-500 mb-2">
+                Cette note sera affichée en haut de la page
+                &quot;Boathouse&quot;
+              </p>
+              <textarea
+                className="flex-1 min-h-32 p-3 border rounded-md focus:ring-2 focus:ring-steel-blue-500 focus:border-steel-blue-500 resize-none bg-gray-50"
+                name="coachnote"
+                id="coachnote"
+                onChange={(e) => {
+                  clubOverview.setCoachNote(e.target.value);
+                }}
+                value={clubOverview.coachNote}
+                placeholder="Écrivez votre note ici..."
+              />
+            </section>
+          </div>
 
-            <ul>
-              <li>Nombre de sessions : {count}</li>
-              <li>
-                Temps total passé sur l&apos;eau :{" "}
-                {millisecondToDayHourMinutes(totalDuration)}
-              </li>
-              <li>
-                Moyenne temps / sessions :{" "}
-                {millisecondToDayHourMinutes(totalDuration / count || 0)}
-              </li>
-              <li>Nombre d&apos;incidents : {incidents.length}</li>
-            </ul>
-          </section>
-
-          <section>
-            <h1 className="font-bold text-xl">La note du coach</h1>
-
-            <p>
-              Cette note sera affichée en haut de la page &quot;Boathouse&quot;
-            </p>
-
-            <textarea
-              cols={64}
-              rows={4}
-              className="input resize"
-              name="coachnote"
-              id="coachnote"
-              onChange={(e) => {
-                clubOverview.setCoachNote(e.target.value);
-              }}
-              value={clubOverview.coachNote}
-            />
-          </section>
-
-          <section>
-            <h1 className="font-bold text-xl">Système de niveau</h1>
-            <p className="mb-4">
-              Configurez les seuils d&apos;alerte et de blocage pour chaque type
-              de bateau en fonction du nombre de rameurs qui n&apos;ont pas les
-              critères requis.
-            </p>
-            <Button
-              type="button"
-              onClick={() => setBoatLevelConfigOpen(true)}
-              className="mt-2"
-            >
-              Configurer les niveaux des bateaux
-            </Button>
-          </section>
-
-          <section>
-            <h1 className="font-bold text-xl">Démarrage automatique</h1>
-            <p>
-              En activant cette option, RowingBeacon se lancera au démarrage du
-              système
-            </p>
-
-            {autoStartState === "pending" && <p>Chargement...</p>}
-            {autoStartState === "activated" && (
-              <>
-                <p>
-                  Le démarrage automatique est{" "}
-                  <span className="font-bold underline">activé</span>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 pt-8">
+            <section className="flex flex-col h-full">
+              <div className="flex-1">
+                <h1 className="font-bold text-xl mb-1 text-gray-900">
+                  Gestion des parcours
+                </h1>
+                <p className="text-gray-500 mb-4">
+                  Gérez les parcours disponibles pour les sorties
                 </p>
+              </div>
+              <Button
+                type="button"
+                onClick={() => setRouteConfigOpen(true)}
+                className="w-full mt-4"
+              >
+                Configurer les parcours
+              </Button>
+            </section>
+
+            <section className="flex flex-col h-full">
+              <div className="flex-1">
+                <h1 className="font-bold text-xl mb-1 text-gray-900">
+                  Système de niveau
+                </h1>
+                <p className="text-gray-500 mb-4">
+                  Configurez les seuils d&apos;alerte et de blocage pour chaque
+                  type de bateau en fonction du nombre de rameurs qui n&apos;ont
+                  pas les critères requis.
+                </p>
+              </div>
+              <Button
+                type="button"
+                onClick={() => setBoatLevelConfigOpen(true)}
+                className="w-full mt-4"
+              >
+                Configurer les niveaux des bateaux
+              </Button>
+            </section>
+
+            <section className="flex flex-col h-full">
+              <div className="flex-1">
+                <h1 className="font-bold text-xl mb-1 text-gray-900">
+                  Démarrage automatique
+                </h1>
+                <p className="text-gray-500 mb-4">
+                  En activant cette option, RowingBeacon se lancera au démarrage
+                  du système
+                </p>
+
+                {autoStartState === "pending" && (
+                  <div className="flex items-center gap-2 text-gray-500">
+                    <ClockIcon className="w-5 h-5 animate-spin" />
+                    <p>Chargement...</p>
+                  </div>
+                )}
+                {autoStartState === "activated" && (
+                  <div>
+                    <p className="text-green-600 font-medium">
+                      Le démarrage automatique est activé
+                    </p>
+                  </div>
+                )}
+                {autoStartState === "not-activated" && (
+                  <div>
+                    <p className="text-gray-600 font-medium">
+                      Le démarrage automatique est désactivé
+                    </p>
+                  </div>
+                )}
+              </div>
+              {autoStartState === "activated" && (
                 <Button
                   type="button"
-                  //eslint-disable-next-line @typescript-eslint/no-misused-promises
+                  // eslint-disable-next-line @typescript-eslint/no-misused-promises
                   onClick={disableAutoStart}
-                  className="mt-2"
+                  className="w-full mt-4"
                 >
                   Désactiver le démarrage automatique
                 </Button>
-              </>
-            )}
-            {autoStartState === "not-activated" && (
-              <>
-                <p>
-                  Le démarrage automatique est{" "}
-                  <span className="font-bold underline">désactivé</span>
-                </p>
-
+              )}
+              {autoStartState === "not-activated" && (
                 <Button
                   type="button"
                   // eslint-disable-next-line @typescript-eslint/no-misused-promises
                   onClick={enableAutoStart}
-                  className="mt-2"
+                  className="w-full mt-4"
                 >
                   Activer le démarrage automatique
                 </Button>
-              </>
-            )}
-          </section>
+              )}
+            </section>
 
-          <section>
-            <h1 className="font-bold text-xl mb-2">Actions sensibles</h1>
-
-            <Button
-              type="button"
-              color="danger"
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              onClick={async () => {
-                if (!(await adminEditSystem.askForAdminAccess())) {
-                  return;
-                }
-
-                setDeleteDataDialogOpen(true);
-              }}
-            >
-              Supprimer toutes les données
-            </Button>
-
-            <Dialog
-              open={deleteDataDialogOpen}
-              onOpenChange={(open) => {
-                setDeleteDataDialogOpen(open);
-              }}
-            >
-              <DialogContent
-                title="Supprimer toutes les données !"
-                className="max-w-xl"
+            <section className="flex flex-col h-full">
+              <div className="flex-1">
+                <h1 className="font-bold text-xl mb-1 text-gray-900">
+                  Actions sensibles
+                </h1>
+                <p className="text-gray-500 mb-4">
+                  Attention : ces actions peuvent avoir des conséquences
+                  irréversibles
+                </p>
+              </div>
+              <Button
+                type="button"
+                color="danger"
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                onClick={async () => {
+                  if (!(await adminEditSystem.askForAdminAccess())) {
+                    return;
+                  }
+                  setDeleteDataDialogOpen(true);
+                }}
+                className="w-full mt-4"
               >
-                <DeleteDatas />
-              </DialogContent>
-            </Dialog>
-          </section>
+                Supprimer toutes les données
+              </Button>
+            </section>
+          </div>
         </div>
       </div>
+
+      <Dialog
+        open={deleteDataDialogOpen}
+        onOpenChange={(open) => {
+          setDeleteDataDialogOpen(open);
+        }}
+      >
+        <DialogContent
+          title="Supprimer toutes les données !"
+          className="max-w-xl"
+        >
+          <DeleteDatas />
+        </DialogContent>
+      </Dialog>
 
       <BoatLevelConfigModal
         isOpen={boatLevelConfigOpen}
         onOpenChange={setBoatLevelConfigOpen}
       />
+
+      <RouteConfigModal
+        isOpen={routeConfigOpen}
+        onOpenChange={setRouteConfigOpen}
+      />
     </div>
   );
-};
-
-const useMiscStats = () => {
-  const [stats, setStats] = useState({ count: 0, totalDuration: 0 });
-
-  useEffect(() => {
-    getMiscStats()
-      .then(setStats)
-      .catch((e) => toast.error(getErrorMessage(e)));
-  }, []);
-
-  return stats;
-};
-
-const getMiscStats = async (): Promise<{
-  count: number;
-  totalDuration: number;
-}> => {
-  const { drizzle } = await getDatabase();
-
-  const sessions = await drizzle.select().from(DBSessions);
-
-  const count = sessions.length;
-  const totalDuration = sessions.reduce((acc: number, session) => {
-    if (!session?.startDateTime || !session?.endDateTime) {
-      return acc;
-    }
-
-    const start = new Date(session.startDateTime);
-    const end = new Date(session.endDateTime);
-    const duration = end.getTime() - start.getTime();
-    return acc + duration;
-  }, 0);
-
-  return { count, totalDuration };
 };

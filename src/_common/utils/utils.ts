@@ -16,12 +16,16 @@ export const forEnum = <
   Callbacks extends Record<EnumValue, () => any>
 >(
   enumValue: EnumValue,
-  callbacks: Callbacks
+  callbacks: Callbacks,
+  fallback?: () => ReturnType<Callbacks[keyof Callbacks]>
 ): ReturnType<Callbacks[typeof enumValue]> => {
   const cb = callbacks[enumValue];
   if (!cb) {
-    // ? should never happen, ts should catch it before
-    throw new Error("UNKNOWN_ENUM_VALUE");
+    console.warn(`Unknown enum value: ${enumValue}`);
+    if (fallback) {
+      return fallback();
+    }
+    return undefined as ReturnType<Callbacks[typeof enumValue]>;
   }
   return cb();
 };
