@@ -1,4 +1,4 @@
-import { and, eq, inArray, not } from "drizzle-orm";
+import { and, eq, inArray, not, between } from "drizzle-orm";
 import { getDatabase } from "../../_common/database/database";
 import { DBSessionOnRowers, DBSessions } from "../../_common/database/schema";
 import { useEffect, useState } from "react";
@@ -7,16 +7,44 @@ import { getErrorMessage } from "../../_common/utils/error";
 import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import Loading from "../../_common/components/Loading";
+import { SeasonSelector } from "../../stats/components/SeasonSelector";
+import { getSeasonDate } from "../../_common/utils/seasons";
+import { useGetFirstAndLastRegisteredSessionDate } from "../../stats/utils/getFirstAndLastRegisteredSessionDate";
 
 export const RowerStats = ({ rowerId }: { rowerId: string }) => {
-  const { count, totalDuration, mostUsedBoats, mostFrequentPartners } =
-    useGetRowerStats(rowerId);
+  const {
+    firstSession,
+    lastSession,
+    isLoading: isLoadingDates,
+  } = useGetFirstAndLastRegisteredSessionDate();
+  const [selectedSeason, setSelectedSeason] = useState(
+    getSeasonDate(new Date())
+  );
+  const {
+    count,
+    totalDuration,
+    mostUsedBoats,
+    mostFrequentPartners,
+    firstSessionDate,
+    lastSessionDate,
+  } = useGetRowerStats(rowerId, selectedSeason);
   const { getBoatById, getRowerById } = useClubOverviewStore();
 
   if (count === undefined) return <Loading />;
 
   return (
     <div>
+      <div className="flex items-center gap-2 mb-4">
+        {isLoadingDates && <Loading />}
+        <SeasonSelector
+          value={selectedSeason}
+          onChange={setSelectedSeason}
+          firstDataAt={firstSession || new Date()}
+          lastDataAt={lastSession || new Date()}
+          disabled={isLoadingDates}
+        />
+      </div>
+
       <h1 className="font-medium text-lg mb-2">Statistiques générales</h1>
       <p>
         <span>Nombre de sessions : </span> <strong>{count}</strong>
@@ -31,6 +59,19 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
           {millisecondToDayHourMinutes(totalDuration / count || 0)}
         </strong>
       </p>
+
+      {firstSessionDate && lastSessionDate && (
+        <>
+          <p>
+            <span>Première session : </span>{" "}
+            <strong>{firstSessionDate.toLocaleDateString()}</strong>
+          </p>
+          <p>
+            <span>Dernière session : </span>{" "}
+            <strong>{lastSessionDate.toLocaleDateString()}</strong>
+          </p>
+        </>
+      )}
       <h1 className="font-medium text-lg mb-2 mt-4">
         Bateaux les plus utilisés
       </h1>
@@ -64,12 +105,17 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
   );
 };
 
-const useGetRowerStats = (rowerId: string) => {
+const useGetRowerStats = (
+  rowerId: string,
+  season: { startDate: Date; endDate: Date }
+) => {
   const [stats, setStats] = useState<{
     count: number;
     totalDuration: number;
     mostUsedBoats: { id: string; count: number }[];
     mostFrequentPartners: { id: string; count: number }[];
+    firstSessionDate?: Date;
+    lastSessionDate?: Date;
   }>({
     count: 0,
     totalDuration: 0,
@@ -78,21 +124,24 @@ const useGetRowerStats = (rowerId: string) => {
   });
 
   useEffect(() => {
-    getRowerStats(rowerId)
+    getRowerStats(rowerId, season)
       .then(setStats)
       .catch((e) => toast.error(getErrorMessage(e)));
-  }, [rowerId]);
+  }, [rowerId, season]);
 
   return stats;
 };
 
 const getRowerStats = async (
-  rowerId: string
+  rowerId: string,
+  season: { startDate: Date; endDate: Date }
 ): Promise<{
   count: number;
   totalDuration: number;
   mostUsedBoats: { id: string; count: number }[];
   mostFrequentPartners: { id: string; count: number }[];
+  firstSessionDate?: Date;
+  lastSessionDate?: Date;
 }> => {
   const { drizzle } = await getDatabase();
 
@@ -100,7 +149,16 @@ const getRowerStats = async (
     .select()
     .from(DBSessionOnRowers)
     .leftJoin(DBSessions, eq(DBSessions.id, DBSessionOnRowers.sessionId))
-    .where(eq(DBSessionOnRowers.rowerId, rowerId));
+    .where(
+      and(
+        eq(DBSessionOnRowers.rowerId, rowerId),
+        between(
+          DBSessions.startDateTime,
+          season.startDate.toISOString(),
+          season.endDate.toISOString()
+        )
+      )
+    );
 
   const count = sessions.length;
   const totalDuration = sessions.reduce((acc: number, session) => {
@@ -113,6 +171,31 @@ const getRowerStats = async (
     const duration = end.getTime() - start.getTime();
     return acc + duration;
   }, 0);
+
+  // Get first and last session dates
+  const validSessions = sessions.filter(
+    (s) => s.session?.startDateTime && s.session?.endDateTime
+  );
+  const firstSessionDate =
+    validSessions.length > 0
+      ? new Date(
+          Math.min(
+            ...validSessions.map((s) =>
+              new Date(s.session!.startDateTime).getTime()
+            )
+          )
+        )
+      : undefined;
+  const lastSessionDate =
+    validSessions.length > 0
+      ? new Date(
+          Math.max(
+            ...validSessions.map((s) =>
+              new Date(s.session!.endDateTime!).getTime()
+            )
+          )
+        )
+      : undefined;
 
   const boats = sessions
     .reduce((acc: { id: string; count: number }[], session) => {
@@ -167,5 +250,7 @@ const getRowerStats = async (
     totalDuration,
     mostUsedBoats: boats,
     mostFrequentPartners,
+    firstSessionDate,
+    lastSessionDate,
   };
 };
