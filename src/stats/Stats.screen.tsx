@@ -57,8 +57,13 @@ export const StatsScreen = () => {
 
   return (
     <div className="p-4 gap-4 flex flex-col h-full relative">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-semibold text-gray-900">Statistiques</h1>
+        <SeasonSelector value={selectedSeason} onChange={setSelectedSeason} />
+      </div>
+
       {count === 0 && (
-        <div className="absolute inset-0 bg-white z-10 backdrop-blur-sm bg-opacity-10">
+        <div className="flex-1 h-full bg-white z-10 backdrop-blur-sm bg-opacity-10">
           <div className="flex justify-center items-center h-full flex-col gap-4">
             <ChartBarIcon className="w-16 h-16 text-gray-900" />
             <p className="text-xl font-semibold text-gray-900 text-center max-w-sm text-balance">
@@ -68,44 +73,43 @@ export const StatsScreen = () => {
         </div>
       )}
 
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold text-gray-900">Statistiques</h1>
-        <SeasonSelector value={selectedSeason} onChange={setSelectedSeason} />
-      </div>
+      {count > 0 && (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <StatCard
+              title="Sessions"
+              value={count.toString()}
+              icon={UserGroupIcon}
+            />
+            <StatCard
+              title="Temps total sur l'eau"
+              value={millisecondToDayHourMinutes(totalDuration)}
+              icon={ClockIcon}
+            />
+            <StatCard
+              title="Moyenne temps / session"
+              value={millisecondToDayHourMinutes(totalDuration / count || 0)}
+              icon={ClockIcon}
+            />
+          </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <StatCard
-          title="Sessions"
-          value={count.toString()}
-          icon={UserGroupIcon}
-        />
-        <StatCard
-          title="Temps total sur l'eau"
-          value={millisecondToDayHourMinutes(totalDuration)}
-          icon={ClockIcon}
-        />
-        <StatCard
-          title="Moyenne temps / session"
-          value={millisecondToDayHourMinutes(totalDuration / count || 0)}
-          icon={ClockIcon}
-        />
-      </div>
-
-      <div className="flex gap-4 flex-1">
-        <div className="bg-white rounded-lg shadow-sm border p-4 flex-1">
-          <StackedBarChart
-            data={chartData}
-            formatMonth={formatMonth}
-            formatAmount={formatAmount}
-            formatStackLabel={getTypeLabel}
-            sortStacks={(a, b) => {
-              const aNbRowers = getBoatNumberOfRowers(a as BoatTypeEnum);
-              const bNbRowers = getBoatNumberOfRowers(b as BoatTypeEnum);
-              return (aNbRowers || 0) - (bNbRowers || 0);
-            }}
-          />
-        </div>
-      </div>
+          <div className="flex gap-4 flex-1">
+            <div className="bg-white rounded-lg shadow-sm border p-4 flex-1">
+              <StackedBarChart
+                data={chartData}
+                formatMonth={formatMonth}
+                formatAmount={formatAmount}
+                formatStackLabel={getTypeLabel}
+                sortStacks={(a, b) => {
+                  const aNbRowers = getBoatNumberOfRowers(a as BoatTypeEnum);
+                  const bNbRowers = getBoatNumberOfRowers(b as BoatTypeEnum);
+                  return (aNbRowers || 0) - (bNbRowers || 0);
+                }}
+              />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
