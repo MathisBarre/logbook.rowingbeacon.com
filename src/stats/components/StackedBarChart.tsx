@@ -86,7 +86,7 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
       "#051C24",
     ];
 
-    return uniqueLabels.map((label, index) => {
+    return uniqueLabels.map((_, index) => {
       return blueShades[index];
     });
   }, [uniqueLabels]);
