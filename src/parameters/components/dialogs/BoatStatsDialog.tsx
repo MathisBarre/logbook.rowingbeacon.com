@@ -19,10 +19,7 @@ export const BoatStatsDialog = ({ boatId, boatName }: BoatStatsDialogProps) => {
           <ChartBarIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
         </button>
       </DialogTrigger>
-      <DialogContent
-        className="max-w-[32rem]"
-        title={`Informations à propos de ${boatName}`}
-      >
+      <DialogContent title={`Informations à propos de ${boatName}`}>
         <BoatStats boatId={boatId} />
       </DialogContent>
     </Dialog>

@@ -8,6 +8,12 @@ import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
 import useIncidentStore from "../../_common/store/incident.store";
 import { formatDate } from "../../_common/utils/date.utils";
 import Loading from "../../_common/components/Loading";
+import { StatsCard } from "../../_common/components/StatsCard";
+import {
+  ChartBarIcon,
+  ClockIcon,
+  CalculatorIcon,
+} from "@heroicons/react/16/solid";
 
 export const BoatStats = ({ boatId }: { boatId: string }) => {
   const { count, totalDuration } = useGetBoatStats(boatId);
@@ -18,33 +24,47 @@ export const BoatStats = ({ boatId }: { boatId: string }) => {
 
   return (
     <div>
-      <h1 className="font-medium text-lg mb-2">Statistiques</h1>
+      <div className="grid grid-cols-3 gap-2">
+        <StatsCard
+          icon={<ChartBarIcon className="w-6 h-6 text-steel-blue-600" />}
+          title="Nombre de sessions"
+          value={count}
+        />
 
-      <p>
-        <span>Nombre de sessions : </span> <strong>{count}</strong>
-      </p>
-      <p>
-        <span>Temps passé sur l&apos;eau : </span>{" "}
-        <strong>{millisecondToDayHourMinutes(totalDuration)}</strong>
-      </p>
-      <p>
-        <span>Moyenne temps / sessions : </span>{" "}
-        <strong>
-          {millisecondToDayHourMinutes(totalDuration / count || 0)}
-        </strong>
-      </p>
-      <h1 className="font-medium text-lg mt-4 mb-2">Incidents</h1>
+        <StatsCard
+          icon={<ClockIcon className="w-6 h-6 text-steel-blue-600" />}
+          title="Temps sur l'eau"
+          value={millisecondToDayHourMinutes(totalDuration)}
+        />
 
-      {incidents.length === 0 && <p>Aucun incident</p>}
+        <StatsCard
+          icon={<CalculatorIcon className="w-6 h-6 text-steel-blue-600" />}
+          title="Moyenne par session"
+          value={millisecondToDayHourMinutes(totalDuration / count || 0)}
+        />
+      </div>
 
-      <ul className="list-disc pl-4">
-        {incidents.map((incident) => (
-          <li key={incident.id}>
-            <span className="font-bold">{formatDate(incident.datetime)}</span> -{" "}
-            {incident.message}
-          </li>
-        ))}
-      </ul>
+      <div className="mt-6">
+        <h1 className="font-medium text-lg mb-4">Incidents</h1>
+
+        {incidents.length === 0 ? (
+          <p className="text-gray-500">Aucun incident</p>
+        ) : (
+          <ul className="space-y-2">
+            {incidents.map((incident) => (
+              <li
+                key={incident.id}
+                className="bg-white rounded-lg shadow-sm border p-4"
+              >
+                <span className="font-bold text-gray-900">
+                  {formatDate(incident.datetime)}
+                </span>
+                <p className="text-gray-600 mt-1">{incident.message}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };
