@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, and, gte, lte } from "drizzle-orm";
 import { getDatabase } from "../../_common/database/database";
 import { DBSessions } from "../../_common/database/schema";
 import { useEffect, useState } from "react";
@@ -14,9 +14,20 @@ import {
   ClockIcon,
   CalculatorIcon,
 } from "@heroicons/react/16/solid";
+import { SeasonSelector } from "../../stats/components/SeasonSelector";
+import { getSeasonDate, Season } from "../../_common/utils/seasons";
+import { useGetFirstAndLastRegisteredSessionDate } from "../../stats/utils/getFirstAndLastRegisteredSessionDate";
 
 export const BoatStats = ({ boatId }: { boatId: string }) => {
-  const { count, totalDuration } = useGetBoatStats(boatId);
+  const {
+    firstSession,
+    lastSession,
+    isLoading: isLoadingDates,
+  } = useGetFirstAndLastRegisteredSessionDate();
+  const [selectedSeason, setSelectedSeason] = useState<Season>(
+    getSeasonDate(new Date())
+  );
+  const { count, totalDuration } = useGetBoatStats(boatId, selectedSeason);
   const { getIncidentsByBoatId } = useIncidentStore();
   const incidents = getIncidentsByBoatId(boatId);
 
@@ -24,6 +35,18 @@ export const BoatStats = ({ boatId }: { boatId: string }) => {
 
   return (
     <div>
+      <div className="flex items-center gap-2 mb-4">
+        {isLoadingDates && <Loading />}
+        <SeasonSelector
+          className="w-full"
+          value={selectedSeason}
+          onChange={setSelectedSeason}
+          firstDataAt={firstSession || new Date()}
+          lastDataAt={lastSession || new Date()}
+          disabled={isLoadingDates}
+        />
+      </div>
+
       <div className="grid grid-cols-3 gap-2">
         <StatsCard
           icon={<ChartBarIcon className="w-6 h-6 text-steel-blue-600" />}
@@ -69,20 +92,21 @@ export const BoatStats = ({ boatId }: { boatId: string }) => {
   );
 };
 
-const useGetBoatStats = (rowerId: string) => {
+const useGetBoatStats = (boatId: string, season: Season) => {
   const [stats, setStats] = useState({ count: 0, totalDuration: 0 });
 
   useEffect(() => {
-    getBoatStats(rowerId)
+    getBoatStats(boatId, season)
       .then(setStats)
       .catch((e) => toast.error(getErrorMessage(e)));
-  }, [rowerId]);
+  }, [boatId, season]);
 
   return stats;
 };
 
 const getBoatStats = async (
-  boatId: string
+  boatId: string,
+  season: Season
 ): Promise<{
   count: number;
   totalDuration: number;
@@ -92,7 +116,13 @@ const getBoatStats = async (
   const sessions = await drizzle
     .select()
     .from(DBSessions)
-    .where(eq(DBSessions.boatId, boatId));
+    .where(
+      and(
+        eq(DBSessions.boatId, boatId),
+        gte(DBSessions.startDateTime, season.startDate.toISOString()),
+        lte(DBSessions.startDateTime, season.endDate.toISOString())
+      )
+    );
 
   const count = sessions.length;
   const totalDuration = sessions.reduce((acc: number, session) => {
