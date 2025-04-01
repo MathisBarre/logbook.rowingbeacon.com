@@ -14,9 +14,62 @@ import {
 import { getSeasonDate } from "../_common/utils/seasons";
 import { useGlobalStats } from "./utils/getGlobalStats";
 import { SeasonSelector } from "./components/SeasonSelector";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { asc } from "drizzle-orm";
+import { desc } from "drizzle-orm";
+import { DBSessions } from "../_common/database/schema";
+import { getDatabase } from "../_common/database/database";
+import { AnimatedLoadingIcon } from "../_common/components/Loading";
+
+const getFirstRegisteredSessionDate = async () => {
+  const { drizzle } = await getDatabase();
+  const firstSession = await drizzle
+    .select()
+    .from(DBSessions)
+    .orderBy(asc(DBSessions.startDateTime))
+    .limit(1);
+  return firstSession[0].startDateTime;
+};
+
+const getLastRegisteredSessionDate = async () => {
+  const { drizzle } = await getDatabase();
+  const lastSession = await drizzle
+    .select()
+    .from(DBSessions)
+    .orderBy(desc(DBSessions.startDateTime))
+    .limit(1);
+  return lastSession[0].startDateTime;
+};
+
+const useGetFirstAndLastRegisteredSessionDate = () => {
+  const [firstSession, setFirstSession] = useState<Date | null>(null);
+  const [lastSession, setLastSession] = useState<Date | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDates = async () => {
+      try {
+        const first = await getFirstRegisteredSessionDate();
+        const last = await getLastRegisteredSessionDate();
+        setFirstSession(new Date(first));
+        setLastSession(new Date(last));
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDates().catch(() => setIsLoading(false));
+  }, []);
+
+  return { firstSession, lastSession, isLoading };
+};
 
 export const StatsScreen = () => {
+  const { firstSession, lastSession, isLoading } =
+    useGetFirstAndLastRegisteredSessionDate();
+
   const [selectedSeason, setSelectedSeason] = useState<{
     startDate: Date;
     endDate: Date;
@@ -59,7 +112,16 @@ export const StatsScreen = () => {
     <div className="p-4 gap-4 flex flex-col h-full relative">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-semibold text-gray-900">Statistiques</h1>
-        <SeasonSelector value={selectedSeason} onChange={setSelectedSeason} />
+        <div className="flex items-center gap-2">
+          {isLoading && <AnimatedLoadingIcon />}
+          <SeasonSelector
+            value={selectedSeason}
+            onChange={setSelectedSeason}
+            firstDataAt={firstSession || new Date()}
+            lastDataAt={lastSession || new Date()}
+            disabled={isLoading}
+          />
+        </div>
       </div>
 
       {count === 0 && (
