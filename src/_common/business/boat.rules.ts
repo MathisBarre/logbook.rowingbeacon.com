@@ -106,7 +106,7 @@ export const getBoatNumberOfRowers = (type?: BoatTypeEnum) => {
   });
 };
 
-export const getTypeLabel = (type: BoatTypeEnum | undefined) => {
+export const getTypeLabel = (type: string | undefined) => {
   return (
     boathTypeWithLabel.find((t) => t.type === type)?.label || "LABEL_NOT_FOUND"
   );

@@ -33,7 +33,7 @@ export const getSessionsByMonthStackedByBoatType = async (
   const sessionsByMonthAndType = sessions.reduce((acc, session) => {
     const month = new Date(session.startDateTime).getMonth();
     const boatType =
-      data.boats.find((boat) => boat.id === session.boatId)?.type || "UNKNOWN";
+      data.boats.find((boat) => boat.id === session.boatId)?.type || "OTHER";
 
     if (!acc[month]) {
       acc[month] = {};

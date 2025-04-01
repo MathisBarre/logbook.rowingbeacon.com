@@ -52,11 +52,6 @@ export const StatsScreen = () => {
     return months[month];
   };
 
-  const formatStackLabel = (label: string) => {
-    return getTypeLabel(label as BoatTypeEnum);
-  };
-
-  // Format number of sessions
   const formatAmount = (amount: number) =>
     `${amount} sortie${amount > 1 ? "s" : ""}`;
 
@@ -102,7 +97,7 @@ export const StatsScreen = () => {
             data={chartData}
             formatMonth={formatMonth}
             formatAmount={formatAmount}
-            formatStackLabel={formatStackLabel}
+            formatStackLabel={getTypeLabel}
             sortStacks={(a, b) => {
               const aNbRowers = getBoatNumberOfRowers(a as BoatTypeEnum);
               const bNbRowers = getBoatNumberOfRowers(b as BoatTypeEnum);
