@@ -75,22 +75,15 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
   const colors = React.useMemo(() => {
     // Define base blue colors for each category
     const blueShades = [
-      "#2a61b4",
-      "#2a71b4",
-      "#2a81b4",
-      "#2a91b4",
-      "#2aa1b4",
-      "#2ab1b4",
-      "#2ac1b4",
-      "#2ad1b4",
-      "#2ae1b4",
-      "#2af1b4",
-      "#2af1a4",
-      "#2af194",
-      "#2af184",
-      "#2af174",
-      "#2af164",
-      "#2af154",
+      "#04BBFF",
+      "#0594D0",
+      "#0483B4",
+      "#007198",
+      "#005F7C",
+      "#004C60",
+      "#003C57",
+      "#002A3E",
+      "#051C24",
     ];
 
     return uniqueLabels.map((label, index) => {
