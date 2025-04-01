@@ -1,3 +1,4 @@
+import { uppercaseFirstLetter } from "../../_common/utils/string.utils";
 import { cn } from "../../_common/utils/utils";
 import { useMemo } from "react";
 
@@ -33,7 +34,9 @@ export const MonthSelector = ({
     // Add months within the date range
     while (iDate <= endDate) {
       const month = iDate.getMonth();
-      const monthLabel = iDate.toLocaleString("fr-FR", { month: "long" });
+      const monthLabel = uppercaseFirstLetter(
+        iDate.toLocaleString("fr-FR", { month: "long" })
+      );
 
       // Only add the month if it's not already in the list
       if (!availableMonths.some((m) => m.value === month)) {
