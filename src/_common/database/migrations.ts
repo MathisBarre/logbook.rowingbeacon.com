@@ -2,6 +2,7 @@ import createSessionTable from "./migrations/01_create-session-table";
 import updateSessionTable from "./migrations/02_update-session-table";
 import createSessionRowersTable from "./migrations/03_session_rowers-table";
 import addIndexes from "./migrations/04_add-index";
+import addHasBeenCoachedColumn from "./migrations/05_add-has-been-coached-column";
 import createMigrationTable from "./migrations/00_migration-table";
 import Database from "@tauri-apps/plugin-sql";
 import { getErrorMessage } from "../utils/error";
@@ -69,5 +70,10 @@ export const migrations: {
     label: "Add indexes to improve performance on existing tables",
     timestamp: 1732189896438,
     sql: addIndexes,
+  },
+  {
+    label: "Add hasBeenCoached column to session table",
+    timestamp: 1753889255500,
+    sql: addHasBeenCoachedColumn,
   },
 ];

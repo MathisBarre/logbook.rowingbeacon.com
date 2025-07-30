@@ -46,6 +46,7 @@ export interface SessionToSave {
   incidentId: string;
   comment: string;
   rowerIds: string[];
+  coached: boolean;
 }
 
 interface ISessionDatabaseRepository {
@@ -79,6 +80,7 @@ class StopSession {
       checked: boolean;
       message: string | undefined;
     };
+    coached: boolean;
   }): Promise<
     SimpleResult<
       | "ONGOING_SESSION_NOT_FOUND"
@@ -130,6 +132,7 @@ class StopSession {
           comment: stopSessionPayload.comment,
           incidentId: incidentId,
           rowerIds: ongoingSessionInStore.rowers.map((rower) => rower.id),
+          coached: stopSessionPayload.coached,
         },
       ]);
 
@@ -172,7 +175,6 @@ export class SessionDatabaseRepository implements ISessionDatabaseRepository {
     sessions: SessionToSave[]
   ): Promise<SimpleResult<"FAILED_TO_SAVE_SESSION", null>> {
     const { drizzle } = await getDatabase();
-
     try {
       const sessionsToSave = sessions.map((session) => ({
         id: session.id,
@@ -185,6 +187,7 @@ export class SessionDatabaseRepository implements ISessionDatabaseRepository {
         endDateTime: getDateTimeWithoutTimezone(session.endDateTime),
         incidentId: session.incidentId,
         comment: session.comment,
+        hasBeenCoached: session.coached ? "true" : "false",
       }));
 
       await drizzle.insert(DBSessions).values(sessionsToSave);

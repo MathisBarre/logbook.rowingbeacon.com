@@ -22,6 +22,9 @@ const StopSessionFormSchema = z.object({
     }),
   comment: z.string(),
   incident: z.string().optional(),
+  coached: z.enum(["yes", "no"], {
+    message: "Vous devez choisir une option",
+  }),
 });
 
 type StopSessionFormValues = z.infer<typeof StopSessionFormSchema>;
@@ -60,6 +63,7 @@ export const StopSessionForm = ({
         checked: isIncidentOpen,
         message: formPayload.incident,
       },
+      coached: formPayload.coached === "yes",
     });
 
     if (stopSessionError) {
@@ -115,7 +119,10 @@ export const StopSessionForm = ({
           <Button
             type="button"
             variant="outlined"
-            className="h-[2.625rem]"
+            className={cn(
+              "h-[2.625rem]",
+              form.formState.errors.endDateTime && "mb-5"
+            )}
             onClick={() => {
               form.setValue("endDateTime", getCurrentDateTime());
             }}
@@ -130,6 +137,44 @@ export const StopSessionForm = ({
           render={({ field }) => {
             return (
               <CommentSection value={field.value} onChange={field.onChange} />
+            );
+          }}
+        />
+
+        <FormField
+          name="coached"
+          control={form.control}
+          render={({ field, fieldState }) => {
+            return (
+              <div>
+                <Label className="flex gap-2 items-center mb-2">
+                  L&apos;équipage a été accompagné par un coach pendant la
+                  sortie :
+                </Label>
+                <label htmlFor="coached" className="flex gap-2 items-center">
+                  <input
+                    type="radio"
+                    name="coached"
+                    id="coached"
+                    value="yes"
+                    onChange={field.onChange}
+                  />
+                  oui
+                </label>
+                <label htmlFor="coached" className="flex gap-2 items-center">
+                  <input
+                    type="radio"
+                    name="coached"
+                    id="coached"
+                    value="no"
+                    onChange={field.onChange}
+                  />
+                  non
+                </label>
+                {fieldState?.error?.message && (
+                  <p className="form-error mt-1">{fieldState.error.message}</p>
+                )}
+              </div>
             );
           }}
         />

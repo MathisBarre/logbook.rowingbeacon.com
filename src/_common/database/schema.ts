@@ -10,6 +10,7 @@ export const DBSessions = sqliteTable("session", {
   endDateTime: text("end_date_time"),
   incidentId: text("incident_id"),
   comment: text("comment"),
+  hasBeenCoached: text("has_been_coached").notNull().default("false"),
 });
 
 export const DBSessionOnRowers = sqliteTable(
