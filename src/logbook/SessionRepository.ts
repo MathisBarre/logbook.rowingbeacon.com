@@ -51,6 +51,7 @@ export const sessionRepository = {
       estimatedEndDateTime: getDateOrNull(session.estimatedEndDateTime),
       startDateTime: new Date(session.startDateTime),
       rowerIds: session.sessionOnRowers.map((rower) => rower.rowerId).join(","),
+      hasBeenCoached: session.hasBeenCoached === "true",
     }));
   },
 

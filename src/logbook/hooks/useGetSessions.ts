@@ -24,6 +24,7 @@ interface SessionLog {
   incident: {
     id: string;
   } | null;
+  hasBeenCoached: boolean;
 }
 
 export const useGetLastSessions = (payload: {
@@ -89,6 +90,7 @@ export const useGetLastSessions = (payload: {
               }
             : null,
           incident: session.incidentId ? { id: session.incidentId } : null,
+          hasBeenCoached: session.hasBeenCoached,
         };
       });
 

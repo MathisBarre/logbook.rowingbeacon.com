@@ -1,7 +1,7 @@
 import { UserIcon, ChatBubbleLeftIcon } from "@heroicons/react/16/solid";
 import { getTime } from "../../_common/utils/date.utils";
 import Loading from "../../_common/components/Loading";
-import { Trash2Icon } from "lucide-react";
+import { Trash2Icon, UserCheckIcon, UserXIcon } from "lucide-react";
 import { useRemoveSession } from "../hooks/useRemoveSession";
 import { useAdminEditModeSystem } from "../../_common/store/adminEditMode.system";
 import { toast } from "sonner";
@@ -23,6 +23,7 @@ export interface SessionInTable {
     id: string;
     name: string;
   } | null;
+  hasBeenCoached: boolean;
 }
 
 interface SessionHistoryTableProps {
@@ -96,8 +97,8 @@ export function SessionHistoryTable({
               </p>
               {session.rowers.length > 0 && (
                 <>
-                  <div className="text-sm text-gray-400">
-                    <UserIcon className="h-4 w-4 align-text-bottom inline mr-1 text-gray-400" />{" "}
+                  <div className="text-sm text-gray-500">
+                    <UserIcon className="h-4 w-4 align-text-bottom inline mr-1 text-gray-500" />{" "}
                     {session.rowers.map((r) => r.name).join(", ")}
                   </div>
                 </>
@@ -105,11 +106,25 @@ export function SessionHistoryTable({
 
               {session.comment && (
                 <>
-                  <div className="text-sm text-gray-400 mt-1">
-                    <ChatBubbleLeftIcon className="h-4 w-4 align-text-bottom inline mr-1 text-gray-400" />{" "}
+                  <div className="text-sm text-gray-500 mt-1">
+                    <ChatBubbleLeftIcon className="h-4 w-4 align-text-bottom inline mr-1 text-gray-500" />{" "}
                     {session.comment || "Aucun commentaire"}
                   </div>
                 </>
+              )}
+
+              {session.hasBeenCoached && (
+                <div className="text-sm text-gray-600 mt-1">
+                  <UserCheckIcon className="h-4 w-4 align-text-bottom inline mr-1 text-gray-600" />{" "}
+                  Session encadrée
+                </div>
+              )}
+
+              {!session.hasBeenCoached && (
+                <div className="text-sm text-red-600 mt-1 text-gray-500">
+                  <UserXIcon className="h-4 w-4 align-text-bottom inline mr-1 text-red-600" />{" "}
+                  Session non encadrée
+                </div>
               )}
             </div>
           </div>
