@@ -1,0 +1,44 @@
+name: Build Tauri AppImage
+description: Build Tauri v2 application as Linux AppImage
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: "yarn"
+
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Install system dependencies
+      shell: bash
+      run: |
+        sudo apt update
+        sudo apt install -y \
+          libwebkit2gtk-4.0-dev \
+          libssl-dev \
+          libgtk-3-dev \
+          squashfs-tools \
+          fuse2 \
+          python3-pip
+        pip install appimage-builder
+
+    - name: Install JS deps
+      shell: bash
+      run: yarn install --frozen-lockfile
+
+    - name: Build AppImage
+      shell: bash
+      run: yarn tauri build
+
+    - name: Upload AppImage artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: tauri-appimage
+        path: src-tauri/target/release/bundle/appimage/*.AppImage
