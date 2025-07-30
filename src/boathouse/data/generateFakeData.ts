@@ -189,6 +189,7 @@ function createSession(
     incidentId: hasAccident ? generateIncidenId() : "",
     comment: hasComment ? "Commentaire aléatoire" : "",
     rowerIds: selectedRowers.map((rower) => rower.id),
+    coached: Math.random() > 0.5,
   };
 
   return sessionCreated;
