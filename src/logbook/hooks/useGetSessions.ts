@@ -24,7 +24,7 @@ interface SessionLog {
   incident: {
     id: string;
   } | null;
-  hasBeenCoached: boolean;
+  hasBeenCoached: boolean | null;
 }
 
 export const useGetLastSessions = (payload: {

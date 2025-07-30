@@ -151,21 +151,24 @@ export const StopSessionForm = ({
                   L&apos;équipage a été accompagné par un coach pendant la
                   sortie :
                 </Label>
-                <label htmlFor="coached" className="flex gap-2 items-center">
+                <label
+                  htmlFor="coached-yes"
+                  className="flex gap-2 items-center"
+                >
                   <input
                     type="radio"
                     name="coached"
-                    id="coached"
+                    id="coached-yes"
                     value="yes"
                     onChange={field.onChange}
                   />
                   oui
                 </label>
-                <label htmlFor="coached" className="flex gap-2 items-center">
+                <label htmlFor="coached-no" className="flex gap-2 items-center">
                   <input
                     type="radio"
                     name="coached"
-                    id="coached"
+                    id="coached-no"
                     value="no"
                     onChange={field.onChange}
                   />

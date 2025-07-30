@@ -51,8 +51,19 @@ export const sessionRepository = {
       estimatedEndDateTime: getDateOrNull(session.estimatedEndDateTime),
       startDateTime: new Date(session.startDateTime),
       rowerIds: session.sessionOnRowers.map((rower) => rower.rowerId).join(","),
-      hasBeenCoached: session.hasBeenCoached === "true",
+      hasBeenCoached: sessionRepository.handleBoolStringToBoolean(
+        session.hasBeenCoached
+      ),
     }));
+  },
+
+  handleBoolStringToBoolean: (value: string | null): boolean | null => {
+    if (value === "true") {
+      return true;
+    } else if (value === "false") {
+      return false;
+    }
+    return null;
   },
 
   getTotalNumberOfSessions: async (): Promise<number> => {

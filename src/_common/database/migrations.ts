@@ -6,6 +6,7 @@ import addHasBeenCoachedColumn from "./migrations/05_add-has-been-coached-column
 import createMigrationTable from "./migrations/00_migration-table";
 import Database from "@tauri-apps/plugin-sql";
 import { getErrorMessage } from "../utils/error";
+import fixHasBeenCoachedColumn from "./migrations/06_fix-has-been-coached";
 
 export const applyMigrations = async (db: Database) => {
   try {
@@ -75,5 +76,10 @@ export const migrations: {
     label: "Add hasBeenCoached column to session table",
     timestamp: 1753889255500,
     sql: addHasBeenCoachedColumn,
+  },
+  {
+    label: "Fix hasBeenCoached column to session table",
+    timestamp: 1753889255501,
+    sql: fixHasBeenCoachedColumn,
   },
 ];

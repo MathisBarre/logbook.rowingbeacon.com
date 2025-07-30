@@ -23,7 +23,7 @@ export interface SessionInTable {
     id: string;
     name: string;
   } | null;
-  hasBeenCoached: boolean;
+  hasBeenCoached: boolean | null;
 }
 
 interface SessionHistoryTableProps {
@@ -113,14 +113,14 @@ export function SessionHistoryTable({
                 </>
               )}
 
-              {session.hasBeenCoached && (
+              {session.hasBeenCoached === true && (
                 <div className="text-sm text-gray-600 mt-1">
                   <UserCheckIcon className="h-4 w-4 align-text-bottom inline mr-1 text-gray-600" />{" "}
                   Session encadrée
                 </div>
               )}
 
-              {!session.hasBeenCoached && (
+              {session.hasBeenCoached === false && (
                 <div className="text-sm text-red-600 mt-1 text-gray-500">
                   <UserXIcon className="h-4 w-4 align-text-bottom inline mr-1 text-red-600" />{" "}
                   Session non encadrée
