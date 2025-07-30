@@ -60,6 +60,12 @@ export const useExportSessions = () => {
         comment: session.comment || "",
         incident_id: session.incidentId || "",
         incident_message: getIncidentMessage(session.incidentId),
+        has_been_coached:
+          session.hasBeenCoached !== null
+            ? session.hasBeenCoached
+              ? "true"
+              : "false"
+            : "",
         boat_id: session.boatId,
         boat_name: clubOverview.getBoatById(session.boatId)?.name || "",
         route_id: session.routeId || "",
