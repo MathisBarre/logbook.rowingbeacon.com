@@ -20,8 +20,14 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
   const [selectedSeason, setSelectedSeason] = useState(
     getSeasonDate(new Date())
   );
-  const { count, totalDuration, mostUsedBoats, mostFrequentPartners } =
-    useGetRowerStats(rowerId, selectedSeason);
+  const {
+    count,
+    totalDuration,
+    mostUsedBoats,
+    mostFrequentPartners,
+    coachedSessionsCount,
+    coachedSessionsPercentage,
+  } = useGetRowerStats(rowerId, selectedSeason);
   const { getBoatById, getRowerById } = useClubOverviewStore();
 
   if (count === undefined) return <Loading />;
@@ -89,15 +95,15 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
             <h3 className="text-sm text-gray-500 font-medium">
               Sessions encadrées
             </h3>
-            {/* <p className="text-xl font-semibold text-gray-900">
-              {coachedSessionsCount} ({coachedSessionsPercentage.toFixed(1)}%)
-            </p> */}
+            <p className="text-xl font-semibold text-gray-900">
+              {coachedSessionsCount} ({coachedSessionsPercentage.toFixed(2)}%)
+            </p>
           </div>
         </div>
       </div>
 
       <div className="flex w-full justify-between">
-        <div className="flex-1 flex flex-col items-start">
+        <div className="flex-1  flex flex-col items-start">
           <h1 className="font-medium text-lg mb-2 mt-4">
             Bateaux les plus utilisés
           </h1>
