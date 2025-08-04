@@ -4,6 +4,7 @@ import {
   ClockIcon,
   ChartBarIcon,
   CalculatorIcon,
+  InformationCircleIcon,
 } from "@heroicons/react/16/solid";
 import { StackedBarChart } from "./components/StackedBarChart";
 import { useSessionsByMonthStackedByBoatType } from "./utils/getSessionsByMonth";
@@ -63,6 +64,12 @@ export const StatsScreen = () => {
 
   return (
     <div className="p-4 gap-4 flex flex-col h-full relative">
+      <div className="text-blue-500 flex items-center gap-2 bg-blue-50 rounded-lg p-2 border border-blue-500">
+        <InformationCircleIcon className="w-4 h-4 text-blue-500" />
+        De nombreuses statistiques complémentaires sont disponibles dans
+        l&apos;onglet &quot;Gestion&quot;, pages &quot;Rameurs&quot; et
+        &quot;Bateaux&quot;
+      </div>
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-semibold text-gray-900">Statistiques</h1>
         <div className="flex items-center gap-2">
