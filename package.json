@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && yarn test && vite build",
+    "build": "tsc && yarn test --run && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
     "knip": "knip",

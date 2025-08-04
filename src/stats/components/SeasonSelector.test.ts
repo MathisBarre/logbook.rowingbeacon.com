@@ -85,13 +85,6 @@ describe("getSeasons", () => {
 
     const seasons = getSeasons(firstDataAt, lastDataAt);
 
-    console.log("Test case - seasons returned:", seasons.length);
-    seasons.forEach((season, index) => {
-      console.log(
-        `${index}: startDate: ${season.startDate.toString()}, endDate: ${season.endDate.toString()}`
-      );
-    });
-
     // Should return 3 seasons including 2025-2026
     expect(seasons).toHaveLength(3);
 
@@ -123,13 +116,6 @@ describe("getSeasons", () => {
     const lastDataAt = new Date(2025, 7, 4, 14, 47); // August 4, 2025 14:47
 
     const seasons = getSeasons(firstDataAt, lastDataAt);
-
-    console.log("Bug reproduction test - seasons returned:", seasons.length);
-    seasons.forEach((season, index) => {
-      console.log(
-        `${index}: startDate: ${season.startDate.toString()}, endDate: ${season.endDate.toString()}`
-      );
-    });
 
     // Should return 3 seasons:
     // 1. 2023-2024 (Nov 2023 falls in this season)
