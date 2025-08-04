@@ -24,10 +24,15 @@ export const StatsScreen = () => {
   const { firstSession, lastSession, isLoading } =
     useGetFirstAndLastRegisteredSessionDate();
 
+  console.log("firstSession", firstSession);
+  console.log("lastSession", lastSession);
+
   const [selectedSeason, setSelectedSeason] = useState<{
     startDate: Date;
     endDate: Date;
   }>(getSeasonDate(new Date()));
+
+  console.log("selectedSeason", selectedSeason);
 
   const { count, totalDuration } = useGlobalStats({
     startDate: selectedSeason.startDate,
