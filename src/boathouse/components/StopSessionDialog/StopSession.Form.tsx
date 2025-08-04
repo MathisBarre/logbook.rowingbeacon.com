@@ -148,8 +148,7 @@ export const StopSessionForm = ({
             return (
               <div>
                 <Label className="flex gap-2 items-center mb-2">
-                  L&apos;équipage a été accompagné par un coach pendant la
-                  sortie :
+                  L&apos;équipage a été encadré par un coach pendant la sortie :
                 </Label>
                 <label
                   htmlFor="coached-yes"
