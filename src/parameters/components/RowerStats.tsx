@@ -9,6 +9,7 @@ import { useGetRowerStats } from "../utils/getRowerStats";
 import { CalculatorIcon } from "@heroicons/react/16/solid";
 import { ClockIcon } from "@heroicons/react/16/solid";
 import { ChartBarIcon } from "@heroicons/react/16/solid";
+import { AcademicCapIcon } from "@heroicons/react/16/solid";
 
 export const RowerStats = ({ rowerId }: { rowerId: string }) => {
   const {
@@ -19,8 +20,14 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
   const [selectedSeason, setSelectedSeason] = useState(
     getSeasonDate(new Date())
   );
-  const { count, totalDuration, mostUsedBoats, mostFrequentPartners } =
-    useGetRowerStats(rowerId, selectedSeason);
+  const {
+    count,
+    totalDuration,
+    mostUsedBoats,
+    mostFrequentPartners,
+    coachedSessionsCount,
+    coachedSessionsPercentage,
+  } = useGetRowerStats(rowerId, selectedSeason);
   const { getBoatById, getRowerById } = useClubOverviewStore();
 
   if (count === undefined) return <Loading />;
@@ -39,7 +46,7 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 gap-2 mb-4">
         <div className="bg-white rounded-lg shadow-sm border p-4 flex items-center gap-4">
           <div className="p-3 bg-steel-blue-50 rounded-lg">
             <ChartBarIcon className="w-6 h-6 text-steel-blue-600" />
@@ -79,10 +86,24 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
             </p>
           </div>
         </div>
+
+        <div className="bg-white rounded-lg shadow-sm border p-4 flex items-center gap-4">
+          <div className="p-3 bg-steel-blue-50 rounded-lg">
+            <AcademicCapIcon className="w-6 h-6 text-steel-blue-600" />
+          </div>
+          <div>
+            <h3 className="text-sm text-gray-500 font-medium">
+              Sessions encadrées
+            </h3>
+            <p className="text-xl font-semibold text-gray-900">
+              {coachedSessionsCount} ({coachedSessionsPercentage.toFixed(2)}%)
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="flex w-full justify-between">
-        <div className="flex-1 flex flex-col items-start">
+        <div className="flex-1  flex flex-col items-start">
           <h1 className="font-medium text-lg mb-2 mt-4">
             Bateaux les plus utilisés
           </h1>

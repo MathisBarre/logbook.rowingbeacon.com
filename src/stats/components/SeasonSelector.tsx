@@ -47,14 +47,28 @@ export const SeasonSelector = ({
   );
 };
 
-const getSeasons = (firstDataAt: Date, lastDataAt: Date) => {
+export const getSeasons = (firstDataAt: Date, lastDataAt: Date) => {
+  const lastDate = getLastDate(firstDataAt, lastDataAt);
   const seasons = [];
   const iDate = new Date(firstDataAt);
 
-  while (iDate <= new Date(lastDataAt)) {
-    seasons.push(getSeasonDate(iDate));
+  while (true) {
+    const season = getSeasonDate(iDate);
+    seasons.push(season);
+
+    // If the current season's end date is >= lastDate, we're done
+    if (season.endDate >= lastDate) {
+      break;
+    }
+
     iDate.setFullYear(iDate.getFullYear() + 1);
   }
-
   return seasons;
+};
+
+const getLastDate = (firstDate: Date, lastDate: Date) => {
+  if (lastDate > firstDate) {
+    return lastDate;
+  }
+  return firstDate;
 };

@@ -7,7 +7,7 @@ describe("getCurrentSeasonDate", () => {
     const result = getSeasonDate(testDate);
 
     expect(result.startDate).toEqual(new Date(2024, 7, 1)); // August 1, 2024
-    expect(result.endDate).toEqual(new Date(2024, 11, 31)); // December 31, 2024
+    expect(result.endDate).toEqual(new Date(2025, 6, 31)); // July 31, 2025
   });
 
   it("should return correct dates when current date is before season (before September)", () => {
@@ -23,7 +23,15 @@ describe("getCurrentSeasonDate", () => {
     const result = getSeasonDate(testDate);
 
     expect(result.startDate).toEqual(new Date(2024, 7, 1)); // August 1, 2024
-    expect(result.endDate).toEqual(new Date(2024, 11, 31)); // December 31, 2024
+    expect(result.endDate).toEqual(new Date(2025, 6, 31)); // July 31, 2025
+  });
+
+  it("should handle the transition month (August) correctly", () => {
+    const testDate = new Date(2024, 7, 4); // August 4, 2024
+    const result = getSeasonDate(testDate);
+
+    expect(result.startDate).toEqual(new Date(2024, 7, 1)); // August 1, 2024
+    expect(result.endDate).toEqual(new Date(2025, 6, 31)); // July 31, 2025
   });
 
   it("should handle year transition correctly", () => {
