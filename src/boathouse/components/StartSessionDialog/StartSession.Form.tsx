@@ -305,6 +305,15 @@ export const StartSessionForm = ({
               />
             </div>
 
+            {selectedBoat.note && selectedBoat.note.trim().length > 0 && (
+              <div className="text-xs text-steel-blue-900 bg-steel-blue-50 border border-steel-blue-200 rounded p-2 whitespace-pre-wrap">
+                <h3 className="font-medium mb-1">
+                  Note(s) à propos de ce bateau :
+                </h3>
+                <p>{selectedBoat.note}</p>
+              </div>
+            )}
+
             {(selectedBoat.ageCategory !== null ||
               selectedBoat.seriousnessCategory !== null) && (
               <div className="flex gap-2 flex-1">
