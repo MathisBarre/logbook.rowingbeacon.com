@@ -19,17 +19,20 @@ interface BoatsSectionProps {
   boats: {
     id: string;
     name: string;
+    note?: string;
     ageCategory: AgeCategoryEnum | null;
     seriousnessCategory: SeriousnessCategoryEnum | null;
   }[];
   value: {
     id: string;
     name: string;
+    note?: string;
   };
   onChange: (value: {
     id: string;
     name: string;
     type?: string;
+    note?: string;
     ageCategory?: AgeCategoryEnum | null;
     seriousnessCategory?: SeriousnessCategoryEnum | null;
   }) => void;
@@ -110,6 +113,12 @@ export const BoatSection = ({
 
         <Optgroup label="Type non précisé" boats={getTypelessBoats(_boats)} />
       </select>
+      {value.note && value.note.trim().length > 0 && (
+        <div className="text-xs text-steel-blue-900 bg-steel-blue-50 border border-steel-blue-200 rounded p-2 mt-2 whitespace-pre-wrap">
+          <h3 className="font-medium mb-1">Note(s) à propos de ce bateau :</h3>
+          <p>{value.note}</p>
+        </div>
+      )}
     </div>
   );
 };

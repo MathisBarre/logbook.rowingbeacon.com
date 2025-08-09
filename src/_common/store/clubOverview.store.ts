@@ -4,6 +4,7 @@ import {
   toggleBoatIsInMaintenanceFn,
   updateBoatNameFn,
   updateBoatTypeFn,
+  updateBoatNoteFn,
 } from "./clubOverview.store.functions";
 import { BoatTypeEnum } from "../business/boat.rules";
 import { generateBoatId } from "../business/boat.rules";
@@ -19,6 +20,7 @@ export interface ClubOverviewState {
     name: string;
     isInMaintenance?: boolean;
     type?: BoatTypeEnum;
+    note?: string;
     archivedAt?: string | undefined;
   }[];
   routes: {
@@ -56,6 +58,7 @@ export interface ClubOverviewStoreState {
   getBoatById: (boatId: string) => ClubOverviewState["boats"][0] | undefined;
   updateBoatType: (boatId: string, type: BoatTypeEnum) => void;
   updateBoatName: (boatId: string, name: string) => void;
+  updateBoatNote: (boatId: string, note: string) => void;
   toggleBoatIsInMaintenance: (boatId: string) => void;
   addBoat: (boat: { name: string; type?: BoatTypeEnum }) => void;
   archiveBoat: (boatId: string) => void;
@@ -160,6 +163,7 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
                   name: boatName,
                   isInMaintenance: false,
                   type: boatType || BoatTypeEnum.OTHER,
+                  note: "",
                 },
               ],
             },
@@ -196,6 +200,15 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
             clubOverview: {
               ...state.clubOverview,
               boats: updateBoatNameFn(state.clubOverview.boats, boatId, name),
+            },
+          }));
+        },
+
+        updateBoatNote: (boatId: string, note: string) => {
+          set((state) => ({
+            clubOverview: {
+              ...state.clubOverview,
+              boats: updateBoatNoteFn(state.clubOverview.boats, boatId, note),
             },
           }));
         },

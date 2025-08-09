@@ -38,6 +38,7 @@ const StartSessionFormSchema = z.object({
     id: z.string(),
     name: z.string(),
     type: z.nativeEnum(BoatTypeEnum),
+    note: z.string().optional(),
     seriousnessCategory: z.nativeEnum(SeriousnessCategoryEnum).nullable(),
     ageCategory: z.nativeEnum(AgeCategoryEnum).nullable(),
   }),
@@ -79,6 +80,7 @@ interface StartSessionFormProps {
       id: string;
       name: string;
       type: BoatTypeEnum;
+      note?: string;
       seriousnessCategory: SeriousnessCategoryEnum | null;
       ageCategory: AgeCategoryEnum | null;
     }[];
