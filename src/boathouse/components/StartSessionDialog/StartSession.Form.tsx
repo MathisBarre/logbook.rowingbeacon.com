@@ -31,6 +31,7 @@ import { AgeCategoryEnum } from "../../../_common/business/ageCategory.rules";
 import { useBoatLevelConfigStore } from "../../../_common/store/boatLevelConfig.store";
 import { BoatTypeEnum } from "../../../_common/business/boat.rules";
 import { getBoatNumberOfRowers } from "../../../_common/business/boat.rules";
+import { Rower } from "../../../_common/business/rower.rules";
 
 const StartSessionFormSchema = z.object({
   boat: z.object({
@@ -139,7 +140,6 @@ export const StartSessionForm = ({
   };
 
   const { boatTypeLevelConfigs } = useBoatLevelConfigStore();
-  const clubOverviewStore = useClubOverviewStore();
 
   const selectedBoat = form.watch("boat");
   const blockFromXRowers = getBoatTypeLevelConfig(
@@ -152,18 +152,10 @@ export const StartSessionForm = ({
     numberOfRowers
   );
 
-  const handleGuestRowerAdded = (guestRower: { id: string; name: string }) => {
-    const rowers = clubOverviewStore.getAllRowers();
-    const guestRowerFromStore = rowers.find((r) => r.name === guestRower.name);
-
-    if (guestRowerFromStore) {
-      const currentRowers = form.getValues("selectedRowersOptions") || [];
-      const updatedRowers = [
-        ...currentRowers,
-        { id: guestRowerFromStore.id, name: guestRowerFromStore.name },
-      ];
-      form.setValue("selectedRowersOptions", updatedRowers);
-    }
+  const handleGuestRowerAdded = (guestRower: Rower) => {
+    const currentRowers = form.getValues("selectedRowersOptions") || [];
+    const updatedRowers = [...currentRowers, guestRower];
+    form.setValue("selectedRowersOptions", updatedRowers);
 
     setIsAddGuestDialogOpen(false);
   };

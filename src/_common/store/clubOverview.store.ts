@@ -86,6 +86,7 @@ export interface ClubOverviewStoreState {
     type?: SeriousnessCategoryEnum | null
   ) => void;
   addGuestRower: (guestRower: {
+    id?: string;
     name: string;
     guestType: GuestRowerTypeEnum;
     category?: AgeCategoryEnum;
@@ -352,7 +353,7 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
               rowers: [
                 ...state.clubOverview.rowers,
                 {
-                  id: generateRowerId(),
+                  id: guestRower.id || generateRowerId(),
                   name: guestRower.name,
                   guestType: guestRower.guestType,
                   category: guestRower.category,

@@ -6,7 +6,11 @@ import { Label } from "../../../_common/components/Label";
 import { Input } from "../../../_common/components/Input";
 import Button from "../../../_common/components/Button";
 import { SimpleDialog } from "../../../_common/components/SimpleDialog";
-import { GuestRowerTypeEnum } from "../../../_common/business/rower.rules";
+import {
+  generateRowerId,
+  GuestRowerTypeEnum,
+  Rower,
+} from "../../../_common/business/rower.rules";
 import { AgeCategoryEnum } from "../../../_common/business/ageCategory.rules";
 import { SeriousnessCategoryEnum } from "../../../_common/business/seriousness.rules";
 import { getSeriousnessTypeTranslation } from "../../../_common/business/seriousness.rules";
@@ -242,7 +246,7 @@ const AddGuestRowerForm = ({ onSubmit, onCancel }: AddGuestRowerFormProps) => {
 interface AddGuestRowerDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onGuestRowerAdded: (guestRower: { id: string; name: string }) => void;
+  onGuestRowerAdded: (guestRower: Rower) => void;
 }
 
 export const AddGuestRowerDialog = ({
@@ -253,20 +257,19 @@ export const AddGuestRowerDialog = ({
   const { addGuestRower } = useClubOverviewStore();
 
   const handleFormSubmit = (values: AddGuestRowerFormValues) => {
-    // À ce stade, guestType est garanti d'être défini grâce à la validation Zod
-
-    // Ajouter le rameur invité au store
-    addGuestRower({
+    const newRower = {
+      id: generateRowerId(),
       name: values.name,
       guestType: values.guestType, // TypeScript sait maintenant que ce n'est pas null
       category: values.category,
       type: values.type,
       phoneNumber: values.phoneNumber,
       email: values.email,
-    });
+    };
 
-    // Notifier que le rameur a été ajouté (l'ID sera récupéré depuis le store)
-    onGuestRowerAdded({ id: "", name: values.name });
+    addGuestRower(newRower);
+
+    onGuestRowerAdded(newRower);
 
     onClose();
   };
