@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import {
-  PencilIcon,
-  SearchIcon,
-  Trash2Icon,
-  CircleAlertIcon,
-} from "lucide-react";
+import { PencilIcon, SearchIcon, Trash2Icon } from "lucide-react";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { windowConfirm } from "../../_common/utils/window.utils";
 import { BoatTypeEnum, getTypeLabel } from "../../_common/business/boat.rules";

@@ -13,7 +13,7 @@ import Button from "../../../_common/components/Button";
 import { dateStringSchema } from "../../../_common/utils/commonSchema";
 import { ErrorBlock } from "../../../_common/components/ErrorBlock";
 import { useStartSession } from "./startSession.hook";
-import { CircleAlertIcon } from "lucide-react";
+import { CircleAlertIcon, NotebookIcon, ShieldIcon } from "lucide-react";
 import { replaceLastOccurrence } from "../../../_common/utils/string.utils";
 import { addMinutes } from "../../../_common/utils/date.utils";
 import {
@@ -21,14 +21,10 @@ import {
   getMinimumValidRowersNeeded,
 } from "../../../_common/store/boatLevelConfig.rules";
 import {
-  SERIOUSNESS_CATEGORIES,
+  getSeriousnessTypeTranslation,
   SeriousnessCategoryEnum,
 } from "../../../_common/business/seriousness.rules";
-import { findSeriousnessCategoryOrder } from "../../../_common/business/seriousness.rules";
-import { findAgeCategoryOrder } from "../../../_common/business/ageCategory.rules";
-import { AGE_CATEGORIES } from "../../../_common/business/ageCategory.rules";
 import { AgeCategoryEnum } from "../../../_common/business/ageCategory.rules";
-import { LevelVisualizer } from "./LevelVisualizer";
 import { useBoatLevelConfigStore } from "../../../_common/store/boatLevelConfig.store";
 import { BoatTypeEnum } from "../../../_common/business/boat.rules";
 import { getBoatNumberOfRowers } from "../../../_common/business/boat.rules";
@@ -307,7 +303,8 @@ export const StartSessionForm = ({
 
             {selectedBoat.note && selectedBoat.note.trim().length > 0 && (
               <div className="text-xs text-steel-blue-900 bg-steel-blue-50 border border-steel-blue-200 rounded p-2 whitespace-pre-wrap">
-                <h3 className="font-medium mb-1">
+                <h3 className="font-medium mb-1 flex items-center gap-1">
+                  <NotebookIcon className="h-4 w-4 text-steel-blue-800" />
                   Note(s) à propos de ce bateau :
                 </h3>
                 <p>{selectedBoat.note}</p>
@@ -316,28 +313,21 @@ export const StartSessionForm = ({
 
             {(selectedBoat.ageCategory !== null ||
               selectedBoat.seriousnessCategory !== null) && (
-              <div className="flex gap-2 flex-1">
-                <LevelVisualizer
-                  wrapperClassnames="flex-[4]"
-                  levels={SERIOUSNESS_CATEGORIES.map((s) => ({
-                    label: s.label || "Aucun",
-                    order: s.order,
-                  }))}
-                  selectedLevelOrder={findSeriousnessCategoryOrder(
-                    form.watch("boat.seriousnessCategory")
-                  )}
-                />
-
-                <LevelVisualizer
-                  wrapperClassnames="flex-[8]"
-                  levels={AGE_CATEGORIES.map((a) => ({
-                    label: String(a.category || "Aucun"),
-                    order: a.order,
-                  }))}
-                  selectedLevelOrder={findAgeCategoryOrder(
-                    form.watch("boat.ageCategory")
-                  )}
-                />
+              <div className="text-xs text-steel-blue-900 bg-steel-blue-50 border border-steel-blue-200 rounded p-2 whitespace-pre-wrap">
+                <h3 className="font-medium mb-1 flex items-center gap-1">
+                  <ShieldIcon className="h-4 w-4 text-steel-blue-800" />
+                  Limitation de niveau sur ce bateau :
+                </h3>
+                <p>
+                  Les rameurs de ce bateau doivent, au minimum, avoir le niveau{" "}
+                  &quot;
+                  {selectedBoat.ageCategory && `${selectedBoat.ageCategory}`}
+                  &quot;
+                  {selectedBoat.seriousnessCategory &&
+                    ` et "${getSeriousnessTypeTranslation(
+                      selectedBoat.seriousnessCategory
+                    )}" `}
+                </p>
               </div>
             )}
           </div>
