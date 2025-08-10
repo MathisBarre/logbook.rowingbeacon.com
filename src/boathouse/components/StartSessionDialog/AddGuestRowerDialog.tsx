@@ -11,6 +11,7 @@ import { AgeCategoryEnum } from "../../../_common/business/ageCategory.rules";
 import { SeriousnessCategoryEnum } from "../../../_common/business/seriousness.rules";
 import { getSeriousnessTypeTranslation } from "../../../_common/business/seriousness.rules";
 import { useClubOverviewStore } from "../../../_common/store/clubOverview.store";
+import { InfoIcon } from "lucide-react";
 
 const AddGuestRowerSchema = z.object({
   name: z.string().min(1, "Le nom est requis"),
@@ -219,9 +220,9 @@ const AddGuestRowerForm = ({ onSubmit, onCancel }: AddGuestRowerFormProps) => {
               )}
             />
 
-            <p className="text-xs text-gray-600 bg-blue-50 border border-blue-200 rounded p-2">
-              <strong>Note :</strong> Au moins un moyen de contact (téléphone ou
-              email) est requis.
+            <p className="text-xs text-blue-600 bg-blue-50 border border-blue-500 rounded p-2 flex gap-1 items-center">
+              <InfoIcon className="size-3.5" /> Au moins un moyen de contact
+              (téléphone ou email) est requis
             </p>
           </>
         )}
