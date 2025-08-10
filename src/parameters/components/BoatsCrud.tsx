@@ -3,7 +3,6 @@ import {
   PencilIcon,
   SearchIcon,
   Trash2Icon,
-  TypeIcon,
   CircleAlertIcon,
 } from "lucide-react";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
@@ -88,7 +87,24 @@ export const BoatCrud = () => {
                       className="border rounded pl-4 flex items-center"
                       key={boat.id}
                     >
-                      <div className="py-2">{boat.name}</div>
+                      <div className="py-2">
+                        <h3
+                          className={cn(
+                            boat.isInMaintenance && "text-error-700"
+                          )}
+                        >
+                          {boat.name}{" "}
+                          {boat.isInMaintenance && "(en maintenance)"}
+                        </h3>
+                        {boat.note && boat.note.trim().length > 0 && (
+                          <div className="text-xs text-steel-blue-900 bg-steel-blue-50 border border-steel-blue-200 rounded p-2 whitespace-pre-wrap mt-2">
+                            <h3 className="font-medium mb-1">
+                              Note(s) à propos de ce bateau :
+                            </h3>
+                            <p>{boat.note}</p>
+                          </div>
+                        )}
+                      </div>
 
                       <div className="flex-1"></div>
 
@@ -112,13 +128,7 @@ export const BoatCrud = () => {
                           })
                         }
                       >
-                        <div className="relative">
-                          <PencilIcon className="text-steel-blue-800 h-4 w-4" />{" "}
-                          <TypeIcon className="text-steel-blue-800 h-4 w-4" />
-                          {boat.note && boat.note.trim().length > 0 && (
-                            <CircleAlertIcon className="h-3.5 w-3.5 text-orange-500 absolute -right-3 -bottom-2" />
-                          )}
-                        </div>
+                        <PencilIcon className="text-steel-blue-800 h-4 w-4" />{" "}
                       </EditButton>
 
                       <Separator />
@@ -171,7 +181,7 @@ const EditButton = ({
     <button
       onClick={onClick}
       className={cn(
-        "flex items-center justify-center  h-12 px-4",
+        "flex items-center justify-center  min-h-12 h-full px-4 min-w-12",
         isActive
           ? "bg-steel-blue-100 border border-dashed border-steel-blue-600 hover:bg-steel-blue-200"
           : "hover:bg-gray-100"
@@ -182,4 +192,4 @@ const EditButton = ({
   );
 };
 
-const Separator = () => <div className="h-12 w-[1px] bg-gray-200" />;
+const Separator = () => <div className="min-h-12 h-full w-[1px] bg-gray-200" />;
