@@ -8,6 +8,7 @@ import {
 } from "../../../_common/utils/string.utils";
 import { getSeriousnessTypeTranslation } from "../../../_common/business/seriousness.rules";
 import { components } from "react-select";
+import { InfoIcon } from "lucide-react";
 
 interface RowersSectionProps {
   rowers: Rower[];
@@ -70,6 +71,21 @@ export const RowersSection = ({
         }))}
       />
       {errorMessage && <p className="form-error">{errorMessage}</p>}
+
+      {/* Tooltip pour les rameurs invités */}
+      <div className="group relative inline-flex items-center gap-2 text-xs text-gray-600 mt-1 cursor-help">
+        <InfoIcon className="h-4 w-4 text-gray-500" />
+        <span className="font-medium">À propos des rameurs invités</span>
+
+        {/* Tooltip au hover */}
+        <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20 max-w-64">
+          Si vous avez des rameurs invités qui ne sont pas dans la liste, vous
+          pouvez les mentionner dans le champ &quot;Commentaire&quot; et ignorer
+          l&apos;avertissement qui s&apos;affichera lors du démarrage de la
+          séance.
+          <div className="absolute top-full left-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+        </div>
+      </div>
     </div>
   );
 };
