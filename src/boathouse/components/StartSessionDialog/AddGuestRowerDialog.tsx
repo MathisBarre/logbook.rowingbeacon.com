@@ -92,7 +92,7 @@ const AddGuestRowerForm = ({ onSubmit, onCancel }: AddGuestRowerFormProps) => {
               <Label>Nom complet du rameur</Label>
               <Input {...field} />
               {fieldState.error && (
-                <p className="form-error mt-1">{fieldState.error.message}</p>
+                <p className="form-error">{fieldState.error.message}</p>
               )}
             </div>
           )}
@@ -107,7 +107,7 @@ const AddGuestRowerForm = ({ onSubmit, onCancel }: AddGuestRowerFormProps) => {
               <select
                 value={field.value || ""}
                 onChange={field.onChange}
-                className="input w-full"
+                className="input w-full mt-1"
               >
                 <option value="" defaultChecked disabled>
                   --- Sélectionner un type d&apos;invité ---
@@ -120,7 +120,7 @@ const AddGuestRowerForm = ({ onSubmit, onCancel }: AddGuestRowerFormProps) => {
                 </option>
               </select>
               {fieldState.error && (
-                <p className="form-error mt-1">{fieldState.error.message}</p>
+                <p className="form-error">{fieldState.error.message}</p>
               )}
             </div>
           )}
@@ -137,7 +137,7 @@ const AddGuestRowerForm = ({ onSubmit, onCancel }: AddGuestRowerFormProps) => {
                   <select
                     value={field.value || ""}
                     onChange={field.onChange}
-                    className="input w-full"
+                    className="input w-full mt-1"
                   >
                     <option value="" defaultChecked disabled>
                       --- Sélectionner un niveau d&apos;âge ---
@@ -149,9 +149,7 @@ const AddGuestRowerForm = ({ onSubmit, onCancel }: AddGuestRowerFormProps) => {
                     ))}
                   </select>
                   {fieldState.error && (
-                    <p className="form-error mt-1">
-                      {fieldState.error.message}
-                    </p>
+                    <p className="form-error">{fieldState.error.message}</p>
                   )}
                 </div>
               )}
@@ -166,7 +164,7 @@ const AddGuestRowerForm = ({ onSubmit, onCancel }: AddGuestRowerFormProps) => {
                   <select
                     value={field.value || ""}
                     onChange={field.onChange}
-                    className="input w-full"
+                    className="input w-full mt-1"
                   >
                     <option value="" defaultChecked disabled>
                       --- Sélectionner un type de pratique ---
@@ -178,9 +176,7 @@ const AddGuestRowerForm = ({ onSubmit, onCancel }: AddGuestRowerFormProps) => {
                     ))}
                   </select>
                   {fieldState.error && (
-                    <p className="form-error mt-1">
-                      {fieldState.error.message}
-                    </p>
+                    <p className="form-error">{fieldState.error.message}</p>
                   )}
                 </div>
               )}
@@ -212,9 +208,7 @@ const AddGuestRowerForm = ({ onSubmit, onCancel }: AddGuestRowerFormProps) => {
                   <Label>Email</Label>
                   <Input {...field} type="email" />
                   {fieldState.error && (
-                    <p className="form-error mt-1">
-                      {fieldState.error.message}
-                    </p>
+                    <p className="form-error">{fieldState.error.message}</p>
                   )}
                 </div>
               )}
