@@ -16,10 +16,13 @@ import { useStartSession } from "./startSession.hook";
 import { CircleAlertIcon, NotebookIcon, ShieldIcon } from "lucide-react";
 import { replaceLastOccurrence } from "../../../_common/utils/string.utils";
 import { addMinutes } from "../../../_common/utils/date.utils";
+import { AddGuestRowerDialog } from "./AddGuestRowerDialog";
+import { useState } from "react";
 import {
   getBoatTypeLevelConfig,
   getMinimumValidRowersNeeded,
 } from "../../../_common/store/boatLevelConfig.rules";
+import { useClubOverviewStore } from "../../../_common/store/clubOverview.store";
 import {
   getSeriousnessTypeTranslation,
   SeriousnessCategoryEnum,
@@ -98,6 +101,8 @@ export const StartSessionForm = ({
   onSessionStarted,
   isLoading,
 }: StartSessionFormProps) => {
+  const [isAddGuestDialogOpen, setIsAddGuestDialogOpen] = useState(false);
+
   const form = useForm<StartSessionFormValues>({
     resolver: zodResolver(StartSessionFormSchema),
     values,
@@ -134,6 +139,7 @@ export const StartSessionForm = ({
   };
 
   const { boatTypeLevelConfigs } = useBoatLevelConfigStore();
+  const clubOverviewStore = useClubOverviewStore();
 
   const selectedBoat = form.watch("boat");
   const blockFromXRowers = getBoatTypeLevelConfig(
@@ -145,6 +151,22 @@ export const StartSessionForm = ({
     blockFromXRowers,
     numberOfRowers
   );
+
+  const handleGuestRowerAdded = (guestRower: { id: string; name: string }) => {
+    const rowers = clubOverviewStore.getAllRowers();
+    const guestRowerFromStore = rowers.find((r) => r.name === guestRower.name);
+
+    if (guestRowerFromStore) {
+      const currentRowers = form.getValues("selectedRowersOptions") || [];
+      const updatedRowers = [
+        ...currentRowers,
+        { id: guestRowerFromStore.id, name: guestRowerFromStore.name },
+      ];
+      form.setValue("selectedRowersOptions", updatedRowers);
+    }
+
+    setIsAddGuestDialogOpen(false);
+  };
 
   return (
     <div>
@@ -302,21 +324,21 @@ export const StartSessionForm = ({
             </div>
 
             {selectedBoat.note && selectedBoat.note.trim().length > 0 && (
-              <div className="text-xs text-steel-blue-900 bg-steel-blue-50 border border-steel-blue-200 rounded p-2 whitespace-pre-wrap">
+              <div className="text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded p-2 whitespace-pre-wrap">
                 <h3 className="font-medium mb-1 flex items-center gap-1">
-                  <NotebookIcon className="h-4 w-4 text-steel-blue-800" />
-                  Note(s) à propos de ce bateau :
+                  <NotebookIcon className="h-4 w-4 text-gray-800" />
+                  Note(s) à propos de ce bateau
                 </h3>
-                <p>{selectedBoat.note}</p>
+                <p className="">{selectedBoat.note}</p>
               </div>
             )}
 
             {(selectedBoat.ageCategory !== null ||
               selectedBoat.seriousnessCategory !== null) && (
-              <div className="text-xs text-steel-blue-900 bg-steel-blue-50 border border-steel-blue-200 rounded p-2 whitespace-pre-wrap">
+              <div className="text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded p-2 whitespace-pre-wrap">
                 <h3 className="font-medium mb-1 flex items-center gap-1">
-                  <ShieldIcon className="h-4 w-4 text-steel-blue-800" />
-                  Limitation de niveau sur ce bateau :
+                  <ShieldIcon className="h-4 w-4 text-gray-800" />
+                  Limitation de niveau sur ce bateau
                 </h3>
                 <p>
                   Les rameurs de ce bateau doivent, au minimum, avoir le niveau{" "}
@@ -338,10 +360,10 @@ export const StartSessionForm = ({
               control={form.control}
               render={({ field, fieldState }) => (
                 <RowersSection
-                  rowers={startSessionData.rowers}
                   onChange={(newValue) => field.onChange(newValue)}
                   values={field.value}
                   errorMessage={fieldState.error?.message}
+                  onAddGuestRower={() => setIsAddGuestDialogOpen(true)}
                 />
               )}
             />
@@ -404,6 +426,12 @@ export const StartSessionForm = ({
           {startSessionError && <ErrorBlock message={startSessionError} />}
         </form>
       </Form>
+
+      <AddGuestRowerDialog
+        isOpen={isAddGuestDialogOpen}
+        onClose={() => setIsAddGuestDialogOpen(false)}
+        onGuestRowerAdded={handleGuestRowerAdded}
+      />
     </div>
   );
 };

@@ -10,6 +10,7 @@ import { BoatTypeEnum } from "../business/boat.rules";
 import { generateBoatId } from "../business/boat.rules";
 import { SeriousnessCategoryEnum } from "../business/seriousness.rules";
 import { AgeCategoryEnum } from "../business/ageCategory.rules";
+import { GuestRowerTypeEnum, generateRowerId } from "../business/rower.rules";
 
 export interface ClubOverviewState {
   club: {
@@ -34,6 +35,10 @@ export interface ClubOverviewState {
     archivedAt?: string | undefined;
     type?: SeriousnessCategoryEnum | undefined;
     category?: AgeCategoryEnum | undefined;
+    // Champs pour les rameurs invités
+    guestType?: GuestRowerTypeEnum | null;
+    phoneNumber?: string;
+    email?: string;
   }[];
 }
 
@@ -80,6 +85,14 @@ export interface ClubOverviewStoreState {
     category?: AgeCategoryEnum | null,
     type?: SeriousnessCategoryEnum | null
   ) => void;
+  addGuestRower: (guestRower: {
+    name: string;
+    guestType: GuestRowerTypeEnum;
+    category?: AgeCategoryEnum;
+    type?: SeriousnessCategoryEnum;
+    phoneNumber?: string;
+    email?: string;
+  }) => void;
   getRowersById: (rowersId: string[]) => ClubOverviewState["rowers"];
   getRowerById: (rowerId: string) => ClubOverviewState["rowers"][0] | undefined;
   getAllRowers: () => ClubOverviewState["rowers"];
@@ -326,6 +339,26 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
                   name: rowerName,
                   category: category || undefined,
                   type: type || undefined,
+                },
+              ],
+            },
+          }));
+        },
+
+        addGuestRower: (guestRower) => {
+          set((state) => ({
+            clubOverview: {
+              ...state.clubOverview,
+              rowers: [
+                ...state.clubOverview.rowers,
+                {
+                  id: generateRowerId(),
+                  name: guestRower.name,
+                  guestType: guestRower.guestType,
+                  category: guestRower.category,
+                  type: guestRower.type,
+                  phoneNumber: guestRower.phoneNumber,
+                  email: guestRower.email,
                 },
               ],
             },

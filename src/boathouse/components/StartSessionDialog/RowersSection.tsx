@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { Label } from "../../../_common/components/Label";
 import { ReactSelect } from "../../../_common/components/ReactSelect";
-import { Rower } from "../../../_common/business/rower.rules";
+import { Rower, isGuestRower } from "../../../_common/business/rower.rules";
 import {
   areStringSimilar,
   simplifyString,
 } from "../../../_common/utils/string.utils";
 import { getSeriousnessTypeTranslation } from "../../../_common/business/seriousness.rules";
 import { components } from "react-select";
-import { InfoIcon } from "lucide-react";
+import { UserPlusIcon } from "lucide-react";
+import Button from "../../../_common/components/Button";
+import { useClubOverviewStore } from "../../../_common/store/clubOverview.store";
 
 interface RowersSectionProps {
   rowers: Rower[];
@@ -23,6 +25,7 @@ interface RowersSectionProps {
     name: string;
   }[];
   errorMessage?: string;
+  onAddGuestRower?: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,22 +39,38 @@ const MenuList = (props: any) => {
 };
 
 export const RowersSection = ({
-  rowers,
   onChange,
   values,
   errorMessage,
-}: RowersSectionProps) => {
+  onAddGuestRower,
+}: Omit<RowersSectionProps, "rowers">) => {
   const [input, setInput] = useState("");
+
+  // Récupérer la liste mise à jour des rameurs depuis le store
+  const { getAllRowers } = useClubOverviewStore();
+  const allRowers = getAllRowers();
 
   return (
     <div className="flex flex-col gap-1">
-      <Label>Rameurs</Label>
+      <div className="flex items-center justify-between">
+        <Label>Rameurs</Label>
+        <Button
+          type="button"
+          variant="outlined"
+          onClick={onAddGuestRower}
+          className="text-xs px-2 py-1 h-auto"
+        >
+          <UserPlusIcon className="h-3 w-3 mr-1" />
+          Ajouter un invité
+        </Button>
+      </div>
+
       <ReactSelect
         components={{ MenuList }}
         maxMenuHeight={208}
         isMulti
         name="rowersIds"
-        options={getOptions(rowers, input)}
+        options={getOptions(allRowers, input)}
         onInputChange={(input) => setInput(input)}
         onChange={(selected) => {
           if (!isArrayOfOptions(selected)) {
@@ -71,21 +90,6 @@ export const RowersSection = ({
         }))}
       />
       {errorMessage && <p className="form-error">{errorMessage}</p>}
-
-      {/* Tooltip pour les rameurs invités */}
-      <div className="group relative inline-flex items-center gap-2 text-xs text-gray-600 mt-1 cursor-help">
-        <InfoIcon className="h-4 w-4 text-gray-500" />
-        <span className="font-medium">À propos des rameurs invités</span>
-
-        {/* Tooltip au hover */}
-        <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20 max-w-64">
-          Si vous avez des rameurs invités qui ne sont pas dans la liste, vous
-          pouvez les mentionner dans le champ &quot;Commentaire&quot; et ignorer
-          l&apos;avertissement qui s&apos;affichera lors du démarrage de la
-          séance.
-          <div className="absolute top-full left-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
-        </div>
-      </div>
     </div>
   );
 };
@@ -113,9 +117,13 @@ const getOptions = (rowers: Rower[], searchInput: string) => {
         rower.category,
         getSeriousnessTypeTranslation(rower.type),
       ].filter(Boolean);
+
+      // Ajouter un indicateur pour les rameurs invités
+      const guestIndicator = isGuestRower(rower) ? " 👤 Invité" : "";
+
       return {
         value: rower.id,
-        label: `${rower.name} ${
+        label: `${rower.name}${guestIndicator} ${
           append.length > 0 ? `(${append.join(" - ")})` : ""
         }`,
       };
