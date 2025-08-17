@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { RowersCrudScreen } from "./rowers-crud/RowersCrud";
+import { RowersCrudScreen } from "./rowers-crud/RowersCrud.screen";
 import { forEnum } from "../_common/utils/utils";
 import { BoatCrud } from "./components/BoatsCrud";
 import { MiscParams } from "./components/MiscParams";
