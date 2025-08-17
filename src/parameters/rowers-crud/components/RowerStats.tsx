@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
-import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
-import Loading from "../../_common/components/Loading";
-import { SeasonSelector } from "../../stats/components/SeasonSelector";
-import { getSeasonDate } from "../../_common/utils/seasons";
-import { useGetFirstAndLastRegisteredSessionDate } from "../../stats/utils/getFirstAndLastRegisteredSessionDate";
-import { useGetRowerStats } from "./useGetRowerStats";
+import { millisecondToDayHourMinutes } from "../../../_common/utils/time.utils";
+import { useClubOverviewStore } from "../../../_common/store/clubOverview.store";
+import Loading from "../../../_common/components/Loading";
+import { SeasonSelector } from "../../../stats/components/SeasonSelector";
+import { getSeasonDate } from "../../../_common/utils/seasons";
+import { useGetFirstAndLastRegisteredSessionDate } from "../../../stats/utils/getFirstAndLastRegisteredSessionDate";
+import { useGetRowerStats } from "../hooks/useGetRowerStats";
 import { CalculatorIcon } from "@heroicons/react/16/solid";
 import { ClockIcon } from "@heroicons/react/16/solid";
 import { ChartBarIcon } from "@heroicons/react/16/solid";

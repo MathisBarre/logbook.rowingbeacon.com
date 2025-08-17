@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-import { getErrorMessage } from "../../_common/utils/error";
+import { getErrorMessage } from "../../../_common/utils/error";
 import { toast } from "sonner";
-import { between, inArray, not } from "drizzle-orm";
-import { and } from "drizzle-orm";
-import { eq } from "drizzle-orm";
-import { DBSessions } from "../../_common/database/schema";
-import { getDatabase } from "../../_common/database/database";
-import { DBSessionOnRowers } from "../../_common/database/schema";
+import { between, inArray, not, and, eq } from "drizzle-orm";
+import { DBSessions } from "../../../_common/database/schema";
+import { getDatabase } from "../../../_common/database/database";
+import { DBSessionOnRowers } from "../../../_common/database/schema";
 
 export const useGetRowerStats = (
   rowerId: string,

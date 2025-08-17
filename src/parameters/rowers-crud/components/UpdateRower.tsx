@@ -1,17 +1,17 @@
-import { Label } from "../../_common/components/Label";
-import Button from "../../_common/components/Button";
+import { Label } from "../../../_common/components/Label";
+import Button from "../../../_common/components/Button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Rower } from "../../_common/business/rower.rules";
-import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
+import { Rower } from "../../../_common/business/rower.rules";
+import { useClubOverviewStore } from "../../../_common/store/clubOverview.store";
 import { toast } from "sonner";
 import {
   SERIOUSNESS_CATEGORIES,
   SeriousnessCategoryEnum,
-} from "../../_common/business/seriousness.rules";
-import { AGE_CATEGORIES } from "../../_common/business/ageCategory.rules";
-import { AgeCategoryEnum } from "../../_common/business/ageCategory.rules";
+} from "../../../_common/business/seriousness.rules";
+import { AGE_CATEGORIES } from "../../../_common/business/ageCategory.rules";
+import { AgeCategoryEnum } from "../../../_common/business/ageCategory.rules";
 
 const useUpdateRowerForm = ({
   defaultValues,

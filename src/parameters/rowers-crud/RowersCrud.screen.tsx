@@ -20,8 +20,8 @@ import { DialogContent } from "../../_common/components/Dialog/DialogContent";
 import { Dialog, DialogTrigger } from "../../_common/components/Dialog/Dialog";
 import { useLocalStorage } from "../../_common/utils/useLocalStorage";
 import { ChartBarIcon } from "@heroicons/react/16/solid";
-import { RowerStatsComparisons } from "./RowerStatsComparisons";
-import { UpdateRower } from "./UpdateRower";
+import { RowerStatsComparisons } from "./components/RowerStatsComparisons";
+import { UpdateRower } from "./components/UpdateRower";
 import { Rower } from "../../_common/business/rower.rules";
 import { getRowerTypeLabel } from "../../_common/business/rower.rules";
 import clsx from "clsx";
@@ -34,7 +34,7 @@ import {
   SERIOUSNESS_CATEGORIES,
   SeriousnessCategoryEnum,
 } from "../../_common/business/seriousness.rules";
-import { RowerStats } from "./RowerStats";
+import { RowerStats } from "./components/RowerStats";
 
 export const RowersCrudScreen = () => {
   const store = useClubOverviewStore();
