@@ -27,7 +27,13 @@ const AddGuestRowerSchema = z.object({
   category: z.nativeEnum(AgeCategoryEnum).optional(),
   type: z.nativeEnum(SeriousnessCategoryEnum).optional(),
   // Champs pour "invité pas encore inscrit"
-  phoneNumber: z.string().optional(),
+  phoneNumber: z
+    .string()
+    .regex(
+      /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/,
+      "Format de numéro de téléphone invalide"
+    )
+    .optional(),
   email: z.string().email("Format d'email invalide").optional(),
 });
 
@@ -264,7 +270,7 @@ export const AddGuestRowerDialog = ({
       category: values.category,
       type: values.type,
       phoneNumber: values.phoneNumber,
-      email: values.email,
+      email: values.email?.toLowerCase(),
     };
 
     addGuestRower(newRower);
