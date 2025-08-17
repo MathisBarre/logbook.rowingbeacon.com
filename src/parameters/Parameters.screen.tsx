@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { RowersCrud } from "./components/RowersCrud";
+import { RowersCrudScreen } from "./rowers-crud/RowersCrud";
 import { forEnum } from "../_common/utils/utils";
 import { BoatCrud } from "./components/BoatsCrud";
 import { MiscParams } from "./components/MiscParams";
@@ -13,7 +13,7 @@ export const ParametersScreen = () => {
     <div className="flex flex-col h-full gap-1">
       <div className="flex-1 relative">
         {forEnum(page, {
-          rowers: () => <RowersCrud />,
+          rowers: () => <RowersCrudScreen />,
           boats: () => <BoatCrud />,
           misc: () => <MiscParams />,
         })}

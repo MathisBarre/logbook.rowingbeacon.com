@@ -5,7 +5,7 @@ import Loading from "../../_common/components/Loading";
 import { SeasonSelector } from "../../stats/components/SeasonSelector";
 import { getSeasonDate } from "../../_common/utils/seasons";
 import { useGetFirstAndLastRegisteredSessionDate } from "../../stats/utils/getFirstAndLastRegisteredSessionDate";
-import { useGetRowerStats } from "../utils/getRowerStats";
+import { useGetRowerStats } from "../rowers-crud/getRowerStats";
 import { CalculatorIcon } from "@heroicons/react/16/solid";
 import { ClockIcon } from "@heroicons/react/16/solid";
 import { ChartBarIcon } from "@heroicons/react/16/solid";

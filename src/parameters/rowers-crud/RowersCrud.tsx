@@ -20,13 +20,12 @@ import { DialogContent } from "../../_common/components/Dialog/DialogContent";
 import { Dialog, DialogTrigger } from "../../_common/components/Dialog/Dialog";
 import { useLocalStorage } from "../../_common/utils/useLocalStorage";
 import { ChartBarIcon } from "@heroicons/react/16/solid";
-import { RowerStats } from "./RowerStats";
 import { RowerStatsComparisons } from "./RowerStatsComparisons";
 import { UpdateRower } from "./UpdateRower";
 import { Rower } from "../../_common/business/rower.rules";
 import { getRowerTypeLabel } from "../../_common/business/rower.rules";
 import clsx from "clsx";
-import { BulkUpdateRower } from "./BulkUpdateRower";
+import { BulkUpdateRower } from "../components/BulkUpdateRower";
 import { sortByTypeOrder } from "../../_common/business/seriousness.rules";
 import { sortByAgeCategoryOrder } from "../../_common/business/ageCategory.rules";
 import { AGE_CATEGORIES } from "../../_common/business/ageCategory.rules";
@@ -35,8 +34,9 @@ import {
   SERIOUSNESS_CATEGORIES,
   SeriousnessCategoryEnum,
 } from "../../_common/business/seriousness.rules";
+import { RowerStats } from "./RowerStats";
 
-export const RowersCrud = () => {
+export const RowersCrudScreen = () => {
   const store = useClubOverviewStore();
   const rowers = store.getAllRowers();
 
