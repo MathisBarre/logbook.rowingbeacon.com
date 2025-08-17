@@ -8,6 +8,81 @@ import { DBSessions } from "../../_common/database/schema";
 import { getDatabase } from "../../_common/database/database";
 import { DBSessionOnRowers } from "../../_common/database/schema";
 
+export const useGetRowerStats = (
+  rowerId: string,
+  season: { startDate: Date; endDate: Date }
+) => {
+  const [stats, setStats] = useState<RowerStats>({
+    count: 0,
+    totalDuration: 0,
+    mostUsedBoats: [],
+    mostFrequentPartners: [],
+    coachedSessionsCount: 0,
+    coachedSessionsPercentage: 0,
+  });
+
+  useEffect(() => {
+    getRowerStats(rowerId, season)
+      .then(setStats)
+      .catch((e) => toast.error(getErrorMessage(e)));
+  }, [rowerId, season]);
+
+  return stats;
+};
+
+const getRowerStats = async (
+  rowerId: string,
+  season: { startDate: Date; endDate: Date }
+): Promise<RowerStats> => {
+  const { drizzle } = await getDatabase();
+
+  const sessions = await drizzle
+    .select()
+    .from(DBSessionOnRowers)
+    .leftJoin(DBSessions, eq(DBSessions.id, DBSessionOnRowers.sessionId))
+    .where(
+      and(
+        eq(DBSessionOnRowers.rowerId, rowerId),
+        between(
+          DBSessions.startDateTime,
+          season.startDate.toISOString(),
+          season.endDate.toISOString()
+        )
+      )
+    );
+
+  const totalDuration = calculateTotalDuration(sessions);
+  const { coachedSessionsCount, coachedSessionsPercentage } =
+    calculateCoachedSessionsStats(sessions);
+  const { firstSessionDate, lastSessionDate } =
+    calculateSessionDateRange(sessions);
+  const mostUsedBoats = calculateMostUsedBoats(sessions);
+  const sessionIds = getSessionIds(sessions);
+
+  const sessionsOnRower = await drizzle
+    .select()
+    .from(DBSessionOnRowers)
+    .where(
+      and(
+        inArray(DBSessionOnRowers.sessionId, sessionIds),
+        not(eq(DBSessionOnRowers.rowerId, rowerId))
+      )
+    );
+
+  const mostFrequentPartners = calculateMostFrequentPartners(sessionsOnRower);
+
+  return {
+    count: sessions.length,
+    totalDuration,
+    mostUsedBoats,
+    mostFrequentPartners,
+    firstSessionDate,
+    lastSessionDate,
+    coachedSessionsCount,
+    coachedSessionsPercentage,
+  };
+};
+
 type SessionWithRower = {
   session: {
     id: string;
@@ -55,7 +130,6 @@ export const calculateTotalDuration = (
 /**
  * Calculate the number of coached sessions and the percentage of coached sessions
  */
-
 const getCoachedSessionsCount = (sessions: SessionWithRower[]): number => {
   return sessions.filter(
     (session) => session.session?.hasBeenCoached === "true"
@@ -212,79 +286,4 @@ export const getSessionIds = (sessions: SessionWithRower[]): string[] => {
   return sessions
     .map((s) => s.session?.id)
     .filter((id): id is string => id !== undefined);
-};
-
-export const useGetRowerStats = (
-  rowerId: string,
-  season: { startDate: Date; endDate: Date }
-) => {
-  const [stats, setStats] = useState<RowerStats>({
-    count: 0,
-    totalDuration: 0,
-    mostUsedBoats: [],
-    mostFrequentPartners: [],
-    coachedSessionsCount: 0,
-    coachedSessionsPercentage: 0,
-  });
-
-  useEffect(() => {
-    getRowerStats(rowerId, season)
-      .then(setStats)
-      .catch((e) => toast.error(getErrorMessage(e)));
-  }, [rowerId, season]);
-
-  return stats;
-};
-
-const getRowerStats = async (
-  rowerId: string,
-  season: { startDate: Date; endDate: Date }
-): Promise<RowerStats> => {
-  const { drizzle } = await getDatabase();
-
-  const sessions = await drizzle
-    .select()
-    .from(DBSessionOnRowers)
-    .leftJoin(DBSessions, eq(DBSessions.id, DBSessionOnRowers.sessionId))
-    .where(
-      and(
-        eq(DBSessionOnRowers.rowerId, rowerId),
-        between(
-          DBSessions.startDateTime,
-          season.startDate.toISOString(),
-          season.endDate.toISOString()
-        )
-      )
-    );
-
-  const totalDuration = calculateTotalDuration(sessions);
-  const { coachedSessionsCount, coachedSessionsPercentage } =
-    calculateCoachedSessionsStats(sessions);
-  const { firstSessionDate, lastSessionDate } =
-    calculateSessionDateRange(sessions);
-  const mostUsedBoats = calculateMostUsedBoats(sessions);
-  const sessionIds = getSessionIds(sessions);
-
-  const sessionsOnRower = await drizzle
-    .select()
-    .from(DBSessionOnRowers)
-    .where(
-      and(
-        inArray(DBSessionOnRowers.sessionId, sessionIds),
-        not(eq(DBSessionOnRowers.rowerId, rowerId))
-      )
-    );
-
-  const mostFrequentPartners = calculateMostFrequentPartners(sessionsOnRower);
-
-  return {
-    count: sessions.length,
-    totalDuration,
-    mostUsedBoats,
-    mostFrequentPartners,
-    firstSessionDate,
-    lastSessionDate,
-    coachedSessionsCount,
-    coachedSessionsPercentage,
-  };
 };

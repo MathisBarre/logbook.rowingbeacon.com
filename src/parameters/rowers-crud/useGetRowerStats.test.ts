@@ -7,7 +7,7 @@ import {
   calculateMostFrequentPartners,
   getSessionIds,
   getPercentage,
-} from "./getRowerStats";
+} from "./useGetRowerStats";
 
 // Mock data
 const createMockSession = (
