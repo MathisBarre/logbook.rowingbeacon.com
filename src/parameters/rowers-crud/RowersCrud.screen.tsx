@@ -15,7 +15,6 @@ import { Input } from "../../_common/components/Input";
 import { Label } from "../../_common/components/Label";
 import { areStringSimilar } from "../../_common/utils/string.utils";
 import { paginateData } from "../../_common/utils/pagination.utils";
-import { windowConfirm } from "../../_common/utils/window.utils";
 import { DialogContent } from "../../_common/components/Dialog/DialogContent";
 import { Dialog, DialogTrigger } from "../../_common/components/Dialog/Dialog";
 import { useLocalStorage } from "../../_common/utils/useLocalStorage";
@@ -35,23 +34,13 @@ import {
   SeriousnessCategoryEnum,
 } from "../../_common/business/seriousness.rules";
 import { RowerStats } from "./components/RowerStats";
+import { useArchiveRower } from "./hooks/useArchiveRower";
 
 export const RowersCrudScreen = () => {
   const store = useClubOverviewStore();
   const rowers = store.getAllRowers();
 
-  const deleteRower = async (rower: { id: string; name: string }) => {
-    if (
-      !(await windowConfirm(
-        `Voulez-vous archiver le rameur "${rower.name}" ? Il ne sera plus possible de renseigner des sorties avec ce rameur, mais les données enregistrées ne seront pas impactées.`
-      ))
-    ) {
-      return;
-    }
-
-    store.archiveRower(rower.id);
-    toast.success("Le rameur a été supprimé");
-  };
+  const archiveRower = useArchiveRower();
 
   const [defaultCategory, setDefaultCategory] =
     useState<AgeCategoryEnum | null>(null);
@@ -277,7 +266,7 @@ export const RowersCrudScreen = () => {
                             <div className="h-full w-[1px] bg-gray-200" />
                             <button
                               onClick={async () => {
-                                await deleteRower(rower);
+                                await archiveRower(rower);
                               }}
                               className="flex items-center justify-center hover:bg-gray-100 aspect-square h-12"
                             >
