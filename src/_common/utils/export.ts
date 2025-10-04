@@ -3,7 +3,30 @@ import { writeTextFile, writeFile, BaseDirectory } from "@tauri-apps/plugin-fs";
 
 export type ExportType = "xlsx" | "ods" | "json" | "csv";
 
-export const exportSpreadsheet = (args: {
+export const exportData = (args: {
+  data: Record<string, string>[];
+  fileName: string;
+  fileType: ExportType;
+}) => {
+  const { fileType } = args;
+
+  if (fileType === "xlsx" || fileType === "ods") {
+    return exportSpreadsheet({
+      ...args,
+      fileType,
+    });
+  }
+
+  if (fileType === "json") {
+    return exportJson(args);
+  }
+
+  if (fileType === "csv") {
+    return exportCsv(args);
+  }
+};
+
+const exportSpreadsheet = (args: {
   data: Record<string, string | Date>[];
   fileName: string;
   fileType: "xlsx" | "ods";
@@ -55,7 +78,7 @@ const saveTextFile = (args: { content: string; fileName: string }) => {
   });
 };
 
-export const exportJson = (args: {
+const exportJson = (args: {
   data: Record<string, string>[];
   fileName: string;
   fileType: ExportType;
@@ -68,7 +91,7 @@ export const exportJson = (args: {
   });
 };
 
-export const exportCsv = (args: {
+const exportCsv = (args: {
   data: Record<string, string>[];
   fileName: string;
   fileType: ExportType;
@@ -83,27 +106,4 @@ export const exportCsv = (args: {
     content: csv,
     fileName: args.fileName,
   });
-};
-
-export const exportData = (args: {
-  data: Record<string, string>[];
-  fileName: string;
-  fileType: ExportType;
-}) => {
-  const { fileType } = args;
-
-  if (fileType === "xlsx" || fileType === "ods") {
-    return exportSpreadsheet({
-      ...args,
-      fileType,
-    });
-  }
-
-  if (fileType === "json") {
-    return exportJson(args);
-  }
-
-  if (fileType === "csv") {
-    return exportCsv(args);
-  }
 };
