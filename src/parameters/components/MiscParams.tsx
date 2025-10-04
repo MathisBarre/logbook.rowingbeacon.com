@@ -8,14 +8,52 @@ import { useAutoStart } from "../hooks/useAutoStart";
 import { BoatLevelConfigModal } from "./BoatLevelConfigModal";
 import { RouteConfigModal } from "./RouteConfigModal";
 import { ClockIcon } from "@heroicons/react/24/outline";
+import { exportAllData, importAllData } from "../../_common/utils/importExport";
+import { toast } from "sonner";
 
 export const MiscParams = () => {
   const [deleteDataDialogOpen, setDeleteDataDialogOpen] = useState(false);
   const [boatLevelConfigOpen, setBoatLevelConfigOpen] = useState(false);
   const [routeConfigOpen, setRouteConfigOpen] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
   const adminEditSystem = useAdminEditModeSystem();
   const clubOverview = useClubOverviewStore();
   const { autoStartState, enableAutoStart, disableAutoStart } = useAutoStart();
+
+  const handleExport = async () => {
+    try {
+      setIsExporting(true);
+      const fileName = await exportAllData();
+      toast.success(`Données exportées avec succès : ${fileName}`);
+    } catch (error) {
+      console.error("Erreur lors de l'export :", error);
+      toast.error("Erreur lors de l'export des données");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleImport = async () => {
+    try {
+      setIsImporting(true);
+      const result = await importAllData();
+      if (result) {
+        toast.success(
+          `Données importées : ${result.boats} bateaux, ${result.routes} parcours, ${result.rowers} rameurs`
+        );
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'import :", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Erreur lors de l'import des données"
+      );
+    } finally {
+      setIsImporting(false);
+    }
+  };
 
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
@@ -50,6 +88,48 @@ export const MiscParams = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 pt-8">
+            <section className="flex flex-col h-full">
+              <div className="flex-1">
+                <h1 className="font-bold text-xl mb-1 text-gray-900">
+                  Importer des données
+                </h1>
+                <p className="text-gray-500 mb-4">
+                  Importez des bateaux, parcours et rameurs depuis un fichier
+                  JSON. Les données seront ajoutées aux données existantes.
+                </p>
+              </div>
+              <Button
+                type="button"
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                onClick={handleImport}
+                loading={isImporting}
+                className="w-full mt-4"
+              >
+                Importer des données
+              </Button>
+            </section>
+
+            <section className="flex flex-col h-full">
+              <div className="flex-1">
+                <h1 className="font-bold text-xl mb-1 text-gray-900">
+                  Exporter des données
+                </h1>
+                <p className="text-gray-500 mb-4">
+                  Exportez tous les bateaux, parcours et rameurs dans un fichier
+                  JSON
+                </p>
+              </div>
+              <Button
+                type="button"
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                onClick={handleExport}
+                loading={isExporting}
+                className="w-full mt-4"
+              >
+                Exporter toutes les données
+              </Button>
+            </section>
+
             <section className="flex flex-col h-full">
               <div className="flex-1">
                 <h1 className="font-bold text-xl mb-1 text-gray-900">
