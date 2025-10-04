@@ -67,8 +67,8 @@ const exportSpreadsheet = (args: {
   });
 };
 
-const exportJson = (args: {
-  data: Record<string, string>[];
+export const exportJson = (args: {
+  data: Record<string, unknown>[];
   fileName: string;
   fileType: ExportType;
 }) => {

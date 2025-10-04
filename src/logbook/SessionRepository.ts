@@ -45,7 +45,6 @@ export const sessionRepository = {
     });
 
     return result.map((session) => ({
-      ...session,
       sessionId: session.id,
       endDateTime: getDateOrNull(session.endDateTime),
       estimatedEndDateTime: getDateOrNull(session.estimatedEndDateTime),
@@ -54,6 +53,10 @@ export const sessionRepository = {
       hasBeenCoached: sessionRepository.handleBoolStringToBoolean(
         session.hasBeenCoached
       ),
+      comment: session.comment,
+      incidentId: session.incidentId,
+      boatId: session.boatId,
+      routeId: session.routeId,
     }));
   },
 
