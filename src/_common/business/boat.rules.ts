@@ -20,6 +20,7 @@ export interface Boat {
   name: string;
   isInMaintenance?: boolean;
   type?: BoatTypeEnum;
+  note?: string;
 }
 
 export interface BoatWithoutUndefined {

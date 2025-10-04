@@ -44,6 +44,7 @@ export const StartSessionFormDataWrapper = ({
             const boatLevelConfig = getBoatLevelConfig(boat.id);
             return {
               ...getBoatWithoutUndefined(boat),
+              note: boat.note,
               ageCategory: boatLevelConfig?.minimalRowerCategory || null,
               seriousnessCategory: boatLevelConfig?.minimalRowerType || null,
             };
@@ -59,6 +60,7 @@ export const StartSessionFormDataWrapper = ({
           ...defaultValues,
           boat: {
             ...getBoatWithoutUndefined(defaultValues.boat),
+            note: getAllBoats().find((b) => b.id === defaultBoat.id)?.note,
             ageCategory: defaultBoatLevelConfig?.minimalRowerCategory || null,
             seriousnessCategory:
               defaultBoatLevelConfig?.minimalRowerType || null,

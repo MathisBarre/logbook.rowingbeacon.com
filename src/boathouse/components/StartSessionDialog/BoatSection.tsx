@@ -19,17 +19,20 @@ interface BoatsSectionProps {
   boats: {
     id: string;
     name: string;
+    note?: string;
     ageCategory: AgeCategoryEnum | null;
     seriousnessCategory: SeriousnessCategoryEnum | null;
   }[];
   value: {
     id: string;
     name: string;
+    note?: string;
   };
   onChange: (value: {
     id: string;
     name: string;
     type?: string;
+    note?: string;
     ageCategory?: AgeCategoryEnum | null;
     seriousnessCategory?: SeriousnessCategoryEnum | null;
   }) => void;

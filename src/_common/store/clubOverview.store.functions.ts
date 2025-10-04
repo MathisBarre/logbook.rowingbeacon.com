@@ -37,6 +37,24 @@ export const updateBoatNameFn = (
   return updatedBoats;
 };
 
+export const updateBoatNoteFn = (
+  boats: ClubOverviewState["boats"],
+  boatId: string,
+  note: string
+) => {
+  const updatedBoats = boats.map((boat) => {
+    if (boat.id === boatId) {
+      return {
+        ...boat,
+        note,
+      };
+    }
+    return boat;
+  });
+
+  return updatedBoats;
+};
+
 export const toggleBoatIsInMaintenanceFn = (
   boats: ClubOverviewState["boats"],
   boatId: string

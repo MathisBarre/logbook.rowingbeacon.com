@@ -1,18 +1,8 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import {
-  ConstructionIcon,
-  PencilIcon,
-  SearchIcon,
-  Trash2Icon,
-  TypeIcon,
-} from "lucide-react";
+import { PencilIcon, SearchIcon, Trash2Icon } from "lucide-react";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
-import { windowConfirm, windowPrompt } from "../../_common/utils/window.utils";
-import {
-  boathTypeWithLabel,
-  BoatTypeEnum,
-  getTypeLabel,
-} from "../../_common/business/boat.rules";
+import { windowConfirm } from "../../_common/utils/window.utils";
+import { BoatTypeEnum, getTypeLabel } from "../../_common/business/boat.rules";
 import { sortBoatsByTypeAndName } from "../../_common/business/boat.rules";
 import { cn } from "../../_common/utils/utils";
 import { Fragment, useState } from "react";
@@ -22,6 +12,8 @@ import { AddBoatsDialog } from "./dialogs/AddBoatsDialog";
 import { BoatStatsDialog } from "./dialogs/BoatStatsDialog";
 import { BoatLevelDialog } from "./dialogs/BoatLevelDialog";
 import { BoatStatsComparisonsDialog } from "./dialogs/BoatStatsComparisonsDialog";
+import { SimpleDialog } from "../../_common/components/SimpleDialog";
+import { UpdateBoat } from "./UpdateBoat";
 
 export const BoatCrud = () => {
   const store = useClubOverviewStore();
@@ -32,12 +24,18 @@ export const BoatCrud = () => {
   );
   const sortedBoats = sortBoatsByTypeAndName(searchedBoats);
 
-  const {
-    updateBoatType,
-    updateBoatName,
-    toggleBoatIsInMaintenance,
-    archiveBoat: deleteBoat,
-  } = useClubOverviewStore();
+  const { archiveBoat: deleteBoat } = useClubOverviewStore();
+
+  const [editBoat, setEditBoat] = useState<
+    | false
+    | {
+        id: string;
+        name: string;
+        type?: BoatTypeEnum;
+        isInMaintenance?: boolean;
+        note?: string;
+      }
+  >(false);
 
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
@@ -84,7 +82,24 @@ export const BoatCrud = () => {
                       className="border rounded pl-4 flex items-center"
                       key={boat.id}
                     >
-                      {boat.name}
+                      <div className="py-2">
+                        <h3
+                          className={cn(
+                            boat.isInMaintenance && "text-error-700"
+                          )}
+                        >
+                          {boat.name}{" "}
+                          {boat.isInMaintenance && "(en maintenance)"}
+                        </h3>
+                        {boat.note && boat.note.trim().length > 0 && (
+                          <div className="text-xs text-steel-blue-900 bg-steel-blue-50 border border-steel-blue-200 rounded p-2 whitespace-pre-wrap mt-2">
+                            <h3 className="font-medium mb-1">
+                              Note(s) à propos de ce bateau :
+                            </h3>
+                            <p>{boat.note}</p>
+                          </div>
+                        )}
+                      </div>
 
                       <div className="flex-1"></div>
 
@@ -98,52 +113,18 @@ export const BoatCrud = () => {
 
                       <Separator />
                       <EditButton
-                        onClick={async () => {
-                          const newBoatName = await windowPrompt(
-                            "Nouveau nom du bateau",
-                            boat.name
-                          );
-
-                          if (newBoatName) {
-                            updateBoatName(boat.id, newBoatName);
-                          }
-                        }}
+                        onClick={() =>
+                          setEditBoat({
+                            id: boat.id,
+                            name: boat.name,
+                            type: boat.type,
+                            isInMaintenance: boat.isInMaintenance,
+                            note: boat.note,
+                          })
+                        }
                       >
                         <PencilIcon className="text-steel-blue-800 h-4 w-4" />{" "}
-                        <TypeIcon className="text-steel-blue-800 h-4 w-4" />
                       </EditButton>
-                      <Separator />
-                      <EditButton
-                        onClick={() => {
-                          toggleBoatIsInMaintenance(boat.id);
-                        }}
-                        isActive={boat.isInMaintenance}
-                      >
-                        <ConstructionIcon className="text-steel-blue-800 h-4 w-4 mr-2" />
-                        <p className="text-sm text-steel-blue-800">
-                          Maintenance
-                        </p>
-                      </EditButton>
-                      <Separator />
-
-                      <select
-                        className="border-none focus:ring-0 h-12 text-steel-blue-800"
-                        name="boatType"
-                        id="boatType"
-                        value={boat.type || BoatTypeEnum.OTHER}
-                        onChange={(e) => {
-                          updateBoatType(
-                            boat.id,
-                            e.target.value as BoatTypeEnum
-                          );
-                        }}
-                      >
-                        {boathTypeWithLabel.map((type) => (
-                          <option key={type.type} value={type.type}>
-                            {type.label}
-                          </option>
-                        ))}
-                      </select>
 
                       <Separator />
                       <EditButton
@@ -167,6 +148,16 @@ export const BoatCrud = () => {
             <div className="flex-1" />
           </div>
         </div>
+        <SimpleDialog
+          modal={true}
+          open={!!editBoat}
+          onOpenChange={(v) => !v && setEditBoat(false)}
+          title="Modifier le bateau"
+        >
+          {editBoat && (
+            <UpdateBoat boat={editBoat} close={() => setEditBoat(false)} />
+          )}
+        </SimpleDialog>
       </div>
     </div>
   );
@@ -185,7 +176,7 @@ const EditButton = ({
     <button
       onClick={onClick}
       className={cn(
-        "flex items-center justify-center  h-12 px-4",
+        "flex items-center justify-center  min-h-12 h-full px-4 min-w-12",
         isActive
           ? "bg-steel-blue-100 border border-dashed border-steel-blue-600 hover:bg-steel-blue-200"
           : "hover:bg-gray-100"
@@ -196,4 +187,4 @@ const EditButton = ({
   );
 };
 
-const Separator = () => <div className="h-12 w-[1px] bg-gray-200" />;
+const Separator = () => <div className="min-h-12 h-full w-[1px] bg-gray-200" />;

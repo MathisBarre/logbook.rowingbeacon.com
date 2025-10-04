@@ -8,6 +8,7 @@ import {
 } from "../../../_common/utils/string.utils";
 import { getSeriousnessTypeTranslation } from "../../../_common/business/seriousness.rules";
 import { components } from "react-select";
+import { InfoIcon } from "lucide-react";
 
 interface RowersSectionProps {
   rowers: Rower[];

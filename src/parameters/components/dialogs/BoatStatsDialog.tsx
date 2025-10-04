@@ -15,7 +15,7 @@ export const BoatStatsDialog = ({ boatId, boatName }: BoatStatsDialogProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="flex items-center justify-center hover:bg-gray-100 h-12 w-12">
+        <button className="flex items-center justify-center hover:bg-gray-100 min-h-12 h-full w-12 min-w-12">
           <ChartBarIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
         </button>
       </DialogTrigger>
