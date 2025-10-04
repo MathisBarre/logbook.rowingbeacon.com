@@ -34,16 +34,17 @@ const exportSpreadsheet = (args: {
   const wb = XLSX.utils.book_new();
 
   const data = args.data.map((row) => {
-    return {
-      ...row,
-      start_date_time: row.start_date_time
-        ? new Date(row.start_date_time)
-        : null,
-      estimated_end_date_time: row.estimated_end_date_time
-        ? new Date(row.estimated_end_date_time)
-        : null,
-      end_date_time: row.end_date_time ? new Date(row.end_date_time) : null,
-    };
+    const parsedRow: Record<string, unknown> = {};
+
+    for (const [key, value] of Object.entries(row)) {
+      if (isDateString(value)) {
+        parsedRow[key] = new Date(value as string);
+      } else {
+        parsedRow[key] = value;
+      }
+    }
+
+    return parsedRow;
   });
 
   const ws = XLSX.utils.json_to_sheet(data, {
@@ -63,18 +64,6 @@ const exportSpreadsheet = (args: {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     file,
     fileName: args.fileName,
-  });
-};
-
-const saveFile = (args: { file: Uint8Array; fileName: string }) => {
-  return writeFile(args.fileName, args.file, {
-    baseDir: BaseDirectory.Download,
-  });
-};
-
-const saveTextFile = (args: { content: string; fileName: string }) => {
-  return writeTextFile(args.fileName, args.content, {
-    baseDir: BaseDirectory.Download,
   });
 };
 
@@ -106,4 +95,24 @@ const exportCsv = (args: {
     content: csv,
     fileName: args.fileName,
   });
+};
+
+const saveFile = (args: { file: Uint8Array; fileName: string }) => {
+  return writeFile(args.fileName, args.file, {
+    baseDir: BaseDirectory.Download,
+  });
+};
+
+const saveTextFile = (args: { content: string; fileName: string }) => {
+  return writeTextFile(args.fileName, args.content, {
+    baseDir: BaseDirectory.Download,
+  });
+};
+
+const isDateString = (value: unknown): boolean => {
+  if (typeof value !== "string") return false;
+
+  // Check if it's a valid date string (ISO format or other parseable formats)
+  const date = new Date(value);
+  return !isNaN(date.getTime()) && value.match(/\d{4}-\d{2}-\d{2}/) !== null;
 };
