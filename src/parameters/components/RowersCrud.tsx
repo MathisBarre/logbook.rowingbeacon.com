@@ -198,7 +198,10 @@ export const RowersCrud = () => {
                   >
                     {SERIOUSNESS_CATEGORIES.map((type) => (
                       <option key={type.type} value={type.type || ""}>
-                        {type.label || t("parameters.noType")}
+                        admin{" "}
+                        {type.translationKey
+                          ? t(type.translationKey)
+                          : t("parameters.noType")}
                       </option>
                     ))}
                   </select>

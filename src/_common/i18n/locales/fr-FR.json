@@ -129,7 +129,8 @@
       "invalidRowersLevel_one": "<0>1</0> rameur n'a pas le niveau requis pour ce bateau.",
       "invalidRowersLevel_other": "<0>{{count}}</0> rameurs n'ont pas le niveau requis pour ce bateau.",
       "fixInformation": "Corriger les informations"
-    }
+    },
+    "noRowersRecorded": "Aucun rameur n'a été enregistré pour cette session. Si c'est une erreur, veuillez contacter le support."
   },
   "logbook": {
     "title": "Journal de bord",
@@ -137,6 +138,7 @@
     "incidents": "Incidents",
     "noSessions": "Aucune session enregistrée pour le moment",
     "noIncidents": "Aucun incident enregistré pour le moment",
+    "noSessionsFound": "Aucune session trouvée avec ces filtres",
     "exportSessions": "Exporter les sessions",
     "date": "Date",
     "boat": "Bateau",
@@ -352,5 +354,20 @@
     "hours": "heures",
     "minutes": "minutes",
     "seconds": "secondes"
+  },
+  "admin": {
+    "password": "Mot de passe admin",
+    "incorrectPassword": "Mot de passe incorrect"
+  },
+  "seriousness": {
+    "recreational": "Loisir",
+    "competitor": "Compétiteur"
+  },
+  "import": {
+    "invalidFile": "Le fichier ne contient pas de données valides. Erreur de validation :",
+    "exportError": "Erreur lors de l'export"
+  },
+  "database": {
+    "failedToLoad": "Échec du chargement de la base de données"
   }
 }

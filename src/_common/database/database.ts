@@ -2,6 +2,7 @@ import Database from "@tauri-apps/plugin-sql";
 import { toast } from "sonner";
 import { applyMigrations } from "./migrations";
 import { getDrizzle } from "./drizzle";
+import i18n from "../i18n/config";
 
 let db: Database | null = null;
 
@@ -19,7 +20,7 @@ export const getDatabase = async () => {
     return { db, drizzle };
   } catch (e) {
     console.error(e);
-    toast.error("Failed to load database");
+    toast.error(i18n.t("database.failedToLoad"));
     throw e;
   }
 };

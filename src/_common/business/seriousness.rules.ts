@@ -1,3 +1,5 @@
+import i18n from "../i18n/config";
+
 export const findSeriousnessCategoryOrder = (
   seriousnessCategory: SeriousnessCategoryEnum | null | undefined
 ) => {
@@ -14,26 +16,28 @@ export enum SeriousnessCategoryEnum {
 export const getSeriousnessTypeTranslation = (
   type: SeriousnessCategoryEnum | null | undefined
 ): string | null => {
-  return (
-    SERIOUSNESS_CATEGORIES.find((t) => t.type === type)?.label || type || null
-  );
+  const category = SERIOUSNESS_CATEGORIES.find((t) => t.type === type);
+  if (!category?.translationKey) {
+    return type || null;
+  }
+  return i18n.t(category.translationKey);
 };
 
 export const SERIOUSNESS_CATEGORIES = [
   {
     order: 0,
     type: null,
-    label: null,
+    translationKey: null,
   },
   {
     order: 1,
     type: SeriousnessCategoryEnum.RECREATIONAL,
-    label: "Loisir",
+    translationKey: "seriousness.recreational",
   },
   {
     order: 2,
     type: SeriousnessCategoryEnum.COMPETITOR,
-    label: "Compétiteur",
+    translationKey: "seriousness.competitor",
   },
 ] as const;
 

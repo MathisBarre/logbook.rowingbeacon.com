@@ -129,7 +129,8 @@
       "invalidRowersLevel_one": "<0>1</0> roeier heeft niet het vereiste niveau voor deze boot.",
       "invalidRowersLevel_other": "<0>{{count}}</0> roeiers hebben niet het vereiste niveau voor deze boot.",
       "fixInformation": "Informatie corrigeren"
-    }
+    },
+    "noRowersRecorded": "Er zijn geen roeiers geregistreerd voor deze sessie. Als dit een fout is, neem dan contact op met de ondersteuning."
   },
   "logbook": {
     "title": "Logboek",
@@ -137,6 +138,7 @@
     "incidents": "Incidenten",
     "noSessions": "Nog geen sessies geregistreerd",
     "noIncidents": "Nog geen incidenten geregistreerd",
+    "noSessionsFound": "Geen sessies gevonden met deze filters",
     "exportSessions": "Sessies exporteren",
     "date": "Datum",
     "boat": "Boot",
@@ -352,5 +354,20 @@
     "hours": "uren",
     "minutes": "minuten",
     "seconds": "seconden"
+  },
+  "admin": {
+    "password": "Beheerderswachtwoord",
+    "incorrectPassword": "Onjuist wachtwoord"
+  },
+  "seriousness": {
+    "recreational": "Recreatief",
+    "competitor": "Wedstrijdroeier"
+  },
+  "import": {
+    "invalidFile": "Het bestand bevat geen geldige gegevens. Validatiefout:",
+    "exportError": "Fout tijdens exporteren"
+  },
+  "database": {
+    "failedToLoad": "Kan database niet laden"
   }
 }

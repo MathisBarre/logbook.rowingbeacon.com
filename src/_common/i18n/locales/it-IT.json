@@ -129,7 +129,8 @@
       "invalidRowersLevel_one": "<0>1</0> vogatore non ha il livello richiesto per questa barca.",
       "invalidRowersLevel_other": "<0>{{count}}</0> vogatori non hanno il livello richiesto per questa barca.",
       "fixInformation": "Correggi informazioni"
-    }
+    },
+    "noRowersRecorded": "Nessun vogatore è stato registrato per questa sessione. Se questo è un errore, contattare il supporto."
   },
   "logbook": {
     "title": "Giornale di bordo",
@@ -137,6 +138,7 @@
     "incidents": "Incidenti",
     "noSessions": "Ancora nessuna sessione registrata",
     "noIncidents": "Ancora nessun incidente registrato",
+    "noSessionsFound": "Nessuna sessione trovata con questi filtri",
     "exportSessions": "Esporta sessioni",
     "date": "Data",
     "boat": "Barca",
@@ -352,5 +354,20 @@
     "hours": "ore",
     "minutes": "minuti",
     "seconds": "secondi"
+  },
+  "admin": {
+    "password": "Password amministratore",
+    "incorrectPassword": "Password errata"
+  },
+  "seriousness": {
+    "recreational": "Ricreativo",
+    "competitor": "Competitore"
+  },
+  "import": {
+    "invalidFile": "Il file non contiene dati validi. Errore di validazione:",
+    "exportError": "Errore durante l'esportazione"
+  },
+  "database": {
+    "failedToLoad": "Impossibile caricare il database"
   }
 }

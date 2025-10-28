@@ -14,6 +14,7 @@ import {
   DBSessions,
 } from "../../../_common/database/schema";
 import { toast } from "sonner";
+import i18n from "../../../_common/i18n/config";
 
 interface ISessionRepository {
   getOngoingSession(sessionId: string):
@@ -210,9 +211,7 @@ export class SessionDatabaseRepository implements ISessionDatabaseRepository {
       } catch (e) {
         console.error("❌ Failed to save rowers on session");
         console.error(e);
-        toast.warning(
-          "Aucun rameur n'a été enregistré pour cette session. Si c'est une erreur, veuillez contacter le support."
-        );
+        toast.warning(i18n.t("session.noRowersRecorded"));
       }
 
       console.log("✅ Session(s) saved");

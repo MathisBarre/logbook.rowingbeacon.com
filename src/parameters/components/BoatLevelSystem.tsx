@@ -144,7 +144,10 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
           <select className="input" {...form.register("minimalRowerType")}>
             {SERIOUSNESS_CATEGORIES.map((type) => (
               <option key={type.type} value={type.type || "null"}>
-                {type.order} - {type.label || t("parameters.noMinimalType")}
+                {type.order} -{" "}
+                {type.translationKey
+                  ? t(type.translationKey)
+                  : t("parameters.noMinimalType")}
               </option>
             ))}
           </select>

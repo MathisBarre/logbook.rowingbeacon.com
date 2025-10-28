@@ -129,7 +129,8 @@
       "invalidRowersLevel_one": "<0>1</0> rower does not have the required level for this boat.",
       "invalidRowersLevel_other": "<0>{{count}}</0> rowers do not have the required level for this boat.",
       "fixInformation": "Correct information"
-    }
+    },
+    "noRowersRecorded": "No rowers were recorded for this session. If this is an error, please contact support."
   },
   "logbook": {
     "title": "Logbook",
@@ -137,6 +138,7 @@
     "incidents": "Incidents",
     "noSessions": "No sessions registered yet",
     "noIncidents": "No incidents registered yet",
+    "noSessionsFound": "No sessions found with these filters",
     "exportSessions": "Export sessions",
     "date": "Date",
     "boat": "Boat",
@@ -352,5 +354,20 @@
     "hours": "hours",
     "minutes": "minutes",
     "seconds": "seconds"
+  },
+  "admin": {
+    "password": "Admin password",
+    "incorrectPassword": "Incorrect password"
+  },
+  "seriousness": {
+    "recreational": "Recreational",
+    "competitor": "Competitor"
+  },
+  "import": {
+    "invalidFile": "The file does not contain valid data. Validation error:",
+    "exportError": "Error during export"
+  },
+  "database": {
+    "failedToLoad": "Failed to load database"
   }
 }

@@ -6,8 +6,10 @@ import { getDateTimeWithoutTimezone } from "../../_common/utils/date.utils";
 import useIncidentStore from "../../_common/store/incident.store";
 import { useState } from "react";
 import { getErrorMessage } from "../../_common/utils/error";
+import { useTranslation } from "react-i18next";
 
 export const useExportSessions = () => {
+  const { t } = useTranslation();
   const clubOverview = useClubOverviewStore();
   const incidentStore = useIncidentStore();
   const [isLoading, setIsLoading] = useState(false);
@@ -223,7 +225,7 @@ export const useExportSessions = () => {
       const sessions = await getSessions(data);
 
       if (sessions.length === 0) {
-        return toast.error("Aucune session trouvée avec ces filtres");
+        return toast.error(t("logbook.noSessionsFound"));
       }
 
       if (data.fileType !== "json") {
@@ -242,7 +244,7 @@ export const useExportSessions = () => {
 
       setIsExportSuccess(true);
     } catch (e) {
-      toast.error(`Erreur lors de l'export (${getErrorMessage(e)})`);
+      toast.error(`${t("import.exportError")} (${getErrorMessage(e)})`);
     } finally {
       setIsLoading(false);
     }

@@ -3,6 +3,7 @@ import { adminEditModeStore } from "./adminEditMode.store";
 import { useClubOverviewStore } from "./clubOverview.store";
 import { closeApp, windowPrompt } from "../utils/window.utils";
 import { hashPassword, verifyPassword } from "../utils/password";
+import i18n from "../i18n/config";
 
 export const useAdminEditModeSystem = () => {
   const store = adminEditModeStore();
@@ -45,7 +46,7 @@ export const useAdminEditModeSystem = () => {
   };
 
   const wrongAdminPassword = () => {
-    toast.error("Mot de passe incorrect");
+    toast.error(i18n.t("admin.incorrectPassword"));
   };
 
   const askForAdminAccess = async (pswd?: string | null): Promise<boolean> => {
@@ -77,5 +78,5 @@ export const useAdminEditModeSystem = () => {
 };
 
 export const askForAdminPassword = () => {
-  return windowPrompt("Mot de passe admin");
+  return windowPrompt(i18n.t("admin.password"));
 };

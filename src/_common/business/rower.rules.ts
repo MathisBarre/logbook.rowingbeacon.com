@@ -2,6 +2,7 @@ import { v4 } from "uuid";
 import { forEnum } from "../utils/utils";
 import { SeriousnessCategoryEnum } from "./seriousness.rules";
 import { AgeCategoryEnum } from "./ageCategory.rules";
+import i18n from "../i18n/config";
 
 /**
  * ----- Typing -----
@@ -25,11 +26,11 @@ export const generateRowerId = () => {
 
 export const getRowerTypeLabel = (rowerType: Rower["type"]) => {
   if (rowerType === undefined) {
-    return "Non renseigné";
+    return i18n.t("session.typeNotSpecified");
   }
 
   return forEnum(rowerType, {
-    competitor: () => "Compétiteur",
-    recreational: () => "Loisir",
+    competitor: () => i18n.t("seriousness.competitor"),
+    recreational: () => i18n.t("seriousness.recreational"),
   });
 };

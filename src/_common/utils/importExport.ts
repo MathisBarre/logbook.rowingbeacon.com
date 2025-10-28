@@ -6,6 +6,7 @@ import { useClubOverviewStore } from "../store/clubOverview.store";
 import { BoatTypeEnum } from "../business/boat.rules";
 import { SeriousnessCategoryEnum } from "../business/seriousness.rules";
 import { AgeCategoryEnum } from "../business/ageCategory.rules";
+import i18n from "../i18n/config";
 
 const BoatSchema = z.object({
   id: z.string(),
@@ -98,8 +99,7 @@ export const importAllData = async () => {
       importData = singleResult.data;
     } else {
       throw new Error(
-        "Le fichier ne contient pas de données valides. Erreur de validation : " +
-          singleResult.error.message
+        i18n.t("import.invalidFile") + " " + singleResult.error.message
       );
     }
   }

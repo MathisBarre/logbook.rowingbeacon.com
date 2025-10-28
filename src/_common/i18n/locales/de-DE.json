@@ -129,7 +129,8 @@
       "invalidRowersLevel_one": "<0>1</0> Ruderer hat nicht das erforderliche Niveau für dieses Boot.",
       "invalidRowersLevel_other": "<0>{{count}}</0> Ruderer haben nicht das erforderliche Niveau für dieses Boot.",
       "fixInformation": "Informationen korrigieren"
-    }
+    },
+    "noRowersRecorded": "Für diese Sitzung wurden keine Ruderer aufgezeichnet. Wenn dies ein Fehler ist, wenden Sie sich bitte an den Support."
   },
   "logbook": {
     "title": "Logbuch",
@@ -137,6 +138,7 @@
     "incidents": "Vorfälle",
     "noSessions": "Noch keine Sitzungen registriert",
     "noIncidents": "Noch keine Vorfälle registriert",
+    "noSessionsFound": "Keine Sitzungen mit diesen Filtern gefunden",
     "exportSessions": "Sitzungen exportieren",
     "date": "Datum",
     "boat": "Boot",
@@ -352,5 +354,20 @@
     "hours": "Stunden",
     "minutes": "Minuten",
     "seconds": "Sekunden"
+  },
+  "admin": {
+    "password": "Admin-Passwort",
+    "incorrectPassword": "Falsches Passwort"
+  },
+  "seriousness": {
+    "recreational": "Freizeit",
+    "competitor": "Wettbewerber"
+  },
+  "import": {
+    "invalidFile": "Die Datei enthält keine gültigen Daten. Validierungsfehler:",
+    "exportError": "Fehler beim Export"
+  },
+  "database": {
+    "failedToLoad": "Fehler beim Laden der Datenbank"
   }
 }

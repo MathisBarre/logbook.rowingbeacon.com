@@ -187,7 +187,7 @@ function createSession(
     routeId: route.id,
     endDateTime: getEndDateTime(startDateTime).toISOString(),
     incidentId: hasAccident ? generateIncidenId() : "",
-    comment: hasComment ? "Commentaire aléatoire" : "",
+    comment: hasComment ? "Random comment" : "",
     rowerIds: selectedRowers.map((rower) => rower.id),
     coached: Math.random() > 0.5,
   };

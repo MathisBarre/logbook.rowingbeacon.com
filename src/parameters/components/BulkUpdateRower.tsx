@@ -95,7 +95,9 @@ export const BulkUpdateRower = ({
           <select className="input" {...form.register("type")}>
             {SERIOUSNESS_CATEGORIES.map((type) => (
               <option key={type.type} value={type.type || "null"}>
-                {type.label || t("parameters.noType")}
+                {type.translationKey
+                  ? t(type.translationKey)
+                  : t("parameters.noType")}
               </option>
             ))}
           </select>
