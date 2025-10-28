@@ -1,4 +1,5 @@
 import { PlusIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -15,6 +16,7 @@ import Button from "../../../_common/components/Button";
 import { Label } from "../../../_common/components/Label";
 
 export const AddBoatsDialog = () => {
+  const { t } = useTranslation();
   const store = useClubOverviewStore();
   const [textareaContent, setTextareaContent] = useState("");
   const [addBoatSelect, setAddBoatSelect] = useState(BoatTypeEnum.OTHER);
@@ -39,14 +41,17 @@ export const AddBoatsDialog = () => {
       setAddBoatSelect(BoatTypeEnum.OTHER);
     } finally {
       if (boatsAdded === 0) {
-        toast.error("Aucun bateau n'a été ajouté");
+        toast.error(t("parameters.noBoatsAdded"));
       } else if (boatsAdded < rowersToAddNumber) {
         toast.warning(
-          `${boatsAdded} bateaux sur ${rowersToAddNumber} ont été ajoutés`
+          t("parameters.someBoatsAdded", {
+            added: boatsAdded,
+            total: rowersToAddNumber,
+          })
         );
         setTextareaContent("");
       } else {
-        toast.success("Tous les bateaux ont été ajoutés");
+        toast.success(t("parameters.allBoatsAdded"));
         setTextareaContent("");
       }
     }
@@ -58,21 +63,21 @@ export const AddBoatsDialog = () => {
         <Button type="button">
           <div className="flex gap-2 items-center ">
             <PlusIcon className="h-4 w-4" />
-            Ajouter des bateaux
+            {t("parameters.addBoats")}
           </div>
         </Button>
       </DialogTrigger>
-      <DialogContent title="Ajouter des bateaux">
-        <Label>Ajouter un ou plusieurs bateaux (un par ligne)</Label>
+      <DialogContent title={t("parameters.addBoats")}>
+        <Label>{t("parameters.addOneOrMoreBoats")}</Label>
         <textarea
           className="input flex w-full mb-4 resize-y min-h-16 placeholder:text-gray-300"
           rows={10}
-          placeholder={"bateau 1 \nbateau 2 \nbateau 3 \n..."}
+          placeholder={t("parameters.boatPlaceholder")}
           value={textareaContent}
           onChange={(e) => setTextareaContent(e.target.value)}
         />
         <Label className="flex flex-col gap-1 mb-2">
-          Importer en tant que
+          {t("parameters.importAs")}
           <select
             className=" focus:ring-0 h-12 text-steel-blue-800 input"
             name="boatType"
@@ -90,7 +95,7 @@ export const AddBoatsDialog = () => {
           </select>
         </Label>
         <Button type="button" className="w-full" onClick={addBoats}>
-          Ajouter le ou les bateaux
+          {t("parameters.addTheBoats")}
         </Button>
       </DialogContent>
     </Dialog>

@@ -1,5 +1,6 @@
 import { UserIcon, ChatBubbleLeftIcon } from "@heroicons/react/16/solid";
-import { getTime } from "../../_common/utils/date.utils";
+import { useTranslation } from "react-i18next";
+import { getTime, getDateOnly } from "../../_common/utils/date.utils";
 import Loading from "../../_common/components/Loading";
 import { Trash2Icon, UserCheckIcon, UserXIcon } from "lucide-react";
 import { useRemoveSession } from "../hooks/useRemoveSession";
@@ -39,18 +40,19 @@ export function SessionHistoryTable({
   errorMessage,
   refresh,
 }: SessionHistoryTableProps) {
+  const { t } = useTranslation();
   const { removeSession } = useRemoveSession();
   const adminEditSystem = useAdminEditModeSystem();
 
   return (
     <div className="overflow-auto pb-20">
       {sessionsInTableList.length === 0 && !loading && !errorMessage && (
-        <p className="text-center py-16">Aucune session</p>
+        <p className="text-center py-16">{t("logbook.noSessions")}</p>
       )}
 
       {errorMessage && (
         <div className="flex justify-center items-center py-16 flex-col">
-          <p className="text-red-500">Erreur lors du chargement des sessions</p>
+          <p className="text-red-500">{t("logbook.errorLoadingSessions")}</p>
           <p className="text-red-500">{errorMessage}</p>
         </div>
       )}
@@ -74,7 +76,7 @@ export function SessionHistoryTable({
                 if (await adminEditSystem.askForAdminAccess()) {
                   await removeSession(session.id);
                   await refresh();
-                  toast.success("La session a été supprimée");
+                  toast.success(t("logbook.sessionDeleted"));
                 }
               }}
             >
@@ -92,7 +94,7 @@ export function SessionHistoryTable({
               <p className="flex mb-2 font-mono tracking-tighter">
                 <span>
                   {session.boat.name} <span className="text-gray-300">|</span>{" "}
-                  {session.route?.name || "Aucun parcours"}
+                  {session.route?.name || t("logbook.noRoute")}
                 </span>
               </p>
               {session.rowers.length > 0 && (
@@ -108,7 +110,7 @@ export function SessionHistoryTable({
                 <>
                   <div className="text-sm text-gray-500 mt-1">
                     <ChatBubbleLeftIcon className="h-4 w-4 align-text-bottom inline mr-1 text-gray-500" />{" "}
-                    {session.comment || "Aucun commentaire"}
+                    {session.comment || t("logbook.noComment")}
                   </div>
                 </>
               )}
@@ -116,14 +118,14 @@ export function SessionHistoryTable({
               {session.hasBeenCoached === true && (
                 <div className="text-sm text-gray-600 mt-1">
                   <UserCheckIcon className="h-4 w-4 align-text-bottom inline mr-1 text-gray-600" />{" "}
-                  Session encadrée
+                  {t("logbook.sessionCoached")}
                 </div>
               )}
 
               {session.hasBeenCoached === false && (
                 <div className="text-sm text-red-600 mt-1 text-gray-500">
                   <UserXIcon className="h-4 w-4 align-text-bottom inline mr-1 text-red-600" />{" "}
-                  Session non encadrée
+                  {t("logbook.sessionNotCoached")}
                 </div>
               )}
             </div>
@@ -152,7 +154,7 @@ const FormattedDate = ({
 
   return (
     <div className="flex justify-center flex-col items-end text-sm gap-1">
-      <p>{startDate.toLocaleDateString()}</p>
+      <p>{getDateOnly(startDate)}</p>
       <p>
         {getTime(startDate)} - {endDate}
       </p>

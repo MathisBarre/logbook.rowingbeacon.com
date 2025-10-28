@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { getErrorMessage } from "../../_common/utils/error";
 import { getDatabase } from "../../_common/database/database";
@@ -13,6 +14,7 @@ import { Season, getSeasonDate } from "../../_common/utils/seasons";
 import { useGetFirstAndLastRegisteredSessionDate } from "../../stats/utils/getFirstAndLastRegisteredSessionDate";
 
 export const RowerStatsComparisons = () => {
+  const { t } = useTranslation();
   const {
     firstSession,
     lastSession,
@@ -45,10 +47,10 @@ export const RowerStatsComparisons = () => {
       {!isLoadingStats && stats.length > 0 && (
         <StatsTable
           headers={{
-            rowerId: "Rameur",
-            count: "Nombre de sessions",
-            totalDuration: "Durée totale",
-            averageDuration: "Durée moyenne / session",
+            rowerId: t("stats.rower"),
+            count: t("stats.numberOfSessions"),
+            totalDuration: t("stats.totalDuration"),
+            averageDuration: t("stats.averageDurationPerSession"),
           }}
           stats={stats.map((stat) => ({
             rowerId: stat.rowerId,

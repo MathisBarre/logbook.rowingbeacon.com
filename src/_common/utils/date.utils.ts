@@ -1,17 +1,40 @@
+import { useLocaleStore } from "../store/locale.store";
+
 export function formatDate(date: string | Date) {
-  return new Date(date).toLocaleString("fr-FR", {
+  const { locale, timeStyle } = useLocaleStore.getState();
+  const currentLocale = locale || "en-US";
+  const hour12 = timeStyle === "12h";
+
+  return new Date(date).toLocaleString(currentLocale, {
     day: "numeric",
     month: "numeric",
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
+    hour12,
   });
 }
 
 export function getTime(date: string | Date) {
-  return new Date(date).toLocaleTimeString("fr-FR", {
+  const { locale, timeStyle } = useLocaleStore.getState();
+  const currentLocale = locale || "en-US";
+  const hour12 = timeStyle === "12h";
+
+  return new Date(date).toLocaleTimeString(currentLocale, {
     hour: "2-digit",
     minute: "2-digit",
+    hour12,
+  });
+}
+
+export function getDateOnly(date: string | Date) {
+  const { locale } = useLocaleStore.getState();
+  const currentLocale = locale || "en-US";
+
+  return new Date(date).toLocaleDateString(currentLocale, {
+    day: "numeric",
+    month: "numeric",
+    year: "numeric",
   });
 }
 

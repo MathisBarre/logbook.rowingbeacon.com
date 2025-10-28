@@ -19,8 +19,10 @@ import { SeasonSelector } from "./components/SeasonSelector";
 import { useState } from "react";
 import { AnimatedLoadingIcon } from "../_common/components/Loading";
 import { useGetFirstAndLastRegisteredSessionDate } from "./utils/getFirstAndLastRegisteredSessionDate";
+import { useTranslation } from "react-i18next";
 
 export const StatsScreen = () => {
+  const { t } = useTranslation();
   const { firstSession, lastSession, isLoading } =
     useGetFirstAndLastRegisteredSessionDate();
 
@@ -47,36 +49,36 @@ export const StatsScreen = () => {
 
   // Format month names
   const formatMonth = (month: number) => {
-    const months = [
-      "Janvier",
-      "Février",
-      "Mars",
-      "Avril",
-      "Mai",
-      "Juin",
-      "Juillet",
-      "Août",
-      "Septembre",
-      "Octobre",
-      "Novembre",
-      "Décembre",
+    const monthKeys = [
+      "january",
+      "february",
+      "march",
+      "april",
+      "may",
+      "june",
+      "july",
+      "august",
+      "september",
+      "october",
+      "november",
+      "december",
     ];
-    return months[month];
+    return t(`stats.months.${monthKeys[month]}`);
   };
 
   const formatAmount = (amount: number) =>
-    `${amount} sortie${amount > 1 ? "s" : ""}`;
+    t(`stats.session_${amount === 1 ? "one" : "other"}`, { count: amount });
 
   return (
     <div className="p-4 gap-4 flex flex-col h-full relative">
       <div className="text-blue-500 flex items-center gap-2 bg-blue-50 rounded-lg p-2 border border-blue-500">
         <InformationCircleIcon className="w-4 h-4 text-blue-500" />
-        De nombreuses statistiques complémentaires sont disponibles dans
-        l&apos;onglet &quot;Gestion&quot;, pages &quot;Rameurs&quot; et
-        &quot;Bateaux&quot;
+        {t("stats.infoMessage")}
       </div>
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold text-gray-900">Statistiques</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">
+          {t("stats.title")}
+        </h1>
         <div className="flex items-center gap-2">
           {isLoading && <AnimatedLoadingIcon />}
           <SeasonSelector
@@ -94,7 +96,7 @@ export const StatsScreen = () => {
           <div className="flex justify-center items-center h-full flex-col gap-4">
             <ChartBarIcon className="w-16 h-16 text-gray-900" />
             <p className="text-xl font-semibold text-gray-900 text-center max-w-sm text-balance">
-              Aucune session enregistrée pour le moment
+              {t("stats.noSessionsRecorded")}
             </p>
           </div>
         </div>
@@ -104,17 +106,17 @@ export const StatsScreen = () => {
         <>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <StatCard
-              title="Sessions"
+              title={t("stats.sessions")}
               value={count.toString()}
               icon={UserGroupIcon}
             />
             <StatCard
-              title="Temps total sur l'eau"
+              title={t("stats.totalTimeOnWater")}
               value={millisecondToDayHourMinutes(totalDuration)}
               icon={ClockIcon}
             />
             <StatCard
-              title="Moyenne temps / session"
+              title={t("stats.averageTimePerSession")}
               value={millisecondToDayHourMinutes(totalDuration / count || 0)}
               icon={CalculatorIcon}
             />

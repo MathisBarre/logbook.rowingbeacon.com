@@ -1,5 +1,6 @@
 import { SimpleDialog } from "../../../_common/components/SimpleDialog";
 import { StartSessionFormDataWrapper } from "./StartSessionForm.DataWrapper";
+import { useTranslation } from "react-i18next";
 
 interface StartSessionDialogProps {
   isOpen: boolean;
@@ -22,12 +23,14 @@ export function StartSessionDialog({
   setIsOpen,
   defaultBoat,
 }: StartSessionDialogProps) {
+  const { t } = useTranslation();
+
   return (
     <SimpleDialog
       modal={true}
       open={isOpen}
       onOpenChange={(v) => v === false && setIsOpen(false)}
-      title="Commencer une sortie"
+      title={t("session.start")}
     >
       <StartSessionFormDataWrapper
         closeAction={() => setIsOpen(false)}

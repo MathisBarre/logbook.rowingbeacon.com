@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Label } from "../../_common/components/Label";
 import Button from "../../_common/components/Button";
 import { useForm } from "react-hook-form";
@@ -50,6 +51,7 @@ export const UpdateBoat = ({
   };
   close: () => void;
 }) => {
+  const { t } = useTranslation();
   const {
     updateBoatName,
     updateBoatType,
@@ -85,7 +87,7 @@ export const UpdateBoat = ({
       updateBoatNote(boat.id, values.note);
     }
 
-    toast.success("Le bateau a été mis à jour");
+    toast.success(t("parameters.boatUpdated"));
     close();
   };
 
@@ -98,12 +100,12 @@ export const UpdateBoat = ({
     >
       <div className="flex flex-col gap-4">
         <Label className="flex flex-col gap-1">
-          Nom
+          {t("boat.name")}
           <input className="input" type="text" {...form.register("boatName")} />
         </Label>
 
         <Label className="flex flex-col gap-1">
-          Type
+          {t("boat.type")}
           <select className="input" {...form.register("boatType")}>
             {boathTypeWithLabel.map((type) => (
               <option key={type.type} value={type.type}>
@@ -119,11 +121,11 @@ export const UpdateBoat = ({
             className="h-4 w-4"
             {...form.register("isInMaintenance")}
           />
-          En maintenance
+          {t("parameters.inMaintenance")}
         </Label>
 
         <Label className="flex flex-col gap-1">
-          Note (affichée au début d&apos;une séance)
+          {t("parameters.noteDisplayedAtSessionStart")}
           <textarea
             rows={5}
             className="input resize-y"
@@ -136,7 +138,7 @@ export const UpdateBoat = ({
 
       <div className="flex justify-end gap-2">
         <Button type="submit" className="flex-1">
-          Mettre à jour le bateau
+          {t("parameters.updateBoat")}
         </Button>
       </div>
     </form>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import Button from "./Button";
 
 export type PromptOptions = {
@@ -24,6 +25,7 @@ export function prompt(options: PromptOptions): Promise<string | null> {
 }
 
 export const WindowPrompt: React.FC = () => {
+  const { t } = useTranslation();
   const [options, setOptions] = useState<PromptOptions | null>(null);
   const [inputValue, setInputValue] = useState<string>("");
   const [promiseHandlers, setPromiseHandlers] = useState<{
@@ -93,10 +95,10 @@ export const WindowPrompt: React.FC = () => {
               className="flex-1"
               variant="outlined"
             >
-              Annuler
+              {t("common.cancel")}
             </Button>
             <Button type="submit" className="flex-1">
-              Soumettre
+              {t("common.submit")}
             </Button>
           </div>
         </form>

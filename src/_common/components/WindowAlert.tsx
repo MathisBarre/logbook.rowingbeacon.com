@@ -24,8 +24,10 @@ export function alert(options: AlertOptions): Promise<void> {
 // AlertDialog.tsx
 
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export const WindowAlert: React.FC = () => {
+  const { t } = useTranslation();
   const [options, setOptions] = useState<AlertOptions | null>(null);
   const [promiseHandlers, setPromiseHandlers] = useState<{
     resolve: () => void;
@@ -70,7 +72,7 @@ export const WindowAlert: React.FC = () => {
             onClick={handleOk}
             className="bg-steel-blue-500 hover:bg-steel-blue-600 text-white font-semibold py-2 px-4 rounded"
           >
-            OK
+            {t("common.ok")}
           </button>
         </div>
       </div>

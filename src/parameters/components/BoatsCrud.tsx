@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { PencilIcon, SearchIcon, Trash2Icon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { windowConfirm } from "../../_common/utils/window.utils";
 import { BoatTypeEnum, getTypeLabel } from "../../_common/business/boat.rules";
@@ -16,6 +17,7 @@ import { SimpleDialog } from "../../_common/components/SimpleDialog";
 import { UpdateBoat } from "./UpdateBoat";
 
 export const BoatCrud = () => {
+  const { t } = useTranslation();
   const store = useClubOverviewStore();
   const boats = store.getAllBoats();
   const [search, setSearch] = useState("");
@@ -40,7 +42,7 @@ export const BoatCrud = () => {
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
       <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between h-12">
-        <h1 className="text-base ml-2 flex gap-2 items-center">Vos bateaux</h1>
+        <h1 className="text-base ml-2 flex gap-2 items-center">{t("parameters.yourBoats")}</h1>
       </div>
 
       <div className="flex-1 flex p-4 flex-col">
@@ -51,7 +53,7 @@ export const BoatCrud = () => {
           <div className="relative flex-1">
             <SearchIcon className="absolute h-full w-5 left-3 pt-[0.125rem]" />
             <Input
-              placeholder="Rechercher un bateau"
+              placeholder={t("parameters.searchBoat")}
               className="pl-10 mt-0"
               type="search"
               value={search}
@@ -89,12 +91,12 @@ export const BoatCrud = () => {
                           )}
                         >
                           {boat.name}{" "}
-                          {boat.isInMaintenance && "(en maintenance)"}
+                          {boat.isInMaintenance && `(${t("parameters.inMaintenance")})`}
                         </h3>
                         {boat.note && boat.note.trim().length > 0 && (
                           <div className="text-xs text-steel-blue-900 bg-steel-blue-50 border border-steel-blue-200 rounded p-2 whitespace-pre-wrap mt-2">
                             <h3 className="font-medium mb-1">
-                              Note(s) à propos de ce bateau :
+                              {t("session.boatNotes")}
                             </h3>
                             <p>{boat.note}</p>
                           </div>
@@ -131,7 +133,7 @@ export const BoatCrud = () => {
                         onClick={async () => {
                           if (
                             await windowConfirm(
-                              `Voulez-vous archiver le bateau "${boat.name}" ? Il ne sera plus possible de renseigner des sorties avec ce bateau, mais les données enregistrées ne seront pas impactées.`
+                              t("parameters.confirmArchiveBoat", { boatName: boat.name })
                             )
                           ) {
                             deleteBoat(boat.id);
@@ -152,7 +154,7 @@ export const BoatCrud = () => {
           modal={true}
           open={!!editBoat}
           onOpenChange={(v) => !v && setEditBoat(false)}
-          title="Modifier le bateau"
+          title={t("parameters.updateBoat")}
         >
           {editBoat && (
             <UpdateBoat boat={editBoat} close={() => setEditBoat(false)} />

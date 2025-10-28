@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { useTranslation } from "react-i18next";
 import { ZustandSession } from "../../../_common/store/sessions.store";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,15 +16,15 @@ import { useGetStopSession } from "../../business/StopSession/StopSession.usecas
 const StopSessionFormSchema = z.object({
   endDateTime: z
     .string({
-      message: "Ce champ est requis",
+      message: "This field is required",
     })
     .min(1, {
-      message: "Ce champ est requis",
+      message: "This field is required",
     }),
   comment: z.string(),
   incident: z.string().optional(),
   coached: z.enum(["yes", "no"], {
-    message: "Vous devez choisir une option",
+    message: "You must choose an option",
   }),
 });
 
@@ -38,6 +39,8 @@ export const StopSessionForm = ({
   afterCancel: () => void;
   session: ZustandSession | undefined;
 }) => {
+  const { t } = useTranslation();
+
   if (!session) {
     return null;
   }
@@ -70,23 +73,19 @@ export const StopSessionForm = ({
       return forEnum(stopSessionError.code, {
         END_DATE_BEFORE_START_DATE: () => {
           form.setError("endDateTime", {
-            message: "La date de fin doit être postérieure à la date de début",
+            message: t("session.endDateMustBeAfterStartDate"),
           });
         },
         FAILED_TO_SAVE_SESSION: () => {
-          toast.error(
-            "Une erreur est survenue lors de la sauvegarde de la sortie"
-          );
+          toast.error(t("session.errorSavingSession"));
         },
         ONGOING_SESSION_NOT_FOUND: () => {
-          toast.error(
-            "Une erreur est survenue lors de la sauvegarde de la sortie"
-          );
+          toast.error(t("session.errorSavingSession"));
         },
       });
     }
 
-    toast.success("La fin de la sortie a bien été enregistrée");
+    toast.success(t("session.sessionEndedSuccessfully"));
 
     afterSubmit();
   });
@@ -102,7 +101,7 @@ export const StopSessionForm = ({
             render={({ field, fieldState }) => {
               return (
                 <div className="flex flex-col gap-1 flex-1">
-                  <Label>Date et heure de la fin</Label>
+                  <Label>{t("session.endDateTime")}</Label>
                   <input
                     className="input"
                     type="datetime-local"
@@ -127,7 +126,7 @@ export const StopSessionForm = ({
               form.setValue("endDateTime", getCurrentDateTime());
             }}
           >
-            Maintenant !
+            {t("session.now")}
           </Button>
         </div>
 
@@ -148,7 +147,7 @@ export const StopSessionForm = ({
             return (
               <div>
                 <Label className="flex gap-2 items-center mb-2">
-                  L&apos;équipage a été encadré par un coach pendant la sortie :
+                  {t("session.coachedDuringSession")}
                 </Label>
                 <label
                   htmlFor="coached-yes"
@@ -161,7 +160,7 @@ export const StopSessionForm = ({
                     value="yes"
                     onChange={field.onChange}
                   />
-                  oui
+                  {t("common.yes")}
                 </label>
                 <label htmlFor="coached-no" className="flex gap-2 items-center">
                   <input
@@ -171,7 +170,7 @@ export const StopSessionForm = ({
                     value="no"
                     onChange={field.onChange}
                   />
-                  non
+                  {t("common.no")}
                 </label>
                 {fieldState?.error?.message && (
                   <p className="form-error mt-1">{fieldState.error.message}</p>
@@ -208,11 +207,11 @@ export const StopSessionForm = ({
                       }
                     }}
                   />
-                  Il y a eu un incident pendant cette sortie
+                  {t("session.incidentDuringSession")}
                 </div>
                 {isIncidentOpen && (
                   <textarea
-                    placeholder="Décrivez l'incident qui a eu lieu..."
+                    placeholder={t("session.describeIncident")}
                     className="bg-white border-t-gray-600 border-t border-x-0 border-b-0 border-none -mx-2 -mb-2 focus:ring-0 sele"
                     name="incident"
                     id="incident"
@@ -235,10 +234,10 @@ export const StopSessionForm = ({
               afterCancel();
             }}
           >
-            Annuler
+            {t("common.cancel")}
           </Button>
           <Button className="flex-1" type="submit">
-            Terminer la sortie
+            {t("session.stopSession")}
           </Button>
         </div>
       </form>

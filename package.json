@@ -1,7 +1,7 @@
 {
   "name": "boathouse.rowingbeacon.com",
   "private": true,
-  "version": "1.19.0",
+  "version": "1.20.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -38,12 +38,14 @@
     "clsx": "^2.0.0",
     "cmdk": "^1.0.0",
     "drizzle-orm": "^0.38.0",
+    "i18next": "^25.6.0",
     "jssha": "^3.3.1",
     "lucide-react": "^0.412.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^5.0.0",
     "react-hook-form": "^7.46.2",
+    "react-i18next": "^16.2.1",
     "react-select": "^5.8.0",
     "recharts": "^2.15.1",
     "sonner": "^1.6.0",

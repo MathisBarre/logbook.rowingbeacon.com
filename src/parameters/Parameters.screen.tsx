@@ -3,10 +3,12 @@ import { RowersCrud } from "./components/RowersCrud";
 import { forEnum } from "../_common/utils/utils";
 import { BoatCrud } from "./components/BoatsCrud";
 import { MiscParams } from "./components/MiscParams";
+import { useTranslation } from "react-i18next";
 
 type Page = "rowers" | "boats" | "misc";
 
 export const ParametersScreen = () => {
+  const { t } = useTranslation();
   const [page, setPage] = useState<Page>("rowers");
 
   return (
@@ -21,19 +23,19 @@ export const ParametersScreen = () => {
 
       <nav className="flex gap-1">
         <NavigationButton
-          label="Paramètres divers"
+          label={t("parameters.misc")}
           page="misc"
           currentPage={page}
           setPage={setPage}
         />
         <NavigationButton
-          label="Bateaux"
+          label={t("parameters.boats")}
           page="boats"
           currentPage={page}
           setPage={setPage}
         />
         <NavigationButton
-          label="Rameurs"
+          label={t("parameters.rowers")}
           page="rowers"
           currentPage={page}
           setPage={setPage}

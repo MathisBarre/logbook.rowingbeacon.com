@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { getErrorMessage } from "../../_common/utils/error";
 import { getDatabase } from "../../_common/database/database";
@@ -13,6 +14,7 @@ import { and, gte, lte } from "drizzle-orm";
 import { useGetFirstAndLastRegisteredSessionDate } from "../../stats/utils/getFirstAndLastRegisteredSessionDate";
 
 export const BoatStatsComparisons = () => {
+  const { t } = useTranslation();
   const {
     firstSession,
     lastSession,
@@ -44,10 +46,10 @@ export const BoatStatsComparisons = () => {
       {!isLoadingStats && stats.length > 0 && (
         <StatsTable
           headers={{
-            boatId: "Bateau",
-            count: "Nombre de sessions",
-            totalDuration: "Durée totale",
-            averageDuration: "Durée moyenne / session",
+            boatId: t("stats.boat"),
+            count: t("stats.numberOfSessions"),
+            totalDuration: t("stats.totalDuration"),
+            averageDuration: t("stats.averageDurationPerSession"),
           }}
           stats={stats.map((stat) => ({
             boatId: stat.boatId,

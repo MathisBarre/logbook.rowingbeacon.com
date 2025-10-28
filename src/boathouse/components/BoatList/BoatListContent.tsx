@@ -1,5 +1,6 @@
 /* eslint-disable react/display-name */
 import { memo } from "react";
+import { useTranslation } from "react-i18next";
 import { Boat } from "../../../_common/business/boat.rules";
 import { useSearchInBoats } from "./BoatList.utils";
 import {
@@ -90,8 +91,9 @@ export const BoatListContent = ({
       />
 
       <BoatSectionRow
-        label="Autre / Non classé"
+        label="boathouse.otherUnclassified"
         subLabel={`${Number(otherBoatsLabel) + Number(typelessBoatsLabel)}`}
+        translate
       />
       <BoatsRows
         onBoatRowClick={onBoatRowClick}
@@ -106,10 +108,19 @@ export const BoatListContent = ({
 };
 
 const BoatSectionRow = memo(
-  ({ label, subLabel: count }: { label: string; subLabel: string }) => {
+  ({
+    label,
+    subLabel: count,
+    translate,
+  }: {
+    label: string;
+    subLabel: string;
+    translate?: boolean;
+  }) => {
+    const { t } = useTranslation();
     return (
       <div className="px-3 py-2 bg-gray-200 sticky z-10 top-0 inset-x-0 flex flex-row items-center font-mono tracking-tighter">
-        <span>{label}</span>
+        <span>{translate ? t(label) : label}</span>
         <span className="flex-1" />
         <span className="text-xs opacity-50">{count}</span>
       </div>
@@ -190,6 +201,7 @@ const BoatInSessionRow = memo(
     sessionRelated?: ZustandSession;
     onClick: (boat: Boat) => void;
   }) => {
+    const { t } = useTranslation();
     return (
       <div
         key={boat.id}
@@ -203,15 +215,17 @@ const BoatInSessionRow = memo(
           <p className="text-xs text-gray-400">
             <>
               {sessionRelated?.route && (
-                <>Direction {`"${sessionRelated?.route.name}"`}</>
+                <>
+                  {t("boathouse.direction")} {`"${sessionRelated?.route.name}"`}
+                </>
               )}
               {sessionRelated?.route &&
                 sessionRelated?.estimatedEndDateTime &&
                 " - "}
               {sessionRelated?.estimatedEndDateTime && (
                 <>
-                  Retour prévu{" "}
-                  {formatSimpleDate(sessionRelated.estimatedEndDateTime)}
+                  {t("boathouse.expectedReturn")}{" "}
+                  {formatSimpleDate(sessionRelated.estimatedEndDateTime, t)}
                 </>
               )}
             </>
@@ -239,20 +253,22 @@ const UnusuableBoatRow = memo(({ boat }: { boat: Boat }) => {
 });
 
 const getSeriousnessLabel = (
-  seriousnessCategory: SeriousnessCategoryEnum | null | undefined
+  seriousnessCategory: SeriousnessCategoryEnum | null | undefined,
+  t: (key: string) => string
 ) => {
   if (!seriousnessCategory) {
     return;
   }
 
   return forEnum(seriousnessCategory, {
-    competitor: () => "Bateau de compétition",
-    recreational: () => "Bateau loisir",
+    competitor: () => t("boathouse.competitionBoat"),
+    recreational: () => t("boathouse.recreationalBoat"),
   });
 };
 
 const getLevelConfigFromTo = (
-  minimalLevelConfig: AgeCategoryEnum | null | undefined
+  minimalLevelConfig: AgeCategoryEnum | null | undefined,
+  t: (key: string, params?: Record<string, unknown>) => string
 ) => {
   if (!minimalLevelConfig) {
     return null;
@@ -266,7 +282,7 @@ const getLevelConfigFromTo = (
     return minimalLevelConfig;
   }
 
-  return `À partir de ${minimalLevelConfig}`;
+  return t("boathouse.fromLevel", { level: minimalLevelConfig });
 };
 
 const BoatRowDefault = memo(
@@ -277,14 +293,17 @@ const BoatRowDefault = memo(
     boat: Boat;
     onBoatRowClick: (boat: Boat) => void;
   }) => {
+    const { t } = useTranslation();
     const boatLevelConfigStore = useStore(boatLevelConfigStoreCore);
     const boatLevelConfig = boatLevelConfigStore.getBoatLevelConfig(boat.id);
 
     const boatTypeFromTo = getSeriousnessLabel(
-      boatLevelConfig?.minimalRowerType
+      boatLevelConfig?.minimalRowerType,
+      t
     );
     const boatLevelConfigFromTo = getLevelConfigFromTo(
-      boatLevelConfig?.minimalRowerCategory
+      boatLevelConfig?.minimalRowerCategory,
+      t
     );
 
     return (
@@ -334,11 +353,12 @@ const EditBoatRow = memo(({ boat }: { boat: Boat }) => {
 
 const EmptyRow = memo(
   ({ isEmpty, search }: { isEmpty: boolean; search: string }) => {
+    const { t } = useTranslation();
     return isEmpty ? (
       <div className="px-3 py-2 text-gray-300">
         {search
-          ? `Aucun bateau à afficher pour la recherche "${search}"`
-          : "Aucun bateau à afficher"}
+          ? t("boathouse.noBoatsForSearch", { search })
+          : t("boathouse.noBoatsToDisplay")}
       </div>
     ) : null;
   }
@@ -351,14 +371,17 @@ const getRelatedSession = (
   return ongoingSessions.find((session) => session.boat.id === boatId);
 };
 
-const formatSimpleDate = (date: string) => {
+const formatSimpleDate = (
+  date: string,
+  t: (key: string, params?: Record<string, unknown>) => string
+) => {
   if (isToday(date)) {
-    return "à " + getTime(date);
+    return t("boathouse.at", { time: getTime(date) });
   }
 
   if (isTomorrow(date)) {
-    return "demain à " + getTime(date);
+    return t("boathouse.tomorrowAt", { time: getTime(date) });
   }
 
-  return "le " + formatDate(date);
+  return t("boathouse.onDate", { date: formatDate(date) });
 };

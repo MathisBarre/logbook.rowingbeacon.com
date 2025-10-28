@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { getSeasonDate, Season } from "../../_common/utils/seasons";
 import { cn } from "../../_common/utils/utils";
 import { useMemo } from "react";
@@ -18,6 +19,7 @@ export const SeasonSelector = ({
   disabled,
   className,
 }: SeasonSelectorProps) => {
+  const { t } = useTranslation();
   const seasons = useMemo(
     () => getSeasons(firstDataAt, lastDataAt),
     [firstDataAt, lastDataAt]
@@ -39,7 +41,7 @@ export const SeasonSelector = ({
           key={season.startDate.toISOString()}
           value={season.startDate.toISOString()}
         >
-          Saison {season.startDate.getFullYear()} -{" "}
+          {t("stats.season")} {season.startDate.getFullYear()} -{" "}
           {season.endDate.getFullYear()}
         </option>
       ))}

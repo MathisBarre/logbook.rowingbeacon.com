@@ -1,6 +1,7 @@
 import { SimpleDialog } from "../../../_common/components/SimpleDialog";
 import { ZustandSession } from "../../../_common/store/sessions.store";
 import { StopSessionForm } from "./StopSession.Form";
+import { useTranslation } from "react-i18next";
 
 interface StopSessionDialogProps {
   isOpen: boolean;
@@ -13,12 +14,14 @@ export function StopSessionDialog({
   setIsOpen,
   session,
 }: StopSessionDialogProps) {
+  const { t } = useTranslation();
+
   return (
     <SimpleDialog
       modal
       open={isOpen}
       onOpenChange={(v) => v === false && setIsOpen(false)}
-      title="Terminer une sortie"
+      title={t("session.stop")}
     >
       <StopSessionForm
         afterSubmit={() => setIsOpen(false)}

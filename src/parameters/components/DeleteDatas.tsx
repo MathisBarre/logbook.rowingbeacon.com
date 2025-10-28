@@ -1,13 +1,15 @@
 import { OctagonAlertIcon, SkullIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useAdminEditModeSystem } from "../../_common/store/adminEditMode.system";
 import { useLogout } from "../../_common/utils/logout";
 import Button from "../../_common/components/Button";
 
 export const DeleteDatas = () => {
+  const { t } = useTranslation();
   const [textareaContent, setTextareaContent] = useState("");
   const adminEditSystem = useAdminEditModeSystem();
-  const requiredTextToDelete = "Je souhaite supprimer toutes mes données";
+  const requiredTextToDelete = t("parameters.deleteConfirmationText");
   const logout = useLogout();
   const [adminPassword, setAdminPassword] = useState("");
 
@@ -15,21 +17,16 @@ export const DeleteDatas = () => {
     <div className="text-error-800 flex flex-col gap-2">
       <div className="flex gap-2 items-center">
         <OctagonAlertIcon />
-        <span className="font-bold text-xl">Attention !</span>
+        <span className="font-bold text-xl">{t("parameters.warning")}</span>
       </div>
-      <p>
-        Vous êtes sur le point de supprimer toutes les données de
-        l&apos;application.
-      </p>
+      <p>{t("parameters.deleteAllDataWarning1")}</p>
+
+      <p>{t("parameters.deleteAllDataWarning2")}</p>
 
       <p>
-        Il sera impossible de les récupérer une fois supprimée. Assurez-vous
-        d&apos;avoir exporté les données importantes.
-      </p>
-
-      <p>
-        Confirmez en écrivant exactement &quot;{requiredTextToDelete}&quot; dans
-        le champ ci-dessous.
+        {t("parameters.deleteConfirmationInstruction", {
+          text: requiredTextToDelete,
+        })}
       </p>
 
       <textarea
@@ -40,7 +37,7 @@ export const DeleteDatas = () => {
         }}
       />
 
-      <p>Renseignez le mot de passe admin</p>
+      <p>{t("parameters.enterAdminPassword")}</p>
 
       <input
         className="input"
@@ -76,7 +73,7 @@ export const DeleteDatas = () => {
         }}
       >
         <SkullIcon />
-        Supprimer toutes mes données
+        {t("parameters.deleteAllData")}
       </Button>
     </div>
   );

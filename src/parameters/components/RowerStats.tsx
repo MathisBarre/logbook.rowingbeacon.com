@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import Loading from "../../_common/components/Loading";
@@ -12,6 +13,7 @@ import { ChartBarIcon } from "@heroicons/react/16/solid";
 import { AcademicCapIcon } from "@heroicons/react/16/solid";
 
 export const RowerStats = ({ rowerId }: { rowerId: string }) => {
+  const { t } = useTranslation();
   const {
     firstSession,
     lastSession,
@@ -53,7 +55,7 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
           </div>
           <div>
             <h3 className="text-sm text-gray-500 font-medium">
-              Nombre de sessions
+              {t("stats.numberOfSessions")}
             </h3>
             <p className="text-xl font-semibold text-gray-900">{count}</p>
           </div>
@@ -65,7 +67,7 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
           </div>
           <div>
             <h3 className="text-sm text-gray-500 font-medium">
-              Temps sur l&apos;eau
+              {t("stats.timeOnWater")}
             </h3>
             <p className="text-xl font-semibold text-gray-900">
               {millisecondToDayHourMinutes(totalDuration)}
@@ -79,7 +81,7 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
           </div>
           <div>
             <h3 className="text-sm text-gray-500 font-medium">
-              Moyenne par session
+              {t("stats.averagePerSession")}
             </h3>
             <p className="text-xl font-semibold text-gray-900">
               {millisecondToDayHourMinutes(totalDuration / count || 0)}
@@ -93,7 +95,7 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
           </div>
           <div>
             <h3 className="text-sm text-gray-500 font-medium">
-              Sessions encadrées
+              {t("stats.coachedSessions")}
             </h3>
             <p className="text-xl font-semibold text-gray-900">
               {coachedSessionsCount} ({coachedSessionsPercentage.toFixed(2)}%)
@@ -105,16 +107,18 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
       <div className="flex w-full justify-between">
         <div className="flex-1  flex flex-col items-start">
           <h1 className="font-medium text-lg mb-2 mt-4">
-            Bateaux les plus utilisés
+            {t("stats.mostUsedBoats")}
           </h1>
 
-          {mostUsedBoats.length === 0 && <p>Aucun bateau utilisé</p>}
+          {mostUsedBoats.length === 0 && <p>{t("stats.noBoatsUsed")}</p>}
 
           <ul className="flex flex-col justify-start">
             {mostUsedBoats.map((boat) => (
               <li key={boat.id} className="flex justify-between gap-6">
                 <span>{getBoatById(boat.id)?.name || "NAME_NOT_FOUND"}</span>{" "}
-                <span className="font-bold">{boat.count} utilisations</span>
+                <span className="font-bold">
+                  {boat.count} {t("stats.uses")}
+                </span>
               </li>
             ))}
           </ul>
@@ -122,10 +126,12 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
 
         <div className="flex-1 flex flex-col items-start">
           <h1 className="font-medium text-lg mb-2 mt-4">
-            Partenaires les plus fréquents
+            {t("stats.mostFrequentPartners")}
           </h1>
 
-          {mostFrequentPartners.length === 0 && <p>Aucun partenaire trouvé</p>}
+          {mostFrequentPartners.length === 0 && (
+            <p>{t("stats.noPartnersFound")}</p>
+          )}
 
           <ul className="flex flex-col justify-start">
             {mostFrequentPartners.map((partner) => (
@@ -133,7 +139,9 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
                 <span>
                   {getRowerById(partner.id)?.name || "NAME_NOT_FOUND"}
                 </span>{" "}
-                <span className="font-bold">{partner.count} sessions</span>
+                <span className="font-bold">
+                  {partner.count} {t("stats.sessions")}
+                </span>
               </li>
             ))}
           </ul>

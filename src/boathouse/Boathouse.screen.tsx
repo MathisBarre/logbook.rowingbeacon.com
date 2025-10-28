@@ -13,8 +13,10 @@ import { Boat } from "../_common/business/boat.rules";
 
 import { windowAlert } from "../_common/utils/window.utils";
 import { WarehouseIcon, WavesIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 function BoathouseScreen() {
+  const { t } = useTranslation();
   const sessionStore = useSessionsStore();
   const { coachNote, getAllBoats } = useClubOverviewStore();
   const boats = getAllBoats();
@@ -48,7 +50,8 @@ function BoathouseScreen() {
           }}
         >
           <p className="text-nowrap text-ellipsis overflow-hidden">
-            <span className="font-semibold">Note du coach</span> : {coachNote}
+            <span className="font-semibold">{t("boathouse.coachNote")}</span> :{" "}
+            {coachNote}
           </p>
         </div>
       )}
@@ -60,7 +63,7 @@ function BoathouseScreen() {
         )}
       >
         <BoatsList
-          label="Bateaux disponibles"
+          label={t("boathouse.availableBoats")}
           boats={availableBoats}
           onBoatRowClick={onBoatRowClick}
           icon={<WarehouseIcon />}
@@ -74,7 +77,7 @@ function BoathouseScreen() {
         )}
       >
         <BoatsList
-          label="Bateaux en cours d'utilisation"
+          label={t("boathouse.boatsInUse")}
           boats={boatsInUse}
           onBoatRowClick={(boat) => {
             const session = sessionStore.findOngoingSessionByBoatId(boat.id);

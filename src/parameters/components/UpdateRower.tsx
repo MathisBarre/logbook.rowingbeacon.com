@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Label } from "../../_common/components/Label";
 import Button from "../../_common/components/Button";
 import { useForm } from "react-hook-form";
@@ -61,6 +62,7 @@ export const UpdateRower = ({
   rower: Rower;
   close: () => void;
 }) => {
+  const { t } = useTranslation();
   const { updateRower } = useClubOverviewStore();
   const form = useUpdateRowerForm({
     defaultValues: {
@@ -83,7 +85,7 @@ export const UpdateRower = ({
 
     form.reset(newValues);
 
-    toast.success("Le rameur a été mise à jour");
+    toast.success(t("parameters.rowerUpdated"));
 
     close();
   };
@@ -97,7 +99,7 @@ export const UpdateRower = ({
     >
       <div className="flex flex-col gap-4">
         <Label className="flex flex-col gap-1">
-          Nom
+          {t("rower.name")}
           <input
             className="input"
             type="text"
@@ -106,25 +108,25 @@ export const UpdateRower = ({
         </Label>
 
         <Label className="flex flex-col gap-1">
-          Catégorie
+          {t("rower.category")}
           <select className="input" {...form.register("category")}>
             {AGE_CATEGORIES.map((category) => (
               <option
                 key={category.category}
                 value={category.category || "null"}
               >
-                {category.category || "Aucune catégorie"}
+                {category.category || t("parameters.noCategory")}
               </option>
             ))}
           </select>
         </Label>
 
         <Label className="flex flex-col gap-1">
-          Type
+          {t("parameters.type")}
           <select className="input" {...form.register("type")}>
             {SERIOUSNESS_CATEGORIES.map((type) => (
               <option key={type.type} value={type.type || "null"}>
-                {type.label || "Aucun type"}
+                {type.label || t("parameters.noType")}
               </option>
             ))}
           </select>
@@ -139,7 +141,7 @@ export const UpdateRower = ({
           className="flex-1"
           disabled={!form.formState.isDirty}
         >
-          Mettre à jour la configuration
+          {t("parameters.updateConfiguration")}
         </Button>
       </div>
     </form>

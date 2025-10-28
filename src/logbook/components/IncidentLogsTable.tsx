@@ -1,9 +1,11 @@
 import { ChatBubbleLeftIcon } from "@heroicons/react/16/solid";
+import { useTranslation } from "react-i18next";
 import useIncidentStore from "../../_common/store/incident.store";
-import { getTime } from "../../_common/utils/date.utils";
+import { getTime, getDateOnly } from "../../_common/utils/date.utils";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 
 export function IncidentLogsTable() {
+  const { t } = useTranslation();
   const incidents = useIncidentStore((state) => state.getIncidents());
 
   const clubOverview = useClubOverviewStore();
@@ -11,7 +13,7 @@ export function IncidentLogsTable() {
   return (
     <div className="overflow-auto pb-32">
       {incidents.length === 0 && (
-        <p className="text-center py-16">Aucun incident</p>
+        <p className="text-center py-16">{t("logbook.noIncidents")}</p>
       )}
 
       {incidents.map((incident) => {
@@ -33,7 +35,7 @@ export function IncidentLogsTable() {
               </p>
               <div className="text-sm text-gray-400 mt-1">
                 <ChatBubbleLeftIcon className="h-4 w-4 align-text-bottom inline mr-1 text-gray-400" />{" "}
-                {incident.message || "Aucun message"}
+                {incident.message || t("logbook.noMessage")}
               </div>
             </div>
           </div>
@@ -48,7 +50,7 @@ const FormattedDate = ({ datetime }: { datetime: string }) => {
 
   return (
     <div className="flex justify-center flex-col items-end text-sm gap-1">
-      <p>{date.toLocaleDateString()}</p>
+      <p>{getDateOnly(date)}</p>
       <p>{getTime(date)}</p>
     </div>
   );

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Label } from "../../../_common/components/Label";
 
 type Value =
@@ -24,9 +25,11 @@ const DurationEstimationSelect = ({
   onChange: (newValue: Value) => void;
   errorMessage?: string;
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-col gap-1 flex-1">
-      <Label>Durée estimée</Label>
+      <Label>{t("session.estimatedDuration")}</Label>
       {/* select */}
       <select
         value={value}
@@ -34,7 +37,7 @@ const DurationEstimationSelect = ({
         className="input"
         name="estimatedEndDateTime"
       >
-        <option value="na">Aucune estimation</option>
+        <option value="na">{t("session.noEstimation")}</option>
         <option value="15">~00h15</option>
         <option value="30">~00h30</option>
         <option value="45">~00h45</option>

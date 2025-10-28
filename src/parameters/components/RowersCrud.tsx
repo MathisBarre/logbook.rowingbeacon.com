@@ -7,6 +7,7 @@ import {
   SearchIcon,
   Trash2Icon,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { toast } from "sonner";
 import Button from "../../_common/components/Button";
@@ -37,20 +38,21 @@ import {
 } from "../../_common/business/seriousness.rules";
 
 export const RowersCrud = () => {
+  const { t } = useTranslation();
   const store = useClubOverviewStore();
   const rowers = store.getAllRowers();
 
   const deleteRower = async (rower: { id: string; name: string }) => {
     if (
       !(await windowConfirm(
-        `Voulez-vous archiver le rameur "${rower.name}" ? Il ne sera plus possible de renseigner des sorties avec ce rameur, mais les données enregistrées ne seront pas impactées.`
+        t("parameters.confirmArchiveRower", { rowerName: rower.name })
       ))
     ) {
       return;
     }
 
     store.archiveRower(rower.id);
-    toast.success("Le rameur a été supprimé");
+    toast.success(t("parameters.rowerDeleted"));
   };
 
   const [defaultCategory, setDefaultCategory] =
@@ -76,14 +78,17 @@ export const RowersCrud = () => {
       }
     } finally {
       if (rowerAdded === 0) {
-        toast.error("Aucun rameur n'a été ajouté");
+        toast.error(t("parameters.noRowersAdded"));
       } else if (rowerAdded < rowersToAddNumber) {
         toast.warning(
-          `${rowerAdded} rameurs sur ${rowersToAddNumber} ont été ajoutés`
+          t("parameters.someRowersAdded", {
+            added: rowerAdded,
+            total: rowersToAddNumber,
+          })
         );
         setTextareaContent("");
       } else {
-        toast.success("Tous les rameurs ont été ajoutés");
+        toast.success(t("parameters.allRowersAdded"));
         setTextareaContent("");
       }
     }
@@ -129,7 +134,9 @@ export const RowersCrud = () => {
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
       <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between h-12">
-        <h1 className="text-base ml-2 flex gap-2 items-center">Vos rameurs</h1>
+        <h1 className="text-base ml-2 flex gap-2 items-center">
+          {t("parameters.yourRowers")}
+        </h1>
       </div>
 
       <div className="p-4 flex flex-col flex-1">
@@ -139,25 +146,25 @@ export const RowersCrud = () => {
               <Button type="button">
                 <div className="flex gap-2 items-center">
                   <PlusIcon className="h-4 w-4" />
-                  Ajouter des rameurs
+                  {t("parameters.addRowers")}
                 </div>
               </Button>
             </DialogTrigger>
-            <DialogContent title="Ajouter des rameurs">
+            <DialogContent title={t("parameters.addRowers")}>
               <div className="flex flex-col gap-4">
                 <Label className="flex flex-col gap-1">
-                  Ajouter un ou plusieurs rameurs (un par ligne)
+                  {t("parameters.addOneOrMoreRowers")}
                   <textarea
                     className="input flex w-full resize-y min-h-16 placeholder:text-gray-300"
                     rows={10}
-                    placeholder={"Rameur 1 \nRameur 2 \nRameur 3"}
+                    placeholder={t("parameters.rowerPlaceholder")}
                     value={textareaContent}
                     onChange={(e) => setTextareaContent(e.target.value)}
                   />
                 </Label>
 
                 <Label className="flex flex-col gap-1">
-                  Catégorie par défaut
+                  {t("parameters.defaultCategory")}
                   <select
                     className="input"
                     value={defaultCategory || ""}
@@ -172,14 +179,14 @@ export const RowersCrud = () => {
                         key={category.category}
                         value={category.category || ""}
                       >
-                        {category.category || "Aucune catégorie"}
+                        {category.category || t("parameters.noCategory")}
                       </option>
                     ))}
                   </select>
                 </Label>
 
                 <Label className="flex flex-col gap-1">
-                  Type par défaut
+                  {t("parameters.defaultType")}
                   <select
                     className="input"
                     value={defaultType || ""}
@@ -191,14 +198,14 @@ export const RowersCrud = () => {
                   >
                     {SERIOUSNESS_CATEGORIES.map((type) => (
                       <option key={type.type} value={type.type || ""}>
-                        {type.label || "Aucun type"}
+                        {type.label || t("parameters.noType")}
                       </option>
                     ))}
                   </select>
                 </Label>
 
                 <Button type="button" className="w-full" onClick={addRowers}>
-                  Ajouter le ou les rameurs
+                  {t("parameters.addTheRowers")}
                 </Button>
               </div>
             </DialogContent>
@@ -209,11 +216,11 @@ export const RowersCrud = () => {
               <Button type="button">
                 <div className="flex gap-2 items-center">
                   <ChartBarIcon className="h-4 w-4" />
-                  Statistiques rameurs
+                  {t("parameters.rowerStatistics")}
                 </div>
               </Button>
             </DialogTrigger>
-            <DialogContent title="Statistiques rameurs">
+            <DialogContent title={t("parameters.rowerStatistics")}>
               <RowerStatsComparisons />
             </DialogContent>
           </Dialog>
@@ -235,7 +242,7 @@ export const RowersCrud = () => {
                 className="input"
                 readOnly
               />
-              Édition en masse
+              {t("parameters.bulkEdit")}
             </div>
           </Button>
 
@@ -244,12 +251,14 @@ export const RowersCrud = () => {
               <Dialog>
                 <DialogTrigger asChild>
                   <Button type="button" variant="outlined">
-                    Éditer la sélection
+                    {t("parameters.editSelection")}
                   </Button>
                 </DialogTrigger>
                 <DialogContent
                   className="max-w-[40rem]"
-                  title={`Mettre à jour ${bulkEditMode.selectedRowers.length} rameurs`}
+                  title={t("parameters.updateNRowers", {
+                    count: bulkEditMode.selectedRowers.length,
+                  })}
                 >
                   <BulkUpdateRower
                     rowersIds={bulkEditMode.selectedRowers}
@@ -265,7 +274,7 @@ export const RowersCrud = () => {
           <div className="relative flex-1">
             <SearchIcon className="absolute h-full w-5 left-3 pt-[0.125rem]" />
             <Input
-              placeholder="Rechercher un rameur"
+              placeholder={t("parameters.searchRower")}
               className="pl-10 mt-0"
               type="search"
               value={search}
@@ -293,7 +302,7 @@ export const RowersCrud = () => {
                         className="col-span-3 bg-gray-100 text-gray-900 p-2 -mx-4 px-4 sticky top-0 z-10"
                         key={rower.category}
                       >
-                        {rower.category || "Sans catégorie"}
+                        {rower.category || t("parameters.noCategory")}
                       </div>
                     )}
                     <div
@@ -322,7 +331,9 @@ export const RowersCrud = () => {
                               </button>
                             </DialogTrigger>
                             <DialogContent
-                              title={`Statistiques de ${rower.name}`}
+                              title={t("parameters.statisticsOf", {
+                                name: rower.name,
+                              })}
                             >
                               <RowerStats rowerId={rower.id} />
                             </DialogContent>
@@ -368,7 +379,7 @@ export const RowersCrud = () => {
                                 }));
                               }}
                             />
-                            Sélectionner
+                            {t("parameters.select")}
                           </Label>
                         </div>
                       )}
@@ -381,7 +392,10 @@ export const RowersCrud = () => {
         </div>
         <div className="flex justify-center items-center gap-8 mt-4">
           <p className="italic text-center">
-            Page {currentPage} sur {numberOfPages}
+            {t("session.pageOf", {
+              current: currentPage,
+              total: numberOfPages,
+            })}
           </p>
           <div className="flex justify-center gap-4">
             <Button
@@ -426,6 +440,7 @@ export const RowersCrud = () => {
 };
 
 const UpdateRowerModal = ({ rower }: { rower: Rower }) => {
+  const { t } = useTranslation();
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
   return (
@@ -437,7 +452,7 @@ const UpdateRowerModal = ({ rower }: { rower: Rower }) => {
       </DialogTrigger>
       <DialogContent
         className="max-w-[40rem]"
-        title={`Mettre à jour ${rower.name}`}
+        title={t("parameters.updateRowerName", { name: rower.name })}
       >
         <UpdateRower
           rower={rower}

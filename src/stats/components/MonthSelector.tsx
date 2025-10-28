@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { uppercaseFirstLetter } from "../../_common/utils/string.utils";
 import { cn } from "../../_common/utils/utils";
 import { useMemo } from "react";
@@ -24,18 +25,19 @@ export const MonthSelector = ({
   disabled,
   className,
 }: MonthSelectorProps) => {
+  const { t, i18n } = useTranslation();
   const months = useMemo<MonthOption[]>(() => {
     const availableMonths: MonthOption[] = [];
     const iDate = new Date(startDate);
 
     // Add "All Months" option
-    availableMonths.push({ value: null, label: "Tous les mois" });
+    availableMonths.push({ value: null, label: t("stats.allMonths") });
 
     // Add months within the date range
     while (iDate <= endDate) {
       const month = iDate.getMonth();
       const monthLabel = uppercaseFirstLetter(
-        iDate.toLocaleString("fr-FR", { month: "long" })
+        iDate.toLocaleString(i18n.language, { month: "long" })
       );
 
       // Only add the month if it's not already in the list
@@ -47,7 +49,7 @@ export const MonthSelector = ({
     }
 
     return availableMonths;
-  }, [startDate, endDate]);
+  }, [startDate, endDate, t, i18n.language]);
 
   return (
     <select

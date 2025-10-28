@@ -1,4 +1,5 @@
 import { ChartBarIcon } from "@heroicons/react/16/solid";
+import { useTranslation } from "react-i18next";
 import {
   Dialog,
   DialogContent,
@@ -12,6 +13,8 @@ interface BoatStatsDialogProps {
 }
 
 export const BoatStatsDialog = ({ boatId, boatName }: BoatStatsDialogProps) => {
+  const { t } = useTranslation();
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -19,7 +22,7 @@ export const BoatStatsDialog = ({ boatId, boatName }: BoatStatsDialogProps) => {
           <ChartBarIcon className="h-4 w-4 cursor-pointer text-steel-blue-800" />
         </button>
       </DialogTrigger>
-      <DialogContent title={`Informations à propos de ${boatName}`}>
+      <DialogContent title={t("stats.aboutBoat", { boatName })}>
         <BoatStats boatId={boatId} />
       </DialogContent>
     </Dialog>

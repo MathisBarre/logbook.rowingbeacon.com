@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { z } from "zod";
+import { useTranslation } from "react-i18next";
 import { BoatSection } from "./BoatSection";
 import CommentSection from "./CommentSection";
 import DurationEstimationSelect from "./DurationEstimationSelect";
@@ -44,7 +45,7 @@ const StartSessionFormSchema = z.object({
   }),
   selectedRowersOptions: z
     .array(z.object({ id: z.string(), name: z.string() }))
-    .min(1, { message: "Veuillez sélectionner au moins un rameur" }),
+    .min(1, { message: "Please select at least one rower" }),
   startDateTime: dateStringSchema,
   durationValue: z.enum([
     "na",
@@ -98,6 +99,7 @@ export const StartSessionForm = ({
   onSessionStarted,
   isLoading,
 }: StartSessionFormProps) => {
+  const { t } = useTranslation();
   const form = useForm<StartSessionFormValues>({
     resolver: zodResolver(StartSessionFormSchema),
     values,
@@ -157,20 +159,27 @@ export const StartSessionForm = ({
         >
           {alert?.code === "BAD_AMOUNT_OF_ROWERS" && (
             <StartSessionAlert
+              t={t}
               TextContent={() => (
                 <>
-                  Vous avez renseigné{" "}
+                  {t("session.alert.rowersProvided")}{" "}
                   <span className="font-medium">
-                    {alert.details.nbOfRowers} rameur(s)
+                    {t("session.alert.rowersCount", {
+                      count: alert.details.nbOfRowers,
+                    })}
                   </span>
                   .
-                  <br /> Le bateau &quot;{alert.details.boatName}&quot;
-                  nécessite{" "}
+                  <br />{" "}
+                  {t("session.alert.boatRequires", {
+                    boatName: alert.details.boatName,
+                  })}{" "}
                   <span className="font-medium">
-                    {alert.details.boatRowersQuantity} rameur(s)
+                    {t("session.alert.rowersCount", {
+                      count: alert.details.boatRowersQuantity,
+                    })}
                   </span>
                   .
-                  <br /> Souhaitez-vous tout de même continuer ?
+                  <br /> {t("session.alert.continueAnyway")}
                 </>
               )}
               onStartSessionClick={() => {
@@ -188,30 +197,36 @@ export const StartSessionForm = ({
 
           {alert?.code === "ROWERS_ALREADY_ON_STARTED_SESSION" && (
             <StartSessionAlert
+              t={t}
               TextContent={() => {
                 const alreadyOnSessionRowers =
                   alert.details.alreadyOnSessionRowers;
 
                 if (alreadyOnSessionRowers === null) {
-                  return "Certains rameurs ont déjà commencé une autre sortie. Souhaitez-vous tout de même continuer ?";
+                  return t("session.alert.rowersAlreadyOnSession");
                 }
 
                 const plural = alreadyOnSessionRowers.length > 1;
+                const rowerNames = plural
+                  ? replaceLastOccurrence(
+                      alreadyOnSessionRowers
+                        .map((rower) => rower.name)
+                        .join(", "),
+                      ", ",
+                      ` ${t("common.and")} `
+                    )
+                  : alreadyOnSessionRowers[0].name;
 
                 return (
                   <>
-                    {plural
-                      ? replaceLastOccurrence(
-                          alreadyOnSessionRowers
-                            .map((rower) => rower.name)
-                            .join(", "),
-                          ", ",
-                          " et "
-                        )
-                      : alreadyOnSessionRowers[0].name}
-                    {plural ? " ont" : " a"} déjà commencé une autre sortie.
+                    {t(
+                      `session.alert.rowerAlreadyStarted_${
+                        plural ? "other" : "one"
+                      }`,
+                      { rowerNames }
+                    )}
                     <br />
-                    Souhaitez-vous tout de même continuer ?
+                    {t("session.alert.continueAnyway")}
                   </>
                 );
               }}
@@ -232,24 +247,20 @@ export const StartSessionForm = ({
 
           {alert?.code === "INVALID_ROWERS_LEVEL" && (
             <StartSessionAlert
+              t={t}
               TextContent={() => {
                 const nb = alert.details.nbOfInvalidRowers;
                 return (
                   <>
-                    {nb === 1 ? (
-                      <>
-                        <span className="font-bold">1</span> rameur n&apos;a pas
-                        le niveau requis pour ce bateau.
-                      </>
-                    ) : (
-                      <>
-                        <span className="font-bold">{nb}</span> rameurs
-                        n&apos;ont pas le niveau requis pour ce bateau.
-                      </>
+                    {t(
+                      `session.alert.invalidRowersLevel_${
+                        nb === 1 ? "one" : "other"
+                      }`,
+                      { count: nb }
                     )}
                     <br />
                     {alert.details.whatToDo === "alert" &&
-                      "Souhaitez-vous tout de même continuer"}
+                      t("session.alert.continueAnyway")}
                   </>
                 );
               }}
@@ -305,7 +316,7 @@ export const StartSessionForm = ({
               <div className="text-xs text-steel-blue-900 bg-steel-blue-50 border border-steel-blue-200 rounded p-2 whitespace-pre-wrap">
                 <h3 className="font-medium mb-1 flex items-center gap-1">
                   <NotebookIcon className="h-4 w-4 text-steel-blue-800" />
-                  Note(s) à propos de ce bateau :
+                  {t("session.boatNotes")}
                 </h3>
                 <p>{selectedBoat.note}</p>
               </div>
@@ -316,15 +327,14 @@ export const StartSessionForm = ({
               <div className="text-xs text-steel-blue-900 bg-steel-blue-50 border border-steel-blue-200 rounded p-2 whitespace-pre-wrap">
                 <h3 className="font-medium mb-1 flex items-center gap-1">
                   <ShieldIcon className="h-4 w-4 text-steel-blue-800" />
-                  Limitation de niveau sur ce bateau :
+                  {t("session.levelRestriction")}
                 </h3>
                 <p>
-                  Les rameurs de ce bateau doivent, au minimum, avoir le niveau{" "}
-                  &quot;
+                  {t("session.minimumLevelRequired")} &quot;
                   {selectedBoat.ageCategory && `${selectedBoat.ageCategory}`}
                   &quot;
                   {selectedBoat.seriousnessCategory &&
-                    ` et "${getSeriousnessTypeTranslation(
+                    ` ${t("common.and")} "${getSeriousnessTypeTranslation(
                       selectedBoat.seriousnessCategory
                     )}" `}
                 </p>
@@ -347,8 +357,9 @@ export const StartSessionForm = ({
             />
             {minimumValidRower > 0 && (
               <p className="text-xs text-gray-500 mt-1">
-                Il est nécessaire de sélectionner au moins {minimumValidRower}{" "}
-                rameur(s) ayant au moins les niveaux requis pour ce bateau.
+                {t("session.minimumValidRowersRequired", {
+                  count: minimumValidRower,
+                })}
               </p>
             )}
           </div>
@@ -394,10 +405,10 @@ export const StartSessionForm = ({
               className="flex-1"
               onClick={cancelAction}
             >
-              Annuler
+              {t("common.cancel")}
             </Button>
             <Button type="submit" className="flex-1" loading={isLoading}>
-              Commencer la sortie
+              {t("session.startSession")}
             </Button>
           </div>
 
@@ -409,10 +420,12 @@ export const StartSessionForm = ({
 };
 
 const StartSessionAlert = ({
+  t,
   TextContent,
   onStartSessionClick,
   onFixSessionClick,
 }: {
+  t: (key: string) => string;
   TextContent: () => React.ReactNode;
   onStartSessionClick: (() => void) | null;
   onFixSessionClick: () => void;
@@ -426,7 +439,7 @@ const StartSessionAlert = ({
         </p>
         <div className="flex gap-2">
           <Button className="w-60" type="button" onClick={onFixSessionClick}>
-            Corriger les informations
+            {t("session.alert.fixInformation")}
           </Button>
           {onStartSessionClick !== null && (
             <Button
@@ -436,7 +449,7 @@ const StartSessionAlert = ({
               color="danger"
               onClick={onStartSessionClick}
             >
-              Commencer la sortie
+              {t("session.startSession")}
             </Button>
           )}
         </div>

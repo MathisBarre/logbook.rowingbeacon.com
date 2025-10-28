@@ -12,13 +12,13 @@ import { useClubOverviewStore } from "../_common/store/clubOverview.store";
 import { generateBoatId } from "../_common/business/boat.rules";
 import { generateRowerId } from "../_common/business/rower.rules";
 import { generateRoutesId } from "../_common/business/route.rules";
-import { logStr } from "../_common/utils/utils";
 import { windowAlert } from "../_common/utils/window.utils";
 import { BoatTypeEnum } from "../_common/business/boat.rules";
 import { hashPassword } from "../_common/utils/password";
 import { useGenerateFakeData } from "../boathouse/data/generateFakeData";
 import { useState } from "react";
 import { AdminPage } from "../_common/store/navigation.store";
+import { useTranslation } from "react-i18next";
 
 const OnboardingFormSchema = z.object({
   clubPassword: z.string(),
@@ -36,6 +36,7 @@ export const OnboardingScreen = ({
   setIsOnboardingDone: (isOnboardingDone: boolean) => void;
   setPage: (page: AdminPage) => void;
 }) => {
+  const { t } = useTranslation();
   const { setClubOverview } = useClubOverviewStore();
 
   const form = useForm<OnboardingFormValues>({
@@ -52,7 +53,7 @@ export const OnboardingScreen = ({
         <div className="m-auto max-w-screen-sm flex gap-4">
           <div className="w-full">
             <h1 className="text-gray-100 mb-[0.2rem] text-lg font-semibold leading-none tracking-tight text-center w-full">
-              Configurez votre application
+              {t("onboarding.title")}
             </h1>
           </div>
         </div>
@@ -73,14 +74,11 @@ export const OnboardingScreen = ({
 
               <div>
                 <h5 className="text-base font-medium">
-                  Souhaitez-vous juste tester RowingBeacon ?
+                  {t("onboarding.testQuestion")}
                 </h5>
               </div>
             </div>
-            <p className="text-sm ">
-              Si vous souhaitez simplement tester l&apos;application, vous
-              pouvez activer le mode démo pour utiliser des données fictives.
-            </p>
+            <p className="text-sm ">{t("onboarding.testDescription")}</p>
             <Button
               loading={generatingFakeDate}
               variant="outlined"
@@ -104,11 +102,13 @@ export const OnboardingScreen = ({
                 setIsOnboardingDone(true);
 
                 await windowAlert(
-                  `Le mot de passe admin du mode démo est "${ADMIN_PASSWORD}"`
+                  t("onboarding.demoPasswordAlert", {
+                    password: ADMIN_PASSWORD,
+                  })
                 );
               }}
             >
-              Lancer l&apos;application en mode démo
+              {t("onboarding.launchDemo")}
               <ArrowRightIcon className="h-4 w-4" />
             </Button>
           </article>
@@ -116,10 +116,9 @@ export const OnboardingScreen = ({
           <section className="bg-white rounded-lg p-6 flex flex-col gap-6 flex-1">
             <div>
               <Label className="flex flex-col mb-1">
-                Mot de passe
+                {t("onboarding.password")}
                 <span className="text-xs text-gray-500 font-normal mt-1">
-                  Le mot de passe sera utile pour protéger les actions
-                  sensibles.
+                  {t("onboarding.passwordHelp")}
                 </span>
               </Label>
               <FormField
@@ -135,9 +134,9 @@ export const OnboardingScreen = ({
               <section className="bg-white rounded-lg p-6 flex flex-col gap-6 flex-1">
                 <div>
                   <Label className="flex flex-col mb-1">
-                    Bateaux
+                    {t("onboarding.boats")}
                     <span className="text-xs text-gray-500 font-normal mt-1">
-                      Entrez le nom de vos bateaux, un par ligne
+                      {t("onboarding.boatsHelp")}
                     </span>
                   </Label>
                   <FormField
@@ -147,23 +146,7 @@ export const OnboardingScreen = ({
                       <textarea
                         className="resize-y w-full text-xs input placeholder:text-gray-400 font-mono"
                         rows={13}
-                        placeholder={logStr`
-                          Exemple: 
-                          100 Swift
-                          101 Hudson
-                          102 WinTech
-                          103 Empacher
-                          104 Vespoli
-                          105 Swift
-                          106 WinTech
-                          200 Hudson
-                          201 WinTech
-                          202 Hudson
-                          203 Vespoli
-                          401 Hudson
-                          402 WinTech
-                          800 Filippi
-                    `}
+                        placeholder={t("onboarding.boatsPlaceholder")}
                         {...field}
                       />
                     )}
@@ -174,9 +157,9 @@ export const OnboardingScreen = ({
               <section className="bg-white rounded-lg p-6 flex flex-col gap-6 flex-1">
                 <div>
                   <Label className="flex flex-col mb-1">
-                    Parcours (facultatif)
+                    {t("onboarding.routes")}
                     <span className="text-xs text-gray-500 font-normal mt-1">
-                      Entrez le nom de vos parcours, un par ligne
+                      {t("onboarding.routesHelp")}
                     </span>
                   </Label>
                   <FormField
@@ -197,9 +180,9 @@ export const OnboardingScreen = ({
               <section className="bg-white rounded-lg p-6 flex flex-col gap-6 flex-1">
                 <div>
                   <Label className="flex flex-col mb-1">
-                    Rameurs
+                    {t("onboarding.rowers")}
                     <span className="text-xs text-gray-500 font-normal mt-1">
-                      Entrez le nom de vos rameurs, un par ligne
+                      {t("onboarding.rowersHelp")}
                     </span>
                   </Label>
                   <FormField
@@ -221,7 +204,7 @@ export const OnboardingScreen = ({
             type="submit"
             className="flex items-center justify-center mb-8"
           >
-            Valider les informations
+            {t("onboarding.validate")}
             <Check className="ml-2 h-5"></Check>
           </Button>
         </form>

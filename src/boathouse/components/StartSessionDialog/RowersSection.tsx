@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Label } from "../../../_common/components/Label";
 import { ReactSelect } from "../../../_common/components/ReactSelect";
 import { Rower } from "../../../_common/business/rower.rules";
@@ -40,11 +41,12 @@ export const RowersSection = ({
   values,
   errorMessage,
 }: RowersSectionProps) => {
+  const { t } = useTranslation();
   const [input, setInput] = useState("");
 
   return (
     <div className="flex flex-col gap-1">
-      <Label>Rameurs</Label>
+      <Label>{t("session.rowers")}</Label>
       <ReactSelect
         components={{ MenuList }}
         maxMenuHeight={208}
