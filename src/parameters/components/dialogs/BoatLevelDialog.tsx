@@ -1,4 +1,5 @@
 import { ShieldIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   Dialog,
   DialogContent,
@@ -12,6 +13,8 @@ interface BoatLevelDialogProps {
 }
 
 export const BoatLevelDialog = ({ boatId, boatName }: BoatLevelDialogProps) => {
+  const { t } = useTranslation();
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -21,7 +24,7 @@ export const BoatLevelDialog = ({ boatId, boatName }: BoatLevelDialogProps) => {
       </DialogTrigger>
       <DialogContent
         className="max-w-[40rem]"
-        title={`Gestion niveau de ${boatName}`}
+        title={t("parameters.boatLevelManagement", { boatName })}
       >
         <BoatLevelSystem boatId={boatId} />
       </DialogContent>

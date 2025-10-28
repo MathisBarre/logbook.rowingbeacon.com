@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Label } from "../../_common/components/Label";
 import { boatLevelConfigStoreCore } from "../../_common/store/boatLevelConfig.store";
 import Button from "../../_common/components/Button";
@@ -52,6 +53,7 @@ const useBoatLevelSystemForm = ({
 };
 
 export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
+  const { t } = useTranslation();
   const { getBoatLevelConfig, upsertBoatLevelConfig, deleteBoatLevelConfig } =
     useStore(boatLevelConfigStoreCore);
 
@@ -93,7 +95,7 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
       removeRestrictions();
     }
 
-    toast.success("Configuration mise à jour");
+    toast.success(t("parameters.configurationUpdated"));
   };
 
   const removeRestrictions = () => {
@@ -113,19 +115,15 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
       }}
     >
       <p className="bg-blue-50 border border-blue-100 p-2 rounded text-sm mb-6">
-        ℹ️ Ces paramètres vous permettent de restreindre l&apos;enregistrement
-        des sorties du bateau à certains rameurs.
+        ℹ️ {t("parameters.boatLevelSystemDescription")}
         <br />
         <br />
-        Configurer une catégorie et/ou un type de rameur minimal alertera le
-        preneur de note ou bloquera l&apos;enregistrement en fonction de la
-        configuration globale du système de niveau (présent dans
-        &quot;paramètres divers&quot;)
+        {t("parameters.boatLevelSystemDescription2")}
       </p>
 
       <div>
         <Label className="flex flex-col gap-1">
-          Catégorie de rameur minimale
+          {t("parameters.minimalRowerCategory")}
           <select className="input" {...form.register("minimalRowerCategory")}>
             {AGE_CATEGORIES.map((category) => (
               <option
@@ -133,7 +131,7 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
                 value={category.category || "null"}
               >
                 {category.order} -{" "}
-                {category.category || "Aucune catégorie minimale"}
+                {category.category || t("parameters.noMinimalCategory")}
               </option>
             ))}
           </select>
@@ -142,11 +140,11 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
         <div className="h-4" />
 
         <Label className="flex flex-col gap-1">
-          Type de rameur minimale
+          {t("parameters.minimalRowerType")}
           <select className="input" {...form.register("minimalRowerType")}>
             {SERIOUSNESS_CATEGORIES.map((type) => (
               <option key={type.type} value={type.type || "null"}>
-                {type.order} - {type.label || "Aucun type minimal"}
+                {type.order} - {type.label || t("parameters.noMinimalType")}
               </option>
             ))}
           </select>
@@ -161,7 +159,7 @@ export const BoatLevelSystem = ({ boatId }: { boatId: string }) => {
           className="flex-1"
           disabled={!form.formState.isDirty}
         >
-          Mettre à jour la configuration
+          {t("parameters.updateConfiguration")}
         </Button>
       </div>
     </form>
