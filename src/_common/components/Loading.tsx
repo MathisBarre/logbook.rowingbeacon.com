@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 interface LoadingProps {
   text?: string;
 }
@@ -27,12 +29,14 @@ export const AnimatedLoadingIcon = () => {
   );
 };
 
-const Loading = ({ text = "Chargement..." }: LoadingProps) => {
+const Loading = ({ text }: LoadingProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="flex font-medium items-center">
       <AnimatedLoadingIcon />
 
-      <div>{text}</div>
+      <div>{text ?? t("common.loading")}</div>
     </div>
   );
 };

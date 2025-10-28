@@ -1,4 +1,5 @@
 import { PencilIcon, Trash2Icon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { toast } from "sonner";
 import Button from "../../_common/components/Button";
@@ -21,6 +22,7 @@ export const RouteConfigModal = ({
   isOpen,
   onOpenChange,
 }: RouteConfigModalProps) => {
+  const { t } = useTranslation();
   const store = useClubOverviewStore();
   const routes = store.getAllRoutes();
   const [newRouteName, setNewRouteName] = useState("");
@@ -39,14 +41,14 @@ export const RouteConfigModal = ({
   const handleUpdateRouteName = (newName: string) => {
     if (!editingRoute) return;
     store.updateRouteName(editingRoute.id, newName);
-    toast.success("Le nom du parcours a été modifié");
+    toast.success(t("parameters.routeNameUpdated"));
     setEditingRoute(null);
   };
 
   const handleAddRoute = () => {
     if (!newRouteName.trim()) return;
     store.addRoute(newRouteName.trim());
-    toast.success("Le parcours a été ajouté");
+    toast.success(t("parameters.routeAdded"));
     setNewRouteName("");
   };
 
@@ -57,22 +59,22 @@ export const RouteConfigModal = ({
   const handleConfirmDelete = () => {
     if (!confirmDelete.route) return;
     store.archiveRoute(confirmDelete.route.id);
-    toast.success("Le parcours a été archivé");
+    toast.success(t("parameters.routeArchived"));
     setConfirmDelete({ isOpen: false, route: null });
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent title="Gestion des parcours" className="max-w-xl">
+      <DialogContent title={t("parameters.routeManagement")} className="max-w-xl">
         <div className="flex flex-col gap-4">
           <p className="text-gray-500">
-            Gérez les parcours disponibles pour les sorties
+            {t("parameters.routeManagementDescription")}
           </p>
           <div className="flex gap-2 items-center">
             <Input
               value={newRouteName}
               onChange={(e) => setNewRouteName(e.target.value)}
-              placeholder="Nom du nouveau parcours"
+              placeholder={t("parameters.newRouteName")}
               className="flex-1 mt-0"
             />
             <Button
@@ -81,7 +83,7 @@ export const RouteConfigModal = ({
               onClick={handleAddRoute}
               disabled={!newRouteName.trim()}
             >
-              Ajouter le parcours
+              {t("parameters.addRoute")}
             </Button>
           </div>
           <div className="flex gap-4 flex-wrap">
@@ -147,13 +149,10 @@ export const RouteConfigModal = ({
           setConfirmDelete({ isOpen: open, route: confirmDelete.route })
         }
       >
-        <DialogContent className="max-w-xl" title="Archiver le parcours">
+        <DialogContent className="max-w-xl" title={t("parameters.archiveRoute")}>
           <DialogHeader>
             <DialogDescription className="mb-4">
-              Voulez-vous archiver le parcours &quot;{confirmDelete.route?.name}
-              &quot; ? Il ne sera plus possible de renseigner des sorties avec
-              ce parcours, mais les données enregistrées ne seront pas
-              impactées.
+              {t("parameters.confirmArchiveRoute", { routeName: confirmDelete.route?.name })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -162,14 +161,14 @@ export const RouteConfigModal = ({
               variant="outlined"
               onClick={() => setConfirmDelete({ isOpen: false, route: null })}
             >
-              Annuler
+              {t("common.cancel")}
             </Button>
             <Button
               type="button"
               variant="primary"
               onClick={handleConfirmDelete}
             >
-              Archiver
+              {t("parameters.archive")}
             </Button>
           </DialogFooter>
         </DialogContent>

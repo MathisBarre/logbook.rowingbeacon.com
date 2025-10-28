@@ -1,4 +1,5 @@
 import { ChangeEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { Label } from "../../../_common/components/Label";
 
 const StartDatetimeSection = ({
@@ -10,9 +11,11 @@ const StartDatetimeSection = ({
   onChange: (newValue: ChangeEvent<HTMLInputElement>) => void;
   errorMessage?: string;
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-col gap-1 flex-1">
-      <Label>Date et heure du début</Label>
+      <Label>{t("session.startDateTime")}</Label>
       <input
         className="input"
         type="datetime-local"

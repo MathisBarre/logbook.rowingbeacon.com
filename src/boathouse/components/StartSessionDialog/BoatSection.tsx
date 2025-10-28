@@ -1,4 +1,5 @@
 import { useStore } from "zustand";
+import { useTranslation } from "react-i18next";
 import {
   getBoatsByType,
   getTypelessBoats,
@@ -68,9 +69,11 @@ export const BoatSection = ({
     [_boats, boatLevelConfigStore]
   );
 
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-col gap-1 flex-1">
-      <FormLabel>Bateau</FormLabel>
+      <FormLabel>{t("session.boat")}</FormLabel>
       <select
         name="boats"
         id="boat"
@@ -109,9 +112,15 @@ export const BoatSection = ({
           boats={getBoatsByType(boats, ["EIGHT_ROWERS_COXED"])}
         />
 
-        <Optgroup label="Autre" boats={getBoatsByType(_boats, ["OTHER"])} />
+        <Optgroup
+          label={t("common.other")}
+          boats={getBoatsByType(_boats, ["OTHER"])}
+        />
 
-        <Optgroup label="Type non précisé" boats={getTypelessBoats(_boats)} />
+        <Optgroup
+          label={t("session.typeNotSpecified")}
+          boats={getTypelessBoats(_boats)}
+        />
       </select>
     </div>
   );

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Label } from "../../../_common/components/Label";
 
 interface CommentSectionProps {
@@ -6,9 +7,11 @@ interface CommentSectionProps {
 }
 
 const CommentSection = ({ value, onChange }: CommentSectionProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-col gap-1">
-      <Label>Commentaire</Label>
+      <Label>{t("session.comment")}</Label>
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}

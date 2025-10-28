@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { useTranslation } from "react-i18next";
 import { dateStringSchema } from "../../_common/utils/commonSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,6 +23,7 @@ export const ExportSessions = ({
 }: {
   closeDialog: () => void;
 }) => {
+  const { t } = useTranslation();
   const form = useForm<StartSessionFormValues>({
     resolver: zodResolver(ExportSessionsFormSchema),
     defaultValues: {
@@ -40,12 +42,12 @@ export const ExportSessions = ({
     <>
       {isExportSuccess && (
         <ExportSessionSuccess
+          t={t}
           TextContent={() => (
             <>
-              <p>Export réalisé avec succès</p>
+              <p>{t("logbook.exportSuccess")}</p>
               <p>
-                &quot;{fileName}&quot; a été téléchargé dans votre dossier
-                &quot;Téléchargements&quot;
+                {t("logbook.fileDownloaded", { fileName })}
               </p>
             </>
           )}
@@ -74,7 +76,7 @@ export const ExportSessions = ({
               render={({ field, fieldState }) => (
                 <>
                   <Label className="flex flex-col gap-1">
-                    Depuis le
+                    {t("logbook.fromDate")}
                     <input className="input" type="date" {...field} />
                   </Label>
                   {fieldState.error && (
@@ -93,7 +95,7 @@ export const ExportSessions = ({
               render={({ field, fieldState }) => (
                 <>
                   <Label className="flex flex-col gap-1">
-                    Jusqu&apos;au
+                    {t("logbook.toDate")}
                     <input className="input flex-1" type="date" {...field} />
                   </Label>
 
@@ -114,7 +116,7 @@ export const ExportSessions = ({
             render={({ field, fieldState }) => (
               <>
                 <Label className="flex flex-col gap-1">
-                  Type de fichier
+                  {t("logbook.fileType")}
                   <select className="input" {...field}>
                     <option value="ods">.ods - OpenDocument</option>
                     <option value="xlsx">.xlsx - Excel</option>
@@ -131,7 +133,7 @@ export const ExportSessions = ({
           />
         </div>
         <Button loading={isLoading} type="submit">
-          Exporter
+          {t("session.export")}
         </Button>
       </form>
     </>
@@ -139,10 +141,12 @@ export const ExportSessions = ({
 };
 
 const ExportSessionSuccess = ({
+  t,
   TextContent,
   btn1,
   btn2,
 }: {
+  t: (key: string, params?: Record<string, unknown>) => string;
   TextContent: () => React.ReactNode;
   btn1: () => void;
   btn2: () => void;
@@ -164,10 +168,10 @@ const ExportSessionSuccess = ({
             color="primary"
             onClick={btn1}
           >
-            Créer un nouveau export
+            {t("logbook.createNewExport")}
           </Button>
           <Button className="flex-1" type="button" onClick={btn2}>
-            Revenir à la liste des sorties
+            {t("logbook.backToSessionList")}
           </Button>
         </div>
       </div>

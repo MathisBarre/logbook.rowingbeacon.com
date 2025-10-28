@@ -1,10 +1,11 @@
+import { useTranslation } from "react-i18next";
 import { Label } from "../../../_common/components/Label";
 import { Route } from "../../../_common/business/route.rules";
 
-export const defaultRoute: Route = {
+export const getDefaultRoute = (t: (key: string) => string): Route => ({
   id: "null",
-  name: "Aucun parcours",
-};
+  name: t("session.noRoute"),
+});
 
 interface RouteSectionProps {
   routes: Route[];
@@ -13,11 +14,14 @@ interface RouteSectionProps {
 }
 
 const RouteSection = ({ routes, onChange, value }: RouteSectionProps) => {
+  const { t } = useTranslation();
+  const defaultRoute = getDefaultRoute(t);
+
   if (routes.length === 0) return null;
 
   return (
     <div className="flex flex-col gap-1 flex-1">
-      <Label>Parcours</Label>
+      <Label>{t("session.route")}</Label>
       <select
         name="route"
         id="route"

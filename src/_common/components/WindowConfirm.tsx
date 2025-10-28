@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export type ConfirmOptions = {
   title?: string;
@@ -22,6 +23,7 @@ export function confirm(options: ConfirmOptions): Promise<boolean> {
 }
 
 export const WindowConfirm: React.FC = () => {
+  const { t } = useTranslation();
   const [options, setOptions] = useState<ConfirmOptions | null>(null);
   const [promiseHandlers, setPromiseHandlers] = useState<{
     resolve: (value: boolean) => void;
@@ -73,13 +75,13 @@ export const WindowConfirm: React.FC = () => {
             onClick={handleCancel}
             className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded mr-2"
           >
-            Cancel
+            {t("common.cancel")}
           </button>
           <button
             onClick={handleOk}
             className="bg-steel-blue-500 hover:bg-steel-blue-600 text-white font-semibold py-2 px-4 rounded"
           >
-            OK
+            {t("common.ok")}
           </button>
         </div>
       </div>

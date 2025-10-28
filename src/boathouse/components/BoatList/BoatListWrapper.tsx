@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
 interface BoatListWrapperProps {
   search: string;
@@ -15,6 +16,8 @@ export const BoatListWrapper = ({
   label,
   icon,
 }: BoatListWrapperProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="border-r bg-white flex flex-col h-full w-full rounded overflow-hidden border-l-steel-blue-800 border-l-8">
       <div className="bg-border p-2 bg-gradient-to-r from-steel-blue-800 to-steel-blue-700 text-white flex justify-between items-center">
@@ -24,13 +27,13 @@ export const BoatListWrapper = ({
         </h1>
         <div>
           <label htmlFor="boatFilter" className="font-normal sr-only">
-            Rechercher :{" "}
+            {t("common.search")}:{" "}
           </label>
           <input
             onChange={(e) => setSearch(e.target.value)}
             value={search}
             type="text"
-            placeholder="Rechercher un bateau..."
+            placeholder={t("boathouse.searchBoat")}
             className="border border-gray-400 rounded shadow-sm px-1 py-0 w-64 h-8 text-black placeholder-gray-500 opacity-90"
           />
         </div>
