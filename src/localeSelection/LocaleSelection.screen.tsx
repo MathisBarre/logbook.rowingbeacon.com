@@ -1,0 +1,87 @@
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import {
+  useLocaleStore,
+  LOCALES,
+  LOCALE_NAMES,
+  Locale,
+} from "../_common/store/locale.store";
+import { changeLanguage } from "../_common/i18n/config";
+import Button from "../_common/components/Button";
+import { Check, GlobeIcon } from "lucide-react";
+
+export const LocaleSelectionScreen = ({
+  onComplete,
+}: {
+  onComplete: () => void;
+}) => {
+  const { t } = useTranslation();
+  const { setLocale } = useLocaleStore();
+  const [selectedLocale, setSelectedLocale] = useState<Locale | null>(null);
+
+  const handleConfirm = () => {
+    if (selectedLocale) {
+      setLocale(selectedLocale);
+      changeLanguage(selectedLocale);
+      onComplete();
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col relative bg-gradient-to-br from-steel-blue-50 to-steel-blue-100">
+      <main className="flex-1 flex items-center justify-center p-6">
+        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+          <div className="flex justify-center mb-6">
+            <div className="p-4 bg-steel-blue-100 rounded-full">
+              <GlobeIcon className="w-12 h-12 text-steel-blue-700" />
+            </div>
+          </div>
+
+          <h1 className="text-2xl font-semibold text-gray-900 text-center mb-2">
+            {t("localeSelection.title")}
+          </h1>
+          <p className="text-gray-600 text-center mb-6">
+            {t("localeSelection.description")}
+          </p>
+
+          <div className="flex flex-col gap-2 mb-6">
+            {LOCALES.map((locale) => (
+              <button
+                key={locale}
+                onClick={() => {
+                  setSelectedLocale(locale);
+                  changeLanguage(locale);
+                }}
+                className={`
+                  flex items-center justify-between p-4 rounded-lg border-2 transition-all
+                  ${
+                    selectedLocale === locale
+                      ? "border-steel-blue-600 bg-steel-blue-50"
+                      : "border-gray-200 hover:border-gray-300 bg-white"
+                  }
+                `}
+              >
+                <span className="font-medium text-gray-900">
+                  {LOCALE_NAMES[locale]}
+                </span>
+                {selectedLocale === locale && (
+                  <Check className="w-5 h-5 text-steel-blue-600" />
+                )}
+              </button>
+            ))}
+          </div>
+
+          <Button
+            type="button"
+            onClick={handleConfirm}
+            disabled={!selectedLocale}
+            className="w-full flex items-center justify-center gap-2"
+          >
+            {t("common.confirm")}
+            <Check className="w-4 h-4" />
+          </Button>
+        </div>
+      </main>
+    </div>
+  );
+};

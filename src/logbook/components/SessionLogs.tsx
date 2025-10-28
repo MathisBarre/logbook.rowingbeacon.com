@@ -11,8 +11,10 @@ import {
   LogsIcon,
 } from "lucide-react";
 import { useAdminEditModeSystem } from "../../_common/store/adminEditMode.system";
+import { useTranslation } from "react-i18next";
 
 export const SessionLogs = () => {
+  const { t } = useTranslation();
   const {
     numberOfPages,
     currentPage,
@@ -35,7 +37,7 @@ export const SessionLogs = () => {
       <div className="bg-border p-2 bg-gradient-to-r from-steel-blue-800 to-steel-blue-700 text-white flex justify-between h-12 max-h-12 min-h-12 items-center">
         <h1 className="text-base ml-2 flex gap-2 items-center">
           <LogsIcon />
-          Historique des sorties
+          {t("session.sessionHistory")}
         </h1>
         <button
           type="button"
@@ -49,7 +51,7 @@ export const SessionLogs = () => {
             setIsExportOpen(true);
           }}
         >
-          Exporter
+          {t("session.export")}
           <FileUpIcon className="h-4 w-4 ml-1" />
         </button>
 
@@ -60,7 +62,7 @@ export const SessionLogs = () => {
           }}
         >
           <DialogContent
-            title="Exporter l'historique des sorties"
+            title={t("session.exportHistory")}
             className="max-w-xl"
           >
             <ExportSessions
@@ -99,7 +101,7 @@ export const SessionLogs = () => {
           </Button>
         </div>
         <p className="italic text-center px-4">
-          Page {currentPage} sur {numberOfPages}
+          {t("session.pageOf", { current: currentPage, total: numberOfPages })}
         </p>
 
         <div className="absolute left-2 -top-2 w-2 h-2 z-10 -rotate-90">

@@ -13,8 +13,10 @@ import { BookIcon, LockIcon, ShipIcon, BarChartIcon } from "lucide-react";
 import logo from "../../_common/images/logo.svg";
 import { Popover, PopoverContent, PopoverTrigger } from "./Popover";
 import PageButton from "./PageButton";
+import { useTranslation } from "react-i18next";
 
 export const NavigationBar = () => {
+  const { t } = useTranslation();
   const { zoomIn, zoomOut, zoomPercentage } = useZoom();
   const {
     setPage,
@@ -58,7 +60,7 @@ export const NavigationBar = () => {
                   -
                 </button>
                 <p className="flex-1 text-center mx-4">
-                  Zoom {zoomPercentage}%
+                  {t("navigation.zoom")} {zoomPercentage}%
                 </p>
                 <button
                   className="h-8 w-8 hover:bg-steel-blue-200 border-l border-steel-blue-100"
@@ -77,7 +79,7 @@ export const NavigationBar = () => {
                 }}
               >
                 <ArrowLeftStartOnRectangleIcon className="h-4 w-4" />
-                Fermer l&apos;application
+                {t("navigation.logout")}
               </button>
             </div>
           </PopoverContent>
@@ -89,7 +91,7 @@ export const NavigationBar = () => {
             currentPage={page}
             setPage={setPage}
             icon={<ShipIcon className="h-4 w-4" />}
-            label="Boathouse"
+            label={t("navigation.boathouse")}
           />
 
           <PageButton
@@ -97,7 +99,7 @@ export const NavigationBar = () => {
             currentPage={page}
             setPage={setPage}
             icon={<BookIcon className="h-4 w-4" />}
-            label="Logbook"
+            label={t("navigation.logbook")}
           />
 
           <PageButton
@@ -105,7 +107,7 @@ export const NavigationBar = () => {
             currentPage={page}
             setPage={setPage}
             icon={<BarChartIcon className="h-4 w-4" />}
-            label="Statistiques"
+            label={t("navigation.stats")}
           />
 
           <PageButton
@@ -113,14 +115,14 @@ export const NavigationBar = () => {
             currentPage={page}
             setPage={setPage}
             icon={<LockIcon className="h-4 w-4" />}
-            label="Gestion"
+            label={t("navigation.parameters")}
           />
         </div>
       </div>
 
       <SimpleAlertDialog
-        title="Fermer l'application ?"
-        description="Vous allez fermer l'application. Aucune donnée ne sera perdue."
+        title={t("navigation.logoutConfirmTitle")}
+        description={t("navigation.logoutConfirmDescription")}
         isOpen={isLogoutAlertOpen}
         cancelElement={
           <Button
@@ -130,7 +132,7 @@ export const NavigationBar = () => {
               setIsLogoutAlertOpen(false);
             }}
           >
-            Annuler
+            {t("common.cancel")}
           </Button>
         }
         confirmElement={
@@ -144,7 +146,7 @@ export const NavigationBar = () => {
               await adminEditSystem.closeApp(password);
             }}
           >
-            Fermer l&apos;application
+            {t("navigation.logout")}
           </Button>
         }
       />

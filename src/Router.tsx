@@ -10,8 +10,14 @@ import { useOnboardingStore } from "./onboarding/onboarding.store";
 import { ParametersScreen } from "./parameters/Parameters.screen";
 import { StatsScreen } from "./stats/Stats.screen";
 import { ErrorBoundary } from "react-error-boundary";
+import { useLocaleStore } from "./_common/store/locale.store";
+import { LocaleSelectionScreen } from "./localeSelection/LocaleSelection.screen";
+import { useEffect } from "react";
+import { changeLanguage } from "./_common/i18n/config";
+import { useTranslation } from "react-i18next";
 
 export function Router() {
+  const { locale } = useLocaleStore();
   const isOnboardingDone = useOnboardingStore((state) => state.isOnboarded);
   const setIsOnboardingDone = useOnboardingStore((state) => state.setOnboarded);
   const {
@@ -22,6 +28,18 @@ export function Router() {
   useAdminShortcut(() => {
     setPage("parameters");
   });
+
+  // Initialize language from store on mount
+  useEffect(() => {
+    if (locale) {
+      changeLanguage(locale);
+    }
+  }, [locale]);
+
+  // Show locale selection first if not set
+  if (!locale) {
+    return <LocaleSelectionScreen onComplete={() => {}} />;
+  }
 
   if (!isOnboardingDone) {
     return (
@@ -61,16 +79,17 @@ export function Router() {
 }
 
 const ErrorFallback = () => {
+  const { t } = useTranslation();
   return (
     <div className="flex-1 flex items-center justify-center flex-col gap-4 p-4 h-full">
       <AlertCircleIcon className="w-12 h-12 text-red-500" />
-      <p className="text-lg">Une erreur est survenue</p>
+      <p className="text-lg">{t("error.generic")}</p>
       <button
         onClick={() => window.location.reload()}
         className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center gap-2"
       >
         <RefreshCwIcon className="w-4 h-4" />
-        Recharger la page
+        {t("error.reload")}
       </button>
     </div>
   );
