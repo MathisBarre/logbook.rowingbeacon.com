@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Dialog, DialogContent } from "../../_common/components/Dialog/Dialog";
 import { BoatTypeEnum, getTypeLabel } from "../../_common/business/boat.rules";
 import { getBoatNumberOfRowers } from "../../_common/business/boat.rules";
@@ -13,34 +14,33 @@ export function BoatLevelConfigModal({
   isOpen,
   onOpenChange,
 }: BoatLevelConfigModalProps) {
+  const { t } = useTranslation();
   const boatLevelConfigStore = useBoatLevelConfigStore();
   const boatLevelConfig = boatLevelConfigStore.getBoatTypeLevelConfigs();
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent
-        title="Configuration des niveaux des bateaux"
+        title={t("parameters.boatLevelConfiguration")}
         className="max-w-3xl"
       >
         <div className="space-y-4">
           <p>
-            <span className="font-bold">Alerte à partir de</span> : afficher une
-            alerte lorsque x rameurs ou plus n&apos;ont pas les critères requis
-            pour le bateau selectionné
+            <span className="font-bold">{t("parameters.alertFrom")}</span> :{" "}
+            {t("parameters.alertFromDescription")}
           </p>
 
           <p>
-            <span className="font-bold">Bloquage à partir de</span> : bloquer
-            l&apos;utilisation du bateau si x rameurs ou plus n&apos;ont pas les
-            critères requis pour le bateau selectionné
+            <span className="font-bold">{t("parameters.blockFrom")}</span> :{" "}
+            {t("parameters.blockFromDescription")}
           </p>
 
           <table className="mt-4 w-full">
             <thead>
               <tr>
-                <th className="text-left pr-4">Type de bateau</th>
-                <th className="text-left pr-4">Alerte</th>
-                <th className="text-left pr-4">Bloquage</th>
+                <th className="text-left pr-4">{t("parameters.boatType")}</th>
+                <th className="text-left pr-4">{t("parameters.alert")}</th>
+                <th className="text-left pr-4">{t("parameters.block")}</th>
               </tr>
             </thead>
             <tbody>
@@ -70,10 +70,14 @@ export function BoatLevelConfigModal({
                           );
                         }}
                       >
-                        <option value="null">ne pas alerter</option>
+                        <option value="null">
+                          {t("parameters.doNotAlert")}
+                        </option>
                         {Array.from({ length: nbOfRowers }, (_, i) => (
                           <option key={i} value={i + 1}>
-                            à partir d&apos;au moins {i + 1} rameur(s)
+                            {t("parameters.fromAtLeastRowers", {
+                              count: i + 1,
+                            })}
                           </option>
                         ))}
                       </select>
@@ -94,10 +98,14 @@ export function BoatLevelConfigModal({
                           );
                         }}
                       >
-                        <option value="null">ne pas bloquer</option>
+                        <option value="null">
+                          {t("parameters.doNotBlock")}
+                        </option>
                         {Array.from({ length: nbOfRowers }, (_, i) => (
                           <option key={i} value={i + 1}>
-                            à partir d&apos;au moins {i + 1} rameur(s)
+                            {t("parameters.fromAtLeastRowers", {
+                              count: i + 1,
+                            })}
                           </option>
                         ))}
                       </select>
@@ -115,7 +123,7 @@ export function BoatLevelConfigModal({
                 boatLevelConfigStore.resetBoatTypeLevelConfigs();
               }}
             >
-              Réinitialiser la configuration des types de bateaux
+              {t("parameters.resetBoatTypeConfiguration")}
             </Button>
           </div>
         </div>
