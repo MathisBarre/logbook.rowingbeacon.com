@@ -30,7 +30,8 @@
   "localeSelection": {
     "title": "Select your language",
     "description": "Choose your preferred language for the application",
-    "selectPlaceholder": "Select a language..."
+    "selectPlaceholder": "Select a language...",
+    "timeFormat": "Time format"
   },
   "navigation": {
     "boathouse": "Boathouse",
@@ -282,7 +283,13 @@
     "noBoatsAdded": "No boats were added",
     "someBoatsAdded": "{{added}} boats out of {{total}} were added",
     "allBoatsAdded": "All boats have been added",
-    "boatStatistics": "Boat statistics"
+    "boatStatistics": "Boat statistics",
+    "language": "Language",
+    "languageDescription": "Select your preferred language for the application",
+    "timeFormat": "Time format",
+    "timeFormatDescription": "Choose between 12-hour or 24-hour time display",
+    "timeFormat12h": "12-hour format (AM/PM)",
+    "timeFormat24h": "24-hour format"
   },
   "boat": {
     "type": "Type",

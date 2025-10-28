@@ -5,10 +5,11 @@ import {
   LOCALES,
   LOCALE_NAMES,
   Locale,
+  TimeStyle,
 } from "../_common/store/locale.store";
 import { changeLanguage } from "../_common/i18n/config";
 import Button from "../_common/components/Button";
-import { Check, GlobeIcon } from "lucide-react";
+import { Check, GlobeIcon, Clock } from "lucide-react";
 
 export const LocaleSelectionScreen = ({
   onComplete,
@@ -16,12 +17,14 @@ export const LocaleSelectionScreen = ({
   onComplete: () => void;
 }) => {
   const { t } = useTranslation();
-  const { setLocale } = useLocaleStore();
+  const { setLocale, setTimeStyle } = useLocaleStore();
   const [selectedLocale, setSelectedLocale] = useState<Locale | null>(null);
+  const [selectedTimeStyle, setSelectedTimeStyle] = useState<TimeStyle>("24h");
 
   const handleConfirm = () => {
     if (selectedLocale) {
       setLocale(selectedLocale);
+      setTimeStyle(selectedTimeStyle);
       changeLanguage(selectedLocale);
       onComplete();
     }
@@ -69,6 +72,53 @@ export const LocaleSelectionScreen = ({
                 )}
               </button>
             ))}
+          </div>
+
+          <div className="mb-6">
+            <div className="flex items-center gap-2 mb-3">
+              <Clock className="w-5 h-5 text-gray-600" />
+              <h2 className="text-lg font-semibold text-gray-900">
+                {t("localeSelection.timeFormat")}
+              </h2>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setSelectedTimeStyle("12h")}
+                className={`
+                  flex-1 flex items-center justify-center p-3 rounded-lg border-2 transition-all
+                  ${
+                    selectedTimeStyle === "12h"
+                      ? "border-steel-blue-600 bg-steel-blue-50"
+                      : "border-gray-200 hover:border-gray-300 bg-white"
+                  }
+                `}
+              >
+                <span className="font-medium text-gray-900">
+                  12h
+                  {selectedTimeStyle === "12h" && (
+                    <Check className="w-4 h-4 inline-block ml-2 text-steel-blue-600" />
+                  )}
+                </span>
+              </button>
+              <button
+                onClick={() => setSelectedTimeStyle("24h")}
+                className={`
+                  flex-1 flex items-center justify-center p-3 rounded-lg border-2 transition-all
+                  ${
+                    selectedTimeStyle === "24h"
+                      ? "border-steel-blue-600 bg-steel-blue-50"
+                      : "border-gray-200 hover:border-gray-300 bg-white"
+                  }
+                `}
+              >
+                <span className="font-medium text-gray-900">
+                  24h
+                  {selectedTimeStyle === "24h" && (
+                    <Check className="w-4 h-4 inline-block ml-2 text-steel-blue-600" />
+                  )}
+                </span>
+              </button>
+            </div>
           </div>
 
           <Button

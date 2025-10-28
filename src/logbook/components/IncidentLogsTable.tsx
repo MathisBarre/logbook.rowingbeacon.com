@@ -1,7 +1,7 @@
 import { ChatBubbleLeftIcon } from "@heroicons/react/16/solid";
 import { useTranslation } from "react-i18next";
 import useIncidentStore from "../../_common/store/incident.store";
-import { getTime } from "../../_common/utils/date.utils";
+import { getTime, getDateOnly } from "../../_common/utils/date.utils";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 
 export function IncidentLogsTable() {
@@ -50,7 +50,7 @@ const FormattedDate = ({ datetime }: { datetime: string }) => {
 
   return (
     <div className="flex justify-center flex-col items-end text-sm gap-1">
-      <p>{date.toLocaleDateString()}</p>
+      <p>{getDateOnly(date)}</p>
       <p>{getTime(date)}</p>
     </div>
   );

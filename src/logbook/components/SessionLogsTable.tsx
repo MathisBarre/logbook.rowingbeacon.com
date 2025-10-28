@@ -1,6 +1,6 @@
 import { UserIcon, ChatBubbleLeftIcon } from "@heroicons/react/16/solid";
 import { useTranslation } from "react-i18next";
-import { getTime } from "../../_common/utils/date.utils";
+import { getTime, getDateOnly } from "../../_common/utils/date.utils";
 import Loading from "../../_common/components/Loading";
 import { Trash2Icon, UserCheckIcon, UserXIcon } from "lucide-react";
 import { useRemoveSession } from "../hooks/useRemoveSession";
@@ -154,7 +154,7 @@ const FormattedDate = ({
 
   return (
     <div className="flex justify-center flex-col items-end text-sm gap-1">
-      <p>{startDate.toLocaleDateString()}</p>
+      <p>{getDateOnly(startDate)}</p>
       <p>
         {getTime(startDate)} - {endDate}
       </p>

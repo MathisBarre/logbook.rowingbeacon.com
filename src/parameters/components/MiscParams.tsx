@@ -11,6 +11,15 @@ import { RouteConfigModal } from "./RouteConfigModal";
 import { ClockIcon } from "@heroicons/react/24/outline";
 import { exportAllData, importAllData } from "../../_common/utils/importExport";
 import { toast } from "sonner";
+import { LocaleSelector } from "../../_common/components/LocaleSelector";
+import { useLocaleStore, TimeStyle } from "../../_common/store/locale.store";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../_common/components/Select";
 
 export const MiscParams = () => {
   const { t } = useTranslation();
@@ -42,7 +51,11 @@ export const MiscParams = () => {
       const result = await importAllData();
       if (result) {
         toast.success(
-          t("parameters.dataImportedSuccessfully", { boats: result.boats, routes: result.routes, rowers: result.rowers })
+          t("parameters.dataImportedSuccessfully", {
+            boats: result.boats,
+            routes: result.routes,
+            rowers: result.rowers,
+          })
         );
       }
     } catch (error) {
@@ -220,6 +233,30 @@ export const MiscParams = () => {
             <section className="flex flex-col h-full">
               <div className="flex-1">
                 <h1 className="font-bold text-xl mb-1 text-gray-900">
+                  {t("parameters.language")}
+                </h1>
+                <p className="text-gray-500 mb-4">
+                  {t("parameters.languageDescription")}
+                </p>
+                <LocaleSelector />
+              </div>
+            </section>
+
+            <section className="flex flex-col h-full">
+              <div className="flex-1">
+                <h1 className="font-bold text-xl mb-1 text-gray-900">
+                  {t("parameters.timeFormat")}
+                </h1>
+                <p className="text-gray-500 mb-4">
+                  {t("parameters.timeFormatDescription")}
+                </p>
+                <TimeStyleSelector />
+              </div>
+            </section>
+
+            <section className="flex flex-col h-full">
+              <div className="flex-1">
+                <h1 className="font-bold text-xl mb-1 text-gray-900">
                   {t("parameters.sensitiveActions")}
                 </h1>
                 <p className="text-gray-500 mb-4">
@@ -269,5 +306,25 @@ export const MiscParams = () => {
         onOpenChange={setRouteConfigOpen}
       />
     </div>
+  );
+};
+
+const TimeStyleSelector = () => {
+  const { t } = useTranslation();
+  const { timeStyle, setTimeStyle } = useLocaleStore();
+
+  return (
+    <Select
+      value={timeStyle}
+      onValueChange={(value) => setTimeStyle(value as TimeStyle)}
+    >
+      <SelectTrigger className="w-full">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="12h">{t("parameters.timeFormat12h")}</SelectItem>
+        <SelectItem value="24h">{t("parameters.timeFormat24h")}</SelectItem>
+      </SelectContent>
+    </Select>
   );
 };

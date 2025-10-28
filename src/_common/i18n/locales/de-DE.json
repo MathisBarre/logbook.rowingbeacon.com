@@ -30,7 +30,8 @@
   "localeSelection": {
     "title": "Wählen Sie Ihre Sprache",
     "description": "Wählen Sie Ihre bevorzugte Sprache für die Anwendung",
-    "selectPlaceholder": "Wählen Sie eine Sprache..."
+    "selectPlaceholder": "Wählen Sie eine Sprache...",
+    "timeFormat": "Zeitformat"
   },
   "navigation": {
     "boathouse": "Bootshaus",
@@ -282,7 +283,13 @@
     "noBoatsAdded": "Keine Boote wurden hinzugefügt",
     "someBoatsAdded": "{{added}} Boote von {{total}} wurden hinzugefügt",
     "allBoatsAdded": "Alle Boote wurden hinzugefügt",
-    "boatStatistics": "Bootstatistiken"
+    "boatStatistics": "Bootstatistiken",
+    "language": "Sprache",
+    "languageDescription": "Wählen Sie Ihre bevorzugte Sprache für die Anwendung",
+    "timeFormat": "Zeitformat",
+    "timeFormatDescription": "Wählen Sie zwischen 12-Stunden- oder 24-Stunden-Zeitanzeige",
+    "timeFormat12h": "12-Stunden-Format (AM/PM)",
+    "timeFormat24h": "24-Stunden-Format"
   },
   "boat": {
     "type": "Typ",

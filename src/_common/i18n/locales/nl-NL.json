@@ -30,7 +30,8 @@
   "localeSelection": {
     "title": "Selecteer uw taal",
     "description": "Kies uw voorkeurstaal voor de applicatie",
-    "selectPlaceholder": "Selecteer een taal..."
+    "selectPlaceholder": "Selecteer een taal...",
+    "timeFormat": "Tijdformaat"
   },
   "navigation": {
     "boathouse": "Boothuis",
@@ -282,7 +283,13 @@
     "noBoatsAdded": "Geen boten toegevoegd",
     "someBoatsAdded": "{{added}} boten van {{total}} zijn toegevoegd",
     "allBoatsAdded": "Alle boten zijn toegevoegd",
-    "boatStatistics": "Bootstatistieken"
+    "boatStatistics": "Bootstatistieken",
+    "language": "Taal",
+    "languageDescription": "Selecteer uw voorkeurstaal voor de applicatie",
+    "timeFormat": "Tijdformaat",
+    "timeFormatDescription": "Kies tussen 12-uurs of 24-uurs tijdweergave",
+    "timeFormat12h": "12-uurs formaat (AM/PM)",
+    "timeFormat24h": "24-uurs formaat"
   },
   "boat": {
     "type": "Type",

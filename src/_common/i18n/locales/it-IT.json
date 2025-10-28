@@ -30,7 +30,8 @@
   "localeSelection": {
     "title": "Seleziona la tua lingua",
     "description": "Scegli la tua lingua preferita per l'applicazione",
-    "selectPlaceholder": "Seleziona una lingua..."
+    "selectPlaceholder": "Seleziona una lingua...",
+    "timeFormat": "Formato ora"
   },
   "navigation": {
     "boathouse": "Hangar",
@@ -282,7 +283,13 @@
     "noBoatsAdded": "Nessuna barca è stata aggiunta",
     "someBoatsAdded": "{{added}} barche su {{total}} sono state aggiunte",
     "allBoatsAdded": "Tutte le barche sono state aggiunte",
-    "boatStatistics": "Statistiche barche"
+    "boatStatistics": "Statistiche barche",
+    "language": "Lingua",
+    "languageDescription": "Seleziona la tua lingua preferita per l'applicazione",
+    "timeFormat": "Formato ora",
+    "timeFormatDescription": "Scegli tra visualizzazione 12 ore o 24 ore",
+    "timeFormat12h": "Formato 12 ore (AM/PM)",
+    "timeFormat24h": "Formato 24 ore"
   },
   "boat": {
     "type": "Tipo",

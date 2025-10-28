@@ -36,16 +36,22 @@ export const LOCALE_NAMES: Record<Locale, string> = {
   "en-NZ": "English (New Zealand)",
 };
 
+export type TimeStyle = "12h" | "24h";
+
 interface LocaleState {
   locale: Locale | null;
+  timeStyle: TimeStyle;
   setLocale: (locale: Locale) => void;
+  setTimeStyle: (timeStyle: TimeStyle) => void;
 }
 
 export const useLocaleStore = create<LocaleState>()(
   persist(
     (set) => ({
       locale: null,
+      timeStyle: "24h",
       setLocale: (locale) => set({ locale }),
+      setTimeStyle: (timeStyle) => set({ timeStyle }),
     }),
     {
       name: "locale-storage",
