@@ -81,7 +81,10 @@ export const RowersCrud = () => {
         toast.error(t("parameters.noRowersAdded"));
       } else if (rowerAdded < rowersToAddNumber) {
         toast.warning(
-          t("parameters.someRowersAdded", { added: rowerAdded, total: rowersToAddNumber })
+          t("parameters.someRowersAdded", {
+            added: rowerAdded,
+            total: rowersToAddNumber,
+          })
         );
         setTextareaContent("");
       } else {
@@ -131,7 +134,9 @@ export const RowersCrud = () => {
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
       <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between h-12">
-        <h1 className="text-base ml-2 flex gap-2 items-center">{t("parameters.yourRowers")}</h1>
+        <h1 className="text-base ml-2 flex gap-2 items-center">
+          {t("parameters.yourRowers")}
+        </h1>
       </div>
 
       <div className="p-4 flex flex-col flex-1">
@@ -251,7 +256,9 @@ export const RowersCrud = () => {
                 </DialogTrigger>
                 <DialogContent
                   className="max-w-[40rem]"
-                  title={t("parameters.updateNRowers", { count: bulkEditMode.selectedRowers.length })}
+                  title={t("parameters.updateNRowers", {
+                    count: bulkEditMode.selectedRowers.length,
+                  })}
                 >
                   <BulkUpdateRower
                     rowersIds={bulkEditMode.selectedRowers}
@@ -324,7 +331,9 @@ export const RowersCrud = () => {
                               </button>
                             </DialogTrigger>
                             <DialogContent
-                              title={t("parameters.statisticsOf", { name: rower.name })}
+                              title={t("parameters.statisticsOf", {
+                                name: rower.name,
+                              })}
                             >
                               <RowerStats rowerId={rower.id} />
                             </DialogContent>
@@ -383,7 +392,10 @@ export const RowersCrud = () => {
         </div>
         <div className="flex justify-center items-center gap-8 mt-4">
           <p className="italic text-center">
-            {t("session.pageOf", { current: currentPage, total: numberOfPages })}
+            {t("session.pageOf", {
+              current: currentPage,
+              total: numberOfPages,
+            })}
           </p>
           <div className="flex justify-center gap-4">
             <Button
@@ -428,6 +440,7 @@ export const RowersCrud = () => {
 };
 
 const UpdateRowerModal = ({ rower }: { rower: Rower }) => {
+  const { t } = useTranslation();
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
   return (

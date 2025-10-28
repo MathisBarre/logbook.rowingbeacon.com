@@ -19,16 +19,14 @@ export const DeleteDatas = () => {
         <OctagonAlertIcon />
         <span className="font-bold text-xl">{t("parameters.warning")}</span>
       </div>
-      <p>
-        {t("parameters.deleteAllDataWarning1")}
-      </p>
+      <p>{t("parameters.deleteAllDataWarning1")}</p>
+
+      <p>{t("parameters.deleteAllDataWarning2")}</p>
 
       <p>
-        {t("parameters.deleteAllDataWarning2")}
-      </p>
-
-      <p>
-        {t("parameters.deleteConfirmationInstruction", { text: requiredTextToDelete })}
+        {t("parameters.deleteConfirmationInstruction", {
+          text: requiredTextToDelete,
+        })}
       </p>
 
       <textarea

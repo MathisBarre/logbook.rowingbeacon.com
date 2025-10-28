@@ -1,7 +1,8 @@
+import { useTranslation } from "react-i18next";
 import { StartSessionForm } from "./StartSession.Form";
 import { getCurrentDateTime } from "../../../_common/utils/date.utils";
 import { useClubOverviewStore } from "../../../_common/store/clubOverview.store";
-import { defaultRoute } from "./RouteSection";
+import { getDefaultRoute } from "./RouteSection";
 import { useBoatLevelConfigStore } from "../../../_common/store/boatLevelConfig.store";
 import {
   BoatTypeEnum,
@@ -21,9 +22,10 @@ export const StartSessionFormDataWrapper = ({
   closeAction,
   defaultBoat,
 }: StartSessionFormDataWrapperProps) => {
+  const { t } = useTranslation();
   const defaultValues = {
     boat: defaultBoat,
-    route: defaultRoute,
+    route: getDefaultRoute(t),
     selectedRowersOptions: [],
     startDateTime: getCurrentDateTime(),
     durationValue: "na" as const,

@@ -273,7 +273,16 @@
     "addRoute": "Add route",
     "archiveRoute": "Archive route",
     "confirmArchiveRoute": "Do you want to archive route \"{{routeName}}\"? It will no longer be possible to record sessions with this route, but recorded data will not be affected.",
-    "archive": "Archive"
+    "archive": "Archive",
+    "addBoats": "Add boats",
+    "addOneOrMoreBoats": "Add one or more boats (one per line)",
+    "boatPlaceholder": "boat 1\nboat 2\nboat 3\n...",
+    "importAs": "Import as",
+    "addTheBoats": "Add the boat(s)",
+    "noBoatsAdded": "No boats were added",
+    "someBoatsAdded": "{{added}} boats out of {{total}} were added",
+    "allBoatsAdded": "All boats have been added",
+    "boatStatistics": "Boat statistics"
   },
   "boat": {
     "type": "Type",

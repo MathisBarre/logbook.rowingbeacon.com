@@ -65,7 +65,10 @@ export const RouteConfigModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent title={t("parameters.routeManagement")} className="max-w-xl">
+      <DialogContent
+        title={t("parameters.routeManagement")}
+        className="max-w-xl"
+      >
         <div className="flex flex-col gap-4">
           <p className="text-gray-500">
             {t("parameters.routeManagementDescription")}
@@ -149,10 +152,15 @@ export const RouteConfigModal = ({
           setConfirmDelete({ isOpen: open, route: confirmDelete.route })
         }
       >
-        <DialogContent className="max-w-xl" title={t("parameters.archiveRoute")}>
+        <DialogContent
+          className="max-w-xl"
+          title={t("parameters.archiveRoute")}
+        >
           <DialogHeader>
             <DialogDescription className="mb-4">
-              {t("parameters.confirmArchiveRoute", { routeName: confirmDelete.route?.name })}
+              {t("parameters.confirmArchiveRoute", {
+                routeName: confirmDelete.route?.name,
+              })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

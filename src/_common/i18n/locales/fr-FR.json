@@ -273,7 +273,16 @@
     "addRoute": "Ajouter le parcours",
     "archiveRoute": "Archiver le parcours",
     "confirmArchiveRoute": "Voulez-vous archiver le parcours \"{{routeName}}\" ? Il ne sera plus possible de renseigner des sorties avec ce parcours, mais les données enregistrées ne seront pas impactées.",
-    "archive": "Archiver"
+    "archive": "Archiver",
+    "addBoats": "Ajouter des bateaux",
+    "addOneOrMoreBoats": "Ajouter un ou plusieurs bateaux (un par ligne)",
+    "boatPlaceholder": "bateau 1\nbateau 2\nbateau 3\n...",
+    "importAs": "Importer en tant que",
+    "addTheBoats": "Ajouter le ou les bateaux",
+    "noBoatsAdded": "Aucun bateau n'a été ajouté",
+    "someBoatsAdded": "{{added}} bateaux sur {{total}} ont été ajoutés",
+    "allBoatsAdded": "Tous les bateaux ont été ajoutés",
+    "boatStatistics": "Statistiques bateaux"
   },
   "boat": {
     "type": "Type",

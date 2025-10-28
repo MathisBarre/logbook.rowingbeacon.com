@@ -273,7 +273,16 @@
     "addRoute": "Route toevoegen",
     "archiveRoute": "Route archiveren",
     "confirmArchiveRoute": "Wilt u route \"{{routeName}}\" archiveren? Het zal niet meer mogelijk zijn om sessies met deze route te registreren, maar geregistreerde gegevens worden niet beïnvloed.",
-    "archive": "Archiveren"
+    "archive": "Archiveren",
+    "addBoats": "Boten toevoegen",
+    "addOneOrMoreBoats": "Één of meer boten toevoegen (één per regel)",
+    "boatPlaceholder": "boot 1\nboot 2\nboot 3\n...",
+    "importAs": "Importeren als",
+    "addTheBoats": "Boot(en) toevoegen",
+    "noBoatsAdded": "Geen boten toegevoegd",
+    "someBoatsAdded": "{{added}} boten van {{total}} zijn toegevoegd",
+    "allBoatsAdded": "Alle boten zijn toegevoegd",
+    "boatStatistics": "Bootstatistieken"
   },
   "boat": {
     "type": "Type",

@@ -273,7 +273,16 @@
     "addRoute": "Aggiungi percorso",
     "archiveRoute": "Archivia percorso",
     "confirmArchiveRoute": "Vuoi archiviare il percorso \"{{routeName}}\"? Non sarà più possibile registrare sessioni con questo percorso, ma i dati registrati non saranno influenzati.",
-    "archive": "Archivia"
+    "archive": "Archivia",
+    "addBoats": "Aggiungi barche",
+    "addOneOrMoreBoats": "Aggiungi una o più barche (una per riga)",
+    "boatPlaceholder": "barca 1\nbarca 2\nbarca 3\n...",
+    "importAs": "Importa come",
+    "addTheBoats": "Aggiungi la/le barca/barche",
+    "noBoatsAdded": "Nessuna barca è stata aggiunta",
+    "someBoatsAdded": "{{added}} barche su {{total}} sono state aggiunte",
+    "allBoatsAdded": "Tutte le barche sono state aggiunte",
+    "boatStatistics": "Statistiche barche"
   },
   "boat": {
     "type": "Tipo",
