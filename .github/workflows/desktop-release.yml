@@ -168,6 +168,10 @@ jobs:
           set -euo pipefail
           shopt -s nullglob
 
+          # The Windows artifact keeps its msi/ and nsis/ folders.
+          find release-assets -mindepth 2 -type f -exec mv {} release-assets/ \;
+          find release-assets -mindepth 1 -type d -empty -delete
+
           appimages=(release-assets/*.AppImage)
           setup_exes=(release-assets/*-setup.exe)
           msis=(release-assets/*.msi)
