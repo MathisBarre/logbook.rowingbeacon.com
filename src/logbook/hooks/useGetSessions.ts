@@ -8,7 +8,11 @@ interface SessionLog {
   rowers: {
     id: string;
     name: string;
+    role: "rower" | "cox";
   }[];
+  outingTypeCode: string | null;
+  distanceM: number | null;
+  captain: { id: string; name: string } | null;
   boat: {
     id: string;
     name: string;
@@ -72,9 +76,17 @@ export const useGetLastSessions = (payload: {
       const formattedData = data.map((session) => {
         return {
           id: session.sessionId,
-          rowers: clubOverview.getRowersById(
-            (session.rowerIds || "").split(",")
-          ),
+          rowers: session.crew.flatMap((member) => {
+            const rower = clubOverview.getRowerById(member.rowerId);
+            return rower
+              ? [{ id: rower.id, name: rower.name, role: member.role }]
+              : [];
+          }),
+          outingTypeCode: session.outingTypeCode,
+          distanceM: session.distanceM,
+          captain: session.captainRowerId
+            ? (clubOverview.getRowerById(session.captainRowerId) ?? null)
+            : null,
           boat: clubOverview.getBoatById(session.boatId) || {
             id: session.boatId,
             name: "NOT_FOUND",

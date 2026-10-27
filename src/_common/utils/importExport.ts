@@ -10,7 +10,7 @@ import i18n from "../i18n/config";
 
 const BoatSchema = z.object({
   id: z.string(),
-  name: z.string(),
+  name: z.string().trim(),
   isInMaintenance: z.boolean().optional(),
   type: z.nativeEnum(BoatTypeEnum).optional(),
   note: z.string().optional(),
@@ -19,13 +19,15 @@ const BoatSchema = z.object({
 
 const RouteSchema = z.object({
   id: z.string(),
-  name: z.string(),
+  name: z.string().trim(),
+  // Distances module: kept so that a backup brings the km back.
+  distanceM: z.number().nonnegative().nullable().optional(),
   archivedAt: z.string().optional(),
 });
 
 const RowerSchema = z.object({
   id: z.string(),
-  name: z.string(),
+  name: z.string().trim(),
   archivedAt: z.string().optional(),
   type: z.nativeEnum(SeriousnessCategoryEnum).optional(),
   category: z.nativeEnum(AgeCategoryEnum).optional(),
@@ -45,7 +47,11 @@ export const exportAllData = async () => {
   const store = useClubOverviewStore.getState();
   const boats = store.clubOverview.boats;
   const routes = store.clubOverview.routes;
-  const rowers = store.clubOverview.rowers;
+  // Guests have no status in this format: an import would turn them into
+  // members, so the export keeps the club's own members only.
+  const rowers = store.clubOverview.rowers.filter(
+    (rower) => rower.status !== "guest"
+  );
 
   const exportData: ExportData = {
     boats,
@@ -105,9 +111,8 @@ export const importAllData = async () => {
   }
 
   const store = useClubOverviewStore.getState();
-  const allBoats = store.clubOverview.boats;
-  const allRoutes = store.clubOverview.routes;
-  const allRowers = store.clubOverview.rowers;
+  // Read again at each line: a name twice in the file is added once.
+  const current = () => useClubOverviewStore.getState().clubOverview;
 
   let boatsAdded = 0;
   let routesAdded = 0;
@@ -115,9 +120,10 @@ export const importAllData = async () => {
 
   if (importData.boats) {
     for (const boat of importData.boats) {
-      if (boat.archivedAt) continue;
+      // A hand-edited file may hold a blank name.
+      if (boat.archivedAt || !boat.name) continue;
 
-      const existingBoat = allBoats.find(
+      const existingBoat = current().boats.find(
         (b) => b.name.toLowerCase() === boat.name.toLowerCase()
       );
       if (!existingBoat) {
@@ -132,13 +138,14 @@ export const importAllData = async () => {
 
   if (importData.routes) {
     for (const route of importData.routes) {
-      if (route.archivedAt) continue;
+      // A hand-edited file may hold a blank name.
+      if (route.archivedAt || !route.name) continue;
 
-      const existingRoute = allRoutes.find(
+      const existingRoute = current().routes.find(
         (r) => r.name.toLowerCase() === route.name.toLowerCase()
       );
       if (!existingRoute) {
-        store.addRoute(route.name);
+        store.addRoute(route.name, route.distanceM);
         routesAdded++;
       }
     }
@@ -146,9 +153,10 @@ export const importAllData = async () => {
 
   if (importData.rowers) {
     for (const rower of importData.rowers) {
-      if (rower.archivedAt) continue;
+      // A hand-edited file may hold a blank name.
+      if (rower.archivedAt || !rower.name) continue;
 
-      const existingRower = allRowers.find(
+      const existingRower = current().rowers.find(
         (r) => r.name.toLowerCase() === rower.name.toLowerCase()
       );
       if (!existingRower) {

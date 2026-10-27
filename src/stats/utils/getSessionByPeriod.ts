@@ -1,8 +1,8 @@
 import { lte } from "drizzle-orm";
 import { gte } from "drizzle-orm";
-import { and } from "drizzle-orm";
+import { and, isNotNull } from "drizzle-orm";
 import { getDatabase } from "../../_common/database/database";
-import { DBSessions } from "../../_common/database/schema";
+import { DBOutings } from "../../_common/database/schema";
 
 export const getSessionsInPeriod = async ({
   startDate,
@@ -15,11 +15,12 @@ export const getSessionsInPeriod = async ({
 
   const sessions = await drizzle
     .select()
-    .from(DBSessions)
+    .from(DBOutings)
     .where(
       and(
-        gte(DBSessions.startDateTime, startDate.toISOString()),
-        lte(DBSessions.endDateTime, endDate.toISOString())
+        isNotNull(DBOutings.endDateTime),
+        gte(DBOutings.startDateTime, startDate.toISOString()),
+        lte(DBOutings.endDateTime, endDate.toISOString())
       )
     );
 

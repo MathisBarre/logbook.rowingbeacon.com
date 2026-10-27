@@ -7,12 +7,15 @@ import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { getBoatNumberOfRowers } from "../../_common/business/boat.rules";
 import { Boat } from "../../_common/business/boat.rules";
 import { generateSessionId } from "../../_common/business/session.rules";
+import { toast } from "sonner";
+import i18n from "../../_common/i18n/config";
 
 export const useGenerateFakeData = () => {
   const { getAllRoutes, getAllBoats, getAllRowers } = useClubOverviewStore();
   const sessionDatabaseRepository = new SessionDatabaseRepository();
 
-  return async function generateFakeData() {
+  /** False when some outings could not be saved (the error is shown). */
+  return async function generateFakeData(): Promise<boolean> {
     const data: SessionToSave[] = [];
     const nbOfDays = 500;
     const startDate = new Date();
@@ -56,8 +59,13 @@ export const useGenerateFakeData = () => {
     const batchs = batch(data, 12);
 
     for (const batch of batchs) {
-      await sessionDatabaseRepository.saveSessions(batch);
+      const [error] = await sessionDatabaseRepository.saveSessions(batch);
+      if (error) {
+        toast.error(i18n.t("database.failedToSave"));
+        return false;
+      }
     }
+    return true;
   };
 };
 

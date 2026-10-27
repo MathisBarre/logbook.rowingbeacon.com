@@ -24,3 +24,17 @@ export const getDatabase = async () => {
     throw e;
   }
 };
+
+/**
+ * Close every connection to the club database. A script that failed inside
+ * a transaction can leave it open on one connection of the pool; closing
+ * the pool rolls it back. The next getDatabase() opens it again.
+ */
+export const closeDatabase = async () => {
+  if (db === null) return;
+  const current = db;
+  db = null;
+  await current.close(current.path).catch((error: unknown) => {
+    console.error("❌ Closing the database failed", error);
+  });
+};

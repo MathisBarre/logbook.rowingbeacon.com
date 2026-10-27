@@ -1,6 +1,6 @@
-import { eq, and, gte, lte } from "drizzle-orm";
+import { eq, and, gte, lte, isNotNull } from "drizzle-orm";
 import { getDatabase } from "../../_common/database/database";
-import { DBSessions } from "../../_common/database/schema";
+import { DBOutings } from "../../_common/database/schema";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -117,12 +117,13 @@ const getBoatStats = async (
 
   const sessions = await drizzle
     .select()
-    .from(DBSessions)
+    .from(DBOutings)
     .where(
       and(
-        eq(DBSessions.boatId, boatId),
-        gte(DBSessions.startDateTime, season.startDate.toISOString()),
-        lte(DBSessions.startDateTime, season.endDate.toISOString())
+        isNotNull(DBOutings.endDateTime),
+        eq(DBOutings.boatId, boatId),
+        gte(DBOutings.startDateTime, season.startDate.toISOString()),
+        lte(DBOutings.startDateTime, season.endDate.toISOString())
       )
     );
 

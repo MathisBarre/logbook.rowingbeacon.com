@@ -61,7 +61,7 @@ export const WindowConfirm: React.FC = () => {
   if (!options) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-[999]">
+    <div className="pointer-events-auto fixed inset-0 flex items-center justify-center z-[999]">
       {/* Background overlay */}
       <div className="absolute inset-0 bg-gray-800 opacity-50"></div>
       {/* Modal content */}

@@ -1,23 +1,4 @@
-import { BoatTypeEnum } from "../business/boat.rules";
 import { ClubOverviewState } from "./clubOverview.store";
-
-export const updateBoatTypeFn = (
-  boats: ClubOverviewState["boats"],
-  boatId: string,
-  type: BoatTypeEnum
-) => {
-  const updatedBoats = boats.map((boat) => {
-    if (boat.id === boatId) {
-      return {
-        ...boat,
-        type,
-      };
-    }
-    return boat;
-  });
-
-  return updatedBoats;
-};
 
 export const updateBoatNameFn = (
   boats: ClubOverviewState["boats"],

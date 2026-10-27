@@ -1,14 +1,16 @@
 import { generateSessionId } from "../../../_common/business/session.rules";
-import { Boat } from "../../../_common/business/boat.rules";
 import { Route } from "../../../_common/business/route.rules";
 import { Rower } from "../../../_common/business/rower.rules";
 import { ErrorWithCode } from "../../../_common/utils/error";
 import { StartedSession } from "./StartSession.rules";
-import { IStartSessionRepository } from "./StartSession.repository.interface";
+import {
+  IStartSessionRepository,
+  StartSessionBoat,
+} from "./StartSession.repository.interface";
 
 interface InMemoryRepositoryParams {
   routes?: Route[];
-  boats?: Boat[];
+  boats?: StartSessionBoat[];
   ongoingSessions?: StartedSession[];
   rowers?: Rower[];
 }
@@ -48,9 +50,16 @@ export const createInMemoryStartSessionRepository = ({
       ongoingSessions.push({
         id: generateSessionId(),
         rowers: payload.rowers,
+        boat: { id: payload.boat.id },
       });
 
       return Promise.resolve();
+    },
+
+    createGuest(name) {
+      const guest = { id: `guest-${rowers.length + 1}`, name };
+      rowers.push(guest);
+      return Promise.resolve(guest);
     },
 
     getRowersById(rowersId) {

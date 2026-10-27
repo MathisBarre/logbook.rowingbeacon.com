@@ -5,7 +5,10 @@ import {
   ChartBarIcon,
   CalculatorIcon,
   InformationCircleIcon,
+  MapIcon,
 } from "@heroicons/react/16/solid";
+import { useModule } from "../_common/store/modules.store";
+import { formatKilometres } from "../_common/business/distance.rules";
 import { StackedBarChart } from "./components/StackedBarChart";
 import { useSessionsByMonthStackedByBoatType } from "./utils/getSessionsByMonth";
 import {
@@ -36,7 +39,8 @@ export const StatsScreen = () => {
 
   console.log("selectedSeason", selectedSeason);
 
-  const { count, totalDuration } = useGlobalStats({
+  const hasDistances = useModule("distances");
+  const { count, totalDuration, totalDistanceM } = useGlobalStats({
     startDate: selectedSeason.startDate,
     endDate: selectedSeason.endDate,
   });
@@ -104,7 +108,12 @@ export const StatsScreen = () => {
 
       {count > 0 && (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div
+            className={
+              "grid grid-cols-1 gap-4 " +
+              (hasDistances ? "md:grid-cols-4" : "md:grid-cols-3")
+            }
+          >
             <StatCard
               title={t("stats.sessions")}
               value={count.toString()}
@@ -120,6 +129,13 @@ export const StatsScreen = () => {
               value={millisecondToDayHourMinutes(totalDuration / count || 0)}
               icon={CalculatorIcon}
             />
+            {hasDistances && (
+              <StatCard
+                title={t("stats.totalDistance")}
+                value={formatKilometres(totalDistanceM) || "0 km"}
+                icon={MapIcon}
+              />
+            )}
           </div>
 
           <div className="flex gap-4 flex-1">

@@ -3,8 +3,8 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { getErrorMessage } from "../../_common/utils/error";
 import { getDatabase } from "../../_common/database/database";
-import { DBSessionOnRowers, DBSessions } from "../../_common/database/schema";
-import { eq, and, gte, lte } from "drizzle-orm";
+import { DBOutingCrew, DBOutings } from "../../_common/database/schema";
+import { eq, and, gte, lte, isNotNull } from "drizzle-orm";
 import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import Loading from "../../_common/components/Loading";
@@ -42,18 +42,22 @@ export const RowerStatsComparisons = () => {
 
       {isLoadingStats && <Loading />}
 
-      {!isLoadingStats && stats.length === 0 && <Loading />}
+      {!isLoadingStats && stats.length === 0 && (
+        <p className="text-gray-500">{t("stats.noSessionsRecorded")}</p>
+      )}
 
       {!isLoadingStats && stats.length > 0 && (
         <StatsTable
           headers={{
-            rowerId: t("stats.rower"),
+            name: t("stats.rower"),
             count: t("stats.numberOfSessions"),
             totalDuration: t("stats.totalDuration"),
             averageDuration: t("stats.averageDurationPerSession"),
+            coxCount: t("stats.coxedSessions"),
           }}
           stats={stats.map((stat) => ({
-            rowerId: stat.rowerId,
+            id: stat.rowerId,
+            name: stat.name,
             count: stat.count.toString(),
             totalDuration: millisecondToDayHourMinutes(
               stat.totalDuration
@@ -61,6 +65,7 @@ export const RowerStatsComparisons = () => {
             averageDuration: millisecondToDayHourMinutes(
               stat.totalDuration / stat.count || 0
             ).toString(),
+            coxCount: stat.coxCount.toString(),
           }))}
         />
       )}
@@ -68,25 +73,32 @@ export const RowerStatsComparisons = () => {
   );
 };
 
-const useGetRowersStats = (season: Season) => {
-  const [stats, setStats] = useState(
-    [] as { count: number; totalDuration: number; rowerId: string }[]
-  );
-  const [isLoading, setIsLoading] = useState(true);
+type RowerComparison = {
+  rowerId: string;
+  /** Outings and time as a rower; time as cox is counted apart. */
+  count: number;
+  totalDuration: number;
+  coxCount: number;
+};
 
-  const { getAllRowers } = useClubOverviewStore();
+const useGetRowersStats = (season: Season) => {
+  const [stats, setStats] = useState([] as (RowerComparison & { name: string })[]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsLoading(true);
     getRowersStats(season)
       .then((stats) => {
-        stats.map((stat) => {
-          const rower = getAllRowers().find(
-            (rower) => rower.id === stat.rowerId
-          );
-          stat.rowerId = rower?.name || stat.rowerId;
-        });
-        setStats(stats);
+        // Archived and merged members keep their name; guests are not ranked.
+        const { getRowerById } = useClubOverviewStore.getState();
+        setStats(
+          stats
+            .filter((stat) => getRowerById(stat.rowerId)?.status !== "guest")
+            .map((stat) => ({
+              ...stat,
+              name: getRowerById(stat.rowerId)?.name || stat.rowerId,
+            }))
+        );
       })
       .catch((e) => toast.error(getErrorMessage(e)))
       .finally(() => setIsLoading(false));
@@ -95,55 +107,48 @@ const useGetRowersStats = (season: Season) => {
   return { stats, isLoading };
 };
 
-const getRowersStats = async (
-  season: Season
-): Promise<
-  {
-    count: number;
-    totalDuration: number;
-    rowerId: string;
-  }[]
-> => {
+const getRowersStats = async (season: Season): Promise<RowerComparison[]> => {
   const { drizzle } = await getDatabase();
 
   const sessions = await drizzle
     .select()
-    .from(DBSessionOnRowers)
-    .leftJoin(DBSessions, eq(DBSessions.id, DBSessionOnRowers.sessionId))
+    .from(DBOutingCrew)
+    .leftJoin(DBOutings, eq(DBOutings.id, DBOutingCrew.outingId))
     .where(
       and(
-        gte(DBSessions.startDateTime, season.startDate.toISOString()),
-        lte(DBSessions.startDateTime, season.endDate.toISOString())
+        isNotNull(DBOutings.endDateTime),
+        gte(DBOutings.startDateTime, season.startDate.toISOString()),
+        lte(DBOutings.startDateTime, season.endDate.toISOString())
       )
     );
 
   const stats = sessions
     .reduce((acc, curr) => {
-      const existingItem = acc.find(
-        (stat) => stat.rowerId === curr.session_rowers.rowerId
-      );
-
-      let totalDuration = 0;
-
-      if (curr.session?.startDateTime && curr.session?.endDateTime) {
-        const start = new Date(curr.session.startDateTime);
-        const end = new Date(curr.session.endDateTime);
-        totalDuration = end.getTime() - start.getTime();
+      let item = acc.find((stat) => stat.rowerId === curr.outing_crew.rowerId);
+      if (!item) {
+        item = {
+          rowerId: curr.outing_crew.rowerId,
+          count: 0,
+          totalDuration: 0,
+          coxCount: 0,
+        };
+        acc.push(item);
       }
 
-      if (existingItem) {
-        existingItem.count++;
-        existingItem.totalDuration += totalDuration;
-      } else {
-        acc.push({
-          rowerId: curr.session_rowers.rowerId,
-          count: 1,
-          totalDuration: totalDuration,
-        });
+      if (curr.outing_crew.role === "cox") {
+        item.coxCount++;
+        return acc;
+      }
+
+      item.count++;
+      if (curr.outing?.startDateTime && curr.outing?.endDateTime) {
+        const start = new Date(curr.outing.startDateTime);
+        const end = new Date(curr.outing.endDateTime);
+        item.totalDuration += end.getTime() - start.getTime();
       }
 
       return acc;
-    }, [] as { count: number; totalDuration: number; rowerId: string }[])
+    }, [] as RowerComparison[])
     .sort((a, b) => b.totalDuration - a.totalDuration);
 
   return stats;

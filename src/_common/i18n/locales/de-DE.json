@@ -51,6 +51,7 @@
     "demoPasswordAlert": "Das Admin-Passwort für den Demo-Modus ist \"{{password}}\"",
     "password": "Passwort",
     "passwordHelp": "Das Passwort wird nützlich sein, um sensible Aktionen zu schützen.",
+    "passwordRequired": "Wählen Sie ein Passwort.",
     "boats": "Boote",
     "boatsHelp": "Geben Sie den Namen Ihrer Boote ein, eines pro Zeile",
     "boatsPlaceholder": "Beispiel: \n100 Swift\n101 Hudson\n102 WinTech\n103 Empacher\n104 Vespoli\n105 Swift\n106 WinTech\n200 Hudson\n201 WinTech\n202 Hudson\n203 Vespoli\n401 Hudson\n402 WinTech\n800 Filippi",
@@ -58,7 +59,30 @@
     "routesHelp": "Geben Sie den Namen Ihrer Routen ein, eine pro Zeile",
     "rowers": "Ruderer",
     "rowersHelp": "Geben Sie den Namen Ihrer Ruderer ein, einen pro Zeile",
-    "validate": "Informationen bestätigen"
+    "validate": "Informationen bestätigen",
+    "profile": {
+      "title": "Wie arbeitet Ihr Verein?",
+      "help": "Diese Wahl aktiviert Module. Sie können sie jederzeit unter Einstellungen > Module hinzufügen oder entfernen.",
+      "simple": {
+        "name": "Einfach",
+        "description": "Boote, Ruderer und Strecken: das Wesentliche, um Fahrten einzutragen."
+      },
+      "fullClub": {
+        "name": "Kompletter Verein",
+        "description": "Fügt Distanzen, Fahrtarten, vollständige Mitgliederprofile, Gäste und Obmann hinzu."
+      },
+      "efaImport": {
+        "name": "Ich komme von efa",
+        "description": "Übernehmen Siet Ihr efa2-Projekt direkt: Boote, Ruderer, Ziele und Fahrtenbücher."
+      }
+    },
+    "efa": {
+      "title": "Ihr efa2-Projekt",
+      "help": "Wählen Sie eine von efa erstellte ZIP-Sicherung oder den Datenordner von efa. Boote, Ruderer, Ziele und alle Fahrtenbücher werden übernommen und die passenden Module aktiviert.",
+      "chosen": "Gewähltes Projekt: {{name}}",
+      "required": "Wählen Sie zuerst Ihr efa2-Projekt",
+      "confirm": "Importieren und loslegen"
+    }
   },
   "boathouse": {
     "coachNote": "Trainernotiz",
@@ -120,7 +144,7 @@
     "minimumValidRowersRequired": "Es müssen mindestens {{count}} Ruderer mit den erforderlichen Niveaus für dieses Boot ausgewählt werden.",
     "alert": {
       "rowersProvided": "Sie haben eingegeben",
-      "rowersCount": "{{count}} Ruderer",
+      "rowersCount": "{{count}} Person(en) an Bord, Steuermann inklusive",
       "boatRequires": "Das Boot \"{{boatName}}\" benötigt",
       "continueAnyway": "Möchten Sie trotzdem fortfahren?",
       "rowersAlreadyOnSession": "Einige Ruderer haben bereits eine andere Sitzung begonnen. Möchten Sie trotzdem fortfahren?",
@@ -130,7 +154,26 @@
       "invalidRowersLevel_other": "<0>{{count}}</0> Ruderer haben nicht das erforderliche Niveau für dieses Boot.",
       "fixInformation": "Informationen korrigieren"
     },
-    "noRowersRecorded": "Für diese Sitzung wurden keine Ruderer aufgezeichnet. Wenn dies ein Fehler ist, wenden Sie sich bitte an den Support."
+    "noRowersRecorded": "Für diese Sitzung wurden keine Ruderer aufgezeichnet. Wenn dies ein Fehler ist, wenden Sie sich bitte an den Support.",
+    "cox": "Steuermann",
+    "configuration": "Bootsvariante",
+    "seatsCount_one": "{{count}} Platz",
+    "seatsCount_other": "{{count}} Plätze",
+    "addGuest": "„{{name}}“ als Gast hinzufügen",
+    "guest": "Gast",
+    "severalDays": "Mehrere Tage",
+    "expectedReturn": "Geplante Rückkehr",
+    "outingType": "Fahrtart",
+    "captain": "Obmann",
+    "noCaptain": "Keiner",
+    "captainRequired": "Wählen Sie einen Obmann aus der Mannschaft.",
+    "distanceKm": "Gefahrene Strecke (km)",
+    "noIncidentDetails": "Keine Angaben",
+    "notSaved": "Die Fahrt konnte nicht gespeichert werden. Bitte erneut versuchen.",
+    "duplicateCrewMember": "Dieselbe Person ist zweimal in der Mannschaft ausgewählt.",
+    "boatAlreadyOnSession": "Dieses Boot ist bereits unterwegs.",
+    "returnBeforeStart": "Die geplante Rückkehr muss nach dem Start liegen.",
+    "invalidDistance": "Ungültige Strecke: geben Sie eine Zahl in km ein, zum Beispiel 12,5."
   },
   "logbook": {
     "title": "Logbuch",
@@ -160,7 +203,8 @@
     "exportSuccess": "Export erfolgreich abgeschlossen",
     "fileDownloaded": "\"{{fileName}}\" wurde in Ihren \"Downloads\"-Ordner heruntergeladen",
     "createNewExport": "Neuen Export erstellen",
-    "backToSessionList": "Zurück zur Sitzungsliste"
+    "backToSessionList": "Zurück zur Sitzungsliste",
+    "captainName": "Obmann: {{name}}"
   },
   "stats": {
     "title": "Statistiken",
@@ -202,7 +246,9 @@
       "december": "Dezember"
     },
     "session_one": "{{count}} Sitzung",
-    "session_other": "{{count}} Sitzungen"
+    "session_other": "{{count}} Sitzungen",
+    "totalDistance": "Gesamtstrecke",
+    "coxedSessions": "Fahrten als Steuermann"
   },
   "parameters": {
     "title": "Verwaltung",
@@ -301,7 +347,7 @@
     "deleteAllDataTitle": "Alle Daten löschen!",
     "warning": "Warnung!",
     "deleteAllDataWarning1": "Sie sind dabei, alle Anwendungsdaten zu löschen.",
-    "deleteAllDataWarning2": "Es wird unmöglich sein, sie nach dem Löschen wiederherzustellen. Stellen Sie sicher, dass Sie wichtige Daten exportiert haben.",
+    "deleteAllDataWarning2": "Zuerst wird eine Sicherheitskopie im Sicherungsordner (Verwaltung > Daten) erstellt, neben früheren Sicherungen. Um die Daten endgültig zu entfernen, löschen Sie auch diese Dateien.",
     "deleteConfirmationText": "Ich möchte alle meine Daten löschen",
     "deleteConfirmationInstruction": "Bestätigen Sie, indem Sie genau \"{{text}}\" in das untenstehende Feld schreiben.",
     "enterAdminPassword": "Admin-Passwort eingeben",
@@ -327,7 +373,13 @@
     "timeFormat": "Zeitformat",
     "timeFormatDescription": "Wählen Sie zwischen 12-Stunden- oder 24-Stunden-Zeitanzeige",
     "timeFormat12h": "12-Stunden-Format (AM/PM)",
-    "timeFormat24h": "24-Stunden-Format"
+    "timeFormat24h": "24-Stunden-Format",
+    "distanceKm": "km",
+    "showMembers": "Ruderer",
+    "showGuests": "Gäste ({{count}})",
+    "guestsHelp": "Gäste entstehen, wenn beim Ablegen ein Name eingetippt wird. Sie erscheinen nicht in der Ruderliste; setzen Sie ihren Status auf „Mitglied“, um sie aufzunehmen.",
+    "finishOutingBeforeArchiving": "Archivieren nicht möglich: beenden Sie zuerst die laufende Fahrt.",
+    "nameRequired": "Der Name ist erforderlich."
   },
   "boat": {
     "type": "Typ",
@@ -337,13 +389,45 @@
     "twoRowersCoxed": "2+ (Zweier mit Steuermann)",
     "fourRowersCoxless": "4x (Doppelvierer)",
     "fourRowersCoxed": "4+ (Vierer mit Steuermann)",
-    "eightRowersCoxed": "8+ (Achter)"
+    "eightRowersCoxed": "8+ (Achter)",
+    "configurations": "Bootsvarianten",
+    "configurationsHelp": "Ein Boot, das als Skull- und Riemenboot gefahren wird (4x / 4-), hat mehrere Varianten; die Wahl erscheint beim Ablegen.",
+    "seats": "Plätze",
+    "riggingUnknown": "Skull oder Riemen",
+    "riggingScull": "Skull",
+    "riggingSweep": "Riemen",
+    "coxed": "Gesteuert",
+    "defaultConfiguration": "Standard",
+    "removeConfiguration": "Diese Variante entfernen",
+    "addConfiguration": "Variante hinzufügen",
+    "configurationError": {
+      "invalidSeats": "Die Platzanzahl muss eine ganze Zahl von 1 bis {{max}} sein.",
+      "sweepNeedsEvenSeats": "Ein Riemenboot braucht eine gerade Platzanzahl.",
+      "duplicateConfiguration": "Diese Riggerung gibt es für dieses Boot bereits."
+    }
   },
   "rower": {
     "name": "Name",
     "level": "Niveau",
     "category": "Kategorie",
-    "stats": "Statistiken"
+    "stats": "Statistiken",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "status": "Status",
+    "statusMember": "Mitglied",
+    "statusGuest": "Gast",
+    "statusOther": "Sonstige",
+    "gender": "Geschlecht",
+    "genderUnknown": "Keine Angabe",
+    "genderFemale": "Weiblich",
+    "genderMale": "Männlich",
+    "genderOther": "Divers",
+    "birthDate": "Geburtsdatum",
+    "licenseNumber": "Lizenznummer",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "address": "Adresse",
+    "note": "Notiz"
   },
   "error": {
     "generic": "Ein Fehler ist aufgetreten",
@@ -368,6 +452,174 @@
     "exportError": "Fehler beim Export"
   },
   "database": {
-    "failedToLoad": "Fehler beim Laden der Datenbank"
+    "failedToLoad": "Fehler beim Laden der Datenbank",
+    "failedToSave": "Speichern fehlgeschlagen: die Änderung wurde rückgängig gemacht",
+    "backupsNotDeleted": "Die alten v1-Sicherungen konnten nicht aus dem Ordner backups gelöscht werden",
+    "reloadFailed": "Daten konnten nicht neu geladen werden: bitte die App neu starten"
+  },
+  "migration": {
+    "unknownBoat": "Unbekanntes Boot",
+    "unknownRower": "Unbekannte Person",
+    "unknownRoute": "Unbekannte Strecke",
+    "done": "Ihre Daten wurden in die neue Datenbank übertragen. Eine Sicherung, die nach 90 Tagen automatisch gelöscht wird, liegt hier: {{location}}",
+    "failed": "Die Vereinsdaten konnten nicht geladen werden. Es wurde nichts gelöscht: Starten Sie die App neu.",
+    "skipped": "{{count}} unlesbare v1-Einträge konnten nicht übernommen werden. Sie bleiben in der Sicherung erhalten: {{location}}"
+  },
+  "modules": {
+    "title": "Module",
+    "intro": "Aktivieren Sie nur, was Ihr Verein braucht. Ein deaktiviertes Modul blendet seine Ansichten und Felder aus, ohne etwas zu löschen: Die Daten sind wieder da, sobald Sie es erneut aktivieren.",
+    "enable": "„{{name}}“ aktivieren",
+    "noThanks": "Nein danke",
+    "distances": {
+      "name": "Distanzen",
+      "description": "Erfassen Sie die gefahrenen Kilometer jeder Fahrt.",
+      "adds": "Fügt Strecken eine Distanz hinzu, eine vorausgefüllte und änderbare Distanz beim Fahrtende sowie Kilometer im Fahrtenbuch und in den Statistiken.",
+      "suggestion": "Möchten Sie Kilometer erfassen? Das Modul Distanzen gibt jeder Strecke eine Distanz und überträgt sie in die Fahrten."
+    },
+    "outingTypes": {
+      "name": "Fahrtarten",
+      "description": "Unterscheiden Sie Training, Regatta, Trainingslager, Wanderfahrt… und erfassen Sie mehrtägige Fahrten.",
+      "adds": "Fügt die Wahl der Fahrtart beim Ablegen hinzu, ein Enddatum für mehrtägige Fahrten sowie die Fahrtart im Fahrtenbuch und in Exporten.",
+      "suggestion": "Möchten Sie Training, Regatten oder Wanderfahrten im Fahrtenbuch unterscheiden? Das Modul Fahrtarten macht das möglich."
+    },
+    "memberProfile": {
+      "name": "Vollständiges Mitgliederprofil",
+      "description": "Halten Sie Kontaktdaten und Angaben Ihrer Mitglieder an einem Ort.",
+      "adds": "Fügt getrennten Vor- und Nachnamen, Geschlecht, Geburtsdatum, Lizenznummer, E-Mail, Telefon, Adresse und Status (Mitglied, Gast, Sonstige) hinzu.",
+      "suggestion": "Brauchen Sie E-Mail, Lizenznummer oder Geburtsdatum? Das Modul Vollständiges Mitgliederprofil fügt diese Felder hinzu."
+    },
+    "guests": {
+      "name": "Gäste",
+      "description": "Tragen Sie beim Ablegen eine Person ein, die nicht in der Ruderliste steht.",
+      "adds": "Ein beim Ablegen eingetippter Name legt einen „Gast“-Eintrag an, der in der Ruderliste verborgen ist; seine Fahrten bleiben im Fahrtenbuch und der Eintrag kann später ergänzt oder zum Mitglied gemacht werden.",
+      "suggestion": "Gäste oder Gastruderer? Mit dem Modul Gäste tippen Sie ihren Namen beim Ablegen ein, ohne ein Mitglied anzulegen."
+    },
+    "captain": {
+      "name": "Obmann",
+      "description": "Bestimmen Sie die Person, die während der Fahrt für die Mannschaft verantwortlich ist.",
+      "adds": "Fügt beim Ablegen die Wahl des Obmanns aus der Mannschaft hinzu (vorgeschlagen wird der Steuermann, sonst der erste erwachsene Ruderer), sichtbar im Fahrtenbuch und in Exporten.",
+      "suggestion": "Möchten Sie wissen, wer für jedes Boot auf dem Wasser verantwortlich ist? Das Modul Obmann fügt das beim Ablegen hinzu.",
+      "requiredOption": "Obmann zum Ablegen verpflichtend machen"
+    }
+  },
+  "outingTypes": {
+    "normal": "Normale Fahrt",
+    "training": "Training",
+    "regatta": "Regatta",
+    "training_camp": "Trainingslager",
+    "instruction": "Ausbildung",
+    "tour": "Wanderfahrt",
+    "club_trip": "Vereinsfahrt",
+    "ergometer": "Ergometer",
+    "motorboat": "Motorboot"
+  },
+  "backup": {
+    "dataTitle": "Daten",
+    "title": "Sicherungen",
+    "description": "Rowing Beacon kopiert alle Vereinsdaten automatisch beim Start, danach alle 24 Stunden sowie vor jedem Import, jeder Wiederherstellung und jedem Löschen. Die letzten 14 automatischen Sicherungen werden aufbewahrt.",
+    "lastBackup": "Letzte Sicherung: {{date}}",
+    "noBackupYet": "Noch keine Sicherung.",
+    "backupNow": "Jetzt sichern",
+    "done": "Sicherung erstellt",
+    "failed": "Die Sicherung ist fehlgeschlagen",
+    "beforeDeleteFailed": "Die Sicherung ist fehlgeschlagen: Es wurde nichts gelöscht.",
+    "autoBackupFailed": "Die automatische Sicherung ist fehlgeschlagen",
+    "restoreFromFile": "Aus einer Datei wiederherstellen…",
+    "externalTitle": "Externe Kopie",
+    "externalFolder": "Manuelle Sicherungen, Sicherungen vor einem Import, einer Wiederherstellung oder einer Löschung sowie eine automatische Sicherung pro Woche werden auch kopiert nach: {{folder}}",
+    "externalReminder": "Die Sicherungen bleiben auf diesem Rechner. Wählen Sie einen USB-Stick oder einen synchronisierten Ordner (Drive, Dropbox…), damit sie einen Rechnerausfall überstehen.",
+    "externalCopyFailed": "Die letzte externe Kopie ist fehlgeschlagen: Prüfen Sie, ob der USB-Stick oder Ordner erreichbar ist.",
+    "externalFolderSet": "Die nächsten Sicherungen werden auch in diesen Ordner kopiert",
+    "chooseExternalFolder": "Ordner wählen",
+    "changeExternalFolder": "Ordner ändern",
+    "stopExternalCopy": "Nicht mehr kopieren",
+    "restore": "Wiederherstellen",
+    "restoreTitle": "Sicherung wiederherstellen",
+    "restoreConfirm": "Alle Vereinsdaten werden durch die Sicherung vom {{backup}} ersetzt.",
+    "restoreSafety": "Der aktuelle Stand wird vorher gesichert, Sie können also zurück. Danach startet die App neu.",
+    "restoreFailed": "Die Wiederherstellung ist fehlgeschlagen und wurde abgebrochen: Es wurde nichts verändert. Die Anwendung startet jetzt neu.",
+    "folder": "Sicherungsordner: {{folder}}",
+    "kind": {
+      "auto": "Automatisch",
+      "manual": "Manuell",
+      "before-import": "Vor einem Import",
+      "before-restore": "Vor einer Wiederherstellung",
+      "before-delete": "Vor einem Löschen"
+    },
+    "notABackup": "Diese Datei ist keine gültige Rowing-Beacon-Sicherung. Es wurde nichts verändert.",
+    "newerBackup": "Diese Sicherung stammt aus einer neueren Version von Rowing Beacon. Aktualisieren Sie die Anwendung, um sie wiederherzustellen. Es wurde nichts verändert.",
+    "restoreNotStarted": "Die Wiederherstellung konnte nicht beginnen (Datei nicht lesbar oder Sicherheitskopie fehlgeschlagen). Es wurde nichts verändert."
+  },
+  "efa2": {
+    "title": "efa2",
+    "description": "Übernehmen Sie die Daten eines Vereins aus efa2 oder erstellen Sie ein Projekt, das efa2 wieder öffnen kann.",
+    "importTitle": "efa2-Projekt importieren",
+    "importDescription": "Wählen Sie eine von efa erstellte ZIP-Sicherung oder den Datenordner von efa (mit der .efa2project-Datei). Die aktuellen Vereinsdaten werden nach einer Sicherung ersetzt.",
+    "chooseZip": "efa-ZIP-Sicherung…",
+    "chooseFolder": "Datenordner…",
+    "exportTitle": "Im efa2-Format exportieren",
+    "exportDescription": "Erstellt an einem Ort Ihrer Wahl eine ZIP-Sicherung, die efa2 wiederherstellen kann, mit allem, was aus efa importiert wurde.",
+    "export": "Exportieren",
+    "exported": "efa2-Projekt gespeichert: {{path}}",
+    "exportFailed": "Der efa2-Export ist fehlgeschlagen",
+    "incidentsNotExported_one": "{{count}} Vorfall hat keine Entsprechung in efa2 und wird nicht exportiert.",
+    "incidentsNotExported_other": "{{count}} Vorfälle haben keine Entsprechung in efa2 und werden nicht exportiert.",
+    "notAProject": "Dort wurde kein lesbares efa2-Projekt gefunden",
+    "readFailed": "Die Dateien konnten nicht gelesen werden ({{reason}}). Prüfen Sie den Zugriff auf den Ordner oder den USB-Stick.",
+    "importFailed": "Der Import ist fehlgeschlagen und wurde abgebrochen: Die Vereinsdaten wurden nicht verändert. Die Anwendung startet jetzt neu.",
+    "previewTitle": "efa2-Projekt „{{name}}“ importieren",
+    "preview": {
+      "boats_one": "{{count}} Boot",
+      "boats_other": "{{count}} Boote",
+      "rowers_one": "{{count}} Ruderer",
+      "rowers_other": "{{count}} Ruderer",
+      "routes_one": "{{count}} Ziel",
+      "routes_other": "{{count}} Ziele",
+      "outings_one": "{{count}} Fahrt (Fahrtenbücher: {{logbooks}})",
+      "outings_other": "{{count}} Fahrten (Fahrtenbücher: {{logbooks}})",
+      "ongoing_one": "davon {{count}} laufende Fahrt",
+      "ongoing_other": "davon {{count}} laufende Fahrten",
+      "guests_one": "{{count}} Gast für einen frei eingegebenen Namen angelegt",
+      "guests_other": "{{count}} Gäste für frei eingegebene Namen angelegt",
+      "externalBoats_one": "{{count}} fremdes Boot, archiviert",
+      "externalBoats_other": "{{count}} fremde Boote, archiviert",
+      "incidents_one": "{{count}} nicht behobener Schaden, als Vorfall übernommen",
+      "incidents_other": "{{count}} nicht behobene Schäden, als Vorfälle übernommen",
+      "keptIntro": "Ebenfalls aufbewahrt, vorerst ohne Ansicht, und beim efa2-Export zurückgeschrieben:",
+      "closedOpen_one": "{{count}} Fahrt, die in efa vor heute offen geblieben ist, wird beim Import beendet",
+      "closedOpen_other": "{{count}} Fahrten, die in efa vor heute offen geblieben sind, werden beim Import beendet",
+      "ambiguousNames_one": "{{count}} frei eingegebener Name passt zu mehreren Personen: er wird ein Gast",
+      "ambiguousNames_other": "{{count}} frei eingegebene Namen passen zu mehreren Personen: sie werden Gäste",
+      "unreadableEntries_one": "{{count}} unlesbarer Fahrtenbucheintrag (ohne Datum oder Nummer): unverändert behalten und beim efa2-Export zurückgeschrieben",
+      "unreadableEntries_other": "{{count}} unlesbare Fahrtenbucheinträge (ohne Datum oder Nummer): unverändert behalten und beim efa2-Export zurückgeschrieben"
+    },
+    "objects": {
+      "efa2boatreservations": "Reservierungen",
+      "efa2boatdamages": "behobene Schäden",
+      "efa2messages": "Nachrichten",
+      "efa2crews": "Standardmannschaften",
+      "efa2waters": "Gewässer",
+      "efa2sessiongroups": "Fahrtgruppen",
+      "efa2clubwork": "Vereinsarbeit",
+      "efa2fahrtenabzeichen": "Fahrtenabzeichen",
+      "efa2statistics": "gespeicherte Statistiken"
+    },
+    "replaceWarning": "Alle aktuellen Vereinsdaten werden ersetzt. Vorher wird eine Sicherung erstellt.",
+    "confirmImport": "Ersetzen und importieren",
+    "externalBoatNote": "Fremdes Boot aus efa importiert",
+    "statusGroupPrefix": "efa-Status: ",
+    "status": {
+      "member": "Mitglied",
+      "guest": "Gast",
+      "other": "Andere"
+    },
+    "defaultProjectName": "RowingBeacon",
+    "boathouseName": "Bootshaus",
+    "backupFailed": "Die Sicherung vor dem Import ist fehlgeschlagen (Festplatte voll?). Der Import wurde abgebrochen, nichts wurde verändert.",
+    "incompleteProject": "Dieses efa-Projekt ist unvollständig: es enthält keine Boote oder keine Personen (Teilsicherung, neues Projekt oder falscher Ordner). Der Import wird abgelehnt, damit die Vereinsdaten nicht gelöscht werden.",
+    "chooseProject": "Dieser Ordner enthält mehrere efa-Projekte: {{names}}. Geben Sie den Namen des zu importierenden Projekts ein.",
+    "closedOpenOutingNote": "(In efa offen gebliebene Fahrt, beim Import beendet.)",
+    "crewsCut_one": "{{count}} Fahrt hat mehr als 24 Ruderer oder mehrere Steuerleute: efa2 hat keinen Platz für die übrigen, sie werden nicht exportiert.",
+    "crewsCut_other": "{{count}} Fahrten haben mehr als 24 Ruderer oder mehrere Steuerleute: efa2 hat keinen Platz für die übrigen, sie werden nicht exportiert."
   }
 }

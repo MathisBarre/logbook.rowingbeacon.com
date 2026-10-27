@@ -67,7 +67,7 @@ export const WindowPrompt: React.FC = () => {
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center z-[9999]"
+      className="pointer-events-auto fixed inset-0 flex items-center justify-center z-[9999]"
       role="dialog"
     >
       {/* Background overlay */}

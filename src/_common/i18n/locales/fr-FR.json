@@ -51,6 +51,7 @@
     "demoPasswordAlert": "Le mot de passe admin du mode démo est \"{{password}}\"",
     "password": "Mot de passe",
     "passwordHelp": "Le mot de passe sera utile pour protéger les actions sensibles.",
+    "passwordRequired": "Choisissez un mot de passe.",
     "boats": "Bateaux",
     "boatsHelp": "Entrez le nom de vos bateaux, un par ligne",
     "boatsPlaceholder": "Exemple: \n100 Swift\n101 Hudson\n102 WinTech\n103 Empacher\n104 Vespoli\n105 Swift\n106 WinTech\n200 Hudson\n201 WinTech\n202 Hudson\n203 Vespoli\n401 Hudson\n402 WinTech\n800 Filippi",
@@ -58,7 +59,30 @@
     "routesHelp": "Entrez le nom de vos parcours, un par ligne",
     "rowers": "Rameurs",
     "rowersHelp": "Entrez le nom de vos rameurs, un par ligne",
-    "validate": "Valider les informations"
+    "validate": "Valider les informations",
+    "profile": {
+      "title": "Comment votre club fonctionne-t-il ?",
+      "help": "Ce choix active des modules. Vous pourrez en ajouter ou en retirer à tout moment dans Paramètres > Modules.",
+      "simple": {
+        "name": "Simple",
+        "description": "Bateaux, rameurs et parcours : l'essentiel pour noter les sorties."
+      },
+      "fullClub": {
+        "name": "Club complet",
+        "description": "Ajoute distances, types de sortie, fiches membres complètes, invités et chef de bord."
+      },
+      "efaImport": {
+        "name": "Je viens d'efa",
+        "description": "Reprend directement votre projet efa2 : bateaux, rameurs, destinations et cahiers."
+      }
+    },
+    "efa": {
+      "title": "Votre projet efa2",
+      "help": "Choisissez une sauvegarde ZIP faite par efa, ou le dossier de données d'efa. Bateaux, rameurs, parcours et tous vos cahiers seront repris, et les modules utiles activés.",
+      "chosen": "Projet choisi : {{name}}",
+      "required": "Choisissez d'abord votre projet efa2",
+      "confirm": "Importer et commencer"
+    }
   },
   "boathouse": {
     "coachNote": "Note du coach",
@@ -120,7 +144,7 @@
     "minimumValidRowersRequired": "Il est nécessaire de sélectionner au moins {{count}} rameur(s) ayant au moins les niveaux requis pour ce bateau.",
     "alert": {
       "rowersProvided": "Vous avez renseigné",
-      "rowersCount": "{{count}} rameur(s)",
+      "rowersCount": "{{count}} personne(s) à bord, barreur compris",
       "boatRequires": "Le bateau \"{{boatName}}\" nécessite",
       "continueAnyway": "Souhaitez-vous tout de même continuer ?",
       "rowersAlreadyOnSession": "Certains rameurs ont déjà commencé une autre sortie. Souhaitez-vous tout de même continuer ?",
@@ -130,7 +154,26 @@
       "invalidRowersLevel_other": "<0>{{count}}</0> rameurs n'ont pas le niveau requis pour ce bateau.",
       "fixInformation": "Corriger les informations"
     },
-    "noRowersRecorded": "Aucun rameur n'a été enregistré pour cette session. Si c'est une erreur, veuillez contacter le support."
+    "noRowersRecorded": "Aucun rameur n'a été enregistré pour cette session. Si c'est une erreur, veuillez contacter le support.",
+    "cox": "Barreur",
+    "configuration": "Armement",
+    "seatsCount_one": "{{count}} place",
+    "seatsCount_other": "{{count}} places",
+    "addGuest": "Ajouter « {{name}} » comme invité",
+    "guest": "invité",
+    "severalDays": "Plusieurs jours",
+    "expectedReturn": "Retour prévu",
+    "outingType": "Type de sortie",
+    "captain": "Chef de bord",
+    "noCaptain": "Aucun",
+    "captainRequired": "Choisissez un chef de bord dans l'équipage.",
+    "distanceKm": "Distance parcourue (km)",
+    "noIncidentDetails": "Aucun détail renseigné",
+    "notSaved": "La sortie n'a pas pu être enregistrée. Réessayez.",
+    "duplicateCrewMember": "Une même personne est choisie deux fois dans l'équipage.",
+    "boatAlreadyOnSession": "Ce bateau est déjà en sortie.",
+    "returnBeforeStart": "Le retour prévu doit être après le départ.",
+    "invalidDistance": "Distance invalide : saisissez un nombre de km, par exemple 12,5."
   },
   "logbook": {
     "title": "Journal de bord",
@@ -160,7 +203,8 @@
     "exportSuccess": "Export réalisé avec succès",
     "fileDownloaded": "\"{{fileName}}\" a été téléchargé dans votre dossier \"Téléchargements\"",
     "createNewExport": "Créer un nouveau export",
-    "backToSessionList": "Revenir à la liste des sorties"
+    "backToSessionList": "Revenir à la liste des sorties",
+    "captainName": "Chef de bord : {{name}}"
   },
   "stats": {
     "title": "Statistiques",
@@ -202,7 +246,9 @@
       "december": "Décembre"
     },
     "session_one": "{{count}} sortie",
-    "session_other": "{{count}} sorties"
+    "session_other": "{{count}} sorties",
+    "totalDistance": "Distance totale",
+    "coxedSessions": "Sorties barrées"
   },
   "parameters": {
     "title": "Gestion",
@@ -301,7 +347,7 @@
     "deleteAllDataTitle": "Supprimer toutes les données !",
     "warning": "Attention !",
     "deleteAllDataWarning1": "Vous êtes sur le point de supprimer toutes les données de l'application.",
-    "deleteAllDataWarning2": "Il sera impossible de les récupérer une fois supprimée. Assurez-vous d'avoir exporté les données importantes.",
+    "deleteAllDataWarning2": "Une sauvegarde de sécurité est d'abord créée dans le dossier des sauvegardes (Gestion > Données), avec les sauvegardes précédentes. Pour effacer définitivement les données, supprimez aussi ces fichiers.",
     "deleteConfirmationText": "Je souhaite supprimer toutes mes données",
     "deleteConfirmationInstruction": "Confirmez en écrivant exactement \"{{text}}\" dans le champ ci-dessous.",
     "enterAdminPassword": "Renseignez le mot de passe admin",
@@ -327,7 +373,13 @@
     "timeFormat": "Format de l'heure",
     "timeFormatDescription": "Choisissez entre l'affichage 12 heures ou 24 heures",
     "timeFormat12h": "Format 12 heures (AM/PM)",
-    "timeFormat24h": "Format 24 heures"
+    "timeFormat24h": "Format 24 heures",
+    "distanceKm": "km",
+    "showMembers": "Rameurs",
+    "showGuests": "Invités ({{count}})",
+    "guestsHelp": "Les invités sont créés quand un nom est tapé au départ. Ils n'apparaissent pas dans la liste des rameurs ; passez leur statut à « Membre » pour les y ajouter.",
+    "finishOutingBeforeArchiving": "Impossible d'archiver : terminez d'abord la sortie en cours.",
+    "nameRequired": "Le nom est obligatoire."
   },
   "boat": {
     "type": "Type",
@@ -337,13 +389,45 @@
     "twoRowersCoxed": "2+ (deux avec barreur)",
     "fourRowersCoxless": "4x (quatre sans barreur)",
     "fourRowersCoxed": "4+ (quatre avec barreur)",
-    "eightRowersCoxed": "8+ (huit)"
+    "eightRowersCoxed": "8+ (huit)",
+    "configurations": "Armements",
+    "configurationsHelp": "Un bateau qui se monte en couple et en pointe (4x / 4-) a plusieurs armements ; le choix est proposé au départ.",
+    "seats": "Places",
+    "riggingUnknown": "Couple ou pointe",
+    "riggingScull": "Couple",
+    "riggingSweep": "Pointe",
+    "coxed": "Barré",
+    "defaultConfiguration": "Par défaut",
+    "removeConfiguration": "Retirer cet armement",
+    "addConfiguration": "Ajouter un armement",
+    "configurationError": {
+      "invalidSeats": "Le nombre de places doit être un entier de 1 à {{max}}.",
+      "sweepNeedsEvenSeats": "En pointe, le nombre de places doit être pair.",
+      "duplicateConfiguration": "Cet armement existe déjà pour ce bateau."
+    }
   },
   "rower": {
     "name": "Nom",
     "level": "Niveau",
     "category": "Catégorie",
-    "stats": "Statistiques"
+    "stats": "Statistiques",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "status": "Statut",
+    "statusMember": "Membre",
+    "statusGuest": "Invité",
+    "statusOther": "Autre",
+    "gender": "Sexe",
+    "genderUnknown": "Non précisé",
+    "genderFemale": "Femme",
+    "genderMale": "Homme",
+    "genderOther": "Autre",
+    "birthDate": "Date de naissance",
+    "licenseNumber": "N° de licence",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "note": "Note"
   },
   "error": {
     "generic": "Une erreur est survenue",
@@ -368,6 +452,174 @@
     "exportError": "Erreur lors de l'export"
   },
   "database": {
-    "failedToLoad": "Échec du chargement de la base de données"
+    "failedToLoad": "Échec du chargement de la base de données",
+    "failedToSave": "Échec de l'enregistrement : la modification a été annulée",
+    "backupsNotDeleted": "Les anciennes sauvegardes v1 n'ont pas pu être supprimées du dossier backups",
+    "reloadFailed": "Impossible de relire les données : redémarrez l'application"
+  },
+  "migration": {
+    "unknownBoat": "Bateau inconnu",
+    "unknownRower": "Rameur inconnu",
+    "unknownRoute": "Parcours inconnu",
+    "done": "Vos données ont été transférées dans la nouvelle base. Une sauvegarde, effacée automatiquement après 90 jours, a été enregistrée ici : {{location}}",
+    "failed": "Impossible de charger les données du club. Rien n'a été effacé : relancez l'application.",
+    "skipped": "{{count}} élément(s) v1 illisible(s) n'ont pas pu être repris. Ils sont conservés dans la sauvegarde : {{location}}"
+  },
+  "modules": {
+    "title": "Modules",
+    "intro": "Activez seulement ce dont votre club a besoin. Désactiver un module masque ses écrans et ses champs sans rien effacer : les données reviennent si vous le réactivez.",
+    "enable": "Activer « {{name}} »",
+    "noThanks": "Non merci",
+    "distances": {
+      "name": "Distances",
+      "description": "Enregistrez les kilomètres parcourus à chaque sortie.",
+      "adds": "Ajoute une distance aux parcours, une distance pré-remplie et modifiable au retour de sortie, et les km dans le cahier et les statistiques.",
+      "suggestion": "Vous voulez suivre les kilomètres ? Le module Distances ajoute une distance à chaque parcours et la reporte dans les sorties."
+    },
+    "outingTypes": {
+      "name": "Types de sortie",
+      "description": "Distinguez entraînements, régates, stages, randonnées… et les sorties sur plusieurs jours.",
+      "adds": "Ajoute le choix du type au départ, une date de fin pour les sorties de plusieurs jours, et le type dans le cahier et les exports.",
+      "suggestion": "Vous voulez distinguer entraînements, régates ou randonnées dans le cahier ? Le module Types de sortie le permet."
+    },
+    "memberProfile": {
+      "name": "Fiche membre complète",
+      "description": "Gardez les coordonnées et informations de vos membres au même endroit.",
+      "adds": "Ajoute prénom et nom séparés, sexe, date de naissance, n° de licence, e-mail, téléphone, adresse et statut (membre, invité, autre).",
+      "suggestion": "Besoin d'un e-mail, d'un n° de licence ou d'une date de naissance ? Le module Fiche membre complète ajoute ces champs."
+    },
+    "guests": {
+      "name": "Invités",
+      "description": "Inscrivez au départ une personne qui n'est pas dans la liste des rameurs.",
+      "adds": "Un nom tapé au départ crée une fiche « invité » masquée de la liste des rameurs ; ses sorties restent dans le cahier et la fiche peut ensuite être complétée ou passée en membre.",
+      "suggestion": "Des invités ou des rameurs de passage ? Le module Invités permet de taper leur nom au départ sans créer de membre."
+    },
+    "captain": {
+      "name": "Chef de bord",
+      "description": "Désignez la personne responsable de l'équipage pendant la sortie.",
+      "adds": "Ajoute au départ le choix du chef de bord parmi l'équipage (barreur, sinon premier rameur adulte, proposé par défaut), affiché dans le cahier et les exports.",
+      "suggestion": "Vous voulez savoir qui est responsable de chaque bateau sur l'eau ? Le module Chef de bord l'ajoute au départ.",
+      "requiredOption": "Rendre le chef de bord obligatoire pour partir"
+    }
+  },
+  "outingTypes": {
+    "normal": "Sortie normale",
+    "training": "Entraînement",
+    "regatta": "Régate",
+    "training_camp": "Stage",
+    "instruction": "Initiation",
+    "tour": "Randonnée",
+    "club_trip": "Sortie club",
+    "ergometer": "Ergomètre",
+    "motorboat": "Bateau à moteur"
+  },
+  "backup": {
+    "dataTitle": "Données",
+    "title": "Sauvegardes",
+    "description": "Rowing Beacon copie automatiquement toutes les données du club au démarrage puis toutes les 24 heures, et avant chaque import, restauration ou suppression. Les 14 dernières sauvegardes automatiques sont gardées.",
+    "lastBackup": "Dernière sauvegarde : {{date}}",
+    "noBackupYet": "Aucune sauvegarde pour l'instant.",
+    "backupNow": "Sauvegarder maintenant",
+    "done": "Sauvegarde faite",
+    "failed": "La sauvegarde a échoué",
+    "beforeDeleteFailed": "La sauvegarde a échoué : rien n'a été effacé.",
+    "autoBackupFailed": "La sauvegarde automatique a échoué",
+    "restoreFromFile": "Restaurer depuis un fichier…",
+    "externalTitle": "Copie externe",
+    "externalFolder": "Les sauvegardes manuelles, celles faites avant un import, une restauration ou une suppression, et une sauvegarde automatique par semaine sont aussi copiées dans : {{folder}}",
+    "externalReminder": "Les sauvegardes restent sur ce poste. Choisissez une clé USB ou un dossier synchronisé (Drive, Dropbox…) pour qu'elles survivent à une panne de l'ordinateur.",
+    "externalCopyFailed": "La dernière copie externe a échoué : vérifiez que la clé USB ou le dossier est accessible.",
+    "externalFolderSet": "Les prochaines sauvegardes seront aussi copiées dans ce dossier",
+    "chooseExternalFolder": "Choisir un dossier",
+    "changeExternalFolder": "Changer de dossier",
+    "stopExternalCopy": "Ne plus copier",
+    "restore": "Restaurer",
+    "restoreTitle": "Restaurer une sauvegarde",
+    "restoreConfirm": "Toutes les données du club vont être remplacées par celles de la sauvegarde du {{backup}}.",
+    "restoreSafety": "L'état actuel est sauvegardé juste avant : vous pourrez y revenir. L'application redémarre ensuite.",
+    "restoreFailed": "La restauration a échoué et a été annulée : rien n'a été modifié. L'application va redémarrer.",
+    "folder": "Dossier des sauvegardes : {{folder}}",
+    "kind": {
+      "auto": "Automatique",
+      "manual": "Manuelle",
+      "before-import": "Avant un import",
+      "before-restore": "Avant une restauration",
+      "before-delete": "Avant une suppression"
+    },
+    "notABackup": "Ce fichier n'est pas une sauvegarde Rowing Beacon valide. Rien n'a été modifié.",
+    "newerBackup": "Cette sauvegarde vient d'une version plus récente de Rowing Beacon. Mettez l'application à jour pour la restaurer. Rien n'a été modifié.",
+    "restoreNotStarted": "La restauration n'a pas pu commencer (fichier illisible ou sauvegarde de sécurité impossible). Rien n'a été modifié."
+  },
+  "efa2": {
+    "title": "efa2",
+    "description": "Reprenez les données d'un club tenu sous efa2, ou produisez un projet qu'efa2 sait rouvrir.",
+    "importTitle": "Importer un projet efa2",
+    "importDescription": "Choisissez une sauvegarde ZIP faite par efa, ou le dossier de données d'efa (celui qui contient le fichier .efa2project). Les données actuelles du club sont remplacées, après une sauvegarde.",
+    "chooseZip": "Sauvegarde ZIP d'efa…",
+    "chooseFolder": "Dossier de données…",
+    "exportTitle": "Exporter au format efa2",
+    "exportDescription": "Crée, à l'endroit de votre choix, une sauvegarde ZIP qu'efa2 sait restaurer, avec tout ce qui avait été importé d'efa.",
+    "export": "Exporter",
+    "exported": "Projet efa2 enregistré : {{path}}",
+    "exportFailed": "L'export efa2 a échoué",
+    "incidentsNotExported_one": "{{count}} incident n'a pas d'équivalent dans efa2 et n'est pas exporté.",
+    "incidentsNotExported_other": "{{count}} incidents n'ont pas d'équivalent dans efa2 et ne sont pas exportés.",
+    "notAProject": "Aucun projet efa2 lisible n'a été trouvé à cet endroit",
+    "readFailed": "Les fichiers n'ont pas pu être lus ({{reason}}). Vérifiez l'accès au dossier ou à la clé USB.",
+    "importFailed": "L'import a échoué et a été annulé : les données du club n'ont pas été modifiées. L'application va redémarrer.",
+    "previewTitle": "Importer le projet efa2 « {{name}} »",
+    "preview": {
+      "boats_one": "{{count}} bateau",
+      "boats_other": "{{count}} bateaux",
+      "rowers_one": "{{count}} rameur",
+      "rowers_other": "{{count}} rameurs",
+      "routes_one": "{{count}} parcours",
+      "routes_other": "{{count}} parcours",
+      "outings_one": "{{count}} sortie (cahiers : {{logbooks}})",
+      "outings_other": "{{count}} sorties (cahiers : {{logbooks}})",
+      "ongoing_one": "dont {{count}} sortie en cours",
+      "ongoing_other": "dont {{count}} sorties en cours",
+      "guests_one": "{{count}} invité créé pour un nom saisi librement",
+      "guests_other": "{{count}} invités créés pour des noms saisis librement",
+      "externalBoats_one": "{{count}} bateau extérieur, archivé",
+      "externalBoats_other": "{{count}} bateaux extérieurs, archivés",
+      "incidents_one": "{{count}} avarie non réparée, reprise comme incident",
+      "incidents_other": "{{count}} avaries non réparées, reprises comme incidents",
+      "keptIntro": "Gardé aussi, sans écran pour l'instant, et réécrit à l'export efa2 :",
+      "closedOpen_one": "{{count}} sortie restée ouverte dans efa avant aujourd'hui, terminée à l'import",
+      "closedOpen_other": "{{count}} sorties restées ouvertes dans efa avant aujourd'hui, terminées à l'import",
+      "ambiguousNames_one": "{{count}} nom saisi librement correspond à plusieurs fiches : il devient un invité",
+      "ambiguousNames_other": "{{count}} noms saisis librement correspondent à plusieurs fiches : ils deviennent des invités",
+      "unreadableEntries_one": "{{count}} entrée du journal illisible (sans date ou sans numéro) : gardée telle quelle et réécrite à l'export efa2",
+      "unreadableEntries_other": "{{count}} entrées du journal illisibles (sans date ou sans numéro) : gardées telles quelles et réécrites à l'export efa2"
+    },
+    "objects": {
+      "efa2boatreservations": "réservations",
+      "efa2boatdamages": "avaries réparées",
+      "efa2messages": "messages",
+      "efa2crews": "équipages types",
+      "efa2waters": "plans d'eau",
+      "efa2sessiongroups": "groupes de sorties",
+      "efa2clubwork": "travail bénévole",
+      "efa2fahrtenabzeichen": "insignes DRV",
+      "efa2statistics": "statistiques enregistrées"
+    },
+    "replaceWarning": "Toutes les données actuelles du club seront remplacées. Une sauvegarde est faite juste avant.",
+    "confirmImport": "Remplacer et importer",
+    "externalBoatNote": "Bateau extérieur importé d'efa",
+    "statusGroupPrefix": "Statut efa : ",
+    "status": {
+      "member": "Membre",
+      "guest": "Invité",
+      "other": "Autre"
+    },
+    "defaultProjectName": "RowingBeacon",
+    "boathouseName": "Hangar",
+    "backupFailed": "La sauvegarde faite avant l'import a échoué (disque plein ?). L'import est annulé, rien n'a été modifié.",
+    "incompleteProject": "Ce projet efa est incomplet : il ne contient aucun bateau ou aucune personne (sauvegarde partielle, projet neuf ou mauvais dossier). L'import est refusé pour ne pas effacer les données du club.",
+    "chooseProject": "Ce dossier contient plusieurs projets efa : {{names}}. Tapez le nom de celui à importer.",
+    "closedOpenOutingNote": "(Sortie restée ouverte dans efa, terminée à l'import.)",
+    "crewsCut_one": "{{count}} sortie a plus de 24 rameurs ou plusieurs barreurs : efa2 n'a pas de place pour les autres, ils ne sont pas exportés.",
+    "crewsCut_other": "{{count}} sorties ont plus de 24 rameurs ou plusieurs barreurs : efa2 n'a pas de place pour les autres, ils ne sont pas exportés."
   }
 }

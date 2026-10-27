@@ -18,7 +18,16 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    /* Monorepo: landing uses React 19; force every .d.ts in this app to
+       resolve the local React 18 types instead of a hoisted copy */
+    "baseUrl": ".",
+    "paths": {
+      "react": ["./node_modules/@types/react"],
+      "react-dom": ["./node_modules/@types/react-dom"],
+      "zod": ["./node_modules/zod"]
+    }
   },
   "include": ["src", "eslint.config.js", "tailwind.config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]

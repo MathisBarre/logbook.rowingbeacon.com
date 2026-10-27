@@ -10,7 +10,11 @@ export const useGlobalStats = ({
   startDate: Date;
   endDate: Date;
 }) => {
-  const [stats, setStats] = useState({ count: 0, totalDuration: 0 });
+  const [stats, setStats] = useState({
+    count: 0,
+    totalDuration: 0,
+    totalDistanceM: 0,
+  });
 
   useEffect(() => {
     getGlobalStats({ startDate, endDate })
@@ -30,6 +34,7 @@ const getGlobalStats = async ({
 }): Promise<{
   count: number;
   totalDuration: number;
+  totalDistanceM: number;
 }> => {
   const sessions = await getSessionsInPeriod({
     startDate,
@@ -47,5 +52,10 @@ const getGlobalStats = async ({
     return acc + duration;
   }, 0);
 
-  return { count: sessions.length, totalDuration };
+  const totalDistanceM = sessions.reduce(
+    (acc, session) => acc + (session.distanceM ?? 0),
+    0
+  );
+
+  return { count: sessions.length, totalDuration, totalDistanceM };
 };

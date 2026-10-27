@@ -51,6 +51,7 @@
     "demoPasswordAlert": "Het beheerderswachtwoord voor de demomodus is \"{{password}}\"",
     "password": "Wachtwoord",
     "passwordHelp": "Het wachtwoord is nuttig om gevoelige acties te beschermen.",
+    "passwordRequired": "Kies een wachtwoord.",
     "boats": "Boten",
     "boatsHelp": "Voer de naam van uw boten in, één per regel",
     "boatsPlaceholder": "Voorbeeld: \n100 Swift\n101 Hudson\n102 WinTech\n103 Empacher\n104 Vespoli\n105 Swift\n106 WinTech\n200 Hudson\n201 WinTech\n202 Hudson\n203 Vespoli\n401 Hudson\n402 WinTech\n800 Filippi",
@@ -58,7 +59,30 @@
     "routesHelp": "Voer de naam van uw routes in, één per regel",
     "rowers": "Roeiers",
     "rowersHelp": "Voer de naam van uw roeiers in, één per regel",
-    "validate": "Informatie valideren"
+    "validate": "Informatie valideren",
+    "profile": {
+      "title": "Hoe werkt uw club?",
+      "help": "Deze keuze zet modules aan. U kunt ze altijd toevoegen of verwijderen via Instellingen > Modules.",
+      "simple": {
+        "name": "Eenvoudig",
+        "description": "Boten, roeiers en trajecten: het essentiële om tochten te noteren."
+      },
+      "fullClub": {
+        "name": "Volledige club",
+        "description": "Voegt afstanden, soorten tochten, volledige ledenprofielen, gasten en stuurman van dienst toe."
+      },
+      "efaImport": {
+        "name": "Ik kom van efa",
+        "description": "Neemt uw efa2-project direct over: boten, roeiers, bestemmingen en logboeken."
+      }
+    },
+    "efa": {
+      "title": "Uw efa2-project",
+      "help": "Kies een ZIP-back-up die efa heeft gemaakt, of de gegevensmap van efa. Boten, roeiers, routes en al uw logboeken worden overgenomen en de nuttige modules ingeschakeld.",
+      "chosen": "Gekozen project: {{name}}",
+      "required": "Kies eerst uw efa2-project",
+      "confirm": "Importeren en beginnen"
+    }
   },
   "boathouse": {
     "coachNote": "Notitie van de coach",
@@ -120,7 +144,7 @@
     "minimumValidRowersRequired": "Het is noodzakelijk om ten minste {{count}} roeier(s) met ten minste de vereiste niveaus voor deze boot te selecteren.",
     "alert": {
       "rowersProvided": "U heeft ingevoerd",
-      "rowersCount": "{{count}} roeier(s)",
+      "rowersCount": "{{count}} perso(o)n(en) aan boord, stuurman inbegrepen",
       "boatRequires": "De boot \"{{boatName}}\" vereist",
       "continueAnyway": "Wilt u toch doorgaan?",
       "rowersAlreadyOnSession": "Enkele roeiers hebben al een andere sessie gestart. Wilt u toch doorgaan?",
@@ -130,7 +154,26 @@
       "invalidRowersLevel_other": "<0>{{count}}</0> roeiers hebben niet het vereiste niveau voor deze boot.",
       "fixInformation": "Informatie corrigeren"
     },
-    "noRowersRecorded": "Er zijn geen roeiers geregistreerd voor deze sessie. Als dit een fout is, neem dan contact op met de ondersteuning."
+    "noRowersRecorded": "Er zijn geen roeiers geregistreerd voor deze sessie. Als dit een fout is, neem dan contact op met de ondersteuning.",
+    "cox": "Stuurman",
+    "configuration": "Uitvoering",
+    "seatsCount_one": "{{count}} plaats",
+    "seatsCount_other": "{{count}} plaatsen",
+    "addGuest": "‘{{name}}’ als gast toevoegen",
+    "guest": "gast",
+    "severalDays": "Meerdere dagen",
+    "expectedReturn": "Verwachte terugkeer",
+    "outingType": "Soort tocht",
+    "captain": "Stuurman van dienst",
+    "noCaptain": "Geen",
+    "captainRequired": "Kies een stuurman van dienst uit de bemanning.",
+    "distanceKm": "Afgelegde afstand (km)",
+    "noIncidentDetails": "Geen details opgegeven",
+    "notSaved": "De vaart kon niet worden opgeslagen. Probeer het opnieuw.",
+    "duplicateCrewMember": "Dezelfde persoon is twee keer in de bemanning gekozen.",
+    "boatAlreadyOnSession": "Deze boot is al op het water.",
+    "returnBeforeStart": "De verwachte terugkeer moet na het vertrek liggen.",
+    "invalidDistance": "Ongeldige afstand: voer een aantal km in, bijvoorbeeld 12,5."
   },
   "logbook": {
     "title": "Logboek",
@@ -160,7 +203,8 @@
     "exportSuccess": "Export succesvol voltooid",
     "fileDownloaded": "\"{{fileName}}\" is gedownload naar uw \"Downloads\" map",
     "createNewExport": "Nieuwe export maken",
-    "backToSessionList": "Terug naar sessielijst"
+    "backToSessionList": "Terug naar sessielijst",
+    "captainName": "Stuurman van dienst: {{name}}"
   },
   "stats": {
     "title": "Statistieken",
@@ -202,7 +246,9 @@
       "december": "December"
     },
     "session_one": "{{count}} sessie",
-    "session_other": "{{count}} sessies"
+    "session_other": "{{count}} sessies",
+    "totalDistance": "Totale afstand",
+    "coxedSessions": "Vaarten als stuurman"
   },
   "parameters": {
     "title": "Beheer",
@@ -301,7 +347,7 @@
     "deleteAllDataTitle": "Alle gegevens verwijderen!",
     "warning": "Waarschuwing!",
     "deleteAllDataWarning1": "U staat op het punt alle applicatiegegevens te verwijderen.",
-    "deleteAllDataWarning2": "Het zal onmogelijk zijn om ze te herstellen zodra ze zijn verwijderd. Zorg ervoor dat u belangrijke gegevens heeft geëxporteerd.",
+    "deleteAllDataWarning2": "Eerst wordt een veiligheidsback-up gemaakt in de back-upmap (Beheer > Gegevens), naast eerdere back-ups. Verwijder ook die bestanden om de gegevens definitief te wissen.",
     "deleteConfirmationText": "Ik wil al mijn gegevens verwijderen",
     "deleteConfirmationInstruction": "Bevestig door exact \"{{text}}\" in het onderstaande veld te typen.",
     "enterAdminPassword": "Voer het beheerderswachtwoord in",
@@ -327,7 +373,13 @@
     "timeFormat": "Tijdformaat",
     "timeFormatDescription": "Kies tussen 12-uurs of 24-uurs tijdweergave",
     "timeFormat12h": "12-uurs formaat (AM/PM)",
-    "timeFormat24h": "24-uurs formaat"
+    "timeFormat24h": "24-uurs formaat",
+    "distanceKm": "km",
+    "showMembers": "Roeiers",
+    "showGuests": "Gasten ({{count}})",
+    "guestsHelp": "Gasten worden aangemaakt als bij vertrek een naam wordt getypt. Ze staan niet in de roeierslijst; zet hun status op ‘Lid’ om ze toe te voegen.",
+    "finishOutingBeforeArchiving": "Archiveren niet mogelijk: beëindig eerst de lopende vaart.",
+    "nameRequired": "De naam is verplicht."
   },
   "boat": {
     "type": "Type",
@@ -337,13 +389,45 @@
     "twoRowersCoxed": "2+ (twee met stuurman)",
     "fourRowersCoxless": "4x (dubbel vier)",
     "fourRowersCoxed": "4+ (vier met stuurman)",
-    "eightRowersCoxed": "8+ (acht)"
+    "eightRowersCoxed": "8+ (acht)",
+    "configurations": "Uitvoeringen",
+    "configurationsHelp": "Een boot die gescheept en gestreken kan worden (4x / 4-) heeft meerdere uitvoeringen; de keuze verschijnt bij vertrek.",
+    "seats": "Plaatsen",
+    "riggingUnknown": "Scull of boord",
+    "riggingScull": "Scull",
+    "riggingSweep": "Boord",
+    "coxed": "Met stuurman",
+    "defaultConfiguration": "Standaard",
+    "removeConfiguration": "Deze uitvoering verwijderen",
+    "addConfiguration": "Uitvoering toevoegen",
+    "configurationError": {
+      "invalidSeats": "Het aantal plaatsen moet een geheel getal van 1 tot {{max}} zijn.",
+      "sweepNeedsEvenSeats": "Een boord-boot heeft een even aantal plaatsen nodig.",
+      "duplicateConfiguration": "Deze uitvoering bestaat al voor deze boot."
+    }
   },
   "rower": {
     "name": "Naam",
     "level": "Niveau",
     "category": "Categorie",
-    "stats": "Statistieken"
+    "stats": "Statistieken",
+    "firstName": "Voornaam",
+    "lastName": "Achternaam",
+    "status": "Status",
+    "statusMember": "Lid",
+    "statusGuest": "Gast",
+    "statusOther": "Overig",
+    "gender": "Geslacht",
+    "genderUnknown": "Niet opgegeven",
+    "genderFemale": "Vrouw",
+    "genderMale": "Man",
+    "genderOther": "Anders",
+    "birthDate": "Geboortedatum",
+    "licenseNumber": "Licentienummer",
+    "email": "E-mail",
+    "phone": "Telefoon",
+    "address": "Adres",
+    "note": "Notitie"
   },
   "error": {
     "generic": "Er is een fout opgetreden",
@@ -368,6 +452,174 @@
     "exportError": "Fout tijdens exporteren"
   },
   "database": {
-    "failedToLoad": "Kan database niet laden"
+    "failedToLoad": "Kan database niet laden",
+    "failedToSave": "Opslaan mislukt: de wijziging is ongedaan gemaakt",
+    "backupsNotDeleted": "De oude v1-back-ups konden niet uit de map backups worden verwijderd",
+    "reloadFailed": "Gegevens konden niet opnieuw worden geladen: start de app opnieuw"
+  },
+  "migration": {
+    "unknownBoat": "Onbekende boot",
+    "unknownRower": "Onbekende roeier",
+    "unknownRoute": "Onbekende route",
+    "done": "Je gegevens zijn naar de nieuwe database overgezet. Een back-up, die na 90 dagen automatisch wordt verwijderd, staat hier: {{location}}",
+    "failed": "De clubgegevens konden niet worden geladen. Er is niets verwijderd: start de app opnieuw.",
+    "skipped": "{{count}} onleesbare v1-item(s) konden niet worden overgenomen. Ze staan in de back-up: {{location}}"
+  },
+  "modules": {
+    "title": "Modules",
+    "intro": "Zet alleen aan wat uw club nodig heeft. Een module uitzetten verbergt de schermen en velden zonder iets te wissen: de gegevens komen terug als u hem weer aanzet.",
+    "enable": "‘{{name}}’ aanzetten",
+    "noThanks": "Nee, bedankt",
+    "distances": {
+      "name": "Afstanden",
+      "description": "Leg de geroeide kilometers van elke tocht vast.",
+      "adds": "Voegt een afstand toe aan trajecten, een vooraf ingevulde en aanpasbare afstand bij het einde van een tocht, en kilometers in het logboek en de statistieken.",
+      "suggestion": "Wilt u kilometers bijhouden? De module Afstanden geeft elk traject een afstand en neemt die over in de tochten."
+    },
+    "outingTypes": {
+      "name": "Soorten tochten",
+      "description": "Onderscheid training, wedstrijden, trainingskampen, toertochten… en leg meerdaagse tochten vast.",
+      "adds": "Voegt de keuze van het soort tocht bij vertrek toe, een einddatum voor meerdaagse tochten, en het soort in het logboek en de exports.",
+      "suggestion": "Wilt u trainingen, wedstrijden of toertochten in het logboek onderscheiden? De module Soorten tochten maakt dat mogelijk."
+    },
+    "memberProfile": {
+      "name": "Volledig ledenprofiel",
+      "description": "Bewaar contactgegevens en informatie van uw leden op één plek.",
+      "adds": "Voegt aparte voor- en achternaam, geslacht, geboortedatum, licentienummer, e-mail, telefoon, adres en status (lid, gast, overig) toe.",
+      "suggestion": "Een e-mail, licentienummer of geboortedatum nodig? De module Volledig ledenprofiel voegt die velden toe."
+    },
+    "guests": {
+      "name": "Gasten",
+      "description": "Voeg bij vertrek iemand toe die niet in de roeierslijst staat.",
+      "adds": "Een naam die bij vertrek wordt getypt, maakt een ‘gast’-profiel aan dat verborgen is in de roeierslijst; de tochten blijven in het logboek en het profiel kan later worden aangevuld of omgezet in een lid.",
+      "suggestion": "Gasten of roeiers op doorreis? Met de module Gasten typt u hun naam bij vertrek zonder een lid aan te maken."
+    },
+    "captain": {
+      "name": "Stuurman van dienst",
+      "description": "Wijs de persoon aan die tijdens de tocht verantwoordelijk is voor de bemanning.",
+      "adds": "Voegt bij vertrek de keuze van de verantwoordelijke uit de bemanning toe (voorgesteld wordt de stuurman, anders de eerste volwassen roeier), zichtbaar in het logboek en de exports.",
+      "suggestion": "Wilt u weten wie verantwoordelijk is voor elke boot op het water? De module Stuurman van dienst voegt dat bij vertrek toe.",
+      "requiredOption": "Stuurman van dienst verplicht maken om te vertrekken"
+    }
+  },
+  "outingTypes": {
+    "normal": "Gewone tocht",
+    "training": "Training",
+    "regatta": "Wedstrijd",
+    "training_camp": "Trainingskamp",
+    "instruction": "Instructie",
+    "tour": "Toertocht",
+    "club_trip": "Clubtocht",
+    "ergometer": "Ergometer",
+    "motorboat": "Motorboot"
+  },
+  "backup": {
+    "dataTitle": "Gegevens",
+    "title": "Back-ups",
+    "description": "Rowing Beacon kopieert alle clubgegevens automatisch bij het opstarten, daarna elke 24 uur, en vóór elke import, herstel of verwijdering. De laatste 14 automatische back-ups worden bewaard.",
+    "lastBackup": "Laatste back-up: {{date}}",
+    "noBackupYet": "Nog geen back-up.",
+    "backupNow": "Nu een back-up maken",
+    "done": "Back-up gemaakt",
+    "failed": "De back-up is mislukt",
+    "beforeDeleteFailed": "De back-up is mislukt: er is niets gewist.",
+    "autoBackupFailed": "De automatische back-up is mislukt",
+    "restoreFromFile": "Herstellen uit een bestand…",
+    "externalTitle": "Externe kopie",
+    "externalFolder": "Handmatige back-ups, back-ups vóór een import, terugzetting of verwijdering en één automatische back-up per week worden ook gekopieerd naar: {{folder}}",
+    "externalReminder": "De back-ups blijven op deze computer. Kies een USB-stick of een gesynchroniseerde map (Drive, Dropbox…) zodat ze een computerstoring overleven.",
+    "externalCopyFailed": "De laatste externe kopie is mislukt: controleer of de USB-stick of map bereikbaar is.",
+    "externalFolderSet": "De volgende back-ups worden ook naar deze map gekopieerd",
+    "chooseExternalFolder": "Map kiezen",
+    "changeExternalFolder": "Andere map",
+    "stopExternalCopy": "Niet meer kopiëren",
+    "restore": "Herstellen",
+    "restoreTitle": "Een back-up herstellen",
+    "restoreConfirm": "Alle clubgegevens worden vervangen door die van de back-up van {{backup}}.",
+    "restoreSafety": "De huidige gegevens worden vlak daarvoor bewaard, dus u kunt terug. Daarna start de app opnieuw.",
+    "restoreFailed": "Het terugzetten is mislukt en geannuleerd: er is niets gewijzigd. De applicatie wordt nu opnieuw gestart.",
+    "folder": "Map met back-ups: {{folder}}",
+    "kind": {
+      "auto": "Automatisch",
+      "manual": "Handmatig",
+      "before-import": "Vóór een import",
+      "before-restore": "Vóór een herstel",
+      "before-delete": "Vóór een verwijdering"
+    },
+    "notABackup": "Dit bestand is geen geldige Rowing Beacon-back-up. Er is niets gewijzigd.",
+    "newerBackup": "Deze back-up komt uit een nieuwere versie van Rowing Beacon. Werk de applicatie bij om hem terug te zetten. Er is niets gewijzigd.",
+    "restoreNotStarted": "Het terugzetten kon niet beginnen (bestand onleesbaar of veiligheidsback-up mislukt). Er is niets gewijzigd."
+  },
+  "efa2": {
+    "title": "efa2",
+    "description": "Neem de gegevens over van een club die efa2 gebruikt, of maak een project dat efa2 weer kan openen.",
+    "importTitle": "Een efa2-project importeren",
+    "importDescription": "Kies een ZIP-back-up die efa heeft gemaakt, of de gegevensmap van efa (met het .efa2project-bestand). De huidige clubgegevens worden vervangen, na een back-up.",
+    "chooseZip": "ZIP-back-up van efa…",
+    "chooseFolder": "Gegevensmap…",
+    "exportTitle": "Exporteren naar efa2",
+    "exportDescription": "Maakt op een plek naar keuze een ZIP-back-up die efa2 kan terugzetten, met alles wat uit efa was geïmporteerd.",
+    "export": "Exporteren",
+    "exported": "efa2-project opgeslagen: {{path}}",
+    "exportFailed": "De efa2-export is mislukt",
+    "incidentsNotExported_one": "{{count}} incident heeft geen equivalent in efa2 en wordt niet geëxporteerd.",
+    "incidentsNotExported_other": "{{count}} incidenten hebben geen equivalent in efa2 en worden niet geëxporteerd.",
+    "notAProject": "Daar is geen leesbaar efa2-project gevonden",
+    "readFailed": "De bestanden konden niet worden gelezen ({{reason}}). Controleer de toegang tot de map of de USB-stick.",
+    "importFailed": "De import is mislukt en geannuleerd: de clubgegevens zijn niet gewijzigd. De applicatie wordt nu opnieuw gestart.",
+    "previewTitle": "Het efa2-project ‘{{name}}’ importeren",
+    "preview": {
+      "boats_one": "{{count}} boot",
+      "boats_other": "{{count}} boten",
+      "rowers_one": "{{count}} roeier",
+      "rowers_other": "{{count}} roeiers",
+      "routes_one": "{{count}} route",
+      "routes_other": "{{count}} routes",
+      "outings_one": "{{count}} tocht (logboeken: {{logbooks}})",
+      "outings_other": "{{count}} tochten (logboeken: {{logbooks}})",
+      "ongoing_one": "waarvan {{count}} lopende tocht",
+      "ongoing_other": "waarvan {{count}} lopende tochten",
+      "guests_one": "{{count}} gast aangemaakt voor een vrij ingevoerde naam",
+      "guests_other": "{{count}} gasten aangemaakt voor vrij ingevoerde namen",
+      "externalBoats_one": "{{count}} externe boot, gearchiveerd",
+      "externalBoats_other": "{{count}} externe boten, gearchiveerd",
+      "incidents_one": "{{count}} niet-herstelde schade, overgenomen als incident",
+      "incidents_other": "{{count}} niet-herstelde schades, overgenomen als incidenten",
+      "keptIntro": "Ook bewaard, voorlopig zonder scherm, en teruggeschreven bij de efa2-export:",
+      "closedOpen_one": "{{count}} tocht die vóór vandaag open bleef in efa, bij de import afgesloten",
+      "closedOpen_other": "{{count}} tochten die vóór vandaag open bleven in efa, bij de import afgesloten",
+      "ambiguousNames_one": "{{count}} vrij ingevoerde naam past bij meerdere personen: hij wordt een gast",
+      "ambiguousNames_other": "{{count}} vrij ingevoerde namen passen bij meerdere personen: ze worden gasten",
+      "unreadableEntries_one": "{{count}} onleesbare logboekregel (zonder datum of nummer): ongewijzigd bewaard en bij de efa2-export teruggeschreven",
+      "unreadableEntries_other": "{{count}} onleesbare logboekregels (zonder datum of nummer): ongewijzigd bewaard en bij de efa2-export teruggeschreven"
+    },
+    "objects": {
+      "efa2boatreservations": "reserveringen",
+      "efa2boatdamages": "herstelde schades",
+      "efa2messages": "berichten",
+      "efa2crews": "standaardploegen",
+      "efa2waters": "wateren",
+      "efa2sessiongroups": "tochtgroepen",
+      "efa2clubwork": "vrijwilligerswerk",
+      "efa2fahrtenabzeichen": "DRV-insignes",
+      "efa2statistics": "opgeslagen statistieken"
+    },
+    "replaceWarning": "Alle huidige clubgegevens worden vervangen. Vlak daarvoor wordt een back-up gemaakt.",
+    "confirmImport": "Vervangen en importeren",
+    "externalBoatNote": "Externe boot geïmporteerd uit efa",
+    "statusGroupPrefix": "efa-status: ",
+    "status": {
+      "member": "Lid",
+      "guest": "Gast",
+      "other": "Anders"
+    },
+    "defaultProjectName": "RowingBeacon",
+    "boathouseName": "Botenhuis",
+    "backupFailed": "De back-up vóór de import is mislukt (schijf vol?). De import is geannuleerd, er is niets gewijzigd.",
+    "incompleteProject": "Dit efa-project is onvolledig: het bevat geen boten of geen personen (gedeeltelijke back-up, nieuw project of verkeerde map). De import wordt geweigerd om de clubgegevens niet te wissen.",
+    "chooseProject": "Deze map bevat meerdere efa-projecten: {{names}}. Typ de naam van het project dat u wilt importeren.",
+    "closedOpenOutingNote": "(Tocht die in efa open bleef, bij de import afgesloten.)",
+    "crewsCut_one": "{{count}} tocht heeft meer dan 24 roeiers of meerdere stuurlieden: efa2 heeft geen plaats voor de anderen, zij worden niet geëxporteerd.",
+    "crewsCut_other": "{{count}} tochten hebben meer dan 24 roeiers of meerdere stuurlieden: efa2 heeft geen plaats voor de anderen, zij worden niet geëxporteerd."
   }
 }

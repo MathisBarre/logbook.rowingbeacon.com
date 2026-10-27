@@ -7,6 +7,8 @@ import { generateIds } from "../../../_common/utils/ids.utils";
 import { asError, asOk, TechnicalError } from "../../../_common/utils/error";
 import { BoatTypeEnum } from "../../../_common/business/boat.rules";
 import { boatLevelConfigStoreCore } from "../../../_common/store/boatLevelConfig.store";
+import { toNewGuestOptionId } from "../../../_common/business/crew.rules";
+import { AgeCategoryEnum } from "../../../_common/business/ageCategory.rules";
 
 describe("StartSession", () => {
   let repository: IStartSessionRepository;
@@ -85,8 +87,12 @@ describe("StartSession", () => {
           {
             id: ROWER_ID,
             name: "DUMMY:rower",
+            role: "rower",
           },
         ],
+        boatConfigurationId: null,
+        outingTypeCode: null,
+        captainRowerId: null,
         startDateTime: startDateTimeStr,
         estimatedEndDateTime: endDateTimeStr,
         comment: "DUMMY:comment",
@@ -236,6 +242,246 @@ describe("StartSession", () => {
       expect(result).toEqual(
         asError(new TechnicalError(new Error("DUMMY:error")))
       );
+    });
+  });
+
+  describe("with a cox, a chosen configuration, a guest and a captain", () => {
+    const FOUR_SCULL_COXED = {
+      id: "conf-4x+",
+      seats: 4,
+      rigging: "scull" as const,
+      coxed: true,
+      isDefault: true,
+      position: 0,
+    };
+    const FOUR_SWEEP = {
+      id: "conf-4-",
+      seats: 4,
+      rigging: "sweep" as const,
+      coxed: false,
+      isDefault: false,
+      position: 1,
+    };
+    const crewRowers = ["r1", "r2", "r3", "r4", "cox"].map((id) => ({
+      id,
+      name: `DUMMY:${id}`,
+    }));
+
+    const setup = () => {
+      init();
+      repository = createInMemoryStartSessionRepository({
+        ...getHappyCaseInMemoryData(),
+        boats: [
+          {
+            id: BOAT_ID,
+            name: "DUMMY:boat",
+            type: BoatTypeEnum.FOUR_ROWERS_COXED,
+            configurations: [FOUR_SCULL_COXED, FOUR_SWEEP],
+          },
+        ],
+        rowers: [...crewRowers],
+      });
+      vi.spyOn(repository, "saveSession");
+    };
+
+    it("counts the cox in the crew of the default configuration", async () => {
+      setup();
+      result = await getUsecase().execute({
+        ...happyCasePayload,
+        sessionToStart: {
+          ...happyCasePayload.sessionToStart,
+          rowersId: ["r1", "r2", "r3", "r4"],
+          coxId: "cox",
+        },
+      });
+
+      expect(result).toEqual(asOk(true));
+      const saved = vi.mocked(repository.saveSession).mock.calls[0][0];
+      expect(saved.boatConfigurationId).toBe("conf-4x+");
+      expect(saved.rowers.map((rower) => [rower.id, rower.role])).toEqual([
+        ["r1", "rower"],
+        ["r2", "rower"],
+        ["r3", "rower"],
+        ["r4", "rower"],
+        ["cox", "cox"],
+      ]);
+    });
+
+    it("checks the crew size against the chosen configuration", async () => {
+      setup();
+      result = await getUsecase().execute({
+        ...happyCasePayload,
+        sessionToStart: {
+          ...happyCasePayload.sessionToStart,
+          rowersId: ["r1", "r2", "r3", "r4"],
+          coxId: "cox",
+          boatConfigurationId: "conf-4-",
+        },
+      });
+
+      expect(result).toEqual(
+        asError({
+          code: "BAD_AMOUNT_OF_ROWERS",
+          details: {
+            nbOfRowers: 5,
+            boatRowersQuantity: 4,
+            boatName: "DUMMY:boat",
+          },
+        })
+      );
+    });
+
+    it("notices rowers filling the cox's place in a coxed boat", async () => {
+      setup();
+      result = await getUsecase().execute({
+        ...happyCasePayload,
+        sessionToStart: {
+          ...happyCasePayload.sessionToStart,
+          rowersId: ["r1", "r2", "r3", "r4", "r5"],
+          coxId: null,
+          boatConfigurationId: "conf-4+",
+        },
+      });
+
+      expect(result).toEqual(
+        asError({
+          code: "BAD_AMOUNT_OF_ROWERS",
+          details: {
+            nbOfRowers: 5,
+            boatRowersQuantity: 4,
+            boatName: "DUMMY:boat",
+          },
+        })
+      );
+    });
+
+    it("creates a guest for a typed name and keeps them as captain", async () => {
+      setup();
+      result = await getUsecase().execute({
+        ...happyCasePayload,
+        sessionToStart: {
+          ...happyCasePayload.sessionToStart,
+          rowersId: ["r1", "r2", "r3", toNewGuestOptionId("Ana Silva")],
+          boatConfigurationId: "conf-4-",
+          captainRowerId: toNewGuestOptionId("Ana Silva"),
+        },
+        params: { ...happyCasePayload.params, requireCaptain: true },
+      });
+
+      expect(result).toEqual(asOk(true));
+      const saved = vi.mocked(repository.saveSession).mock.calls[0][0];
+      const guest = saved.rowers[3];
+      expect(guest.name).toBe("Ana Silva");
+      expect(saved.captainRowerId).toBe(guest.id);
+    });
+
+    it("refuses to start without a captain when one is required", async () => {
+      setup();
+      result = await getUsecase().execute({
+        ...happyCasePayload,
+        sessionToStart: {
+          ...happyCasePayload.sessionToStart,
+          rowersId: ["r1", "r2", "r3", "r4"],
+          boatConfigurationId: "conf-4-",
+          captainRowerId: "someone-not-in-the-crew",
+        },
+        params: { ...happyCasePayload.params, requireCaptain: true },
+      });
+
+      expect(result).toEqual(asError({ code: "CAPTAIN_REQUIRED" }));
+    });
+
+    it("refuses the same person as rower and cox", async () => {
+      setup();
+      result = await getUsecase().execute({
+        ...happyCasePayload,
+        sessionToStart: {
+          ...happyCasePayload.sessionToStart,
+          rowersId: ["r1", "r2", "r3", "r4"],
+          coxId: "r1",
+        },
+        params: { ...happyCasePayload.params, ignoreRowersNumberError: true },
+      });
+
+      expect(result).toEqual(asError({ code: "DUPLICATE_CREW_MEMBER" }));
+    });
+
+    it("refuses the same guest typed twice", async () => {
+      setup();
+      result = await getUsecase().execute({
+        ...happyCasePayload,
+        sessionToStart: {
+          ...happyCasePayload.sessionToStart,
+          rowersId: [toNewGuestOptionId("Paul"), toNewGuestOptionId(" paul ")],
+        },
+        params: { ...happyCasePayload.params, ignoreRowersNumberError: true },
+      });
+
+      expect(result).toEqual(asError({ code: "DUPLICATE_CREW_MEMBER" }));
+    });
+
+    it("refuses a second outing on a boat that is already out", async () => {
+      setup();
+      const payload = {
+        ...happyCasePayload,
+        sessionToStart: {
+          ...happyCasePayload.sessionToStart,
+          rowersId: ["r1", "r2", "r3", "r4"],
+          boatConfigurationId: "conf-4-",
+        },
+      };
+      expect(await getUsecase().execute(payload)).toEqual(asOk(true));
+      expect(await getUsecase().execute(payload)).toEqual(
+        asError({ code: "BOAT_ALREADY_ON_SESSION" })
+      );
+    });
+
+    it("never lets a guest or the cox fail the level check", async () => {
+      init();
+      repository = createInMemoryStartSessionRepository({
+        ...getHappyCaseInMemoryData(),
+        boats: [
+          {
+            id: BOAT_ID,
+            name: "DUMMY:boat",
+            type: BoatTypeEnum.FOUR_ROWERS_COXED,
+            configurations: [FOUR_SCULL_COXED],
+          },
+        ],
+        rowers: [
+          ...["r1", "r2", "r3"].map((id) => ({
+            id,
+            name: id,
+            category: AgeCategoryEnum.SENIOR,
+          })),
+          { id: "guest", name: "Ana", status: "guest" as const },
+          { id: "cox", name: "Cox" },
+        ],
+      });
+      boatLevelConfigStoreCore.setState({
+        boatLevelConfigs: [
+          {
+            boatId: BOAT_ID,
+            minimalRowerCategory: AgeCategoryEnum.SENIOR,
+            minimalRowerType: null,
+          },
+        ],
+      });
+
+      try {
+        result = await getUsecase().execute({
+          ...happyCasePayload,
+          sessionToStart: {
+            ...happyCasePayload.sessionToStart,
+            rowersId: ["r1", "r2", "r3", "guest"],
+            coxId: "cox",
+          },
+        });
+      } finally {
+        boatLevelConfigStoreCore.setState({ boatLevelConfigs: [] });
+      }
+
+      expect(result).toEqual(asOk(true));
     });
   });
 });

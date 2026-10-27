@@ -9,6 +9,7 @@ import { Label } from "../../_common/components/Label";
 import { addMonths, getDateTime } from "../../_common/utils/date.utils";
 import { useExportSessions } from "../hooks/useExportSessions";
 import { CheckIcon } from "lucide-react";
+import { ModuleSuggestion } from "../../_common/components/ModuleSuggestion";
 
 const ExportSessionsFormSchema = z.object({
   fromDate: dateStringSchema,
@@ -46,9 +47,7 @@ export const ExportSessions = ({
           TextContent={() => (
             <>
               <p>{t("logbook.exportSuccess")}</p>
-              <p>
-                {t("logbook.fileDownloaded", { fileName })}
-              </p>
+              <p>{t("logbook.fileDownloaded", { fileName })}</p>
             </>
           )}
           btn2={() => {
@@ -132,6 +131,7 @@ export const ExportSessions = ({
             )}
           />
         </div>
+        <ModuleSuggestion id="outingTypes" />
         <Button loading={isLoading} type="submit">
           {t("session.export")}
         </Button>

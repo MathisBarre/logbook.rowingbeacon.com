@@ -3,14 +3,14 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { getErrorMessage } from "../../_common/utils/error";
 import { getDatabase } from "../../_common/database/database";
-import { DBSessions } from "../../_common/database/schema";
+import { DBOutings } from "../../_common/database/schema";
 import { millisecondToDayHourMinutes } from "../../_common/utils/time.utils";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import Loading from "../../_common/components/Loading";
 import { StatsTable } from "../../_common/components/StatsTable";
 import { SeasonSelector } from "../../stats/components/SeasonSelector";
 import { Season, getSeasonDate } from "../../_common/utils/seasons";
-import { and, gte, lte } from "drizzle-orm";
+import { and, gte, lte, isNotNull } from "drizzle-orm";
 import { useGetFirstAndLastRegisteredSessionDate } from "../../stats/utils/getFirstAndLastRegisteredSessionDate";
 
 export const BoatStatsComparisons = () => {
@@ -41,18 +41,21 @@ export const BoatStatsComparisons = () => {
 
       {isLoadingStats && <Loading />}
 
-      {!isLoadingStats && stats.length === 0 && <Loading />}
+      {!isLoadingStats && stats.length === 0 && (
+        <p className="text-gray-500">{t("stats.noSessionsRecorded")}</p>
+      )}
 
       {!isLoadingStats && stats.length > 0 && (
         <StatsTable
           headers={{
-            boatId: t("stats.boat"),
+            name: t("stats.boat"),
             count: t("stats.numberOfSessions"),
             totalDuration: t("stats.totalDuration"),
             averageDuration: t("stats.averageDurationPerSession"),
           }}
           stats={stats.map((stat) => ({
-            boatId: stat.boatId,
+            id: stat.boatId,
+            name: stat.name,
             count: stat.count.toString(),
             totalDuration: millisecondToDayHourMinutes(
               stat.totalDuration
@@ -69,21 +72,27 @@ export const BoatStatsComparisons = () => {
 
 const useGetBoatsStats = (season: Season) => {
   const [stats, setStats] = useState(
-    [] as { count: number; totalDuration: number; boatId: string }[]
+    [] as {
+      count: number;
+      totalDuration: number;
+      boatId: string;
+      name: string;
+    }[]
   );
   const [isLoading, setIsLoading] = useState(true);
-
-  const { getAllBoats } = useClubOverviewStore();
 
   useEffect(() => {
     setIsLoading(true);
     getBoatsStats(season)
       .then((stats) => {
-        stats.map((stat) => {
-          const boat = getAllBoats().find((boat) => boat.id === stat.boatId);
-          stat.boatId = boat?.name || stat.boatId;
-        });
-        setStats(stats);
+        // Archived boats keep their name.
+        const { getBoatById } = useClubOverviewStore.getState();
+        setStats(
+          stats.map((stat) => ({
+            ...stat,
+            name: getBoatById(stat.boatId)?.name || stat.boatId,
+          }))
+        );
       })
       .catch((e) => toast.error(getErrorMessage(e)))
       .finally(() => setIsLoading(false));
@@ -105,39 +114,43 @@ const getBoatsStats = async (
 
   const sessions = await drizzle
     .select()
-    .from(DBSessions)
+    .from(DBOutings)
     .where(
       and(
-        gte(DBSessions.startDateTime, season.startDate.toISOString()),
-        lte(DBSessions.startDateTime, season.endDate.toISOString())
+        isNotNull(DBOutings.endDateTime),
+        gte(DBOutings.startDateTime, season.startDate.toISOString()),
+        lte(DBOutings.startDateTime, season.endDate.toISOString())
       )
     );
 
   const stats = sessions
-    .reduce((acc, curr) => {
-      const existingItem = acc.find((stat) => stat.boatId === curr.boatId);
+    .reduce(
+      (acc, curr) => {
+        const existingItem = acc.find((stat) => stat.boatId === curr.boatId);
 
-      let totalDuration = 0;
+        let totalDuration = 0;
 
-      if (curr?.startDateTime && curr?.endDateTime) {
-        const start = new Date(curr.startDateTime);
-        const end = new Date(curr.endDateTime);
-        totalDuration = end.getTime() - start.getTime();
-      }
+        if (curr?.startDateTime && curr?.endDateTime) {
+          const start = new Date(curr.startDateTime);
+          const end = new Date(curr.endDateTime);
+          totalDuration = end.getTime() - start.getTime();
+        }
 
-      if (existingItem) {
-        existingItem.count++;
-        existingItem.totalDuration += totalDuration;
-      } else {
-        acc.push({
-          boatId: curr.boatId,
-          count: 1,
-          totalDuration: totalDuration,
-        });
-      }
+        if (existingItem) {
+          existingItem.count++;
+          existingItem.totalDuration += totalDuration;
+        } else {
+          acc.push({
+            boatId: curr.boatId,
+            count: 1,
+            totalDuration: totalDuration,
+          });
+        }
 
-      return acc;
-    }, [] as { count: number; totalDuration: number; boatId: string }[])
+        return acc;
+      },
+      [] as { count: number; totalDuration: number; boatId: string }[]
+    )
     .sort((a, b) => b.totalDuration - a.totalDuration);
 
   return stats;

@@ -5,11 +5,17 @@ import { BoatSection } from "./BoatSection";
 import CommentSection from "./CommentSection";
 import DurationEstimationSelect from "./DurationEstimationSelect";
 import RouteSection from "./RouteSection";
-import { RowersSection } from "./RowersSection";
+import { CoxSection, RowersSection } from "./RowersSection";
+import { ConfigurationSection } from "./ConfigurationSection";
+import { OutingTypeSection } from "./OutingTypeSection";
+import { CaptainSection } from "./CaptainSection";
+import { getDefaultCaptainId } from "../../../_common/business/crew.rules";
+import { DEFAULT_OUTING_TYPE_CODE } from "../../../_common/business/outingType.rules";
 import StartDatetimeSection from "./StartDatetimeSection";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormField } from "../../../_common/components/Form";
+import { Label } from "../../../_common/components/Label";
 import Button from "../../../_common/components/Button";
 import { dateStringSchema } from "../../../_common/utils/commonSchema";
 import { ErrorBlock } from "../../../_common/components/ErrorBlock";
@@ -28,7 +34,17 @@ import {
 import { AgeCategoryEnum } from "../../../_common/business/ageCategory.rules";
 import { useBoatLevelConfigStore } from "../../../_common/store/boatLevelConfig.store";
 import { BoatTypeEnum } from "../../../_common/business/boat.rules";
-import { getBoatNumberOfRowers } from "../../../_common/business/boat.rules";
+import { Rower } from "../../../_common/business/rower.rules";
+import {
+  BoatConfiguration,
+  getLegacyTypeFromConfiguration,
+} from "../../../_common/business/boatConfiguration.rules";
+import { getOutingConfiguration } from "../../business/StartSession/StartSession.rules";
+import {
+  useModule,
+  useModulesStore,
+} from "../../../_common/store/modules.store";
+import { useEffect, useRef } from "react";
 
 const StartSessionFormSchema = z.object({
   boat: z.object({
@@ -43,9 +59,11 @@ const StartSessionFormSchema = z.object({
     id: z.string(),
     name: z.string(),
   }),
+  boatConfigurationId: z.string().nullable(),
   selectedRowersOptions: z
     .array(z.object({ id: z.string(), name: z.string() }))
     .min(1, { message: "Please select at least one rower" }),
+  cox: z.object({ id: z.string(), name: z.string() }).nullable(),
   startDateTime: dateStringSchema,
   durationValue: z.enum([
     "na",
@@ -61,7 +79,11 @@ const StartSessionFormSchema = z.object({
     "150",
     "165",
     "180",
+    "days",
   ]),
+  estimatedReturn: z.string().optional(),
+  outingTypeCode: z.string().nullable(),
+  captainId: z.string().nullable(),
   comment: z.string(),
 });
 
@@ -80,11 +102,9 @@ interface StartSessionFormProps {
       note?: string;
       seriousnessCategory: SeriousnessCategoryEnum | null;
       ageCategory: AgeCategoryEnum | null;
+      configurations: BoatConfiguration[];
     }[];
-    rowers: {
-      id: string;
-      name: string;
-    }[];
+    rowers: Rower[];
   };
   cancelAction: () => void;
   onSessionStarted: () => void;
@@ -107,7 +127,9 @@ export const StartSessionForm = ({
 
   const {
     startSession,
+    isSubmitting,
     startSessionError,
+    clearStartSessionError,
     acceptBadAmountOfRowers,
     fixInputs,
     alert,
@@ -117,17 +139,28 @@ export const StartSessionForm = ({
 
   const formatValuesForSubmission = (values: StartSessionFormValues) => {
     const durationInMinutes =
-      values.durationValue !== "na"
+      values.durationValue !== "na" && values.durationValue !== "days"
         ? parseInt(values.durationValue)
         : undefined;
 
-    const estimatedEndDatetime = durationInMinutes
-      ? addMinutes(new Date(values.startDateTime), durationInMinutes)
-      : undefined;
+    const estimatedEndDatetime =
+      values.durationValue === "days"
+        ? values.estimatedReturn
+          ? new Date(values.estimatedReturn)
+          : undefined
+        : durationInMinutes
+          ? addMinutes(new Date(values.startDateTime), durationInMinutes)
+          : undefined;
 
     return {
       boatId: values.boat.id,
       rowersId: values.selectedRowersOptions.map((option) => option.id),
+      coxId: selectedConfiguration?.coxed ? (values.cox?.id ?? null) : null,
+      boatConfigurationId: values.boatConfigurationId,
+      outingTypeCode: hasOutingTypes
+        ? (values.outingTypeCode ?? DEFAULT_OUTING_TYPE_CODE)
+        : null,
+      captainRowerId: hasCaptain ? values.captainId : null,
       startDatetime: new Date(values.startDateTime),
       estimatedEndDatetime: estimatedEndDatetime,
       routeId: values.route.id === "null" ? null : values.route.id,
@@ -136,13 +169,82 @@ export const StartSessionForm = ({
   };
 
   const { boatTypeLevelConfigs } = useBoatLevelConfigStore();
+  const allowGuests = useModule("guests");
+  const hasOutingTypes = useModule("outingTypes");
+  const hasCaptain = useModule("captain");
+  const captainRequired = useModulesStore((state) => state.captainRequired);
 
   const selectedBoat = form.watch("boat");
+  const selectedBoatData = startSessionData.boats.find(
+    (boat) => boat.id === selectedBoat.id
+  );
+  const boatConfigurationId = form.watch("boatConfigurationId");
+  const selectedConfiguration = selectedBoatData
+    ? getOutingConfiguration(selectedBoatData, boatConfigurationId)
+    : undefined;
+
+  // A new boat starts on its default configuration.
+  useEffect(() => {
+    const boat = startSessionData.boats.find(
+      (boat) => boat.id === selectedBoat.id
+    );
+    const defaultConfigurationId = boat
+      ? (getOutingConfiguration(boat)?.id ?? null)
+      : null;
+    if (form.getValues("boatConfigurationId") !== defaultConfigurationId) {
+      form.setValue("boatConfigurationId", defaultConfigurationId);
+    }
+  }, [selectedBoat.id]);
+
+  const selectedRowers = form.watch("selectedRowersOptions");
+  const selectedCox = form.watch("cox");
+  const crew = [
+    ...(selectedRowers ?? []).map((rower) => ({
+      ...rower,
+      role: "rower" as const,
+    })),
+    ...(selectedConfiguration?.coxed && selectedCox
+      ? [{ ...selectedCox, role: "cox" as const }]
+      : []),
+  ];
+  const crewKey = crew.map((member) => member.id).join(",");
+
+  // Suggest a captain as the crew changes, until someone picks one.
+  // "No captain" picked by hand is a choice too and is kept.
+  const captainChoice = useRef<"suggested" | "picked" | "none">("suggested");
+  useEffect(() => {
+    if (!hasCaptain || captainChoice.current === "none") {
+      return;
+    }
+    const captainId = form.getValues("captainId");
+    const isCaptainInCrew = crew.some((member) => member.id === captainId);
+    if (captainChoice.current === "picked" && isCaptainInCrew) {
+      return;
+    }
+    // The picked captain left the crew: back to suggestions.
+    captainChoice.current = "suggested";
+    const rowersById = new Map(
+      startSessionData.rowers.map((rower) => [rower.id, rower])
+    );
+    form.setValue(
+      "captainId",
+      getDefaultCaptainId(
+        crew.map((member) => ({ ...rowersById.get(member.id), ...member })),
+        new Date()
+      )
+    );
+  }, [crewKey, hasCaptain]);
+
+  const durationValue = form.watch("durationValue");
+
   const blockFromXRowers = getBoatTypeLevelConfig(
-    selectedBoat.type || BoatTypeEnum.OTHER,
+    selectedConfiguration
+      ? getLegacyTypeFromConfiguration(selectedConfiguration)
+      : selectedBoat.type || BoatTypeEnum.OTHER,
     boatTypeLevelConfigs
   ).blockFrom;
-  const numberOfRowers = getBoatNumberOfRowers(selectedBoat.type);
+  // The level check is about rowing seats: the cox is not counted.
+  const numberOfRowers = selectedConfiguration?.seats ?? undefined;
   const minimumValidRower = getMinimumValidRowersNeeded(
     blockFromXRowers,
     numberOfRowers
@@ -342,7 +444,21 @@ export const StartSessionForm = ({
             )}
           </div>
 
-          <div>
+          {selectedBoatData && (
+            <FormField
+              name="boatConfigurationId"
+              control={form.control}
+              render={({ field }) => (
+                <ConfigurationSection
+                  configurations={selectedBoatData.configurations}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+          )}
+
+          <div className="flex flex-col gap-4">
             <FormField
               name="selectedRowersOptions"
               control={form.control}
@@ -352,9 +468,31 @@ export const StartSessionForm = ({
                   onChange={(newValue) => field.onChange(newValue)}
                   values={field.value}
                   errorMessage={fieldState.error?.message}
+                  seats={selectedConfiguration?.seats}
+                  allowGuests={allowGuests}
+                  excluded={
+                    selectedConfiguration?.coxed && selectedCox
+                      ? [selectedCox]
+                      : []
+                  }
                 />
               )}
             />
+            {selectedConfiguration?.coxed && (
+              <FormField
+                name="cox"
+                control={form.control}
+                render={({ field }) => (
+                  <CoxSection
+                    rowers={startSessionData.rowers}
+                    onChange={(newValue) => field.onChange(newValue)}
+                    value={field.value}
+                    allowGuests={allowGuests}
+                    excluded={selectedRowers ?? []}
+                  />
+                )}
+              />
+            )}
             {minimumValidRower > 0 && (
               <p className="text-xs text-gray-500 mt-1">
                 {t("session.minimumValidRowersRequired", {
@@ -363,6 +501,47 @@ export const StartSessionForm = ({
               </p>
             )}
           </div>
+
+          {(hasOutingTypes || hasCaptain) && (
+            <div className="flex gap-6">
+              {hasOutingTypes && (
+                <FormField
+                  name="outingTypeCode"
+                  control={form.control}
+                  render={({ field }) => (
+                    <OutingTypeSection
+                      value={field.value ?? DEFAULT_OUTING_TYPE_CODE}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+              )}
+              {hasCaptain && (
+                <FormField
+                  name="captainId"
+                  control={form.control}
+                  render={({ field }) => (
+                    <CaptainSection
+                      crew={crew}
+                      value={field.value}
+                      onChange={(captainId) => {
+                        captainChoice.current =
+                          captainId === null ? "none" : "picked";
+                        clearStartSessionError();
+                        field.onChange(captainId);
+                      }}
+                      isRequired={captainRequired}
+                      errorMessage={
+                        startSessionError === "CAPTAIN_REQUIRED"
+                          ? t("session.captainRequired")
+                          : undefined
+                      }
+                    />
+                  )}
+                />
+              )}
+            </div>
+          )}
 
           <div className="flex gap-6">
             <FormField
@@ -385,9 +564,28 @@ export const StartSessionForm = ({
                   value={field.value}
                   onChange={field.onChange}
                   errorMessage={fieldState.error?.message}
+                  allowMultiDay={hasOutingTypes}
                 />
               )}
             />
+
+            {durationValue === "days" && (
+              <FormField
+                name="estimatedReturn"
+                control={form.control}
+                render={({ field }) => (
+                  <div className="flex flex-col gap-1 flex-1">
+                    <Label>{t("session.expectedReturn")}</Label>
+                    <input
+                      className="input"
+                      type="datetime-local"
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                    />
+                  </div>
+                )}
+              />
+            )}
           </div>
 
           <FormField
@@ -407,12 +605,18 @@ export const StartSessionForm = ({
             >
               {t("common.cancel")}
             </Button>
-            <Button type="submit" className="flex-1" loading={isLoading}>
+            <Button
+              type="submit"
+              className="flex-1"
+              loading={isLoading || isSubmitting}
+            >
               {t("session.startSession")}
             </Button>
           </div>
 
-          {startSessionError && <ErrorBlock message={startSessionError} />}
+          {startSessionError && startSessionError !== "CAPTAIN_REQUIRED" && (
+            <ErrorBlock message={startSessionError} />
+          )}
         </form>
       </Form>
     </div>

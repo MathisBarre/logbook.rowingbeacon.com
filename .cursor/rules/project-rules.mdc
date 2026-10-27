@@ -3,7 +3,7 @@ description:
 globs: 
 alwaysApply: true
 ---
-use yarn classic
+use pnpm
 
 use tailwind and react
 

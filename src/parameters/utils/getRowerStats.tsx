@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { getErrorMessage } from "../../_common/utils/error";
 import { toast } from "sonner";
-import { between, inArray, not } from "drizzle-orm";
+import { between, inArray, isNotNull, not } from "drizzle-orm";
 import { and } from "drizzle-orm";
 import { eq } from "drizzle-orm";
-import { DBSessions } from "../../_common/database/schema";
+import { DBOutings } from "../../_common/database/schema";
 import { getDatabase } from "../../_common/database/database";
-import { DBSessionOnRowers } from "../../_common/database/schema";
+import { DBOutingCrew } from "../../_common/database/schema";
+import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 
 type SessionWithRower = {
   session: {
@@ -32,6 +33,9 @@ type RowerStats = {
   lastSessionDate?: Date;
   coachedSessionsCount: number;
   coachedSessionsPercentage: number;
+  /** Outings as cox, kept apart from rowing time. */
+  coxCount: number;
+  coxDuration: number;
 };
 
 /**
@@ -169,21 +173,24 @@ export const calculateMostUsedBoats = (
   limit: number = 5
 ): { id: string; count: number }[] => {
   return sessions
-    .reduce((acc: { id: string; count: number }[], session) => {
-      const boatId = session.session?.boatId;
-      if (!boatId) {
+    .reduce(
+      (acc: { id: string; count: number }[], session) => {
+        const boatId = session.session?.boatId;
+        if (!boatId) {
+          return acc;
+        }
+
+        const existing = acc.find((b) => b.id === boatId);
+        if (existing) {
+          existing.count++;
+        } else {
+          acc.push({ id: boatId, count: 1 });
+        }
+
         return acc;
-      }
-
-      const existing = acc.find((b) => b.id === boatId);
-      if (existing) {
-        existing.count++;
-      } else {
-        acc.push({ id: boatId, count: 1 });
-      }
-
-      return acc;
-    }, [] as { id: string; count: number }[])
+      },
+      [] as { id: string; count: number }[]
+    )
     .sort((a, b) => b.count - a.count)
     .slice(0, limit);
 };
@@ -193,17 +200,22 @@ export const calculateMostFrequentPartners = (
   limit: number = 5
 ): { id: string; count: number }[] => {
   return sessionsOnRower
-    .reduce((acc: { id: string; count: number }[], sessionOnRower) => {
-      const existing = acc.find((rower) => rower.id === sessionOnRower.rowerId);
+    .reduce(
+      (acc: { id: string; count: number }[], sessionOnRower) => {
+        const existing = acc.find(
+          (rower) => rower.id === sessionOnRower.rowerId
+        );
 
-      if (existing) {
-        existing.count++;
-      } else {
-        acc.push({ id: sessionOnRower.rowerId, count: 1 });
-      }
+        if (existing) {
+          existing.count++;
+        } else {
+          acc.push({ id: sessionOnRower.rowerId, count: 1 });
+        }
 
-      return acc;
-    }, [] as { id: string; count: number }[])
+        return acc;
+      },
+      [] as { id: string; count: number }[]
+    )
     .sort((a, b) => b.count - a.count)
     .slice(0, limit);
 };
@@ -225,6 +237,8 @@ export const useGetRowerStats = (
     mostFrequentPartners: [],
     coachedSessionsCount: 0,
     coachedSessionsPercentage: 0,
+    coxCount: 0,
+    coxDuration: 0,
   });
 
   useEffect(() => {
@@ -242,20 +256,44 @@ const getRowerStats = async (
 ): Promise<RowerStats> => {
   const { drizzle } = await getDatabase();
 
-  const sessions = await drizzle
+  const rows = await drizzle
     .select()
-    .from(DBSessionOnRowers)
-    .leftJoin(DBSessions, eq(DBSessions.id, DBSessionOnRowers.sessionId))
+    .from(DBOutingCrew)
+    .leftJoin(DBOutings, eq(DBOutings.id, DBOutingCrew.outingId))
     .where(
       and(
-        eq(DBSessionOnRowers.rowerId, rowerId),
+        isNotNull(DBOutings.endDateTime),
+        eq(DBOutingCrew.rowerId, rowerId),
         between(
-          DBSessions.startDateTime,
+          DBOutings.startDateTime,
           season.startDate.toISOString(),
           season.endDate.toISOString()
         )
       )
     );
+
+  const toSession = (row: (typeof rows)[number]): SessionWithRower => ({
+    session: row.outing
+      ? {
+          id: row.outing.id,
+          startDateTime: row.outing.startDateTime,
+          endDateTime: row.outing.endDateTime,
+          boatId: row.outing.boatId,
+          hasBeenCoached:
+            row.outing.hasBeenCoached === 1
+              ? "true"
+              : row.outing.hasBeenCoached === 0
+                ? "false"
+                : null,
+        }
+      : null,
+  });
+  const sessions = rows
+    .filter((row) => row.outing_crew.role !== "cox")
+    .map(toSession);
+  const coxSessions = rows
+    .filter((row) => row.outing_crew.role === "cox")
+    .map(toSession);
 
   const totalDuration = calculateTotalDuration(sessions);
   const { coachedSessionsCount, coachedSessionsPercentage } =
@@ -263,17 +301,25 @@ const getRowerStats = async (
   const { firstSessionDate, lastSessionDate } =
     calculateSessionDateRange(sessions);
   const mostUsedBoats = calculateMostUsedBoats(sessions);
-  const sessionIds = getSessionIds(sessions);
+  const sessionIds = getSessionIds([...sessions, ...coxSessions]);
 
-  const sessionsOnRower = await drizzle
+  const crewRows = await drizzle
     .select()
-    .from(DBSessionOnRowers)
+    .from(DBOutingCrew)
     .where(
       and(
-        inArray(DBSessionOnRowers.sessionId, sessionIds),
-        not(eq(DBSessionOnRowers.rowerId, rowerId))
+        inArray(DBOutingCrew.outingId, sessionIds),
+        not(eq(DBOutingCrew.rowerId, rowerId))
       )
     );
+  // Guests are not ranked, here as in the comparison table.
+  const { getRowerById } = useClubOverviewStore.getState();
+  const sessionsOnRower: SessionOnRower[] = crewRows
+    .filter((row) => getRowerById(row.rowerId)?.status !== "guest")
+    .map((row) => ({
+      rowerId: row.rowerId,
+      sessionId: row.outingId,
+    }));
 
   const mostFrequentPartners = calculateMostFrequentPartners(sessionsOnRower);
 
@@ -286,5 +332,7 @@ const getRowerStats = async (
     lastSessionDate,
     coachedSessionsCount,
     coachedSessionsPercentage,
+    coxCount: coxSessions.length,
+    coxDuration: calculateTotalDuration(coxSessions),
   };
 };

@@ -2,7 +2,15 @@ import { UserIcon, ChatBubbleLeftIcon } from "@heroicons/react/16/solid";
 import { useTranslation } from "react-i18next";
 import { getTime, getDateOnly } from "../../_common/utils/date.utils";
 import Loading from "../../_common/components/Loading";
-import { Trash2Icon, UserCheckIcon, UserXIcon } from "lucide-react";
+import {
+  ShieldCheckIcon,
+  Trash2Icon,
+  UserCheckIcon,
+  UserXIcon,
+} from "lucide-react";
+import { useModule } from "../../_common/store/modules.store";
+import { formatKilometres } from "../../_common/business/distance.rules";
+import { getOutingTypeLabel } from "../../_common/business/outingType.rules";
 import { useRemoveSession } from "../hooks/useRemoveSession";
 import { useAdminEditModeSystem } from "../../_common/store/adminEditMode.system";
 import { toast } from "sonner";
@@ -12,7 +20,11 @@ export interface SessionInTable {
   rowers: {
     id: string;
     name: string;
+    role?: "rower" | "cox";
   }[];
+  outingTypeCode?: string | null;
+  distanceM?: number | null;
+  captain?: { id: string; name: string } | null;
   boat: {
     id: string;
     name: string;
@@ -43,6 +55,9 @@ export function SessionHistoryTable({
   const { t } = useTranslation();
   const { removeSession } = useRemoveSession();
   const adminEditSystem = useAdminEditModeSystem();
+  const hasOutingTypes = useModule("outingTypes");
+  const hasDistances = useModule("distances");
+  const hasCaptain = useModule("captain");
 
   return (
     <div className="overflow-auto pb-20">
@@ -74,9 +89,9 @@ export function SessionHistoryTable({
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onClick={async () => {
                 if (await adminEditSystem.askForAdminAccess()) {
-                  await removeSession(session.id);
+                  const deleted = await removeSession(session.id);
                   await refresh();
-                  toast.success(t("logbook.sessionDeleted"));
+                  if (deleted) toast.success(t("logbook.sessionDeleted"));
                 }
               }}
             >
@@ -95,15 +110,40 @@ export function SessionHistoryTable({
                 <span>
                   {session.boat.name} <span className="text-gray-300">|</span>{" "}
                   {session.route?.name || t("logbook.noRoute")}
+                  {hasDistances && session.distanceM != null && (
+                    <>
+                      {" "}
+                      <span className="text-gray-300">|</span>{" "}
+                      {formatKilometres(session.distanceM)}
+                    </>
+                  )}
                 </span>
+                {hasOutingTypes && session.outingTypeCode && (
+                  <span className="ml-3 text-xs bg-steel-blue-50 text-steel-blue-900 border border-steel-blue-200 rounded px-2 py-0.5 font-sans tracking-normal">
+                    {getOutingTypeLabel(session.outingTypeCode)}
+                  </span>
+                )}
               </p>
               {session.rowers.length > 0 && (
                 <>
                   <div className="text-sm text-gray-500">
                     <UserIcon className="h-4 w-4 align-text-bottom inline mr-1 text-gray-500" />{" "}
-                    {session.rowers.map((r) => r.name).join(", ")}
+                    {session.rowers
+                      .map((r) =>
+                        r.role === "cox"
+                          ? `${r.name} (${t("session.cox").toLowerCase()})`
+                          : r.name
+                      )
+                      .join(", ")}
                   </div>
                 </>
+              )}
+
+              {hasCaptain && session.captain && (
+                <div className="text-sm text-gray-500 mt-1">
+                  <ShieldCheckIcon className="h-4 w-4 align-text-bottom inline mr-1 text-gray-500" />{" "}
+                  {t("logbook.captainName", { name: session.captain.name })}
+                </div>
               )}
 
               {session.comment && (

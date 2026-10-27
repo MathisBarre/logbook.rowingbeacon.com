@@ -1,5 +1,4 @@
 import { createStore } from "zustand/vanilla";
-import { persist } from "zustand/middleware";
 import {
   BoatLevelConfig,
   BoatTypeLevelConfigs,
@@ -10,9 +9,27 @@ import { SeriousnessCategoryEnum } from "../business/seriousness.rules";
 import { AgeCategoryEnum } from "../business/ageCategory.rules";
 import { BoatTypeEnum } from "../business/boat.rules";
 import { useStore } from "zustand";
+import { enqueueWrite } from "../database/writeQueue";
+import {
+  deleteBoatLevelConfig,
+  saveBoatLevelConfig,
+  saveSetting,
+} from "../database/repositories/club.repository";
+
+export const SETTING_BOAT_TYPE_LEVEL_CONFIGS = "levels.boatTypeLevelConfigs";
+
+const writeBoatTypeLevelConfigs = (configs: BoatTypeLevelConfigs) => {
+  void enqueueWrite("boat type levels", (db) =>
+    saveSetting(db, SETTING_BOAT_TYPE_LEVEL_CONFIGS, configs)
+  );
+};
 
 export interface IBoatLevelConfigStore {
   boatTypeLevelConfigs: BoatTypeLevelConfigs;
+  hydrate: (data: {
+    boatTypeLevelConfigs: BoatTypeLevelConfigs;
+    boatLevelConfigs: BoatLevelConfig[];
+  }) => void;
   updateBoatTypeLevelConfigs: (
     boatType: Exclude<BoatTypeEnum, BoatTypeEnum.OTHER>,
     boatTypeLevelConfig: BoatTypeLevelConfig
@@ -32,95 +49,102 @@ export interface IBoatLevelConfigStore {
   resetBoatTypeLevelConfigs: () => void;
 }
 
-export const boatLevelConfigStoreCore = createStore(
-  persist<IBoatLevelConfigStore>(
-    (set, get) => ({
-      boatTypeLevelConfigs: DEFAULT_BOAT_TYPE_LEVEL_CONFIGS,
-      boatLevelConfigs: [],
-      getBoatTypeLevelConfigs: () => {
-        return get().boatTypeLevelConfigs;
-      },
-      updateBoatTypeLevelConfigs(boatType, boatTypeLevelConfig) {
-        set((state) => {
-          return {
-            ...state,
-            boatTypeLevelConfigs: {
-              ...state.boatTypeLevelConfigs,
-              [boatType]: boatTypeLevelConfig,
-            },
-          };
-        });
-      },
-      getBoatLevelConfig(boatId) {
-        return get().boatLevelConfigs.find((boat) => boat.boatId === boatId);
-      },
-      upsertBoatLevelConfig(boatId, boatLevelConfig) {
-        set((state) => {
-          const currentBoatLevelConfig = state.boatLevelConfigs.find(
-            (boat) => boat.boatId === boatId
-          );
+export const boatLevelConfigStoreCore = createStore<IBoatLevelConfigStore>()(
+  (set, get) => ({
+    boatTypeLevelConfigs: DEFAULT_BOAT_TYPE_LEVEL_CONFIGS,
+    boatLevelConfigs: [],
+    hydrate({ boatTypeLevelConfigs, boatLevelConfigs }) {
+      set({ boatTypeLevelConfigs, boatLevelConfigs });
+    },
+    getBoatTypeLevelConfigs: () => {
+      return get().boatTypeLevelConfigs;
+    },
+    updateBoatTypeLevelConfigs(boatType, boatTypeLevelConfig) {
+      set((state) => {
+        return {
+          ...state,
+          boatTypeLevelConfigs: {
+            ...state.boatTypeLevelConfigs,
+            [boatType]: boatTypeLevelConfig,
+          },
+        };
+      });
+      writeBoatTypeLevelConfigs(get().boatTypeLevelConfigs);
+    },
+    getBoatLevelConfig(boatId) {
+      return get().boatLevelConfigs.find((boat) => boat.boatId === boatId);
+    },
+    upsertBoatLevelConfig(boatId, boatLevelConfig) {
+      set((state) => {
+        const currentBoatLevelConfig = state.boatLevelConfigs.find(
+          (boat) => boat.boatId === boatId
+        );
 
-          if (!currentBoatLevelConfig) {
-            return {
-              ...state,
-              boatLevelConfigs: [
-                ...state.boatLevelConfigs,
-                {
-                  boatId,
-                  minimalRowerCategory:
-                    boatLevelConfig.minimalRowerCategory || null,
-                  minimalRowerType: boatLevelConfig.minimalRowerType || null,
-                },
-              ],
-            };
-          }
-
-          const boatLevelConfigsWithoutCurrent = state.boatLevelConfigs.filter(
-            (boat) => boat.boatId !== boatId
-          );
-
-          const newBoatLevelConfig = {
-            ...currentBoatLevelConfig,
-            ...boatLevelConfig,
-          };
-
+        if (!currentBoatLevelConfig) {
           return {
             ...state,
             boatLevelConfigs: [
-              ...boatLevelConfigsWithoutCurrent,
-              newBoatLevelConfig,
+              ...state.boatLevelConfigs,
+              {
+                boatId,
+                minimalRowerCategory:
+                  boatLevelConfig.minimalRowerCategory || null,
+                minimalRowerType: boatLevelConfig.minimalRowerType || null,
+              },
             ],
           };
-        });
-      },
-      deleteBoatLevelConfig(boatId) {
-        set((state) => {
-          const boatLevelConfigs = state.boatLevelConfigs.filter(
-            (boat) => boat.boatId !== boatId
-          );
-          return {
-            ...state,
-            boatLevelConfigs,
-          };
-        });
-      },
-      reset() {
-        set({
-          boatTypeLevelConfigs: DEFAULT_BOAT_TYPE_LEVEL_CONFIGS,
-          boatLevelConfigs: [],
-        });
-      },
-      resetBoatTypeLevelConfigs() {
-        set((state) => ({
+        }
+
+        const boatLevelConfigsWithoutCurrent = state.boatLevelConfigs.filter(
+          (boat) => boat.boatId !== boatId
+        );
+
+        const newBoatLevelConfig = {
+          ...currentBoatLevelConfig,
+          ...boatLevelConfig,
+        };
+
+        return {
           ...state,
-          boatTypeLevelConfigs: DEFAULT_BOAT_TYPE_LEVEL_CONFIGS,
-        }));
-      },
-    }),
-    {
-      name: "boatLevelConfigStore",
-    }
-  )
+          boatLevelConfigs: [
+            ...boatLevelConfigsWithoutCurrent,
+            newBoatLevelConfig,
+          ],
+        };
+      });
+      const saved = get().getBoatLevelConfig(boatId);
+      if (saved) {
+        void enqueueWrite("boat level", (db) => saveBoatLevelConfig(db, saved));
+      }
+    },
+    deleteBoatLevelConfig(boatId) {
+      set((state) => {
+        const boatLevelConfigs = state.boatLevelConfigs.filter(
+          (boat) => boat.boatId !== boatId
+        );
+        return {
+          ...state,
+          boatLevelConfigs,
+        };
+      });
+      void enqueueWrite("boat level", (db) =>
+        deleteBoatLevelConfig(db, boatId)
+      );
+    },
+    reset() {
+      set({
+        boatTypeLevelConfigs: DEFAULT_BOAT_TYPE_LEVEL_CONFIGS,
+        boatLevelConfigs: [],
+      });
+    },
+    resetBoatTypeLevelConfigs() {
+      set((state) => ({
+        ...state,
+        boatTypeLevelConfigs: DEFAULT_BOAT_TYPE_LEVEL_CONFIGS,
+      }));
+      writeBoatTypeLevelConfigs(DEFAULT_BOAT_TYPE_LEVEL_CONFIGS);
+    },
+  })
 );
 
 export const useBoatLevelConfigStore = () => useStore(boatLevelConfigStoreCore);

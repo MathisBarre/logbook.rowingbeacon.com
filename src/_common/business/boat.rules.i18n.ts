@@ -7,7 +7,7 @@ export const getTypeLabelTranslated = (
 ) => {
   if (!type) return t("common.other");
 
-  switch (type) {
+  switch (type as BoatTypeEnum) {
     case BoatTypeEnum.ONE_ROWER_COXLESS:
       return t("boat.oneRowerCoxless");
     case BoatTypeEnum.TWO_ROWERS_COXLESS:

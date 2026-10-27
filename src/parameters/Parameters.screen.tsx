@@ -3,9 +3,11 @@ import { RowersCrud } from "./components/RowersCrud";
 import { forEnum } from "../_common/utils/utils";
 import { BoatCrud } from "./components/BoatsCrud";
 import { MiscParams } from "./components/MiscParams";
+import { ModulesParams } from "./components/ModulesParams";
+import { DataParams } from "./components/DataParams";
 import { useTranslation } from "react-i18next";
 
-type Page = "rowers" | "boats" | "misc";
+type Page = "rowers" | "boats" | "misc" | "modules" | "data";
 
 export const ParametersScreen = () => {
   const { t } = useTranslation();
@@ -18,6 +20,8 @@ export const ParametersScreen = () => {
           rowers: () => <RowersCrud />,
           boats: () => <BoatCrud />,
           misc: () => <MiscParams />,
+          modules: () => <ModulesParams />,
+          data: () => <DataParams />,
         })}
       </div>
 
@@ -25,6 +29,18 @@ export const ParametersScreen = () => {
         <NavigationButton
           label={t("parameters.misc")}
           page="misc"
+          currentPage={page}
+          setPage={setPage}
+        />
+        <NavigationButton
+          label={t("backup.dataTitle")}
+          page="data"
+          currentPage={page}
+          setPage={setPage}
+        />
+        <NavigationButton
+          label={t("modules.title")}
+          page="modules"
           currentPage={page}
           setPage={setPage}
         />

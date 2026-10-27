@@ -14,5 +14,5 @@ export interface Route {
  */
 
 export const generateRoutesId = () => {
-  return `route-${v4()}`;
+  return v4();
 };

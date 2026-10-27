@@ -1,11 +1,21 @@
-import { getBoatNumberOfRowers } from "../../../_common/business/boat.rules";
 import { IBoatLevelConfigStore } from "../../../_common/store/boatLevelConfig.store";
 import {
   canRowerUseBoat,
   getBoatTypeLevelConfig,
 } from "../../../_common/store/boatLevelConfig.rules";
-import { getNbOfMissingRowers, whatShouldItDo } from "./StartSession.rules";
+import {
+  getExpectedCrewSize,
+  getOutingConfiguration,
+  whatShouldItDo,
+} from "./StartSession.rules";
 import { Route } from "../../../_common/business/route.rules";
+import { Rower } from "../../../_common/business/rower.rules";
+import {
+  getNewGuestName,
+  hasDuplicateCrewMember,
+  isSamePersonName,
+} from "../../../_common/business/crew.rules";
+import { getLegacyTypeFromConfiguration } from "../../../_common/business/boatConfiguration.rules";
 import { toISODateFormat } from "../../../_common/utils/date.utils";
 import {
   asError,
@@ -19,18 +29,29 @@ import {
   isInvalidStartSessionDate,
 } from "./StartSession.rules";
 import { getAlreadyOnStartedSessionRowersId } from "./StartSession.rules";
-import { IStartSessionRepository } from "./StartSession.repository.interface";
+import {
+  IStartSessionRepository,
+  StartSessionBoat,
+} from "./StartSession.repository.interface";
 
 interface Params {
   ignoreRowersNumberError: boolean;
   ignoreRowersAlreadyOnSessionError: boolean;
   ignoreRowersLevelError?: boolean;
+  /** Captain module option: refuse an outing without a captain. */
+  requireCaptain?: boolean;
 }
 
 interface Payload {
   sessionToStart: SessionToStart;
   params: Params;
 }
+
+/** Crew ids in seat order, cox last. */
+const getCrewIds = (payload: SessionToStart) => [
+  ...payload.rowersId,
+  ...(payload.coxId ? [payload.coxId] : []),
+];
 
 export class StartSessionUsecase {
   constructor(
@@ -45,12 +66,26 @@ export class StartSessionUsecase {
         ignoreRowersAlreadyOnSessionError, //
         ignoreRowersNumberError,
         ignoreRowersLevelError = false,
+        requireCaptain = false,
       } = payload.params;
 
-      const InvalidPayloadError = this.getInvalidPayloadError(sessionToStart);
+      const InvalidPayloadError = this.getInvalidPayloadError(
+        sessionToStart,
+        requireCaptain
+      );
 
       if (InvalidPayloadError) {
         return asError(InvalidPayloadError);
+      }
+
+      const startedSessions =
+        await this.startSessionRepository.getStartedSessions();
+      if (
+        startedSessions.some(
+          (session) => session.boat?.id === sessionToStart.boatId
+        )
+      ) {
+        return asError({ code: "BOAT_ALREADY_ON_SESSION" });
       }
 
       const RowersNumberError = await this.getRowersNumberError(sessionToStart);
@@ -59,9 +94,8 @@ export class StartSessionUsecase {
         return asError(RowersNumberError);
       }
 
-      const AlreadyOnSessionError = await this.getAlreadyOnSessionError(
-        sessionToStart
-      );
+      const AlreadyOnSessionError =
+        await this.getAlreadyOnSessionError(sessionToStart);
 
       if (!ignoreRowersAlreadyOnSessionError && AlreadyOnSessionError) {
         return asError(AlreadyOnSessionError);
@@ -81,7 +115,10 @@ export class StartSessionUsecase {
     }
   }
 
-  private getInvalidPayloadError(payload: SessionToStart) {
+  private getInvalidPayloadError(
+    payload: SessionToStart,
+    requireCaptain: boolean
+  ) {
     if (isInvalidStartSessionDate(payload)) {
       return new ErrorWithCode({
         code: "INVALID_DATETIME",
@@ -91,24 +128,61 @@ export class StartSessionUsecase {
         },
       });
     }
+
+    if (hasDuplicateCrewMember(getCrewIds(payload))) {
+      return new ErrorWithCode({ code: "DUPLICATE_CREW_MEMBER" });
+    }
+
+    const hasCaptainInCrew =
+      !!payload.captainRowerId &&
+      getCrewIds(payload).includes(payload.captainRowerId);
+
+    if (requireCaptain && !hasCaptainInCrew) {
+      return new ErrorWithCode({ code: "CAPTAIN_REQUIRED" });
+    }
   }
 
   private async getRowersNumberError(payload: SessionToStart) {
-    const nbOfRowers = payload.rowersId.length;
-
     const boat = await this.startSessionRepository.getBoat(payload.boatId);
+    const configuration = getOutingConfiguration(
+      boat,
+      payload.boatConfigurationId
+    );
 
+    // With a configuration the cox has a field of their own: rowers are
+    // compared to the seats, so 5 rowers in a 4+ without cox are noticed.
+    // A cox in a coxless boat takes a seat.
+    if (configuration && configuration.seats !== null) {
+      const nbOfRowers =
+        payload.rowersId.length +
+        (!configuration.coxed && payload.coxId ? 1 : 0);
+      if (nbOfRowers === configuration.seats) return;
+      return new ErrorWithCode({
+        code: "BAD_AMOUNT_OF_ROWERS",
+        details: {
+          nbOfRowers,
+          boatRowersQuantity: configuration.seats,
+          boatName: boat.name,
+        },
+      });
+    }
+
+    const crewSize = getCrewIds(payload).length;
     const notSameRowersAsSeatsInBoat = checkIfNotSameRowersAsSeatsInBoat(
-      nbOfRowers,
-      boat
+      crewSize,
+      boat,
+      payload.boatConfigurationId
     );
 
     if (notSameRowersAsSeatsInBoat) {
       return new ErrorWithCode({
         code: "BAD_AMOUNT_OF_ROWERS",
         details: {
-          nbOfRowers,
-          boatRowersQuantity: getBoatNumberOfRowers(boat.type),
+          nbOfRowers: crewSize,
+          boatRowersQuantity: getExpectedCrewSize(
+            boat,
+            payload.boatConfigurationId
+          ),
           boatName: boat.name,
         },
       });
@@ -119,16 +193,29 @@ export class StartSessionUsecase {
     const startedSession =
       await this.startSessionRepository.getStartedSessions();
 
+    const crewIds = getCrewIds(payload);
     const alreadyOnStartedSessionRowersId = getAlreadyOnStartedSessionRowersId(
-      payload.rowersId,
+      crewIds,
       startedSession
     );
 
-    if (alreadyOnStartedSessionRowersId.length > 0) {
-      const alreadyOnStartedSessionRowers =
-        await this.startSessionRepository.getRowersById(
+    // A typed guest name is the guest already out under that name.
+    const guestsAlreadyOut = crewIds.flatMap((id) => {
+      const guestName = getNewGuestName(id);
+      if (guestName === null) return [];
+      return startedSession
+        .flatMap((session) => session.rowers)
+        .filter((rower) => isSamePersonName(rower.name, guestName))
+        .slice(0, 1);
+    });
+
+    if (alreadyOnStartedSessionRowersId.length > 0 || guestsAlreadyOut.length) {
+      const alreadyOnStartedSessionRowers = [
+        ...(await this.startSessionRepository.getRowersById(
           alreadyOnStartedSessionRowersId
-        );
+        )),
+        ...guestsAlreadyOut,
+      ];
 
       return new ErrorWithCode({
         code: "ROWERS_ALREADY_ON_STARTED_SESSION",
@@ -137,6 +224,28 @@ export class StartSessionUsecase {
         },
       });
     }
+  }
+
+  /** Registered rowers for ids, guests created for typed names, in order. */
+  private async resolveCrewMembers(ids: string[]) {
+    const registered = await this.startSessionRepository.getRowersById(
+      ids.filter((id) => getNewGuestName(id) === null)
+    );
+    const members = new Map<string, Rower>();
+
+    for (const id of ids) {
+      const guestName = getNewGuestName(id);
+      const member =
+        guestName === null
+          ? registered.find((rower) => rower.id === id)
+          : await this.startSessionRepository.createGuest(guestName);
+
+      if (member) {
+        members.set(id, member);
+      }
+    }
+
+    return members;
   }
 
   private async saveSession(payload: SessionToStart) {
@@ -152,11 +261,9 @@ export class StartSessionUsecase {
       route = _route;
     }
 
-    const rowers = await this.startSessionRepository.getRowersById(
-      payload.rowersId
-    );
+    const members = await this.resolveCrewMembers(getCrewIds(payload));
 
-    if (rowers.length === 0) {
+    if (members.size === 0) {
       throw new ErrorWithCode({
         code: "NO_ROWERS",
         details: {
@@ -164,6 +271,18 @@ export class StartSessionUsecase {
         },
       });
     }
+
+    const rowers = [
+      ...payload.rowersId.map((id) => ({ id, role: "rower" as const })),
+      ...(payload.coxId ? [{ id: payload.coxId, role: "cox" as const }] : []),
+    ].flatMap(({ id, role }) => {
+      const member = members.get(id);
+      return member ? [{ ...member, role }] : [];
+    });
+
+    const captainRowerId = payload.captainRowerId
+      ? (members.get(payload.captainRowerId)?.id ?? null)
+      : null;
 
     await this.startSessionRepository.saveSession({
       boat: {
@@ -173,6 +292,10 @@ export class StartSessionUsecase {
       route,
       comment: payload.comment,
       rowers,
+      boatConfigurationId:
+        getOutingConfiguration(boat, payload.boatConfigurationId)?.id ?? null,
+      outingTypeCode: payload.outingTypeCode ?? null,
+      captainRowerId,
       estimatedEndDateTime: payload.estimatedEndDatetime
         ? toISODateFormat(payload.estimatedEndDatetime)
         : undefined,
@@ -180,10 +303,25 @@ export class StartSessionUsecase {
     });
   }
 
+  private getLevelBoatType(
+    boat: StartSessionBoat,
+    boatConfigurationId?: string | null
+  ) {
+    const configuration = getOutingConfiguration(boat, boatConfigurationId);
+
+    return configuration
+      ? getLegacyTypeFromConfiguration(configuration)
+      : boat.type;
+  }
+
+  /**
+   * Only rowing seats are checked: the cox is not, and a guest never counts
+   * as an invalid rower (they have no level to check).
+   */
   private async getRowersLevelError(payload: SessionToStart) {
     const boat = await this.startSessionRepository.getBoat(payload.boatId);
     const rowers = await this.startSessionRepository.getRowersById(
-      payload.rowersId
+      payload.rowersId.filter((id) => getNewGuestName(id) === null)
     );
     const boatLevelConfig = this.boatLevelConfigStore.getBoatLevelConfig(
       boat.id
@@ -195,18 +333,23 @@ export class StartSessionUsecase {
 
     let nbOfInvalidRowers = 0;
     for (const rower of rowers) {
-      if (!canRowerUseBoat(boatLevelConfig, rower)) {
+      if (rower.status !== "guest" && !canRowerUseBoat(boatLevelConfig, rower)) {
         nbOfInvalidRowers++;
       }
     }
 
-    const nbOfMissingRowers = getNbOfMissingRowers(boat.type, rowers.length);
-    nbOfInvalidRowers += nbOfMissingRowers;
+    const seats = getOutingConfiguration(
+      boat,
+      payload.boatConfigurationId
+    )?.seats;
+    if (seats !== undefined && seats !== null) {
+      nbOfInvalidRowers += Math.max(seats - payload.rowersId.length, 0);
+    }
 
     const boatTypeLevelConfigs =
       this.boatLevelConfigStore.getBoatTypeLevelConfigs();
     const boatTypeMinimalCorrectRowerConfig = getBoatTypeLevelConfig(
-      boat.type,
+      this.getLevelBoatType(boat, payload.boatConfigurationId),
       boatTypeLevelConfigs
     );
 

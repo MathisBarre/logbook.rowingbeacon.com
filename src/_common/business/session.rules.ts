@@ -1,5 +1,5 @@
 import { v4 } from "uuid";
 
 export const generateSessionId = () => {
-  return `session-${v4()}`;
+  return v4();
 };

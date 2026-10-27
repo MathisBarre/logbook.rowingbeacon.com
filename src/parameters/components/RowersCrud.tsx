@@ -24,7 +24,9 @@ import { ChartBarIcon } from "@heroicons/react/16/solid";
 import { RowerStats } from "./RowerStats";
 import { RowerStatsComparisons } from "./RowerStatsComparisons";
 import { UpdateRower } from "./UpdateRower";
-import { Rower } from "../../_common/business/rower.rules";
+import { ClubRower } from "../../_common/database/repositories/club.types";
+import { useModule } from "../../_common/store/modules.store";
+import { ModuleSuggestion } from "../../_common/components/ModuleSuggestion";
 import { getRowerTypeLabel } from "../../_common/business/rower.rules";
 import clsx from "clsx";
 import { BulkUpdateRower } from "./BulkUpdateRower";
@@ -40,7 +42,11 @@ import {
 export const RowersCrud = () => {
   const { t } = useTranslation();
   const store = useClubOverviewStore();
-  const rowers = store.getAllRowers();
+  const hasGuests = useModule("guests");
+  const [showGuests, setShowGuests] = useState(false);
+  const guests = store.getAllGuests();
+  const isShowingGuests = showGuests && guests.length > 0;
+  const rowers = isShowingGuests ? guests : store.getAllRowers();
 
   const deleteRower = async (rower: { id: string; name: string }) => {
     if (
@@ -51,8 +57,11 @@ export const RowersCrud = () => {
       return;
     }
 
-    store.archiveRower(rower.id);
-    toast.success(t("parameters.rowerDeleted"));
+    if (store.archiveRower(rower.id)) {
+      toast.success(t("parameters.rowerDeleted"));
+    } else {
+      toast.error(t("parameters.finishOutingBeforeArchiving"));
+    }
   };
 
   const [defaultCategory, setDefaultCategory] =
@@ -198,7 +207,6 @@ export const RowersCrud = () => {
                   >
                     {SERIOUSNESS_CATEGORIES.map((type) => (
                       <option key={type.type} value={type.type || ""}>
-                        admin{" "}
                         {type.translationKey
                           ? t(type.translationKey)
                           : t("parameters.noType")}
@@ -274,6 +282,24 @@ export const RowersCrud = () => {
             </>
           )}
 
+          {(hasGuests || guests.length > 0) && (
+            <select
+              className="input"
+              value={isShowingGuests ? "guests" : "members"}
+              onChange={(e) => {
+                setCurrentPage(1);
+                setShowGuests(e.target.value === "guests");
+                // Hidden rowers must not stay in the bulk edit selection.
+                setBulkEditMode((prev) => ({ ...prev, selectedRowers: [] }));
+              }}
+            >
+              <option value="members">{t("parameters.showMembers")}</option>
+              <option value="guests" disabled={guests.length === 0}>
+                {t("parameters.showGuests", { count: guests.length })}
+              </option>
+            </select>
+          )}
+
           <div className="relative flex-1">
             <SearchIcon className="absolute h-full w-5 left-3 pt-[0.125rem]" />
             <Input
@@ -288,6 +314,12 @@ export const RowersCrud = () => {
             />
           </div>
         </div>
+        <ModuleSuggestion id="guests" className="mb-4" />
+        {isShowingGuests && (
+          <p className="text-sm text-gray-500 mb-2">
+            {t("parameters.guestsHelp")}
+          </p>
+        )}
         <div className="flex-1 relative">
           <div className="overflow-y-auto absolute inset-0 border p-4 pt-0 rounded">
             <div className="grid gap-4 grid-cols-3">
@@ -442,7 +474,7 @@ export const RowersCrud = () => {
   );
 };
 
-const UpdateRowerModal = ({ rower }: { rower: Rower }) => {
+const UpdateRowerModal = ({ rower }: { rower: ClubRower }) => {
   const { t } = useTranslation();
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
 

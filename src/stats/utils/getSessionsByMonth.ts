@@ -5,6 +5,8 @@ import { getErrorMessage } from "../../_common/utils/error";
 import { Boat } from "../../_common/business/boat.rules";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { getSessionsInPeriod } from "./getSessionByPeriod";
+import { getDatabase } from "../../_common/database/database";
+import { getLegacyTypeFromConfiguration } from "../../_common/business/boatConfiguration.rules";
 
 export const getOneEmptyBarChartStackItemByMonth = () => {
   const result: BarChartStackItem[] = [];
@@ -29,19 +31,36 @@ export const getSessionsByMonthStackedByBoatType = async (
   data: { boats: Boat[] }
 ): Promise<BarChartStackItem[]> => {
   const sessions = await getSessionsInPeriod({ startDate, endDate });
+  const { db } = await getDatabase();
+  // Archived configurations included: an outing keeps the rigging it used.
+  const configurations = new Map(
+    (
+      await db.select<{ id: string; seats: number | null; coxed: number }[]>(
+        "SELECT id, seats, coxed FROM boat_configuration"
+      )
+    ).map((c) => [c.id, { seats: c.seats, coxed: c.coxed === 1 }])
+  );
 
-  const sessionsByMonthAndType = sessions.reduce((acc, session) => {
-    const month = new Date(session.startDateTime).getMonth();
-    const boatType =
-      data.boats.find((boat) => boat.id === session.boatId)?.type || "OTHER";
+  const sessionsByMonthAndType = sessions.reduce(
+    (acc, session) => {
+      const month = new Date(session.startDateTime).getMonth();
+      const configuration = session.boatConfigurationId
+        ? configurations.get(session.boatConfigurationId)
+        : undefined;
+      const boatType = configuration
+        ? getLegacyTypeFromConfiguration(configuration)
+        : data.boats.find((boat) => boat.id === session.boatId)?.type ||
+          "OTHER";
 
-    if (!acc[month]) {
-      acc[month] = {};
-    }
-    acc[month][boatType] = (acc[month][boatType] || 0) + 1;
+      if (!acc[month]) {
+        acc[month] = {};
+      }
+      acc[month][boatType] = (acc[month][boatType] || 0) + 1;
 
-    return acc;
-  }, {} as Record<number, Record<string, number>>);
+      return acc;
+    },
+    {} as Record<number, Record<string, number>>
+  );
 
   const result: BarChartStackItem[] = [];
 
@@ -66,10 +85,9 @@ export const useSessionsByMonthStackedByBoatType = ({
   endDate: Date;
 }) => {
   const [data, setData] = useState<BarChartStackItem[]>([]);
-  const { getAllBoats } = useClubOverviewStore();
-
   useEffect(() => {
-    const boats = getAllBoats();
+    // Archived boats included, so their outings keep their boat type.
+    const boats = useClubOverviewStore.getState().clubOverview.boats;
     getSessionsByMonthStackedByBoatType({ startDate, endDate }, { boats })
       .then(setData)
       .catch((e) => console.error(getErrorMessage(e)));

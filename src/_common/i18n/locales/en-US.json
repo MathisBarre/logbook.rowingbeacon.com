@@ -51,6 +51,7 @@
     "demoPasswordAlert": "The admin password for demo mode is \"{{password}}\"",
     "password": "Password",
     "passwordHelp": "The password will be useful to protect sensitive actions.",
+    "passwordRequired": "Choose a password.",
     "boats": "Boats",
     "boatsHelp": "Enter the name of your boats, one per line",
     "boatsPlaceholder": "Example: \n100 Swift\n101 Hudson\n102 WinTech\n103 Empacher\n104 Vespoli\n105 Swift\n106 WinTech\n200 Hudson\n201 WinTech\n202 Hudson\n203 Vespoli\n401 Hudson\n402 WinTech\n800 Filippi",
@@ -58,7 +59,30 @@
     "routesHelp": "Enter the name of your routes, one per line",
     "rowers": "Rowers",
     "rowersHelp": "Enter the name of your rowers, one per line",
-    "validate": "Validate information"
+    "validate": "Validate information",
+    "profile": {
+      "title": "How does your club work?",
+      "help": "This choice turns on modules. You can add or remove them at any time in Parameters > Modules.",
+      "simple": {
+        "name": "Simple",
+        "description": "Boats, rowers and routes: the essentials to log outings."
+      },
+      "fullClub": {
+        "name": "Full club",
+        "description": "Adds distances, outing types, full member profiles, guests and captain."
+      },
+      "efaImport": {
+        "name": "I'm coming from efa",
+        "description": "Brings in your efa2 project directly: boats, rowers, destinations and logbooks."
+      }
+    },
+    "efa": {
+      "title": "Your efa2 project",
+      "help": "Choose a ZIP backup made by efa, or efa's data folder. Boats, rowers, routes and all your logbooks are brought in, and the useful modules turned on.",
+      "chosen": "Chosen project: {{name}}",
+      "required": "Choose your efa2 project first",
+      "confirm": "Import and start"
+    }
   },
   "boathouse": {
     "coachNote": "Coach's note",
@@ -120,7 +144,7 @@
     "minimumValidRowersRequired": "It is necessary to select at least {{count}} rower(s) with at least the required levels for this boat.",
     "alert": {
       "rowersProvided": "You have entered",
-      "rowersCount": "{{count}} rower(s)",
+      "rowersCount": "{{count}} person(s) on board, cox included",
       "boatRequires": "The boat \"{{boatName}}\" requires",
       "continueAnyway": "Do you still want to continue?",
       "rowersAlreadyOnSession": "Some rowers have already started another session. Do you still want to continue?",
@@ -130,7 +154,26 @@
       "invalidRowersLevel_other": "<0>{{count}}</0> rowers do not have the required level for this boat.",
       "fixInformation": "Fix information"
     },
-    "noRowersRecorded": "No rowers were recorded for this session. If this is an error, please contact support."
+    "noRowersRecorded": "No rowers were recorded for this session. If this is an error, please contact support.",
+    "cox": "Cox",
+    "configuration": "Rigging",
+    "seatsCount_one": "{{count}} seat",
+    "seatsCount_other": "{{count}} seats",
+    "addGuest": "Add “{{name}}” as a guest",
+    "guest": "guest",
+    "severalDays": "Several days",
+    "expectedReturn": "Expected return",
+    "outingType": "Outing type",
+    "captain": "Captain",
+    "noCaptain": "None",
+    "captainRequired": "Choose a captain from the crew.",
+    "distanceKm": "Distance covered (km)",
+    "noIncidentDetails": "No details provided",
+    "notSaved": "The outing could not be saved. Please try again.",
+    "duplicateCrewMember": "The same person is picked twice in the crew.",
+    "boatAlreadyOnSession": "This boat is already out.",
+    "returnBeforeStart": "The expected return must be after the start.",
+    "invalidDistance": "Invalid distance: enter a number of km, for example 12.5."
   },
   "logbook": {
     "title": "Logbook",
@@ -160,7 +203,8 @@
     "exportSuccess": "Export completed successfully",
     "fileDownloaded": "\"{{fileName}}\" has been downloaded to your \"Downloads\" folder",
     "createNewExport": "Create a new export",
-    "backToSessionList": "Return to session list"
+    "backToSessionList": "Return to session list",
+    "captainName": "Captain: {{name}}"
   },
   "stats": {
     "title": "Statistics",
@@ -202,7 +246,9 @@
       "december": "December"
     },
     "session_one": "{{count}} session",
-    "session_other": "{{count}} sessions"
+    "session_other": "{{count}} sessions",
+    "totalDistance": "Total distance",
+    "coxedSessions": "Outings as cox"
   },
   "parameters": {
     "title": "Management",
@@ -301,7 +347,7 @@
     "deleteAllDataTitle": "Delete all data!",
     "warning": "Warning!",
     "deleteAllDataWarning1": "You are about to delete all application data.",
-    "deleteAllDataWarning2": "It will be impossible to recover them once deleted. Make sure you have exported important data.",
+    "deleteAllDataWarning2": "A safety backup is made first in the backups folder (Management > Data), alongside earlier backups. To erase the data for good, delete those files too.",
     "deleteConfirmationText": "I wish to delete all my data",
     "deleteConfirmationInstruction": "Confirm by writing exactly \"{{text}}\" in the field below.",
     "enterAdminPassword": "Enter admin password",
@@ -327,7 +373,13 @@
     "timeFormat": "Time format",
     "timeFormatDescription": "Choose between 12-hour or 24-hour time display",
     "timeFormat12h": "12-hour format (AM/PM)",
-    "timeFormat24h": "24-hour format"
+    "timeFormat24h": "24-hour format",
+    "distanceKm": "km",
+    "showMembers": "Rowers",
+    "showGuests": "Guests ({{count}})",
+    "guestsHelp": "Guests are created when a name is typed at departure. They don't appear in the rower list; set their status to “Member” to add them.",
+    "finishOutingBeforeArchiving": "Cannot archive: finish the ongoing outing first.",
+    "nameRequired": "The name is required."
   },
   "boat": {
     "type": "Type",
@@ -337,13 +389,45 @@
     "twoRowersCoxed": "2+ (coxed pair)",
     "fourRowersCoxless": "4x (quad scull)",
     "fourRowersCoxed": "4+ (coxed four)",
-    "eightRowersCoxed": "8+ (eight)"
+    "eightRowersCoxed": "8+ (eight)",
+    "configurations": "Riggings",
+    "configurationsHelp": "A boat that can be rigged for sculling and sweep (4x / 4-) has several riggings; the choice is offered at departure.",
+    "seats": "Seats",
+    "riggingUnknown": "Scull or sweep",
+    "riggingScull": "Scull",
+    "riggingSweep": "Sweep",
+    "coxed": "Coxed",
+    "defaultConfiguration": "Default",
+    "removeConfiguration": "Remove this rigging",
+    "addConfiguration": "Add a rigging",
+    "configurationError": {
+      "invalidSeats": "Seats must be a whole number from 1 to {{max}}.",
+      "sweepNeedsEvenSeats": "A sweep boat needs an even number of seats.",
+      "duplicateConfiguration": "This configuration already exists for this boat."
+    }
   },
   "rower": {
     "name": "Name",
     "level": "Level",
     "category": "Category",
-    "stats": "Statistics"
+    "stats": "Statistics",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "status": "Status",
+    "statusMember": "Member",
+    "statusGuest": "Guest",
+    "statusOther": "Other",
+    "gender": "Gender",
+    "genderUnknown": "Not specified",
+    "genderFemale": "Female",
+    "genderMale": "Male",
+    "genderOther": "Other",
+    "birthDate": "Birth date",
+    "licenseNumber": "Licence number",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "note": "Note"
   },
   "error": {
     "generic": "An error occurred",
@@ -368,6 +452,174 @@
     "exportError": "Error during export"
   },
   "database": {
-    "failedToLoad": "Failed to load database"
+    "failedToLoad": "Failed to load database",
+    "failedToSave": "Saving failed: the change was cancelled",
+    "backupsNotDeleted": "The old v1 backups could not be deleted from the backups folder",
+    "reloadFailed": "Could not reload the data: please restart the app"
+  },
+  "migration": {
+    "unknownBoat": "Unknown boat",
+    "unknownRower": "Unknown rower",
+    "unknownRoute": "Unknown route",
+    "done": "Your data has been moved to the new database. A backup, deleted automatically after 90 days, was saved here: {{location}}",
+    "failed": "Club data could not be loaded. Nothing was deleted: restart the app.",
+    "skipped": "{{count}} unreadable v1 item(s) could not be copied. They are kept in the backup: {{location}}"
+  },
+  "modules": {
+    "title": "Modules",
+    "intro": "Turn on only what your club needs. Turning a module off hides its screens and fields without deleting anything: the data comes back if you turn it on again.",
+    "enable": "Turn on “{{name}}”",
+    "noThanks": "No thanks",
+    "distances": {
+      "name": "Distances",
+      "description": "Record the kilometres covered on every outing.",
+      "adds": "Adds a distance to routes, a prefilled and editable distance when an outing ends, and kilometres in the logbook and statistics.",
+      "suggestion": "Want to track kilometres? The Distances module adds a distance to each route and carries it into outings."
+    },
+    "outingTypes": {
+      "name": "Outing types",
+      "description": "Tell training, regattas, camps, tours… apart, and record outings over several days.",
+      "adds": "Adds a type choice at departure, an end date for outings over several days, and the type in the logbook and exports.",
+      "suggestion": "Want to tell training, regattas or tours apart in the logbook? The Outing types module does that."
+    },
+    "memberProfile": {
+      "name": "Full member profile",
+      "description": "Keep your members' contact details and information in one place.",
+      "adds": "Adds separate first and last names, gender, birth date, licence number, email, phone, address and status (member, guest, other).",
+      "suggestion": "Need an email, a licence number or a birth date? The Full member profile module adds these fields."
+    },
+    "guests": {
+      "name": "Guests",
+      "description": "Add someone who is not in the rower list when an outing starts.",
+      "adds": "A name typed at departure creates a “guest” record hidden from the rower list; its outings stay in the logbook and the record can later be completed or turned into a member.",
+      "suggestion": "Guests or visiting rowers? The Guests module lets you type their name at departure without creating a member."
+    },
+    "captain": {
+      "name": "Captain",
+      "description": "Name the person responsible for the crew during the outing.",
+      "adds": "Adds a captain choice among the crew at departure (the cox, otherwise the first adult rower, is suggested), shown in the logbook and exports.",
+      "suggestion": "Want to know who is responsible for each boat on the water? The Captain module adds it at departure.",
+      "requiredOption": "Require a captain to start an outing"
+    }
+  },
+  "outingTypes": {
+    "normal": "Regular outing",
+    "training": "Training",
+    "regatta": "Regatta",
+    "training_camp": "Training camp",
+    "instruction": "Instruction",
+    "tour": "Tour",
+    "club_trip": "Club trip",
+    "ergometer": "Ergometer",
+    "motorboat": "Motorboat"
+  },
+  "backup": {
+    "dataTitle": "Data",
+    "title": "Backups",
+    "description": "Rowing Beacon automatically copies all club data at start-up, then every 24 hours, and before every import, restore or deletion. The last 14 automatic backups are kept.",
+    "lastBackup": "Last backup: {{date}}",
+    "noBackupYet": "No backup yet.",
+    "backupNow": "Back up now",
+    "done": "Backup done",
+    "failed": "The backup failed",
+    "beforeDeleteFailed": "The backup failed: nothing was deleted.",
+    "autoBackupFailed": "The automatic backup failed",
+    "restoreFromFile": "Restore from a file…",
+    "externalTitle": "External copy",
+    "externalFolder": "Manual backups, those made before an import, restore or deletion, and one automatic backup a week are also copied to: {{folder}}",
+    "externalReminder": "Backups stay on this computer. Choose a USB key or a synced folder (Drive, Dropbox…) so they survive a computer failure.",
+    "externalCopyFailed": "The last external copy failed: check that the USB key or folder is available.",
+    "externalFolderSet": "Next backups will also be copied to this folder",
+    "chooseExternalFolder": "Choose a folder",
+    "changeExternalFolder": "Change folder",
+    "stopExternalCopy": "Stop copying",
+    "restore": "Restore",
+    "restoreTitle": "Restore a backup",
+    "restoreConfirm": "All club data will be replaced with the backup from {{backup}}.",
+    "restoreSafety": "The current data is backed up right before, so you can go back to it. The app then restarts.",
+    "restoreFailed": "The restore failed and was cancelled: nothing has been changed. The application will now restart.",
+    "folder": "Backup folder: {{folder}}",
+    "kind": {
+      "auto": "Automatic",
+      "manual": "Manual",
+      "before-import": "Before an import",
+      "before-restore": "Before a restore",
+      "before-delete": "Before a deletion"
+    },
+    "notABackup": "This file is not a valid Rowing Beacon backup. Nothing has been changed.",
+    "newerBackup": "This backup comes from a newer version of Rowing Beacon. Update the application to restore it. Nothing has been changed.",
+    "restoreNotStarted": "The restore could not start (unreadable file, or the safety backup failed). Nothing has been changed."
+  },
+  "efa2": {
+    "title": "efa2",
+    "description": "Bring in the data of a club kept in efa2, or produce a project efa2 can open again.",
+    "importTitle": "Import an efa2 project",
+    "importDescription": "Choose a ZIP backup made by efa, or efa's data folder (the one holding the .efa2project file). The current club data is replaced, after a backup.",
+    "chooseZip": "efa ZIP backup…",
+    "chooseFolder": "Data folder…",
+    "exportTitle": "Export to efa2",
+    "exportDescription": "Creates, wherever you choose, a ZIP backup that efa2 can restore, with everything that was imported from efa.",
+    "export": "Export",
+    "exported": "efa2 project saved: {{path}}",
+    "exportFailed": "The efa2 export failed",
+    "incidentsNotExported_one": "{{count}} incident has no efa2 equivalent and is not exported.",
+    "incidentsNotExported_other": "{{count}} incidents have no efa2 equivalent and are not exported.",
+    "notAProject": "No readable efa2 project was found there",
+    "readFailed": "The files could not be read ({{reason}}). Check access to the folder or the USB drive.",
+    "importFailed": "The import failed and was cancelled: the club data has not been changed. The application will now restart.",
+    "previewTitle": "Import the efa2 project “{{name}}”",
+    "preview": {
+      "boats_one": "{{count}} boat",
+      "boats_other": "{{count}} boats",
+      "rowers_one": "{{count}} rower",
+      "rowers_other": "{{count}} rowers",
+      "routes_one": "{{count}} route",
+      "routes_other": "{{count}} routes",
+      "outings_one": "{{count}} outing (logbooks: {{logbooks}})",
+      "outings_other": "{{count}} outings (logbooks: {{logbooks}})",
+      "ongoing_one": "including {{count}} ongoing outing",
+      "ongoing_other": "including {{count}} ongoing outings",
+      "guests_one": "{{count}} guest created for a name typed freely",
+      "guests_other": "{{count}} guests created for names typed freely",
+      "externalBoats_one": "{{count}} external boat, archived",
+      "externalBoats_other": "{{count}} external boats, archived",
+      "incidents_one": "{{count}} unrepaired damage, kept as an incident",
+      "incidents_other": "{{count}} unrepaired damages, kept as incidents",
+      "keptIntro": "Also kept, without a screen for now, and written back on efa2 export:",
+      "closedOpen_one": "{{count}} outing left open in efa before today, closed by the import",
+      "closedOpen_other": "{{count}} outings left open in efa before today, closed by the import",
+      "ambiguousNames_one": "{{count}} freely typed name matches several records: it becomes a guest",
+      "ambiguousNames_other": "{{count}} freely typed names match several records: they become guests",
+      "unreadableEntries_one": "{{count}} unreadable logbook entry (no date or number): kept as is and written back on efa2 export",
+      "unreadableEntries_other": "{{count}} unreadable logbook entries (no date or number): kept as is and written back on efa2 export"
+    },
+    "objects": {
+      "efa2boatreservations": "reservations",
+      "efa2boatdamages": "repaired damages",
+      "efa2messages": "messages",
+      "efa2crews": "standard crews",
+      "efa2waters": "waters",
+      "efa2sessiongroups": "outing groups",
+      "efa2clubwork": "club work",
+      "efa2fahrtenabzeichen": "DRV badges",
+      "efa2statistics": "saved statistics"
+    },
+    "replaceWarning": "All current club data will be replaced. A backup is made right before.",
+    "confirmImport": "Replace and import",
+    "externalBoatNote": "External boat imported from efa",
+    "statusGroupPrefix": "efa status: ",
+    "status": {
+      "member": "Member",
+      "guest": "Guest",
+      "other": "Other"
+    },
+    "defaultProjectName": "RowingBeacon",
+    "boathouseName": "Boathouse",
+    "backupFailed": "The backup made before the import failed (is the disk full?). The import is cancelled, nothing has been changed.",
+    "incompleteProject": "This efa project is incomplete: it has no boats or no persons (partial backup, new project or wrong folder). The import is refused so as not to erase the club data.",
+    "chooseProject": "This folder holds several efa projects: {{names}}. Type the name of the one to import.",
+    "closedOpenOutingNote": "(Outing left open in efa, closed by the import.)",
+    "crewsCut_one": "{{count}} outing has more than 24 rowers or several coxes: efa2 has no seat for the others, they are not exported.",
+    "crewsCut_other": "{{count}} outings have more than 24 rowers or several coxes: efa2 has no seat for the others, they are not exported."
   }
 }

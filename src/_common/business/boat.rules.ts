@@ -1,5 +1,5 @@
 import { forEnum } from "../utils/utils";
-import { generateId } from "../utils/ids.utils";
+import { v4 } from "uuid";
 
 /**
  * ----- Typing -----
@@ -44,7 +44,7 @@ export const getBoatWithoutUndefined = (boat: Boat): BoatWithoutUndefined => {
 };
 
 export const generateBoatId = () => {
-  return generateId("boat");
+  return v4();
 };
 
 export const isBoatAvailable = (

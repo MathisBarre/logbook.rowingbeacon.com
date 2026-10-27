@@ -1,153 +1,119 @@
 import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
+import { devtools } from "zustand/middleware";
 import { generateSessionId } from "../business/session.rules";
+import { enqueueWrite } from "../database/writeQueue";
+import { insertOuting } from "../database/repositories/club.repository";
+import {
+  OngoingOuting,
+  OutingCrewMember,
+} from "../database/repositories/club.types";
 
-interface ZustandRower {
-  id: string;
-  name: string;
-}
-
-type ZustandRoute = {
-  id: string;
-  name: string;
-} | null;
-
-interface ZustandBoat {
-  id: string;
-  name: string;
-}
-
-export interface ZustandSession {
-  id: string;
-  rowers: ZustandRower[];
-  route: ZustandRoute;
-  boat: ZustandBoat;
-  startDateTime: string;
-  estimatedEndDateTime?: string | undefined;
-  comment: string;
-  endDateTime: string | null;
-}
+/** An ongoing outing, kept in memory and stored in the `outing` table. */
+export type ZustandSession = OngoingOuting;
 
 interface ZustandSessionsStoreState {
   session: ZustandSession[];
+  hydrate: (sessions: ZustandSession[]) => void;
   startSession: (payload: {
-    rowers: ZustandRower[];
-    route: ZustandRoute | null;
-    boat: ZustandBoat;
+    rowers: (Omit<OutingCrewMember, "role"> & {
+      role?: OutingCrewMember["role"];
+    })[];
+    route: ZustandSession["route"];
+    boat: ZustandSession["boat"];
+    boatConfigurationId?: string | null;
+    outingTypeCode?: string | null;
+    captainRowerId?: string | null;
     startDateTime: string;
     estimatedEndDateTime?: string | undefined;
     comment: string;
-  }) => void;
-  stopSession: (
-    boatId: string,
-    payload: {
-      endDateTime: string;
-      comment: string | null;
-    }
-  ) => void;
+  }) => Promise<void>;
   getOngoingSessions: () => ZustandSession[];
   getOngoingSession: (sessionId: string) => ZustandSession | undefined;
-  getCompletedSessions: () => ZustandSession[];
   findOngoingSessionByBoatId: (boatId: string) => ZustandSession | undefined;
+  /** Removes an outing from the ongoing list (it stays in the database). */
   removeSession: (sessionId: string) => void;
   reset: () => void;
-  bulkAddSessions: (sessions: ZustandSession[]) => void;
 }
 
 export const useSessionsStore = create<ZustandSessionsStoreState>()(
-  devtools(
-    persist(
-      (set, get) => ({
-        session: [],
-        startSession: (payload) => {
-          set((state) => {
-            return {
-              session: [
-                ...state.session,
-                {
-                  id: generateSessionId(),
-                  rowers: payload.rowers,
-                  route: payload.route,
-                  boat: payload.boat,
-                  startDateTime: payload.startDateTime,
-                  estimatedEndDateTime: payload.estimatedEndDateTime,
-                  comment: payload.comment,
-                  endDateTime: null,
-                },
-              ],
-            };
-          });
-        },
+  devtools((set, get) => ({
+    session: [],
 
-        stopSession: (boatId, payload) => {
-          set((state) => {
-            const session = state.getOngoingSessions().find((session) => {
-              return session.boat.id === boatId;
-            });
+    hydrate: (sessions) => {
+      set({ session: sessions });
+    },
 
-            return {
-              session: state.session.map((sessionInState) =>
-                sessionInState.id === session?.id
-                  ? {
-                      ...sessionInState,
-                      endDateTime: payload.endDateTime,
-                      comment: payload.comment
-                        ? payload.comment
-                        : sessionInState.comment,
-                    }
-                  : sessionInState
-              ),
-            };
-          });
-        },
+    startSession: async (payload) => {
+      const session: ZustandSession = {
+        id: generateSessionId(),
+        rowers: payload.rowers.map((rower) => ({
+          id: rower.id,
+          name: rower.name,
+          role: rower.role ?? "rower",
+        })),
+        route: payload.route
+          ? { id: payload.route.id, name: payload.route.name }
+          : null,
+        boat: { id: payload.boat.id, name: payload.boat.name },
+        boatConfigurationId: payload.boatConfigurationId ?? null,
+        outingTypeCode: payload.outingTypeCode ?? null,
+        captainRowerId: payload.captainRowerId ?? null,
+        startDateTime: payload.startDateTime,
+        estimatedEndDateTime: payload.estimatedEndDateTime,
+        comment: payload.comment,
+        endDateTime: null,
+      };
 
-        getOngoingSessions() {
-          return get().session.filter((session) => !session.endDateTime);
-        },
+      set((state) => ({ session: [...state.session, session] }));
 
-        getOngoingSession(sessionId) {
-          return get().session.find((session) => session.id === sessionId);
-        },
+      const saved = await enqueueWrite("outing start", (db) =>
+        insertOuting(db, {
+          id: session.id,
+          boatId: session.boat.id,
+          boatConfigurationId: session.boatConfigurationId,
+          routeId: session.route?.id ?? null,
+          outingTypeCode: session.outingTypeCode,
+          captainRowerId: session.captainRowerId,
+          startDateTime: session.startDateTime,
+          estimatedEndDateTime: session.estimatedEndDateTime ?? null,
+          comment: session.comment,
+          crew: session.rowers.map((rower) => ({
+            rowerId: rower.id,
+            role: rower.role,
+          })),
+        })
+      );
 
-        getCompletedSessions() {
-          return get().session.filter((session) => session.endDateTime);
-        },
-
-        findOngoingSessionByBoatId(boatId) {
-          return get().session.find(
-            (session) => session.boat.id === boatId && !session.endDateTime
-          );
-        },
-
-        bulkAddSessions(sessions) {
-          set((state) => {
-            return {
-              session: [...state.session, ...sessions],
-            };
-          });
-        },
-
-        removeSession(sessionId) {
-          set((state) => {
-            return {
-              session: state.session.filter(
-                (session) => session.id !== sessionId
-              ),
-            };
-          });
-        },
-
-        reset() {
-          set(() => {
-            return {
-              session: [],
-            };
-          });
-        },
-      }),
-      {
-        name: "sessions",
+      if (!saved) {
+        set((state) => ({
+          session: state.session.filter((s) => s.id !== session.id),
+        }));
+        throw new Error("OUTING_NOT_SAVED");
       }
-    )
-  )
+    },
+
+    getOngoingSessions() {
+      return get().session.filter((session) => !session.endDateTime);
+    },
+
+    getOngoingSession(sessionId) {
+      return get().session.find((session) => session.id === sessionId);
+    },
+
+    findOngoingSessionByBoatId(boatId) {
+      return get().session.find(
+        (session) => session.boat.id === boatId && !session.endDateTime
+      );
+    },
+
+    removeSession(sessionId) {
+      set((state) => ({
+        session: state.session.filter((session) => session.id !== sessionId),
+      }));
+    },
+
+    reset() {
+      set({ session: [] });
+    },
+  }))
 );

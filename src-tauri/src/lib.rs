@@ -36,6 +36,8 @@ pub fn run() {
             Ok(())
         })
         .plugin(tauri_plugin_fs::init())
+        // Keeps folders picked by the club (backup copy) reachable after a restart.
+        .plugin(tauri_plugin_persisted_scope::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(
             tauri_plugin_sql::Builder::new().add_migrations("sqlite:main.db", migrations).build()

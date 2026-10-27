@@ -1,38 +1,23 @@
 import { generateIncidenId } from "../../../_common/business/incident.rules";
 import useIncidentStore from "../../../_common/store/incident.store";
 import { useSessionsStore } from "../../../_common/store/sessions.store";
-import {
-  getDateTimeWithoutTimezone,
-  isAfter,
-  toISODateFormat,
-} from "../../../_common/utils/date.utils";
+import { isAfter, toISODateFormat } from "../../../_common/utils/date.utils";
 import { asError, asOk, SimpleResult } from "../../../_common/utils/error";
 import { isStringEquivalentOfUndefined } from "../../../_common/utils/string.utils";
 import { getDatabase } from "../../../_common/database/database";
 import {
-  DBSessionOnRowers,
-  DBSessions,
-} from "../../../_common/database/schema";
-import { toast } from "sonner";
+  finishOuting,
+  insertOuting,
+} from "../../../_common/database/repositories/club.repository";
+import {
+  enqueueWrite,
+  flushWrites,
+} from "../../../_common/database/writeQueue";
+import { OngoingOuting } from "../../../_common/database/repositories/club.types";
 import i18n from "../../../_common/i18n/config";
 
 interface ISessionRepository {
-  getOngoingSession(sessionId: string):
-    | {
-        id: string;
-        boat: {
-          id: string;
-        };
-        startDateTime: string;
-        estimatedEndDateTime?: string | undefined;
-        route: {
-          id: string;
-        } | null;
-        rowers: {
-          id: string;
-        }[];
-      }
-    | undefined;
+  getOngoingSession(sessionId: string): OngoingOuting | undefined;
 
   removeSession(sessionId: string): void;
 }
@@ -44,16 +29,19 @@ export interface SessionToSave {
   estimatedEndDateTime?: string | undefined;
   routeId?: string | undefined;
   endDateTime: string;
-  incidentId: string;
   comment: string;
   rowerIds: string[];
   coached: boolean;
 }
 
 interface ISessionDatabaseRepository {
-  saveSessions(
-    sessions: SessionToSave[]
-  ): Promise<SimpleResult<"FAILED_TO_SAVE_SESSION", null>>;
+  finishSession(payload: {
+    outing: OngoingOuting;
+    endDateTime: string;
+    comment: string;
+    coached: boolean;
+    distanceM?: number | null;
+  }): Promise<SimpleResult<"FAILED_TO_SAVE_SESSION", null>>;
 }
 
 interface IIncidentStore {
@@ -82,6 +70,7 @@ class StopSession {
       message: string | undefined;
     };
     coached: boolean;
+    distanceM?: number | null;
   }): Promise<
     SimpleResult<
       | "ONGOING_SESSION_NOT_FOUND"
@@ -117,25 +106,14 @@ class StopSession {
       });
     }
 
-    const incidentId = generateIncidenId();
-
-    console.log("session id", ongoingSessionInStore.id);
-
     const [saveSessionError] =
-      await this.sessionDatabaseRepository.saveSessions([
-        {
-          id: ongoingSessionInStore.id,
-          boatId: ongoingSessionInStore.boat.id,
-          startDateTime: ongoingSessionInStore.startDateTime,
-          estimatedEndDateTime: ongoingSessionInStore.estimatedEndDateTime,
-          routeId: ongoingSessionInStore?.route?.id || undefined,
-          endDateTime: stopSessionPayload.endDateTime,
-          comment: stopSessionPayload.comment,
-          incidentId: incidentId,
-          rowerIds: ongoingSessionInStore.rowers.map((rower) => rower.id),
-          coached: stopSessionPayload.coached,
-        },
-      ]);
+      await this.sessionDatabaseRepository.finishSession({
+        outing: ongoingSessionInStore,
+        endDateTime: stopSessionPayload.endDateTime,
+        comment: stopSessionPayload.comment,
+        coached: stopSessionPayload.coached,
+        distanceM: stopSessionPayload.distanceM,
+      });
 
     if (saveSessionError) {
       return asError({
@@ -144,7 +122,7 @@ class StopSession {
     }
 
     if (stopSessionPayload.incident.checked) {
-      const emptyMessage = "Aucun détail renseigné";
+      const emptyMessage = i18n.t("session.noIncidentDetails");
 
       const incidentMessage = isStringEquivalentOfUndefined(
         stopSessionPayload.incident.message
@@ -153,14 +131,12 @@ class StopSession {
         : stopSessionPayload.incident.message || emptyMessage;
 
       const incidentPayload = {
-        id: incidentId,
+        id: generateIncidenId(),
         message: incidentMessage,
         sessionId: stopSessionPayload.sessionId,
         datetime: stopSessionPayload.endDateTime,
         boatId: ongoingSessionInStore.boat.id,
       };
-
-      console.log("adding incident", incidentPayload);
 
       this.incidentStore.addIncident(incidentPayload);
     }
@@ -172,50 +148,80 @@ class StopSession {
 }
 
 export class SessionDatabaseRepository implements ISessionDatabaseRepository {
+  async finishSession(payload: {
+    outing: OngoingOuting;
+    endDateTime: string;
+    comment: string;
+    coached: boolean;
+    distanceM?: number | null;
+  }): Promise<SimpleResult<"FAILED_TO_SAVE_SESSION", null>> {
+    // Through the write queue, so that a reload after another failed write
+    // cannot read the outing as still ongoing.
+    const saved = await enqueueWrite(
+      "finish outing",
+      async (db) => {
+        const finished = await finishOuting(db, {
+          id: payload.outing.id,
+          endDateTime: payload.endDateTime,
+          comment: payload.comment,
+          hasBeenCoached: payload.coached,
+          distanceM: payload.distanceM,
+        });
+
+        // The departure was never saved: record the whole outing now rather
+        // than losing it.
+        if (!finished) {
+          const { outing } = payload;
+          await insertOuting(db, {
+            id: outing.id,
+            boatId: outing.boat.id,
+            boatConfigurationId: outing.boatConfigurationId,
+            routeId: outing.route?.id ?? null,
+            outingTypeCode: outing.outingTypeCode,
+            captainRowerId: outing.captainRowerId,
+            startDateTime: outing.startDateTime,
+            estimatedEndDateTime: outing.estimatedEndDateTime ?? null,
+            endDateTime: payload.endDateTime,
+            distanceM: payload.distanceM ?? null,
+            comment: payload.comment,
+            hasBeenCoached: payload.coached,
+            crew: outing.rowers.map((rower) => ({
+              rowerId: rower.id,
+              role: rower.role,
+            })),
+          });
+        }
+      },
+      { quiet: true }
+    );
+    if (!saved) return asError({ code: "FAILED_TO_SAVE_SESSION" });
+    return asOk(null);
+  }
+
+  /** Inserts finished outings at once (demo data). */
   async saveSessions(
     sessions: SessionToSave[]
   ): Promise<SimpleResult<"FAILED_TO_SAVE_SESSION", null>> {
-    const { drizzle } = await getDatabase();
     try {
-      const sessionsToSave = sessions.map((session) => ({
-        id: session.id,
-        boatId: session.boatId,
-        startDateTime: getDateTimeWithoutTimezone(session.startDateTime),
-        estimatedEndDateTime: session.estimatedEndDateTime
-          ? getDateTimeWithoutTimezone(session.estimatedEndDateTime)
-          : undefined,
-        routeId: session.routeId,
-        endDateTime: getDateTimeWithoutTimezone(session.endDateTime),
-        incidentId: session.incidentId,
-        comment: session.comment,
-        hasBeenCoached: session.coached ? "true" : "false",
-      }));
-
-      await drizzle.insert(DBSessions).values(sessionsToSave);
-
-      const rowersOnSessionsToSave = sessions.flatMap((session) =>
-        session.rowerIds.map((rowerId) => ({
-          sessionId: session.id,
-          rowerId: rowerId,
-        }))
-      );
-
-      try {
-        if (rowersOnSessionsToSave.length > 0) {
-          await drizzle
-            .insert(DBSessionOnRowers)
-            .values(rowersOnSessionsToSave);
-        } else {
-          console.log("⚠️ No rowers to save on session");
-        }
-      } catch (e) {
-        console.error("❌ Failed to save rowers on session");
-        console.error(e);
-        toast.warning(i18n.t("session.noRowersRecorded"));
+      const { db } = await getDatabase();
+      // Boats and rowers created just before (demo) must be written first.
+      await flushWrites();
+      for (const session of sessions) {
+        await insertOuting(db, {
+          id: session.id,
+          boatId: session.boatId,
+          routeId: session.routeId,
+          startDateTime: session.startDateTime,
+          estimatedEndDateTime: session.estimatedEndDateTime,
+          endDateTime: session.endDateTime,
+          comment: session.comment,
+          hasBeenCoached: session.coached,
+          crew: session.rowerIds.map((rowerId) => ({
+            rowerId,
+            role: "rower" as const,
+          })),
+        });
       }
-
-      console.log("✅ Session(s) saved");
-
       return asOk(null);
     } catch (e) {
       console.error("❌ Failed to save session(s)");

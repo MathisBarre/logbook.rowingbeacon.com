@@ -51,6 +51,7 @@
     "demoPasswordAlert": "La password admin per la modalità demo è \"{{password}}\"",
     "password": "Password",
     "passwordHelp": "La password sarà utile per proteggere le azioni sensibili.",
+    "passwordRequired": "Scegli una password.",
     "boats": "Barche",
     "boatsHelp": "Inserisci il nome delle tue barche, una per riga",
     "boatsPlaceholder": "Esempio: \n100 Swift\n101 Hudson\n102 WinTech\n103 Empacher\n104 Vespoli\n105 Swift\n106 WinTech\n200 Hudson\n201 WinTech\n202 Hudson\n203 Vespoli\n401 Hudson\n402 WinTech\n800 Filippi",
@@ -58,7 +59,30 @@
     "routesHelp": "Inserisci il nome dei tuoi percorsi, uno per riga",
     "rowers": "Vogatori",
     "rowersHelp": "Inserisci il nome dei tuoi vogatori, uno per riga",
-    "validate": "Convalida informazioni"
+    "validate": "Convalida informazioni",
+    "profile": {
+      "title": "Come funziona il vostro club?",
+      "help": "Questa scelta attiva dei moduli. Potrete aggiungerne o toglierne in qualsiasi momento in Parametri > Moduli.",
+      "simple": {
+        "name": "Semplice",
+        "description": "Barche, vogatori e percorsi: l'essenziale per registrare le uscite."
+      },
+      "fullClub": {
+        "name": "Club completo",
+        "description": "Aggiunge distanze, tipi di uscita, schede socio complete, ospiti e capobarca."
+      },
+      "efaImport": {
+        "name": "Vengo da efa",
+        "description": "Riprende direttamente il vostro progetto efa2: barche, vogatori, destinazioni e registri."
+      }
+    },
+    "efa": {
+      "title": "Il vostro progetto efa2",
+      "help": "Scegliete un backup ZIP creato da efa, o la cartella dati di efa. Barche, vogatori, percorsi e tutti i registri vengono ripresi, e i moduli utili attivati.",
+      "chosen": "Progetto scelto: {{name}}",
+      "required": "Scegliete prima il vostro progetto efa2",
+      "confirm": "Importa e inizia"
+    }
   },
   "boathouse": {
     "coachNote": "Nota dell'allenatore",
@@ -120,7 +144,7 @@
     "minimumValidRowersRequired": "È necessario selezionare almeno {{count}} vogatore/i con almeno i livelli richiesti per questa barca.",
     "alert": {
       "rowersProvided": "Hai inserito",
-      "rowersCount": "{{count}} vogatore/i",
+      "rowersCount": "{{count}} persona/e a bordo, timoniere incluso",
       "boatRequires": "La barca \"{{boatName}}\" richiede",
       "continueAnyway": "Vuoi comunque continuare?",
       "rowersAlreadyOnSession": "Alcuni vogatori hanno già iniziato un'altra sessione. Vuoi comunque continuare?",
@@ -130,7 +154,26 @@
       "invalidRowersLevel_other": "<0>{{count}}</0> vogatori non hanno il livello richiesto per questa barca.",
       "fixInformation": "Correggi informazioni"
     },
-    "noRowersRecorded": "Nessun vogatore è stato registrato per questa sessione. Se questo è un errore, contattare il supporto."
+    "noRowersRecorded": "Nessun vogatore è stato registrato per questa sessione. Se questo è un errore, contattare il supporto.",
+    "cox": "Timoniere",
+    "configuration": "Armo",
+    "seatsCount_one": "{{count}} posto",
+    "seatsCount_other": "{{count}} posti",
+    "addGuest": "Aggiungi «{{name}}» come ospite",
+    "guest": "ospite",
+    "severalDays": "Più giorni",
+    "expectedReturn": "Rientro previsto",
+    "outingType": "Tipo di uscita",
+    "captain": "Capobarca",
+    "noCaptain": "Nessuno",
+    "captainRequired": "Scegliete un capobarca nell'equipaggio.",
+    "distanceKm": "Distanza percorsa (km)",
+    "noIncidentDetails": "Nessun dettaglio fornito",
+    "notSaved": "Non è stato possibile salvare l'uscita. Riprova.",
+    "duplicateCrewMember": "La stessa persona è scelta due volte nell'equipaggio.",
+    "boatAlreadyOnSession": "Questa barca è già in uscita.",
+    "returnBeforeStart": "Il rientro previsto deve essere dopo la partenza.",
+    "invalidDistance": "Distanza non valida: inserisci un numero di km, per esempio 12,5."
   },
   "logbook": {
     "title": "Giornale di bordo",
@@ -160,7 +203,8 @@
     "exportSuccess": "Esportazione completata con successo",
     "fileDownloaded": "\"{{fileName}}\" è stato scaricato nella cartella \"Download\"",
     "createNewExport": "Crea una nuova esportazione",
-    "backToSessionList": "Torna alla lista delle sessioni"
+    "backToSessionList": "Torna alla lista delle sessioni",
+    "captainName": "Capobarca: {{name}}"
   },
   "stats": {
     "title": "Statistiche",
@@ -202,7 +246,9 @@
       "december": "Dicembre"
     },
     "session_one": "{{count}} sessione",
-    "session_other": "{{count}} sessioni"
+    "session_other": "{{count}} sessioni",
+    "totalDistance": "Distanza totale",
+    "coxedSessions": "Uscite da timoniere"
   },
   "parameters": {
     "title": "Gestione",
@@ -301,7 +347,7 @@
     "deleteAllDataTitle": "Elimina tutti i dati!",
     "warning": "Attenzione!",
     "deleteAllDataWarning1": "Stai per eliminare tutti i dati dell'applicazione.",
-    "deleteAllDataWarning2": "Sarà impossibile recuperarli una volta eliminati. Assicurati di aver esportato i dati importanti.",
+    "deleteAllDataWarning2": "Prima viene creato un backup di sicurezza nella cartella dei backup (Gestione > Dati), insieme ai backup precedenti. Per cancellare definitivamente i dati, elimina anche questi file.",
     "deleteConfirmationText": "Desidero eliminare tutti i miei dati",
     "deleteConfirmationInstruction": "Conferma scrivendo esattamente \"{{text}}\" nel campo sottostante.",
     "enterAdminPassword": "Inserisci la password admin",
@@ -327,7 +373,13 @@
     "timeFormat": "Formato ora",
     "timeFormatDescription": "Scegli tra visualizzazione 12 ore o 24 ore",
     "timeFormat12h": "Formato 12 ore (AM/PM)",
-    "timeFormat24h": "Formato 24 ore"
+    "timeFormat24h": "Formato 24 ore",
+    "distanceKm": "km",
+    "showMembers": "Vogatori",
+    "showGuests": "Ospiti ({{count}})",
+    "guestsHelp": "Gli ospiti vengono creati quando si digita un nome alla partenza. Non compaiono nell'elenco dei vogatori; impostate lo stato su «Socio» per aggiungerli.",
+    "finishOutingBeforeArchiving": "Impossibile archiviare: termina prima l'uscita in corso.",
+    "nameRequired": "Il nome è obbligatorio."
   },
   "boat": {
     "type": "Tipo",
@@ -337,13 +389,45 @@
     "twoRowersCoxed": "2+ (due con)",
     "fourRowersCoxless": "4x (quattro di coppia)",
     "fourRowersCoxed": "4+ (quattro con)",
-    "eightRowersCoxed": "8+ (otto)"
+    "eightRowersCoxed": "8+ (otto)",
+    "configurations": "Armi",
+    "configurationsHelp": "Una barca armabile di coppia e di punta (4x / 4-) ha più armi; la scelta è proposta alla partenza.",
+    "seats": "Posti",
+    "riggingUnknown": "Coppia o punta",
+    "riggingScull": "Coppia",
+    "riggingSweep": "Punta",
+    "coxed": "Con timoniere",
+    "defaultConfiguration": "Predefinito",
+    "removeConfiguration": "Rimuovi questo armo",
+    "addConfiguration": "Aggiungi un armo",
+    "configurationError": {
+      "invalidSeats": "I posti devono essere un numero intero da 1 a {{max}}.",
+      "sweepNeedsEvenSeats": "Una barca di punta richiede un numero pari di posti.",
+      "duplicateConfiguration": "Questo armo esiste già per questa barca."
+    }
   },
   "rower": {
     "name": "Nome",
     "level": "Livello",
     "category": "Categoria",
-    "stats": "Statistiche"
+    "stats": "Statistiche",
+    "firstName": "Nome",
+    "lastName": "Cognome",
+    "status": "Stato",
+    "statusMember": "Socio",
+    "statusGuest": "Ospite",
+    "statusOther": "Altro",
+    "gender": "Sesso",
+    "genderUnknown": "Non specificato",
+    "genderFemale": "Donna",
+    "genderMale": "Uomo",
+    "genderOther": "Altro",
+    "birthDate": "Data di nascita",
+    "licenseNumber": "N. di tessera",
+    "email": "E-mail",
+    "phone": "Telefono",
+    "address": "Indirizzo",
+    "note": "Nota"
   },
   "error": {
     "generic": "Si è verificato un errore",
@@ -368,6 +452,174 @@
     "exportError": "Errore durante l'esportazione"
   },
   "database": {
-    "failedToLoad": "Impossibile caricare il database"
+    "failedToLoad": "Impossibile caricare il database",
+    "failedToSave": "Salvataggio non riuscito: la modifica è stata annullata",
+    "backupsNotDeleted": "Non è stato possibile eliminare i vecchi backup v1 dalla cartella backups",
+    "reloadFailed": "Impossibile ricaricare i dati: riavvia l'applicazione"
+  },
+  "migration": {
+    "unknownBoat": "Barca sconosciuta",
+    "unknownRower": "Vogatore sconosciuto",
+    "unknownRoute": "Percorso sconosciuto",
+    "done": "I tuoi dati sono stati trasferiti nel nuovo database. Un backup, eliminato automaticamente dopo 90 giorni, è stato salvato qui: {{location}}",
+    "failed": "Impossibile caricare i dati del club. Nulla è stato cancellato: riavvia l'app.",
+    "skipped": "{{count}} elemento/i v1 illeggibile/i non è stato possibile copiarli. Sono conservati nel backup: {{location}}"
+  },
+  "modules": {
+    "title": "Moduli",
+    "intro": "Attivate solo ciò che serve al vostro club. Disattivare un modulo nasconde schermate e campi senza cancellare nulla: i dati tornano se lo riattivate.",
+    "enable": "Attiva «{{name}}»",
+    "noThanks": "No grazie",
+    "distances": {
+      "name": "Distanze",
+      "description": "Registrate i chilometri percorsi a ogni uscita.",
+      "adds": "Aggiunge una distanza ai percorsi, una distanza precompilata e modificabile al rientro e i km nel registro e nelle statistiche.",
+      "suggestion": "Volete seguire i chilometri? Il modulo Distanze aggiunge una distanza a ogni percorso e la riporta nelle uscite."
+    },
+    "outingTypes": {
+      "name": "Tipi di uscita",
+      "description": "Distinguete allenamenti, regate, raduni, gite… e registrate uscite di più giorni.",
+      "adds": "Aggiunge la scelta del tipo alla partenza, una data di fine per le uscite di più giorni e il tipo nel registro e negli export.",
+      "suggestion": "Volete distinguere allenamenti, regate o gite nel registro? Il modulo Tipi di uscita lo permette."
+    },
+    "memberProfile": {
+      "name": "Scheda socio completa",
+      "description": "Tenete recapiti e informazioni dei soci in un unico posto.",
+      "adds": "Aggiunge nome e cognome separati, sesso, data di nascita, n. di tessera, e-mail, telefono, indirizzo e stato (socio, ospite, altro).",
+      "suggestion": "Vi servono e-mail, n. di tessera o data di nascita? Il modulo Scheda socio completa aggiunge questi campi."
+    },
+    "guests": {
+      "name": "Ospiti",
+      "description": "Inserite alla partenza una persona che non è nell'elenco dei vogatori.",
+      "adds": "Un nome digitato alla partenza crea una scheda «ospite» nascosta dall'elenco dei vogatori; le sue uscite restano nel registro e la scheda può poi essere completata o trasformata in socio.",
+      "suggestion": "Ospiti o vogatori di passaggio? Il modulo Ospiti permette di digitare il loro nome alla partenza senza creare un socio."
+    },
+    "captain": {
+      "name": "Capobarca",
+      "description": "Indicate la persona responsabile dell'equipaggio durante l'uscita.",
+      "adds": "Aggiunge alla partenza la scelta del capobarca nell'equipaggio (proposto il timoniere, altrimenti il primo vogatore adulto), visibile nel registro e negli export.",
+      "suggestion": "Volete sapere chi è responsabile di ogni barca in acqua? Il modulo Capobarca lo aggiunge alla partenza.",
+      "requiredOption": "Rendere obbligatorio il capobarca per partire"
+    }
+  },
+  "outingTypes": {
+    "normal": "Uscita normale",
+    "training": "Allenamento",
+    "regatta": "Regata",
+    "training_camp": "Raduno",
+    "instruction": "Avviamento",
+    "tour": "Gita",
+    "club_trip": "Uscita sociale",
+    "ergometer": "Remoergometro",
+    "motorboat": "Motoscafo"
+  },
+  "backup": {
+    "dataTitle": "Dati",
+    "title": "Backup",
+    "description": "Rowing Beacon copia automaticamente tutti i dati del club all'avvio, poi ogni 24 ore, e prima di ogni importazione, ripristino o eliminazione. Vengono conservati gli ultimi 14 backup automatici.",
+    "lastBackup": "Ultimo backup: {{date}}",
+    "noBackupYet": "Ancora nessun backup.",
+    "backupNow": "Esegui backup ora",
+    "done": "Backup eseguito",
+    "failed": "Il backup non è riuscito",
+    "beforeDeleteFailed": "Il backup non è riuscito: non è stato cancellato nulla.",
+    "autoBackupFailed": "Il backup automatico non è riuscito",
+    "restoreFromFile": "Ripristina da un file…",
+    "externalTitle": "Copia esterna",
+    "externalFolder": "I backup manuali, quelli fatti prima di un'importazione, di un ripristino o di un'eliminazione, e un backup automatico a settimana vengono copiati anche in: {{folder}}",
+    "externalReminder": "I backup restano su questo computer. Scegliete una chiavetta USB o una cartella sincronizzata (Drive, Dropbox…) perché sopravvivano a un guasto del computer.",
+    "externalCopyFailed": "L'ultima copia esterna non è riuscita: verificate che la chiavetta USB o la cartella siano accessibili.",
+    "externalFolderSet": "I prossimi backup verranno copiati anche in questa cartella",
+    "chooseExternalFolder": "Scegliete una cartella",
+    "changeExternalFolder": "Cambia cartella",
+    "stopExternalCopy": "Non copiare più",
+    "restore": "Ripristina",
+    "restoreTitle": "Ripristina un backup",
+    "restoreConfirm": "Tutti i dati del club verranno sostituiti con quelli del backup del {{backup}}.",
+    "restoreSafety": "Lo stato attuale viene salvato subito prima: potrete tornarci. Poi l'app si riavvia.",
+    "restoreFailed": "Il ripristino non è riuscito ed è stato annullato: nulla è stato modificato. L'applicazione verrà riavviata.",
+    "folder": "Cartella dei backup: {{folder}}",
+    "kind": {
+      "auto": "Automatico",
+      "manual": "Manuale",
+      "before-import": "Prima di un'importazione",
+      "before-restore": "Prima di un ripristino",
+      "before-delete": "Prima di un'eliminazione"
+    },
+    "notABackup": "Questo file non è un backup valido di Rowing Beacon. Nulla è stato modificato.",
+    "newerBackup": "Questo backup proviene da una versione più recente di Rowing Beacon. Aggiorna l'applicazione per ripristinarlo. Nulla è stato modificato.",
+    "restoreNotStarted": "Il ripristino non è potuto iniziare (file illeggibile o backup di sicurezza non riuscito). Nulla è stato modificato."
+  },
+  "efa2": {
+    "title": "efa2",
+    "description": "Riprendete i dati di un club gestito con efa2, o create un progetto che efa2 può riaprire.",
+    "importTitle": "Importa un progetto efa2",
+    "importDescription": "Scegliete un backup ZIP creato da efa, o la cartella dati di efa (quella con il file .efa2project). I dati attuali del club vengono sostituiti, dopo un backup.",
+    "chooseZip": "Backup ZIP di efa…",
+    "chooseFolder": "Cartella dati…",
+    "exportTitle": "Esporta in formato efa2",
+    "exportDescription": "Crea, dove preferisci, un backup ZIP che efa2 sa ripristinare, con tutto ciò che era stato importato da efa.",
+    "export": "Esporta",
+    "exported": "Progetto efa2 salvato: {{path}}",
+    "exportFailed": "L'esportazione efa2 non è riuscita",
+    "incidentsNotExported_one": "{{count}} incidente non ha equivalente in efa2 e non viene esportato.",
+    "incidentsNotExported_other": "{{count}} incidenti non hanno equivalente in efa2 e non vengono esportati.",
+    "notAProject": "Nessun progetto efa2 leggibile trovato in quella posizione",
+    "readFailed": "Impossibile leggere i file ({{reason}}). Verifica l'accesso alla cartella o alla chiavetta USB.",
+    "importFailed": "L'importazione non è riuscita ed è stata annullata: i dati del club non sono stati modificati. L'applicazione verrà riavviata.",
+    "previewTitle": "Importa il progetto efa2 «{{name}}»",
+    "preview": {
+      "boats_one": "{{count}} barca",
+      "boats_other": "{{count}} barche",
+      "rowers_one": "{{count}} vogatore",
+      "rowers_other": "{{count}} vogatori",
+      "routes_one": "{{count}} percorso",
+      "routes_other": "{{count}} percorsi",
+      "outings_one": "{{count}} uscita (registri: {{logbooks}})",
+      "outings_other": "{{count}} uscite (registri: {{logbooks}})",
+      "ongoing_one": "di cui {{count}} uscita in corso",
+      "ongoing_other": "di cui {{count}} uscite in corso",
+      "guests_one": "{{count}} ospite creato per un nome inserito liberamente",
+      "guests_other": "{{count}} ospiti creati per nomi inseriti liberamente",
+      "externalBoats_one": "{{count}} barca esterna, archiviata",
+      "externalBoats_other": "{{count}} barche esterne, archiviate",
+      "incidents_one": "{{count}} danno non riparato, ripreso come incidente",
+      "incidents_other": "{{count}} danni non riparati, ripresi come incidenti",
+      "keptIntro": "Conservato anche, per ora senza schermata, e riscritto all'esportazione efa2:",
+      "closedOpen_one": "{{count}} uscita rimasta aperta in efa prima di oggi, chiusa all'importazione",
+      "closedOpen_other": "{{count}} uscite rimaste aperte in efa prima di oggi, chiuse all'importazione",
+      "ambiguousNames_one": "{{count}} nome inserito liberamente corrisponde a più schede: diventa un ospite",
+      "ambiguousNames_other": "{{count}} nomi inseriti liberamente corrispondono a più schede: diventano ospiti",
+      "unreadableEntries_one": "{{count}} voce del registro illeggibile (senza data o numero): conservata così com'è e riscritta all'esportazione efa2",
+      "unreadableEntries_other": "{{count}} voci del registro illeggibili (senza data o numero): conservate così come sono e riscritte all'esportazione efa2"
+    },
+    "objects": {
+      "efa2boatreservations": "prenotazioni",
+      "efa2boatdamages": "danni riparati",
+      "efa2messages": "messaggi",
+      "efa2crews": "equipaggi tipo",
+      "efa2waters": "specchi d'acqua",
+      "efa2sessiongroups": "gruppi di uscite",
+      "efa2clubwork": "lavoro volontario",
+      "efa2fahrtenabzeichen": "distintivi DRV",
+      "efa2statistics": "statistiche salvate"
+    },
+    "replaceWarning": "Tutti i dati attuali del club verranno sostituiti. Subito prima viene fatto un backup.",
+    "confirmImport": "Sostituisci e importa",
+    "externalBoatNote": "Barca esterna importata da efa",
+    "statusGroupPrefix": "Stato efa: ",
+    "status": {
+      "member": "Socio",
+      "guest": "Ospite",
+      "other": "Altro"
+    },
+    "defaultProjectName": "RowingBeacon",
+    "boathouseName": "Rimessa",
+    "backupFailed": "Il backup eseguito prima dell'importazione non è riuscito (disco pieno?). L'importazione è annullata, nulla è stato modificato.",
+    "incompleteProject": "Questo progetto efa è incompleto: non contiene barche o persone (backup parziale, progetto nuovo o cartella sbagliata). L'importazione è rifiutata per non cancellare i dati del club.",
+    "chooseProject": "Questa cartella contiene più progetti efa: {{names}}. Scrivi il nome di quello da importare.",
+    "closedOpenOutingNote": "(Uscita rimasta aperta in efa, chiusa all'importazione.)",
+    "crewsCut_one": "{{count}} uscita ha più di 24 vogatori o più timonieri: efa2 non ha posto per gli altri, che non vengono esportati.",
+    "crewsCut_other": "{{count}} uscite hanno più di 24 vogatori o più timonieri: efa2 non ha posto per gli altri, che non vengono esportati."
   }
 }

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
+import { toast } from "sonner";
 import { PencilIcon, SearchIcon, Trash2Icon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
@@ -15,6 +16,7 @@ import { BoatLevelDialog } from "./dialogs/BoatLevelDialog";
 import { BoatStatsComparisonsDialog } from "./dialogs/BoatStatsComparisonsDialog";
 import { SimpleDialog } from "../../_common/components/SimpleDialog";
 import { UpdateBoat } from "./UpdateBoat";
+import { ModuleSuggestion } from "../../_common/components/ModuleSuggestion";
 
 export const BoatCrud = () => {
   const { t } = useTranslation();
@@ -42,7 +44,9 @@ export const BoatCrud = () => {
   return (
     <div className="bg-white shadow-md absolute inset-0 rounded overflow-auto flex flex-col">
       <div className="bg-border p-2 bg-steel-blue-900 text-white flex justify-between h-12">
-        <h1 className="text-base ml-2 flex gap-2 items-center">{t("parameters.yourBoats")}</h1>
+        <h1 className="text-base ml-2 flex gap-2 items-center">
+          {t("parameters.yourBoats")}
+        </h1>
       </div>
 
       <div className="flex-1 flex p-4 flex-col">
@@ -63,6 +67,7 @@ export const BoatCrud = () => {
             />
           </div>
         </div>
+        <ModuleSuggestion id="captain" className="mb-4" />
 
         <div className="flex-1 relative">
           <div className="absolute inset-0 overflow-y-auto p-4 pt-0 border rounded flex flex-col">
@@ -91,7 +96,8 @@ export const BoatCrud = () => {
                           )}
                         >
                           {boat.name}{" "}
-                          {boat.isInMaintenance && `(${t("parameters.inMaintenance")})`}
+                          {boat.isInMaintenance &&
+                            `(${t("parameters.inMaintenance")})`}
                         </h3>
                         {boat.note && boat.note.trim().length > 0 && (
                           <div className="text-xs text-steel-blue-900 bg-steel-blue-50 border border-steel-blue-200 rounded p-2 whitespace-pre-wrap mt-2">
@@ -133,10 +139,16 @@ export const BoatCrud = () => {
                         onClick={async () => {
                           if (
                             await windowConfirm(
-                              t("parameters.confirmArchiveBoat", { boatName: boat.name })
+                              t("parameters.confirmArchiveBoat", {
+                                boatName: boat.name,
+                              })
                             )
                           ) {
-                            deleteBoat(boat.id);
+                            if (!deleteBoat(boat.id)) {
+                              toast.error(
+                                t("parameters.finishOutingBeforeArchiving")
+                              );
+                            }
                           }
                         }}
                       >

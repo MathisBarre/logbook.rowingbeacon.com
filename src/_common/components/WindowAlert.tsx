@@ -58,7 +58,7 @@ export const WindowAlert: React.FC = () => {
 
   // Modal content
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-[9999]">
+    <div className="pointer-events-auto fixed inset-0 flex items-center justify-center z-[9999]">
       {/* Background overlay */}
       <div className="absolute inset-0 bg-gray-800 opacity-50"></div>
       {/* Modal content */}

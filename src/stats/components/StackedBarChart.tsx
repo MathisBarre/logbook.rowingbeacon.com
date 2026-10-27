@@ -44,14 +44,17 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
   // Transform data for stacked bar chart
   const transformedData = React.useMemo(() => {
     // Group data by month
-    const monthlyData = data.reduce((acc, item) => {
-      const monthKey = item.month;
-      if (!acc[monthKey]) {
-        acc[monthKey] = { month: monthKey } as Record<string, number>;
-      }
-      acc[monthKey][item.stackLabel] = item.stackAmount;
-      return acc;
-    }, {} as Record<number, Record<string, number>>);
+    const monthlyData = data.reduce(
+      (acc, item) => {
+        const monthKey = item.month;
+        if (!acc[monthKey]) {
+          acc[monthKey] = { month: monthKey };
+        }
+        acc[monthKey][item.stackLabel] = item.stackAmount;
+        return acc;
+      },
+      {} as Record<number, Record<string, number>>
+    );
 
     // Convert to array and sort by month, starting from August (8)
     return Object.values(monthlyData).sort((a, b) => {

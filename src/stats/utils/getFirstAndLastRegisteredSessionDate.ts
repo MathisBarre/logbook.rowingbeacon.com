@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { asc } from "drizzle-orm";
+import { asc, isNotNull } from "drizzle-orm";
 import { desc } from "drizzle-orm";
-import { DBSessions } from "../../_common/database/schema";
+import { DBOutings } from "../../_common/database/schema";
 import { getDatabase } from "../../_common/database/database";
 
 const getFirstRegisteredSessionDate = async () => {
   const { drizzle } = await getDatabase();
   const firstSession = await drizzle
     .select()
-    .from(DBSessions)
-    .orderBy(asc(DBSessions.startDateTime))
+    .from(DBOutings)
+    .where(isNotNull(DBOutings.endDateTime))
+    .orderBy(asc(DBOutings.startDateTime))
     .limit(1);
   return firstSession[0].startDateTime;
 };
@@ -18,8 +19,9 @@ const getLastRegisteredSessionDate = async () => {
   const { drizzle } = await getDatabase();
   const lastSession = await drizzle
     .select()
-    .from(DBSessions)
-    .orderBy(desc(DBSessions.startDateTime))
+    .from(DBOutings)
+    .where(isNotNull(DBOutings.endDateTime))
+    .orderBy(desc(DBOutings.startDateTime))
     .limit(1);
   return lastSession[0].startDateTime;
 };

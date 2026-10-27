@@ -29,6 +29,8 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
     mostFrequentPartners,
     coachedSessionsCount,
     coachedSessionsPercentage,
+    coxCount,
+    coxDuration,
   } = useGetRowerStats(rowerId, selectedSeason);
   const { getBoatById, getRowerById } = useClubOverviewStore();
 
@@ -102,6 +104,22 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
             </p>
           </div>
         </div>
+
+        {coxCount > 0 && (
+          <div className="bg-white rounded-lg shadow-sm border p-4 flex items-center gap-4">
+            <div className="p-3 bg-steel-blue-50 rounded-lg">
+              <ClockIcon className="w-6 h-6 text-steel-blue-600" />
+            </div>
+            <div>
+              <h3 className="text-sm text-gray-500 font-medium">
+                {t("stats.coxedSessions")}
+              </h3>
+              <p className="text-xl font-semibold text-gray-900">
+                {coxCount} ({millisecondToDayHourMinutes(coxDuration)})
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex w-full justify-between">

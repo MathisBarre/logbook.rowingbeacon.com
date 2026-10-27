@@ -3,8 +3,10 @@ import { writeTextFile, writeFile, BaseDirectory } from "@tauri-apps/plugin-fs";
 
 export type ExportType = "xlsx" | "ods" | "json" | "csv";
 
+type ExportCell = string | number;
+
 export const exportData = (args: {
-  data: Record<string, string>[];
+  data: Record<string, ExportCell>[];
   fileName: string;
   fileType: ExportType;
 }) => {
@@ -27,7 +29,7 @@ export const exportData = (args: {
 };
 
 const exportSpreadsheet = (args: {
-  data: Record<string, string | Date>[];
+  data: Record<string, ExportCell | Date>[];
   fileName: string;
   fileType: "xlsx" | "ods";
 }) => {
@@ -38,7 +40,7 @@ const exportSpreadsheet = (args: {
 
     for (const [key, value] of Object.entries(row)) {
       if (isDateString(value)) {
-        parsedRow[key] = new Date(value as string);
+        parsedRow[key] = new Date(value);
       } else {
         parsedRow[key] = value;
       }
@@ -80,14 +82,27 @@ export const exportJson = (args: {
   });
 };
 
+/**
+ * RFC 4180: a comment with a comma, a quote or a line break stays one cell.
+ * Text starting like a formula ("=", "+", "-", "@") gets a leading
+ * apostrophe so spreadsheets show it as text; numbers are left as they are.
+ */
+export const toCsvCell = (value: ExportCell) => {
+  const text =
+    typeof value === "string" && /^[=+\-@\t\r]/.test(value)
+      ? `'${value}`
+      : String(value);
+  return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+};
+
 const exportCsv = (args: {
-  data: Record<string, string>[];
+  data: Record<string, ExportCell>[];
   fileName: string;
   fileType: ExportType;
 }) => {
-  const csvHeaders = Object.keys(args.data[0]).join(",");
+  const csvHeaders = Object.keys(args.data[0]).map(toCsvCell).join(",");
   const csvValues = args.data
-    .map((row) => Object.values(row).join(","))
+    .map((row) => Object.values(row).map(toCsvCell).join(","))
     .join("\n");
   const csv = `${csvHeaders}\n${csvValues}`;
 

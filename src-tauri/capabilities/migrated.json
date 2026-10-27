@@ -13,6 +13,8 @@
     "dialog:default",
     "fs:default",
     "fs:allow-home-write-recursive",
-    "autostart:default"
+    "autostart:default",
+    "fs:allow-appdata-write-recursive",
+    "fs:allow-appdata-read-recursive"
   ]
 }

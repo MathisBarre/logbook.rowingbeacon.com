@@ -6,8 +6,11 @@ export const useRemoveSession = () => {
 
   const removeSession = async (sessionId: string) => {
     setIsRemoving(true);
-    await sessionRepository.removeSession(sessionId);
-    setIsRemoving(false);
+    try {
+      return await sessionRepository.removeSession(sessionId);
+    } finally {
+      setIsRemoving(false);
+    }
   };
 
   return { isRemoving, removeSession };

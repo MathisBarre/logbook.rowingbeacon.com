@@ -3,7 +3,8 @@ export const StatsTable = ({
   stats,
 }: {
   headers: Record<string, string>;
-  stats: Record<string, string>[];
+  /** `id` keys the row; only the keys in `headers` are shown. */
+  stats: ({ id: string } & Record<string, string>)[];
 }) => {
   return (
     <div className="border rounded overflow-auto max-h-[32rem]">
@@ -28,7 +29,7 @@ export const StatsTable = ({
         </thead>
         <tbody>
           {stats.map((stat) => (
-            <tr key={stat.rowerId} className="group">
+            <tr key={stat.id} className="group">
               {Object.keys(headers).map((key, index) => (
                 <td
                   key={index}

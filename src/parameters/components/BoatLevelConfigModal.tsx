@@ -53,7 +53,7 @@ export function BoatLevelConfigModal({
 
                 return (
                   <tr key={type}>
-                    <td>{getTypeLabel(type as BoatTypeEnum)}</td>
+                    <td>{getTypeLabel(type)}</td>
                     <td>
                       <select
                         className="w-full input"

@@ -1,7 +1,12 @@
-import { desc, eq } from "drizzle-orm";
+import { asc, desc, isNotNull } from "drizzle-orm";
 import { getDatabase } from "../_common/database/database";
-import { DBSessionOnRowers, DBSessions } from "../_common/database/schema";
+import { deleteOuting } from "../_common/database/repositories/club.repository";
+import { enqueueWrite } from "../_common/database/writeQueue";
+import useIncidentStore from "../_common/store/incident.store";
+import { DBOutingCrew, DBOutings } from "../_common/database/schema";
 import { getDateTimeWithoutTimezone } from "../_common/utils/date.utils";
+
+const INCIDENT_QUERY_CHUNK = 500;
 
 export const sessionRepository = {
   getSessions: async (payload: {
@@ -20,50 +25,83 @@ export const sessionRepository = {
 
     const { drizzle } = await getDatabase();
 
-    const result = await drizzle.query.DBSessions.findMany({
-      where: (DBSessions, { lte, gte, and }) =>
+    const result = await drizzle.query.DBOutings.findMany({
+      where: (DBOutings, { lte, gte, and }) =>
         and(
+          isNotNull(DBOutings.endDateTime),
           fromDateTime
             ? gte(
-                DBSessions.startDateTime,
+                DBOutings.startDateTime,
                 getDateTimeWithoutTimezone(fromDateTime)
               )
             : undefined,
           toDateTime
             ? lte(
-                DBSessions.startDateTime,
+                DBOutings.startDateTime,
                 getDateTimeWithoutTimezone(toDateTime)
               )
             : undefined
         ),
       offset: skip,
       limit: pageSize,
-      orderBy: [desc(DBSessions.startDateTime)],
+      orderBy: [desc(DBOutings.startDateTime)],
       with: {
-        sessionOnRowers: true,
+        crew: { orderBy: [asc(DBOutingCrew.position)] },
       },
     });
+
+    const { db } = await getDatabase();
+    const outingIds = result.map((session) => session.id);
+    // Chunked: SQLite caps the number of bound parameters per query.
+    const incidents: { id: string; outing_id: string }[] = [];
+    for (let i = 0; i < outingIds.length; i += INCIDENT_QUERY_CHUNK) {
+      const chunk = outingIds.slice(i, i + INCIDENT_QUERY_CHUNK);
+      incidents.push(
+        ...(await db.select<{ id: string; outing_id: string }[]>(
+          `SELECT id, outing_id FROM incident WHERE outing_id IN (${chunk
+            .map((_, index) => `$${index + 1}`)
+            .join(", ")}) ORDER BY occurred_at`,
+          chunk
+        ))
+      );
+    }
+    const incidentsByOuting = new Map<string, string[]>();
+    for (const incident of incidents) {
+      incidentsByOuting.set(incident.outing_id, [
+        ...(incidentsByOuting.get(incident.outing_id) ?? []),
+        incident.id,
+      ]);
+    }
 
     return result.map((session) => ({
       sessionId: session.id,
       endDateTime: getDateOrNull(session.endDateTime),
       estimatedEndDateTime: getDateOrNull(session.estimatedEndDateTime),
       startDateTime: new Date(session.startDateTime),
-      rowerIds: session.sessionOnRowers.map((rower) => rower.rowerId).join(","),
+      rowerIds: session.crew.map((rower) => rower.rowerId).join(","),
+      crew: session.crew.map((member) => ({
+        rowerId: member.rowerId,
+        role: member.role as "rower" | "cox",
+      })),
+      outingTypeCode: session.outingTypeCode,
+      distanceM: session.distanceM,
+      captainRowerId: session.captainRowerId,
       hasBeenCoached: sessionRepository.handleBoolStringToBoolean(
         session.hasBeenCoached
       ),
       comment: session.comment,
-      incidentId: session.incidentId,
+      incidentId: incidentsByOuting.get(session.id)?.[0] ?? null,
+      incidentIds: incidentsByOuting.get(session.id) ?? [],
+      boatConfigurationId: session.boatConfigurationId,
       boatId: session.boatId,
       routeId: session.routeId,
     }));
   },
 
-  handleBoolStringToBoolean: (value: string | null): boolean | null => {
-    if (value === "true") {
+  handleBoolStringToBoolean: (value: number | null): boolean | null => {
+    if (value === 1) {
       return true;
-    } else if (value === "false") {
+    } else if (value === 0) {
       return false;
     }
     return null;
@@ -76,20 +114,23 @@ export const sessionRepository = {
       SELECT 
         COUNT(*) as count
       FROM 
-        session
+        outing
+      WHERE
+        end_date_time IS NOT NULL
     `);
 
     return result[0].count;
   },
 
-  removeSession: async (sessionId: string) => {
-    const { drizzle } = await getDatabase();
-
-    await drizzle.delete(DBSessions).where(eq(DBSessions.id, sessionId));
-
-    await drizzle
-      .delete(DBSessionOnRowers)
-      .where(eq(DBSessionOnRowers.sessionId, sessionId));
+  /** False when the deletion failed (the error is already shown). */
+  removeSession: async (sessionId: string): Promise<boolean> => {
+    const deleted = await enqueueWrite("delete outing", (db) =>
+      deleteOuting(db, sessionId)
+    );
+    if (deleted) {
+      useIncidentStore.getState().detachFromSession(sessionId);
+    }
+    return deleted;
   },
 };
 

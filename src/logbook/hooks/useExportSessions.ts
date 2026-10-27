@@ -1,12 +1,40 @@
 import { toast } from "sonner";
 import { exportData, exportJson, ExportType } from "../../_common/utils/export";
 import { sessionRepository } from "../SessionRepository";
+import { flushWrites } from "../../_common/database/writeQueue";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { getDateTimeWithoutTimezone } from "../../_common/utils/date.utils";
 import useIncidentStore from "../../_common/store/incident.store";
 import { useState } from "react";
 import { getErrorMessage } from "../../_common/utils/error";
 import { useTranslation } from "react-i18next";
+import { metresToKilometres } from "../../_common/business/distance.rules";
+import { getOutingTypeLabel } from "../../_common/business/outingType.rules";
+import { getConfigurationCode } from "../../_common/business/boatConfiguration.rules";
+import { getDatabase } from "../../_common/database/database";
+
+type SessionFromDb = Awaited<
+  ReturnType<typeof sessionRepository.getSessions>
+>[number];
+
+/** Codes (4x, 4-…) of every configuration, archived ones included. */
+const getConfigurationCodes = async () => {
+  const { db } = await getDatabase();
+  const rows = await db.select<
+    {
+      id: string;
+      seats: number | null;
+      rigging: "scull" | "sweep" | null;
+      coxed: number;
+    }[]
+  >("SELECT id, seats, rigging, coxed FROM boat_configuration");
+  return new Map(
+    rows.map((row) => [
+      row.id,
+      getConfigurationCode({ ...row, coxed: row.coxed === 1 }) ?? "",
+    ])
+  );
+};
 
 export const useExportSessions = () => {
   const { t } = useTranslation();
@@ -39,12 +67,13 @@ export const useExportSessions = () => {
     };
   };
 
-  const getRowerId = (rowerId: string) => {
-    return clubOverview.getRowerById(rowerId)?.id || "";
+  // A rower missing from memory (merged) keeps their id in the export.
+  const getRowerId = (rowerId: string | undefined) => {
+    return rowerId ?? "";
   };
 
-  const getRowerName = (rowerId: string) => {
-    return clubOverview.getRowerById(rowerId)?.name || "";
+  const getRowerName = (rowerId: string | undefined) => {
+    return rowerId ? clubOverview.getRowerById(rowerId)?.name || "" : "";
   };
 
   const getIncident = (incidentId: string | null) => {
@@ -97,6 +126,8 @@ export const useExportSessions = () => {
   };
 
   const getSessions = async (data: { fromDate: string; toDate: string }) => {
+    // An outing finished just before the export is still in the queue.
+    await flushWrites();
     return await sessionRepository.getSessions({
       maxPageSize: 999_999,
       skip: 0,
@@ -108,23 +139,37 @@ export const useExportSessions = () => {
     });
   };
 
-  const formatToSpreadsheet = (
-    sessionsDB: {
-      sessionId: string;
-      endDateTime: Date | null;
-      estimatedEndDateTime: Date | null;
-      startDateTime: Date;
-      rowerIds: string;
-      hasBeenCoached: boolean | null;
-      boatId: string;
-      routeId: string | null;
-      incidentId: string | null;
-      comment: string | null;
-    }[]
-  ) => {
-    return sessionsDB.map((session) => {
-      const rowersIds = session.rowerIds.split(",");
+  const getIncidentMessages = (incidentIds: string[]) =>
+    incidentIds.map(getIncidentMessage).filter(Boolean).join(" | ");
 
+  const formatToSpreadsheet = (
+    sessionsDB: SessionFromDb[],
+    configurationCodes: Map<string, string>
+  ) => {
+    const getRowerIds = (session: SessionFromDb) =>
+      session.crew
+        .filter((member) => member.role === "rower")
+        .map((member) => member.rowerId);
+    // As many rower columns as the largest crew exported.
+    // A loop, not a spread: a spread of every outing hits the engine's
+    // argument limit on large exports.
+    const rowerColumnsCount = sessionsDB.reduce(
+      (max, session) => Math.max(max, getRowerIds(session).length),
+      1
+    );
+
+    return sessionsDB.map((session) => {
+      const rowersIds = getRowerIds(session);
+      const coxId = session.crew.find((member) => member.role === "cox")
+        ?.rowerId;
+      const rowerColumns: Record<string, string> = {};
+      for (let index = 0; index < rowerColumnsCount; index++) {
+        rowerColumns[`rower${index + 1}_id`] = getRowerId(rowersIds[index]);
+        rowerColumns[`rower${index + 1}_name`] = getRowerName(rowersIds[index]);
+      }
+      const distanceKm = metresToKilometres(session.distanceM);
+
+      // v1 columns first, in their v1 order; v2 columns after the rowers.
       return {
         session_id: session.sessionId,
         start_date_time: getDateTimeWithoutTimezone(session.startDateTime),
@@ -135,8 +180,8 @@ export const useExportSessions = () => {
           ? getDateTimeWithoutTimezone(session.endDateTime)
           : "",
         comment: session.comment || "",
-        incident_id: session.incidentId || "",
-        incident_message: getIncidentMessage(session.incidentId),
+        incident_id: session.incidentIds.join(" | "),
+        incident_message: getIncidentMessages(session.incidentIds),
         has_been_coached:
           session.hasBeenCoached !== null
             ? session.hasBeenCoached
@@ -149,55 +194,41 @@ export const useExportSessions = () => {
         route_name: session.routeId
           ? clubOverview.getRouteById(session.routeId)?.name || ""
           : "",
-        rower1_id: getRowerId(rowersIds[0]),
-        rower1_name: getRowerName(rowersIds[0]),
-        rower2_id: getRowerId(rowersIds[1]),
-        rower2_name: getRowerName(rowersIds[1]),
-        rower3_id: getRowerId(rowersIds[2]),
-        rower3_name: getRowerName(rowersIds[2]),
-        rower4_id: getRowerId(rowersIds[3]),
-        rower4_name: getRowerName(rowersIds[3]),
-        rower5_id: getRowerId(rowersIds[4]),
-        rower5_name: getRowerName(rowersIds[4]),
-        rower6_id: getRowerId(rowersIds[5]),
-        rower6_name: getRowerName(rowersIds[5]),
-        rower7_id: getRowerId(rowersIds[6]),
-        rower7_name: getRowerName(rowersIds[6]),
-        rower8_id: getRowerId(rowersIds[7]),
-        rower8_name: getRowerName(rowersIds[7]),
-        rower9_id: getRowerId(rowersIds[8]),
-        rower9_name: getRowerName(rowersIds[8]),
+        ...rowerColumns,
+        boat_configuration: session.boatConfigurationId
+          ? (configurationCodes.get(session.boatConfigurationId) ?? "")
+          : "",
+        outing_type: getOutingTypeLabel(session.outingTypeCode),
+        outing_type_code: session.outingTypeCode ?? "",
+        distance_km: distanceKm ?? "",
+        cox_id: getRowerId(coxId),
+        cox_name: getRowerName(coxId),
+        captain_id: getRowerId(session.captainRowerId ?? undefined),
+        captain_name: getRowerName(session.captainRowerId ?? undefined),
       };
     });
   };
 
   const formatToJson = (
-    sessionsDB: {
-      sessionId: string;
-      endDateTime: Date | null;
-      estimatedEndDateTime: Date | null;
-      startDateTime: Date;
-      rowerIds: string;
-      hasBeenCoached: boolean | null;
-      boatId: string;
-      routeId: string | null;
-      incidentId: string | null;
-      comment: string | null;
-    }[]
+    sessionsDB: SessionFromDb[],
+    configurationCodes: Map<string, string>
   ) => {
     return sessionsDB.map((session) => {
       return {
         sessionId: session.sessionId,
         boat: getBoat(session.boatId),
+        boatConfiguration: session.boatConfigurationId
+          ? (configurationCodes.get(session.boatConfigurationId) ?? null)
+          : null,
         route: getRoute(session.routeId),
-        rowers: session.rowerIds
-          ? session.rowerIds
-              .split(",")
-              .map((rowerId) => getRower(rowerId))
-              .filter(
-                (rower): rower is { id: string; name: string } => rower !== null
-              )
-          : [],
+        rowers: session.crew.flatMap((member) => {
+          const rower = getRower(member.rowerId);
+          return rower ? [{ ...rower, role: member.role }] : [];
+        }),
+        outingType: session.outingTypeCode,
+        outingTypeLabel: getOutingTypeLabel(session.outingTypeCode) || null,
+        distanceKm: metresToKilometres(session.distanceM),
+        captain: getRower(session.captainRowerId ?? ""),
         startDateTime: getDateStringIfExists(session.startDateTime),
         estimatedEndDateTime: getDateStringIfExists(
           session.estimatedEndDateTime
@@ -206,6 +237,7 @@ export const useExportSessions = () => {
         comment: session.comment || "",
         hasBeenCoached: session.hasBeenCoached,
         relatedIncident: getIncident(session.incidentId),
+        relatedIncidents: session.incidentIds.map(getIncident),
       };
     });
   };
@@ -228,15 +260,17 @@ export const useExportSessions = () => {
         return toast.error(t("logbook.noSessionsFound"));
       }
 
+      const configurationCodes = await getConfigurationCodes();
+
       if (data.fileType !== "json") {
         await exportData({
-          data: formatToSpreadsheet({ ...sessions }),
+          data: formatToSpreadsheet(sessions, configurationCodes),
           fileName,
           fileType: data.fileType,
         });
       } else {
         await exportJson({
-          data: formatToJson(sessions),
+          data: formatToJson(sessions, configurationCodes),
           fileName,
           fileType: data.fileType,
         });

@@ -1,29 +1,65 @@
 import {
   Boat,
-  BoatTypeEnum,
   getBoatNumberOfRowers,
 } from "../../../_common/business/boat.rules";
 import { Rower } from "../../../_common/business/rower.rules";
+import {
+  BoatConfiguration,
+  getCrewSize,
+  getDefaultConfiguration,
+} from "../../../_common/business/boatConfiguration.rules";
 import { BoatTypeLevelConfig } from "../../../_common/store/boatLevelConfig.rules";
 
-export const checkIfNotSameRowersAsSeatsInBoat = (
-  nbOfRowers: number,
-  boat: Boat
+/**
+ * Crew size expected in the boat, cox included: from the chosen
+ * configuration, else from the legacy boat type.
+ */
+export const getExpectedCrewSize = (
+  boat: Boat & { configurations?: BoatConfiguration[] },
+  boatConfigurationId?: string | null
 ) => {
-  const rowersQuantity = getBoatNumberOfRowers(boat.type);
+  const configuration = getOutingConfiguration(boat, boatConfigurationId);
 
-  if (rowersQuantity === undefined) {
+  return configuration
+    ? getCrewSize(configuration)
+    : getBoatNumberOfRowers(boat.type);
+};
+
+export const getOutingConfiguration = (
+  boat: { configurations?: BoatConfiguration[] },
+  boatConfigurationId?: string | null
+) => {
+  const configurations = boat.configurations ?? [];
+
+  return (
+    configurations.find(
+      (configuration) => configuration.id === boatConfigurationId
+    ) ?? getDefaultConfiguration(configurations)
+  );
+};
+
+export const checkIfNotSameRowersAsSeatsInBoat = (
+  crewSize: number,
+  boat: Boat & { configurations?: BoatConfiguration[] },
+  boatConfigurationId?: string | null
+) => {
+  const expectedCrewSize = getExpectedCrewSize(boat, boatConfigurationId);
+
+  if (expectedCrewSize === undefined) {
     return false;
   }
 
-  const goodRowerQuantity = nbOfRowers === rowersQuantity;
-
-  return !goodRowerQuantity;
+  return crewSize !== expectedCrewSize;
 };
 export interface SessionToStart {
   routeId: string | null;
   boatId: string;
+  /** Rowing seats; may hold new guest option ids (crew.rules). */
   rowersId: string[];
+  coxId?: string | null;
+  boatConfigurationId?: string | null;
+  outingTypeCode?: string | null;
+  captainRowerId?: string | null;
   startDatetime: Date;
   estimatedEndDatetime?: Date | undefined;
   comment: string;
@@ -39,6 +75,7 @@ export const isInvalidStartSessionDate = (payload: SessionToStart) => {
 export interface StartedSession {
   id: string;
   rowers: Rower[];
+  boat?: { id: string };
 }
 
 export const getAlreadyOnStartedSessionRowersId = (
@@ -72,21 +109,4 @@ export const whatShouldItDo = (
   }
 
   return whatToDo;
-};
-
-export const getNbOfMissingRowers = (
-  boatType: BoatTypeEnum | undefined,
-  nbOfRowers: number
-) => {
-  if (boatType === undefined) {
-    return 0;
-  }
-
-  const boatNumberOfRowers = getBoatNumberOfRowers(boatType);
-
-  if (boatNumberOfRowers === undefined) {
-    return 0;
-  }
-
-  return Math.max(boatNumberOfRowers - nbOfRowers, 0);
 };

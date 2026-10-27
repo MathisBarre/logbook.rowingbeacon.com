@@ -6,14 +6,21 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { toast } from "sonner";
+import { BoatTypeEnum } from "../../_common/business/boat.rules";
 import {
-  boathTypeWithLabel,
-  BoatTypeEnum,
-} from "../../_common/business/boat.rules";
+  BoatConfiguration,
+  getConfigurationFromLegacyType,
+  getDefaultConfiguration,
+  getConfigurationError,
+  getLegacyTypeFromConfiguration,
+  renewChangedConfigurations,
+} from "../../_common/business/boatConfiguration.rules";
+import { BoatConfigurationsEditor } from "./BoatConfigurationsEditor";
+import { useState } from "react";
+import { v4 } from "uuid";
 
 type UpdateBoatFormValues = {
   boatName: string;
-  boatType: BoatTypeEnum;
   isInMaintenance: boolean;
   note: string;
 };
@@ -25,7 +32,6 @@ const useUpdateBoatForm = ({
 }) => {
   const UpdateBoatFormSchema = z.object({
     boatName: z.string(),
-    boatType: z.nativeEnum(BoatTypeEnum),
     isInMaintenance: z.boolean(),
     note: z.string(),
   });
@@ -54,29 +60,69 @@ export const UpdateBoat = ({
   const { t } = useTranslation();
   const {
     updateBoatName,
-    updateBoatType,
+    updateBoat,
     toggleBoatIsInMaintenance,
     updateBoatNote,
+    getBoatById,
   } = useClubOverviewStore();
+
+  const initialConfigurations: BoatConfiguration[] = getBoatById(boat.id)
+    ?.configurations ?? [
+    {
+      id: v4(),
+      ...getConfigurationFromLegacyType(boat.type),
+      isDefault: true,
+      position: 0,
+    },
+  ];
+  const [configurations, setConfigurations] = useState(initialConfigurations);
 
   const form = useUpdateBoatForm({
     defaultValues: {
       boatName: boat.name,
-      boatType: boat.type || BoatTypeEnum.OTHER,
       isInMaintenance: boat.isInMaintenance || false,
       note: boat.note || "",
     },
   });
 
-  const onSubmit = () => {
-    const values = form.getValues();
+  const hasConfigurationError = configurations.some(
+    (configuration) =>
+      getConfigurationError(
+        configuration,
+        configurations,
+        initialConfigurations
+      ) !== null
+  );
 
-    if (values.boatName !== boat.name) {
-      updateBoatName(boat.id, values.boatName);
+  const onSubmit = () => {
+    if (hasConfigurationError) return;
+    const values = form.getValues();
+    const boatName = values.boatName.trim();
+    if (boatName === "") {
+      form.setError("boatName", { message: t("parameters.nameRequired") });
+      return;
     }
 
-    if ((boat.type || BoatTypeEnum.OTHER) !== values.boatType) {
-      updateBoatType(boat.id, values.boatType);
+    if (boatName !== boat.name) {
+      updateBoatName(boat.id, boatName);
+    }
+
+    if (
+      JSON.stringify(configurations) !== JSON.stringify(initialConfigurations)
+    ) {
+      updateBoat(boat.id, {
+        configurations: renewChangedConfigurations(
+          configurations,
+          initialConfigurations,
+          v4
+        ).map((configuration, position) => ({
+          ...configuration,
+          position,
+        })),
+        type: getLegacyTypeFromConfiguration(
+          getDefaultConfiguration(configurations)
+        ),
+      });
     }
 
     if ((boat.isInMaintenance || false) !== values.isInMaintenance) {
@@ -101,19 +147,25 @@ export const UpdateBoat = ({
       <div className="flex flex-col gap-4">
         <Label className="flex flex-col gap-1">
           {t("boat.name")}
-          <input className="input" type="text" {...form.register("boatName")} />
+          <input
+            className="input"
+            type="text"
+            {...form.register("boatName", {
+              onChange: () => form.clearErrors("boatName"),
+            })}
+          />
+          {form.formState.errors.boatName?.message && (
+            <p className="form-error">
+              {form.formState.errors.boatName.message}
+            </p>
+          )}
         </Label>
 
-        <Label className="flex flex-col gap-1">
-          {t("boat.type")}
-          <select className="input" {...form.register("boatType")}>
-            {boathTypeWithLabel.map((type) => (
-              <option key={type.type} value={type.type}>
-                {type.label}
-              </option>
-            ))}
-          </select>
-        </Label>
+        <BoatConfigurationsEditor
+          configurations={configurations}
+          saved={initialConfigurations}
+          onChange={setConfigurations}
+        />
 
         <Label className="flex items-center gap-2">
           <input
@@ -137,7 +189,11 @@ export const UpdateBoat = ({
       <div className="h-4" />
 
       <div className="flex justify-end gap-2">
-        <Button type="submit" className="flex-1">
+        <Button
+          type="submit"
+          className="flex-1"
+          disabled={hasConfigurationError}
+        >
           {t("parameters.updateBoat")}
         </Button>
       </div>

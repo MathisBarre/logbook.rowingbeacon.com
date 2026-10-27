@@ -8,10 +8,17 @@ import Button from "../../../_common/components/Button";
 import { Label } from "../../../_common/components/Label";
 import CommentSection from "../StartSessionDialog/CommentSection";
 import { getCurrentDateTime } from "../../../_common/utils/date.utils";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { cn, forEnum } from "../../../_common/utils/utils";
 import { toast } from "sonner";
 import { useGetStopSession } from "../../business/StopSession/StopSession.usecase";
+import { useModule } from "../../../_common/store/modules.store";
+import { useClubOverviewStore } from "../../../_common/store/clubOverview.store";
+import {
+  isValidKilometreInput,
+  parseKilometres,
+  toKilometreInput,
+} from "../../../_common/business/distance.rules";
 
 const StopSessionFormSchema = z.object({
   endDateTime: z
@@ -22,6 +29,7 @@ const StopSessionFormSchema = z.object({
       message: "This field is required",
     }),
   comment: z.string(),
+  distanceKm: z.string().optional(),
   incident: z.string().optional(),
   coached: z.enum(["yes", "no"], {
     message: "You must choose an option",
@@ -45,11 +53,17 @@ export const StopSessionForm = ({
     return null;
   }
 
+  const hasDistances = useModule("distances");
+  const routeDistanceM = useClubOverviewStore((state) =>
+    session.route ? state.getRouteById(session.route.id)?.distanceM : null
+  );
+
   const form = useForm<StopSessionFormValues>({
     resolver: zodResolver(StopSessionFormSchema),
     defaultValues: {
       endDateTime: "",
       comment: session.comment,
+      distanceKm: toKilometreInput(routeDistanceM),
     },
   });
 
@@ -57,7 +71,28 @@ export const StopSessionForm = ({
 
   const stopSession = useGetStopSession();
 
+  // A second click while saving must not stop the outing twice.
+  const isStopping = useRef(false);
+  const [isSaving, setIsSaving] = useState(false);
+
   const onSubmit = form.handleSubmit(async (formPayload) => {
+    if (isStopping.current) return;
+    isStopping.current = true;
+    setIsSaving(true);
+    try {
+      await submit(formPayload);
+    } finally {
+      isStopping.current = false;
+      setIsSaving(false);
+    }
+  });
+
+  const submit = async (formPayload: StopSessionFormValues) => {
+    if (hasDistances && !isValidKilometreInput(formPayload.distanceKm ?? "")) {
+      form.setError("distanceKm", { message: t("session.invalidDistance") });
+      return;
+    }
+
     const [stopSessionError] = await stopSession.execute({
       sessionId: session.id,
       endDateTime: formPayload.endDateTime,
@@ -67,6 +102,9 @@ export const StopSessionForm = ({
         message: formPayload.incident,
       },
       coached: formPayload.coached === "yes",
+      distanceM: hasDistances
+        ? parseKilometres(formPayload.distanceKm ?? "")
+        : undefined,
     });
 
     if (stopSessionError) {
@@ -88,7 +126,7 @@ export const StopSessionForm = ({
     toast.success(t("session.sessionEndedSuccessfully"));
 
     afterSubmit();
-  });
+  };
 
   return (
     <Form {...form}>
@@ -129,6 +167,27 @@ export const StopSessionForm = ({
             {t("session.now")}
           </Button>
         </div>
+
+        {hasDistances && (
+          <FormField
+            name="distanceKm"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <div className="flex flex-col gap-1">
+                <Label>{t("session.distanceKm")}</Label>
+                <input
+                  className="input w-40"
+                  inputMode="decimal"
+                  value={field.value ?? ""}
+                  onChange={field.onChange}
+                />
+                {fieldState.error?.message && (
+                  <p className="form-error">{fieldState.error.message}</p>
+                )}
+              </div>
+            )}
+          />
+        )}
 
         <FormField
           name="comment"
@@ -236,7 +295,7 @@ export const StopSessionForm = ({
           >
             {t("common.cancel")}
           </Button>
-          <Button className="flex-1" type="submit">
+          <Button className="flex-1" type="submit" loading={isSaving}>
             {t("session.stopSession")}
           </Button>
         </div>

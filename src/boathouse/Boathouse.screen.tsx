@@ -18,9 +18,8 @@ import { useTranslation } from "react-i18next";
 function BoathouseScreen() {
   const { t } = useTranslation();
   const sessionStore = useSessionsStore();
-  const { coachNote, getAllBoats } = useClubOverviewStore();
-  const boats = getAllBoats();
-  const { availableBoats, boatsInUse } = useSortBoats(boats || []);
+  const { coachNote, clubOverview } = useClubOverviewStore();
+  const { availableBoats, boatsInUse } = useSortBoats(clubOverview.boats);
 
   const [startSessionOpenWithBoat, setStartSessionOpenWithBoat] = useState<
     | false
@@ -111,7 +110,8 @@ function BoathouseScreen() {
   );
 }
 
-const useSortBoats = (boats: Boat[]) => {
+/** An archived boat still out stays listed so its outing can be finished. */
+const useSortBoats = (boats: (Boat & { archivedAt?: string })[]) => {
   const onGoingSessions = useSessionsStore().getOngoingSessions();
 
   const boatsInUse = boats.filter((boat) => {
@@ -119,7 +119,10 @@ const useSortBoats = (boats: Boat[]) => {
   });
 
   const availableBoats = boats.filter((boat) => {
-    return !boatsInUse.some((boatInUse) => boatInUse.id === boat.id);
+    return (
+      !boat.archivedAt &&
+      !boatsInUse.some((boatInUse) => boatInUse.id === boat.id)
+    );
   });
 
   return { availableBoats, boatsInUse };

@@ -14,16 +14,20 @@ type Value =
   | "135"
   | "150"
   | "165"
-  | "180";
+  | "180"
+  | "days";
 
 const DurationEstimationSelect = ({
   value,
   onChange,
   errorMessage,
+  allowMultiDay = false,
 }: {
   value: Value;
   onChange: (newValue: Value) => void;
   errorMessage?: string;
+  /** Outing types module: outings over several days. */
+  allowMultiDay?: boolean;
 }) => {
   const { t } = useTranslation();
 
@@ -50,6 +54,9 @@ const DurationEstimationSelect = ({
         <option value="150">~02h30</option>
         <option value="165">~02h45</option>
         <option value="180">~03h00</option>
+        {allowMultiDay && (
+          <option value="days">{t("session.severalDays")}</option>
+        )}
       </select>
 
       {errorMessage && <p className="form-error">{errorMessage}</p>}
