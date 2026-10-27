@@ -6,6 +6,7 @@ import {
   BoatTypeEnum,
   boathTypeWithLabel,
 } from "../../../_common/business/boat.rules";
+import { getTypeShortLabelTranslated } from "../../../_common/business/boat.rules.i18n";
 import { useClubOverviewStore } from "../../../_common/store/clubOverview.store";
 import {
   Dialog,
@@ -89,7 +90,7 @@ export const AddBoatsDialog = () => {
           >
             {boathTypeWithLabel.map((type) => (
               <option key={type.type} value={type.type}>
-                {type.label}
+                {getTypeShortLabelTranslated(type.type, t)}
               </option>
             ))}
           </select>

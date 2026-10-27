@@ -44,8 +44,7 @@ export const BoatListContent = ({
     twoRowerBoatsLabel,
     fourRowerBoatsLabel,
     eightRowerBoatsLabel,
-    otherBoatsLabel,
-    typelessBoatsLabel,
+    otherAndTypelessBoatsLabel,
   } = useSearchInBoats(boats, search);
 
   return (
@@ -92,7 +91,7 @@ export const BoatListContent = ({
 
       <BoatSectionRow
         label="boathouse.otherUnclassified"
-        subLabel={`${Number(otherBoatsLabel) + Number(typelessBoatsLabel)}`}
+        subLabel={otherAndTypelessBoatsLabel}
         translate
       />
       <BoatsRows

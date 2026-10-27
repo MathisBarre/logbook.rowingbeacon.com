@@ -4,7 +4,8 @@ import { PencilIcon, SearchIcon, Trash2Icon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { windowConfirm } from "../../_common/utils/window.utils";
-import { BoatTypeEnum, getTypeLabel } from "../../_common/business/boat.rules";
+import { BoatTypeEnum } from "../../_common/business/boat.rules";
+import { getTypeShortLabelTranslated } from "../../_common/business/boat.rules.i18n";
 import { sortBoatsByTypeAndName } from "../../_common/business/boat.rules";
 import { cn } from "../../_common/utils/utils";
 import { Fragment, useState } from "react";
@@ -82,7 +83,7 @@ export const BoatCrud = () => {
                         className="col-span-2 bg-gray-100 text-gray-900 p-2 -mx-4 px-4 sticky top-0"
                         key={boat.type}
                       >
-                        {getTypeLabel(boat.type)}
+                        {getTypeShortLabelTranslated(boat.type, t)}
                       </div>
                     )}
                     <div

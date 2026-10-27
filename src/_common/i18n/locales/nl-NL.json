@@ -22,6 +22,7 @@
     "all": "Alle",
     "none": "Geen",
     "other": "Andere",
+    "dayShort": "d",
     "ok": "OK",
     "retry": "Opnieuw proberen",
     "submit": "Indienen",
@@ -34,7 +35,7 @@
     "timeFormat": "Tijdformaat"
   },
   "navigation": {
-    "boathouse": "Boothuis",
+    "boathouse": "Botenhuis",
     "logbook": "Logboek",
     "stats": "Statistieken",
     "parameters": "Beheer",
@@ -62,14 +63,14 @@
     "validate": "Informatie valideren",
     "profile": {
       "title": "Hoe werkt uw club?",
-      "help": "Deze keuze zet modules aan. U kunt ze altijd toevoegen of verwijderen via Instellingen > Modules.",
+      "help": "Deze keuze zet modules aan. U kunt ze altijd toevoegen of verwijderen via Beheer > Modules.",
       "simple": {
         "name": "Eenvoudig",
         "description": "Boten, roeiers en trajecten: het essentiële om tochten te noteren."
       },
       "fullClub": {
         "name": "Volledige club",
-        "description": "Voegt afstanden, soorten tochten, volledige ledenprofielen, gasten en stuurman van dienst toe."
+        "description": "Voegt afstanden, soorten tochten, volledige ledenprofielen, gasten en een schipper per boot toe."
       },
       "efaImport": {
         "name": "Ik kom van efa",
@@ -132,7 +133,7 @@
     "startDateTime": "Startdatum en -tijd",
     "endDateTime": "Einddatum en -tijd",
     "now": "Nu!",
-    "coachedDuringSession": "De bemanning werd tijdens de sessie begeleid door een coach:",
+    "coachedDuringSession": "De ploeg werd tijdens de sessie begeleid door een coach:",
     "incidentDuringSession": "Er was een incident tijdens deze sessie",
     "describeIncident": "Beschrijf het voorgevallen incident...",
     "endDateMustBeAfterStartDate": "Einddatum moet na startdatum liggen",
@@ -140,11 +141,14 @@
     "sessionEndedSuccessfully": "Sessie-einde is succesvol geregistreerd",
     "boatNotes": "Notities over deze boot:",
     "levelRestriction": "Niveaubeperking op deze boot:",
-    "minimumLevelRequired": "Roeiers voor deze boot moeten minimaal het niveau hebben",
+    "minimumAgeCategoryRequired": "Roeiers in deze boot moeten minimaal categorie ‘{{ageCategory}}’ hebben.",
+    "minimumSeriousnessCategoryRequired": "Roeiers in deze boot moeten minimaal type ‘{{seriousnessCategory}}’ hebben.",
+    "minimumAgeAndSeriousnessCategoryRequired": "Roeiers in deze boot moeten minimaal categorie ‘{{ageCategory}}’ en type ‘{{seriousnessCategory}}’ hebben.",
     "minimumValidRowersRequired": "Het is noodzakelijk om ten minste {{count}} roeier(s) met ten minste de vereiste niveaus voor deze boot te selecteren.",
     "alert": {
-      "rowersProvided": "U heeft ingevoerd",
-      "rowersCount": "{{count}} perso(o)n(en) aan boord, stuurman inbegrepen",
+      "rowersProvided": "U heeft ingevoerd:",
+      "rowersCount_one": "{{count}} persoon aan boord, stuurman inbegrepen",
+      "rowersCount_other": "{{count}} personen aan boord, stuurman inbegrepen",
       "boatRequires": "De boot \"{{boatName}}\" vereist",
       "continueAnyway": "Wilt u toch doorgaan?",
       "rowersAlreadyOnSession": "Enkele roeiers hebben al een andere sessie gestart. Wilt u toch doorgaan?",
@@ -164,13 +168,13 @@
     "severalDays": "Meerdere dagen",
     "expectedReturn": "Verwachte terugkeer",
     "outingType": "Soort tocht",
-    "captain": "Stuurman van dienst",
+    "captain": "Schipper",
     "noCaptain": "Geen",
-    "captainRequired": "Kies een stuurman van dienst uit de bemanning.",
+    "captainRequired": "Kies een schipper uit de ploeg.",
     "distanceKm": "Afgelegde afstand (km)",
     "noIncidentDetails": "Geen details opgegeven",
     "notSaved": "De vaart kon niet worden opgeslagen. Probeer het opnieuw.",
-    "duplicateCrewMember": "Dezelfde persoon is twee keer in de bemanning gekozen.",
+    "duplicateCrewMember": "Dezelfde persoon is twee keer in de ploeg gekozen.",
     "boatAlreadyOnSession": "Deze boot is al op het water.",
     "returnBeforeStart": "De verwachte terugkeer moet na het vertrek liggen.",
     "invalidDistance": "Ongeldige afstand: voer een aantal km in, bijvoorbeeld 12,5."
@@ -204,7 +208,8 @@
     "fileDownloaded": "\"{{fileName}}\" is gedownload naar uw \"Downloads\" map",
     "createNewExport": "Nieuwe export maken",
     "backToSessionList": "Terug naar sessielijst",
-    "captainName": "Stuurman van dienst: {{name}}"
+    "captainName": "Schipper: {{name}}",
+    "coxName": "{{name}} (stuurman)"
   },
   "stats": {
     "title": "Statistieken",
@@ -223,7 +228,8 @@
     "coachedSessions": "Begeleide sessies",
     "mostUsedBoats": "Meest gebruikte boten",
     "noBoatsUsed": "Geen boten gebruikt",
-    "uses": "toepassingen",
+    "uses": "keer gebruikt",
+    "sessionsUnit": "sessies",
     "mostFrequentPartners": "Meest frequente partners",
     "noPartnersFound": "Geen partners gevonden",
     "incidents": "Incidenten",
@@ -270,7 +276,7 @@
     "boatLevelManagement": "Niveaubeheer voor {{boatName}}",
     "configurationUpdated": "Configuratie bijgewerkt",
     "boatLevelSystemDescription": "Met deze instellingen kunt u de registratie van bootsessies beperken tot bepaalde roeiers.",
-    "boatLevelSystemDescription2": "Het configureren van een minimumcategorie en/of roeierstype zal de notulist waarschuwen of de registratie blokkeren, afhankelijk van de globale niveausysteemconfiguratie (te vinden in \"diverse instellingen\")",
+    "boatLevelSystemDescription2": "Met een minimumcategorie en/of een minimum roeierstype waarschuwt de applicatie bij vertrek of blokkeert ze de registratie, afhankelijk van de instellingen van het niveausysteem (in \"Diverse instellingen\")",
     "minimalRowerCategory": "Minimum roeierscategorie",
     "minimalRowerType": "Minimum roeierstype",
     "noMinimalCategory": "Geen minimumcategorie",
@@ -318,7 +324,7 @@
     "searchBoat": "Zoek een boot",
     "statisticsOf": "Statistieken van {{name}}",
     "select": "Selecteer",
-    "coachNoteDescription": "Deze notitie wordt boven aan de \"Boothuis\" pagina weergegeven",
+    "coachNoteDescription": "Deze notitie wordt boven aan de pagina \"Botenhuis\" weergegeven",
     "coachNotePlaceholder": "Schrijf hier uw notitie...",
     "importData": "Gegevens importeren",
     "importDataDescription": "Importeer boten, routes en roeiers uit een JSON-bestand. Gegevens worden toegevoegd aan bestaande gegevens.",
@@ -391,7 +397,7 @@
     "fourRowersCoxed": "4+ (vier met stuurman)",
     "eightRowersCoxed": "8+ (acht)",
     "configurations": "Uitvoeringen",
-    "configurationsHelp": "Een boot die gescheept en gestreken kan worden (4x / 4-) heeft meerdere uitvoeringen; de keuze verschijnt bij vertrek.",
+    "configurationsHelp": "Een boot die u als scull- of als boordboot kunt optuigen (4x / 4-), heeft meerdere uitvoeringen; de keuze verschijnt bij vertrek.",
     "seats": "Plaatsen",
     "riggingUnknown": "Scull of boord",
     "riggingScull": "Scull",
@@ -402,7 +408,7 @@
     "addConfiguration": "Uitvoering toevoegen",
     "configurationError": {
       "invalidSeats": "Het aantal plaatsen moet een geheel getal van 1 tot {{max}} zijn.",
-      "sweepNeedsEvenSeats": "Een boord-boot heeft een even aantal plaatsen nodig.",
+      "sweepNeedsEvenSeats": "Een boordboot heeft een even aantal plaatsen nodig.",
       "duplicateConfiguration": "Deze uitvoering bestaat al voor deze boot."
     }
   },
@@ -461,7 +467,7 @@
     "unknownBoat": "Onbekende boot",
     "unknownRower": "Onbekende roeier",
     "unknownRoute": "Onbekende route",
-    "done": "Je gegevens zijn naar de nieuwe database overgezet. Een back-up, die na 90 dagen automatisch wordt verwijderd, staat hier: {{location}}",
+    "done": "Uw gegevens zijn naar de nieuwe database overgezet. Een back-up, die na 90 dagen automatisch wordt verwijderd, staat hier: {{location}}",
     "failed": "De clubgegevens konden niet worden geladen. Er is niets verwijderd: start de app opnieuw.",
     "skipped": "{{count}} onleesbare v1-item(s) konden niet worden overgenomen. Ze staan in de back-up: {{location}}"
   },
@@ -495,11 +501,11 @@
       "suggestion": "Gasten of roeiers op doorreis? Met de module Gasten typt u hun naam bij vertrek zonder een lid aan te maken."
     },
     "captain": {
-      "name": "Stuurman van dienst",
-      "description": "Wijs de persoon aan die tijdens de tocht verantwoordelijk is voor de bemanning.",
-      "adds": "Voegt bij vertrek de keuze van de verantwoordelijke uit de bemanning toe (voorgesteld wordt de stuurman, anders de eerste volwassen roeier), zichtbaar in het logboek en de exports.",
-      "suggestion": "Wilt u weten wie verantwoordelijk is voor elke boot op het water? De module Stuurman van dienst voegt dat bij vertrek toe.",
-      "requiredOption": "Stuurman van dienst verplicht maken om te vertrekken"
+      "name": "Schipper",
+      "description": "Wijs de persoon aan die tijdens de tocht verantwoordelijk is voor de ploeg.",
+      "adds": "Voegt bij vertrek de keuze van de verantwoordelijke uit de ploeg toe (voorgesteld wordt de stuurman, anders de eerste volwassen roeier), zichtbaar in het logboek en de exports.",
+      "suggestion": "Wilt u weten wie verantwoordelijk is voor elke boot op het water? De module Schipper voegt dat bij vertrek toe.",
+      "requiredOption": "Schipper verplicht maken om te vertrekken"
     }
   },
   "outingTypes": {

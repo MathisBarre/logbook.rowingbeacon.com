@@ -14,8 +14,8 @@ import { useSessionsByMonthStackedByBoatType } from "./utils/getSessionsByMonth"
 import {
   BoatTypeEnum,
   getBoatNumberOfRowers,
-  getTypeLabel,
 } from "../_common/business/boat.rules";
+import { getTypeShortLabelTranslated } from "../_common/business/boat.rules.i18n";
 import { getSeasonDate } from "../_common/utils/seasons";
 import { useGlobalStats } from "./utils/getGlobalStats";
 import { SeasonSelector } from "./components/SeasonSelector";
@@ -25,7 +25,7 @@ import { useGetFirstAndLastRegisteredSessionDate } from "./utils/getFirstAndLast
 import { useTranslation } from "react-i18next";
 
 export const StatsScreen = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { firstSession, lastSession, isLoading } =
     useGetFirstAndLastRegisteredSessionDate();
 
@@ -116,17 +116,23 @@ export const StatsScreen = () => {
           >
             <StatCard
               title={t("stats.sessions")}
-              value={count.toString()}
+              value={count.toLocaleString(i18n.language)}
               icon={UserGroupIcon}
             />
             <StatCard
               title={t("stats.totalTimeOnWater")}
-              value={millisecondToDayHourMinutes(totalDuration)}
+              value={millisecondToDayHourMinutes(
+                totalDuration,
+                t("common.dayShort")
+              )}
               icon={ClockIcon}
             />
             <StatCard
               title={t("stats.averageTimePerSession")}
-              value={millisecondToDayHourMinutes(totalDuration / count || 0)}
+              value={millisecondToDayHourMinutes(
+                totalDuration / count || 0,
+                t("common.dayShort")
+              )}
               icon={CalculatorIcon}
             />
             {hasDistances && (
@@ -144,7 +150,9 @@ export const StatsScreen = () => {
                 data={chartData}
                 formatMonth={formatMonth}
                 formatAmount={formatAmount}
-                formatStackLabel={getTypeLabel}
+                formatStackLabel={(type) =>
+                  getTypeShortLabelTranslated(type, t)
+                }
                 sortStacks={(a, b) => {
                   const aNbRowers = getBoatNumberOfRowers(a as BoatTypeEnum);
                   const bNbRowers = getBoatNumberOfRowers(b as BoatTypeEnum);

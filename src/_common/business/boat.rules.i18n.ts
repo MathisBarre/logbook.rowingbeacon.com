@@ -1,5 +1,5 @@
 import { TFunction } from "i18next";
-import { BoatTypeEnum } from "./boat.rules";
+import { BoatTypeEnum, getTypeLabel } from "./boat.rules";
 
 export const getTypeLabelTranslated = (
   type: string | undefined,
@@ -26,3 +26,9 @@ export const getTypeLabelTranslated = (
       return t("common.other");
   }
 };
+
+/** Short class code ("1x", "4x / 4-"), with the "other" class translated. */
+export const getTypeShortLabelTranslated = (
+  type: string | undefined,
+  t: TFunction
+) => (type === BoatTypeEnum.OTHER ? t("common.other") : getTypeLabel(type));

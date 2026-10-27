@@ -58,10 +58,12 @@ export const BoatStatsComparisons = () => {
             name: stat.name,
             count: stat.count.toString(),
             totalDuration: millisecondToDayHourMinutes(
-              stat.totalDuration
+              stat.totalDuration,
+              t("common.dayShort")
             ).toString(),
             averageDuration: millisecondToDayHourMinutes(
-              stat.totalDuration / stat.count || 0
+              stat.totalDuration / stat.count || 0,
+              t("common.dayShort")
             ).toString(),
           }))}
         />

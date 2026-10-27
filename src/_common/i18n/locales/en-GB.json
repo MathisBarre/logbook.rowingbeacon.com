@@ -22,6 +22,7 @@
     "all": "All",
     "none": "None",
     "other": "Other",
+    "dayShort": "d",
     "ok": "OK",
     "retry": "Retry",
     "submit": "Submit",
@@ -62,7 +63,7 @@
     "validate": "Validate information",
     "profile": {
       "title": "How does your club work?",
-      "help": "This choice turns on modules. You can add or remove them at any time in Parameters > Modules.",
+      "help": "This choice turns on modules. You can add or remove them at any time in Management > Modules.",
       "simple": {
         "name": "Simple",
         "description": "Boats, rowers and routes: the essentials to log outings."
@@ -140,7 +141,9 @@
     "sessionEndedSuccessfully": "Session end has been recorded successfully",
     "boatNotes": "Notes about this boat:",
     "levelRestriction": "Level restriction on this boat:",
-    "minimumLevelRequired": "Rowers for this boat must, at minimum, have the level",
+    "minimumAgeCategoryRequired": "Rowers in this boat must have at least the “{{ageCategory}}” category.",
+    "minimumSeriousnessCategoryRequired": "Rowers in this boat must have at least the “{{seriousnessCategory}}” type.",
+    "minimumAgeAndSeriousnessCategoryRequired": "Rowers in this boat must have at least the “{{ageCategory}}” category and the “{{seriousnessCategory}}” type.",
     "minimumValidRowersRequired": "It is necessary to select at least {{count}} rower(s) with at least the required levels for this boat.",
     "alert": {
       "rowersProvided": "You have entered",
@@ -204,7 +207,8 @@
     "fileDownloaded": "\"{{fileName}}\" has been downloaded to your \"Downloads\" folder",
     "createNewExport": "Create a new export",
     "backToSessionList": "Return to session list",
-    "captainName": "Captain: {{name}}"
+    "captainName": "Captain: {{name}}",
+    "coxName": "{{name}} (cox)"
   },
   "stats": {
     "title": "Statistics",
@@ -224,6 +228,7 @@
     "mostUsedBoats": "Most used boats",
     "noBoatsUsed": "No boats used",
     "uses": "uses",
+    "sessionsUnit": "sessions",
     "mostFrequentPartners": "Most frequent partners",
     "noPartnersFound": "No partners found",
     "incidents": "Incidents",

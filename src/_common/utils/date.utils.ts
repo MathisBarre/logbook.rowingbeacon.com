@@ -9,7 +9,7 @@ export function formatDate(date: string | Date) {
     day: "numeric",
     month: "numeric",
     year: "numeric",
-    hour: "2-digit",
+    hour: hour12 ? "numeric" : "2-digit",
     minute: "2-digit",
     hour12,
   });
@@ -21,7 +21,7 @@ export function getTime(date: string | Date) {
   const hour12 = timeStyle === "12h";
 
   return new Date(date).toLocaleTimeString(currentLocale, {
-    hour: "2-digit",
+    hour: hour12 ? "numeric" : "2-digit",
     minute: "2-digit",
     hour12,
   });

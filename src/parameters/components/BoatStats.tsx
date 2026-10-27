@@ -59,13 +59,19 @@ export const BoatStats = ({ boatId }: { boatId: string }) => {
         <StatsCard
           icon={<ClockIcon className="w-6 h-6 text-steel-blue-600" />}
           title={t("stats.timeOnWater")}
-          value={millisecondToDayHourMinutes(totalDuration)}
+          value={millisecondToDayHourMinutes(
+            totalDuration,
+            t("common.dayShort")
+          )}
         />
 
         <StatsCard
           icon={<CalculatorIcon className="w-6 h-6 text-steel-blue-600" />}
           title={t("stats.averagePerSession")}
-          value={millisecondToDayHourMinutes(totalDuration / count || 0)}
+          value={millisecondToDayHourMinutes(
+            totalDuration / count || 0,
+            t("common.dayShort")
+          )}
         />
       </div>
 

@@ -9,6 +9,7 @@ import { CoxSection, RowersSection } from "./RowersSection";
 import { ConfigurationSection } from "./ConfigurationSection";
 import { OutingTypeSection } from "./OutingTypeSection";
 import { CaptainSection } from "./CaptainSection";
+import { InvalidRowersLevelText } from "./InvalidRowersLevelText";
 import { getDefaultCaptainId } from "../../../_common/business/crew.rules";
 import { DEFAULT_OUTING_TYPE_CODE } from "../../../_common/business/outingType.rules";
 import StartDatetimeSection from "./StartDatetimeSection";
@@ -27,11 +28,9 @@ import {
   getBoatTypeLevelConfig,
   getMinimumValidRowersNeeded,
 } from "../../../_common/store/boatLevelConfig.rules";
-import {
-  getSeriousnessTypeTranslation,
-  SeriousnessCategoryEnum,
-} from "../../../_common/business/seriousness.rules";
+import { SeriousnessCategoryEnum } from "../../../_common/business/seriousness.rules";
 import { AgeCategoryEnum } from "../../../_common/business/ageCategory.rules";
+import { getBoatLevelRestrictionText } from "../../../_common/business/boatLevel.rules.i18n";
 import { useBoatLevelConfigStore } from "../../../_common/store/boatLevelConfig.store";
 import { BoatTypeEnum } from "../../../_common/business/boat.rules";
 import { Rower } from "../../../_common/business/rower.rules";
@@ -175,6 +174,7 @@ export const StartSessionForm = ({
   const captainRequired = useModulesStore((state) => state.captainRequired);
 
   const selectedBoat = form.watch("boat");
+  const boatLevelRestrictionText = getBoatLevelRestrictionText(selectedBoat, t);
   const selectedBoatData = startSessionData.boats.find(
     (boat) => boat.id === selectedBoat.id
   );
@@ -351,15 +351,12 @@ export const StartSessionForm = ({
             <StartSessionAlert
               t={t}
               TextContent={() => {
-                const nb = alert.details.nbOfInvalidRowers;
                 return (
                   <>
-                    {t(
-                      `session.alert.invalidRowersLevel_${
-                        nb === 1 ? "one" : "other"
-                      }`,
-                      { count: nb }
-                    )}
+                    <InvalidRowersLevelText
+                      t={t}
+                      nbOfInvalidRowers={alert.details.nbOfInvalidRowers}
+                    />
                     <br />
                     {alert.details.whatToDo === "alert" &&
                       t("session.alert.continueAnyway")}
@@ -424,22 +421,13 @@ export const StartSessionForm = ({
               </div>
             )}
 
-            {(selectedBoat.ageCategory !== null ||
-              selectedBoat.seriousnessCategory !== null) && (
+            {boatLevelRestrictionText && (
               <div className="text-xs text-steel-blue-900 bg-steel-blue-50 border border-steel-blue-200 rounded p-2 whitespace-pre-wrap">
                 <h3 className="font-medium mb-1 flex items-center gap-1">
                   <ShieldIcon className="h-4 w-4 text-steel-blue-800" />
                   {t("session.levelRestriction")}
                 </h3>
-                <p>
-                  {t("session.minimumLevelRequired")} &quot;
-                  {selectedBoat.ageCategory && `${selectedBoat.ageCategory}`}
-                  &quot;
-                  {selectedBoat.seriousnessCategory &&
-                    ` ${t("common.and")} "${getSeriousnessTypeTranslation(
-                      selectedBoat.seriousnessCategory
-                    )}" `}
-                </p>
+                <p>{boatLevelRestrictionText}</p>
               </div>
             )}
           </div>

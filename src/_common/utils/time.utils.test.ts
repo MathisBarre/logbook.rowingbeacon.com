@@ -9,33 +9,33 @@ const ONE_DAY = ONE_HOUR * 24;
 describe("millisecondToDayHourMinutes", () => {
   describe("when 0ms", () => {
     test("should return 0min", () => {
-      expect(millisecondToDayHourMinutes(0)).toBe("0min");
+      expect(millisecondToDayHourMinutes(0, "j")).toBe("0min");
     });
   });
 
   describe("when 1 minute", () => {
     test("should return 1min", () => {
-      expect(millisecondToDayHourMinutes(ONE_MINUTE)).toBe("1min");
+      expect(millisecondToDayHourMinutes(ONE_MINUTE, "j")).toBe("1min");
     });
   });
 
   describe("when 1 hour", () => {
     test("should return 1h", () => {
-      expect(millisecondToDayHourMinutes(ONE_HOUR)).toBe("1h 0min");
+      expect(millisecondToDayHourMinutes(ONE_HOUR, "j")).toBe("1h 0min");
     });
   });
 
   describe("when 1 day", () => {
     test("should return 1j", () => {
-      expect(millisecondToDayHourMinutes(ONE_DAY)).toBe("1j 0h 0min");
+      expect(millisecondToDayHourMinutes(ONE_DAY, "j")).toBe("1j 0h 0min");
     });
   });
 
   describe("when 1 day, 1 hour, 1 minute", () => {
     test("should return 1j 1h 1min", () => {
-      expect(millisecondToDayHourMinutes(ONE_DAY + ONE_HOUR + ONE_MINUTE)).toBe(
-        "1j 1h 1min"
-      );
+      expect(
+        millisecondToDayHourMinutes(ONE_DAY + ONE_HOUR + ONE_MINUTE, "j")
+      ).toBe("1j 1h 1min");
     });
   });
 });

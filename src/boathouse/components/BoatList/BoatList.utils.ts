@@ -75,29 +75,35 @@ export const useSearchInBoats = (boats: Boat[], search: string) => {
     [typelessBoat, searchFilter]
   );
 
-  const oneRowerBoatsLabel = search
-    ? `${filteredOneRowerBoats.length} / ${oneRowerBoats.length}`
-    : oneRowerBoats.length.toString();
+  const oneRowerBoatsLabel = getSectionCountLabel(
+    filteredOneRowerBoats.length,
+    oneRowerBoats.length,
+    search
+  );
 
-  const twoRowerBoatsLabel = search
-    ? `${filteredTwoRowerBoats.length} / ${twoRowerBoats.length}`
-    : twoRowerBoats.length.toString();
+  const twoRowerBoatsLabel = getSectionCountLabel(
+    filteredTwoRowerBoats.length,
+    twoRowerBoats.length,
+    search
+  );
 
-  const fourRowerBoatsLabel = search
-    ? `${filteredFourRowerBoats.length} / ${fourRowerBoats.length}`
-    : fourRowerBoats.length.toString();
+  const fourRowerBoatsLabel = getSectionCountLabel(
+    filteredFourRowerBoats.length,
+    fourRowerBoats.length,
+    search
+  );
 
-  const eightRowerBoatsLabel = search
-    ? `${filteredEightRowerBoats.length} / ${eightRowerBoats.length}`
-    : eightRowerBoats.length.toString();
+  const eightRowerBoatsLabel = getSectionCountLabel(
+    filteredEightRowerBoats.length,
+    eightRowerBoats.length,
+    search
+  );
 
-  const otherBoatsLabel = search
-    ? `${filteredOtherBoats.length} / ${otherBoats.length}`
-    : otherBoats.length.toString();
-
-  const typelessBoatsLabel = search
-    ? `${filteredTypelessBoats.length} / ${typelessBoat.length}`
-    : typelessBoat.length.toString();
+  const otherAndTypelessBoatsLabel = getSectionCountLabel(
+    filteredOtherBoats.length + filteredTypelessBoats.length,
+    otherBoats.length + typelessBoat.length,
+    search
+  );
 
   return {
     filteredOneRowerBoats,
@@ -110,7 +116,14 @@ export const useSearchInBoats = (boats: Boat[], search: string) => {
     twoRowerBoatsLabel,
     fourRowerBoatsLabel,
     eightRowerBoatsLabel,
-    otherBoatsLabel,
-    typelessBoatsLabel,
+    otherAndTypelessBoatsLabel,
   };
+};
+
+export const getSectionCountLabel = (
+  filteredCount: number,
+  totalCount: number,
+  search: string
+) => {
+  return search ? `${filteredCount} / ${totalCount}` : totalCount.toString();
 };

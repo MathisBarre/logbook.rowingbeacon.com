@@ -22,6 +22,7 @@
     "all": "All",
     "none": "None",
     "other": "Other",
+    "dayShort": "d",
     "ok": "OK",
     "retry": "Retry",
     "submit": "Submit",
@@ -62,7 +63,7 @@
     "validate": "Validate information",
     "profile": {
       "title": "How does your club work?",
-      "help": "This choice turns on modules. You can add or remove them at any time in Parameters > Modules.",
+      "help": "This choice turns on modules. You can add or remove them at any time in Management > Modules.",
       "simple": {
         "name": "Simple",
         "description": "Boats, rowers and routes: the essentials to log outings."
@@ -140,7 +141,9 @@
     "sessionEndedSuccessfully": "Session end has been recorded successfully",
     "boatNotes": "Notes about this boat:",
     "levelRestriction": "Level restriction on this boat:",
-    "minimumLevelRequired": "Rowers for this boat must, at minimum, have the level",
+    "minimumAgeCategoryRequired": "Rowers in this boat must have at least the “{{ageCategory}}” category.",
+    "minimumSeriousnessCategoryRequired": "Rowers in this boat must have at least the “{{seriousnessCategory}}” type.",
+    "minimumAgeAndSeriousnessCategoryRequired": "Rowers in this boat must have at least the “{{ageCategory}}” category and the “{{seriousnessCategory}}” type.",
     "minimumValidRowersRequired": "It is necessary to select at least {{count}} rower(s) with at least the required levels for this boat.",
     "alert": {
       "rowersProvided": "You have entered",
@@ -204,7 +207,8 @@
     "fileDownloaded": "\"{{fileName}}\" has been downloaded to your \"Downloads\" folder",
     "createNewExport": "Create a new export",
     "backToSessionList": "Return to session list",
-    "captainName": "Captain: {{name}}"
+    "captainName": "Captain: {{name}}",
+    "coxName": "{{name}} (cox)"
   },
   "stats": {
     "title": "Statistics",
@@ -224,6 +228,7 @@
     "mostUsedBoats": "Most used boats",
     "noBoatsUsed": "No boats used",
     "uses": "uses",
+    "sessionsUnit": "sessions",
     "mostFrequentPartners": "Most frequent partners",
     "noPartnersFound": "No partners found",
     "incidents": "Incidents",
@@ -348,7 +353,7 @@
     "warning": "Warning!",
     "deleteAllDataWarning1": "You are about to delete all application data.",
     "deleteAllDataWarning2": "A safety backup is made first in the backups folder (Management > Data), alongside earlier backups. To erase the data for good, delete those files too.",
-    "deleteConfirmationText": "I wish to delete all my data",
+    "deleteConfirmationText": "I want to delete all my data",
     "deleteConfirmationInstruction": "Confirm by writing exactly \"{{text}}\" in the field below.",
     "enterAdminPassword": "Enter admin password",
     "routeNameUpdated": "Route name has been updated",
@@ -423,7 +428,7 @@
     "genderMale": "Male",
     "genderOther": "Other",
     "birthDate": "Birth date",
-    "licenseNumber": "Licence number",
+    "licenseNumber": "License number",
     "email": "Email",
     "phone": "Phone",
     "address": "Address",
@@ -453,7 +458,7 @@
   },
   "database": {
     "failedToLoad": "Failed to load database",
-    "failedToSave": "Saving failed: the change was cancelled",
+    "failedToSave": "Saving failed: the change was canceled",
     "backupsNotDeleted": "The old v1 backups could not be deleted from the backups folder",
     "reloadFailed": "Could not reload the data: please restart the app"
   },
@@ -472,9 +477,9 @@
     "noThanks": "No thanks",
     "distances": {
       "name": "Distances",
-      "description": "Record the kilometres covered on every outing.",
-      "adds": "Adds a distance to routes, a prefilled and editable distance when an outing ends, and kilometres in the logbook and statistics.",
-      "suggestion": "Want to track kilometres? The Distances module adds a distance to each route and carries it into outings."
+      "description": "Record the kilometers covered on every outing.",
+      "adds": "Adds a distance to routes, a prefilled and editable distance when an outing ends, and kilometers in the logbook and statistics.",
+      "suggestion": "Want to track kilometers? The Distances module adds a distance to each route and carries it into outings."
     },
     "outingTypes": {
       "name": "Outing types",
@@ -485,8 +490,8 @@
     "memberProfile": {
       "name": "Full member profile",
       "description": "Keep your members' contact details and information in one place.",
-      "adds": "Adds separate first and last names, gender, birth date, licence number, email, phone, address and status (member, guest, other).",
-      "suggestion": "Need an email, a licence number or a birth date? The Full member profile module adds these fields."
+      "adds": "Adds separate first and last names, gender, birth date, license number, email, phone, address and status (member, guest, other).",
+      "suggestion": "Need an email, a license number or a birth date? The Full member profile module adds these fields."
     },
     "guests": {
       "name": "Guests",
@@ -516,7 +521,7 @@
   "backup": {
     "dataTitle": "Data",
     "title": "Backups",
-    "description": "Rowing Beacon automatically copies all club data at start-up, then every 24 hours, and before every import, restore or deletion. The last 14 automatic backups are kept.",
+    "description": "Rowing Beacon automatically copies all club data at startup, then every 24 hours, and before every import, restore or deletion. The last 14 automatic backups are kept.",
     "lastBackup": "Last backup: {{date}}",
     "noBackupYet": "No backup yet.",
     "backupNow": "Back up now",
@@ -527,8 +532,8 @@
     "restoreFromFile": "Restore from a file…",
     "externalTitle": "External copy",
     "externalFolder": "Manual backups, those made before an import, restore or deletion, and one automatic backup a week are also copied to: {{folder}}",
-    "externalReminder": "Backups stay on this computer. Choose a USB key or a synced folder (Drive, Dropbox…) so they survive a computer failure.",
-    "externalCopyFailed": "The last external copy failed: check that the USB key or folder is available.",
+    "externalReminder": "Backups stay on this computer. Choose a USB drive or a synced folder (Drive, Dropbox…) so they survive a computer failure.",
+    "externalCopyFailed": "The last external copy failed: check that the USB drive or folder is available.",
     "externalFolderSet": "Next backups will also be copied to this folder",
     "chooseExternalFolder": "Choose a folder",
     "changeExternalFolder": "Change folder",
@@ -537,7 +542,7 @@
     "restoreTitle": "Restore a backup",
     "restoreConfirm": "All club data will be replaced with the backup from {{backup}}.",
     "restoreSafety": "The current data is backed up right before, so you can go back to it. The app then restarts.",
-    "restoreFailed": "The restore failed and was cancelled: nothing has been changed. The application will now restart.",
+    "restoreFailed": "The restore failed and was canceled: nothing has been changed. The application will now restart.",
     "folder": "Backup folder: {{folder}}",
     "kind": {
       "auto": "Automatic",
@@ -566,7 +571,7 @@
     "incidentsNotExported_other": "{{count}} incidents have no efa2 equivalent and are not exported.",
     "notAProject": "No readable efa2 project was found there",
     "readFailed": "The files could not be read ({{reason}}). Check access to the folder or the USB drive.",
-    "importFailed": "The import failed and was cancelled: the club data has not been changed. The application will now restart.",
+    "importFailed": "The import failed and was canceled: the club data has not been changed. The application will now restart.",
     "previewTitle": "Import the efa2 project “{{name}}”",
     "preview": {
       "boats_one": "{{count}} boat",
@@ -615,7 +620,7 @@
     },
     "defaultProjectName": "RowingBeacon",
     "boathouseName": "Boathouse",
-    "backupFailed": "The backup made before the import failed (is the disk full?). The import is cancelled, nothing has been changed.",
+    "backupFailed": "The backup made before the import failed (is the disk full?). The import is canceled, nothing has been changed.",
     "incompleteProject": "This efa project is incomplete: it has no boats or no persons (partial backup, new project or wrong folder). The import is refused so as not to erase the club data.",
     "chooseProject": "This folder holds several efa projects: {{names}}. Type the name of the one to import.",
     "closedOpenOutingNote": "(Outing left open in efa, closed by the import.)",

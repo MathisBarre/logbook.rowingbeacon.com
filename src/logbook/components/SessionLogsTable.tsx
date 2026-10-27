@@ -131,7 +131,7 @@ export function SessionHistoryTable({
                     {session.rowers
                       .map((r) =>
                         r.role === "cox"
-                          ? `${r.name} (${t("session.cox").toLowerCase()})`
+                          ? t("logbook.coxName", { name: r.name })
                           : r.name
                       )
                       .join(", ")}

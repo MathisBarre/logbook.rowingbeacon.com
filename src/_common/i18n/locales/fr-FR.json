@@ -22,6 +22,7 @@
     "all": "Tous",
     "none": "Aucun",
     "other": "Autre",
+    "dayShort": "j",
     "ok": "OK",
     "retry": "Réessayer",
     "submit": "Soumettre",
@@ -62,7 +63,7 @@
     "validate": "Valider les informations",
     "profile": {
       "title": "Comment votre club fonctionne-t-il ?",
-      "help": "Ce choix active des modules. Vous pourrez en ajouter ou en retirer à tout moment dans Paramètres > Modules.",
+      "help": "Ce choix active des modules. Vous pourrez en ajouter ou en retirer à tout moment dans Gestion > Modules.",
       "simple": {
         "name": "Simple",
         "description": "Bateaux, rameurs et parcours : l'essentiel pour noter les sorties."
@@ -140,7 +141,9 @@
     "sessionEndedSuccessfully": "La fin de la sortie a bien été enregistrée",
     "boatNotes": "Note(s) à propos de ce bateau :",
     "levelRestriction": "Limitation de niveau sur ce bateau :",
-    "minimumLevelRequired": "Les rameurs de ce bateau doivent, au minimum, avoir le niveau",
+    "minimumAgeCategoryRequired": "Les rameurs de ce bateau doivent être au minimum de catégorie « {{ageCategory}} ».",
+    "minimumSeriousnessCategoryRequired": "Les rameurs de ce bateau doivent être au minimum de type « {{seriousnessCategory}} ».",
+    "minimumAgeAndSeriousnessCategoryRequired": "Les rameurs de ce bateau doivent être au minimum de catégorie « {{ageCategory}} » et de type « {{seriousnessCategory}} ».",
     "minimumValidRowersRequired": "Il est nécessaire de sélectionner au moins {{count}} rameur(s) ayant au moins les niveaux requis pour ce bateau.",
     "alert": {
       "rowersProvided": "Vous avez renseigné",
@@ -204,7 +207,8 @@
     "fileDownloaded": "\"{{fileName}}\" a été téléchargé dans votre dossier \"Téléchargements\"",
     "createNewExport": "Créer un nouveau export",
     "backToSessionList": "Revenir à la liste des sorties",
-    "captainName": "Chef de bord : {{name}}"
+    "captainName": "Chef de bord : {{name}}",
+    "coxName": "{{name}} (barreur)"
   },
   "stats": {
     "title": "Statistiques",
@@ -224,6 +228,7 @@
     "mostUsedBoats": "Bateaux les plus utilisés",
     "noBoatsUsed": "Aucun bateau utilisé",
     "uses": "utilisations",
+    "sessionsUnit": "sessions",
     "mostFrequentPartners": "Partenaires les plus fréquents",
     "noPartnersFound": "Aucun partenaire trouvé",
     "incidents": "Incidents",

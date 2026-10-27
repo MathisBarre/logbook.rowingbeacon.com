@@ -13,7 +13,7 @@ import { ChartBarIcon } from "@heroicons/react/16/solid";
 import { AcademicCapIcon } from "@heroicons/react/16/solid";
 
 export const RowerStats = ({ rowerId }: { rowerId: string }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const {
     firstSession,
     lastSession,
@@ -72,7 +72,7 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
               {t("stats.timeOnWater")}
             </h3>
             <p className="text-xl font-semibold text-gray-900">
-              {millisecondToDayHourMinutes(totalDuration)}
+              {millisecondToDayHourMinutes(totalDuration, t("common.dayShort"))}
             </p>
           </div>
         </div>
@@ -86,7 +86,10 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
               {t("stats.averagePerSession")}
             </h3>
             <p className="text-xl font-semibold text-gray-900">
-              {millisecondToDayHourMinutes(totalDuration / count || 0)}
+              {millisecondToDayHourMinutes(
+                totalDuration / count || 0,
+                t("common.dayShort")
+              )}
             </p>
           </div>
         </div>
@@ -100,7 +103,12 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
               {t("stats.coachedSessions")}
             </h3>
             <p className="text-xl font-semibold text-gray-900">
-              {coachedSessionsCount} ({coachedSessionsPercentage.toFixed(2)}%)
+              {coachedSessionsCount} (
+              {(coachedSessionsPercentage / 100).toLocaleString(i18n.language, {
+                style: "percent",
+                maximumFractionDigits: 1,
+              })}
+              )
             </p>
           </div>
         </div>
@@ -115,7 +123,9 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
                 {t("stats.coxedSessions")}
               </h3>
               <p className="text-xl font-semibold text-gray-900">
-                {coxCount} ({millisecondToDayHourMinutes(coxDuration)})
+                {coxCount} (
+                {millisecondToDayHourMinutes(coxDuration, t("common.dayShort"))}
+                )
               </p>
             </div>
           </div>
@@ -158,7 +168,7 @@ export const RowerStats = ({ rowerId }: { rowerId: string }) => {
                   {getRowerById(partner.id)?.name || "NAME_NOT_FOUND"}
                 </span>{" "}
                 <span className="font-bold">
-                  {partner.count} {t("stats.sessions")}
+                  {partner.count} {t("stats.sessionsUnit")}
                 </span>
               </li>
             ))}

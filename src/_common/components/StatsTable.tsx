@@ -33,7 +33,7 @@ export const StatsTable = ({
               {Object.keys(headers).map((key, index) => (
                 <td
                   key={index}
-                  className={`border p-1 group-last:border-b-0 ${
+                  className={`border p-1 whitespace-nowrap group-last:border-b-0 ${
                     index === 0 ? "border-l-0" : ""
                   } ${
                     index === Object.keys(headers).length - 1
