@@ -26,6 +26,14 @@ import { getBackupFileName } from "./backup.rules";
 
 let root: string;
 let storage: BackupStorage;
+let opened: { close: () => Promise<void> }[] = [];
+
+/** Windows cannot delete an open database: each one is closed after the test. */
+const openTestDatabase = (path: string) => {
+  const db = createTestSqlClient(path);
+  opened.push(db);
+  return db;
+};
 
 beforeEach(() => {
   root = mkdtempSync(join(tmpdir(), "rb-backup-"));
@@ -40,15 +48,23 @@ beforeEach(() => {
   mkdirSync(join(root, "backups"));
 });
 
-afterEach(() => {
+afterEach(async () => {
+  for (const db of opened) {
+    try {
+      await db.close();
+    } catch {
+      // Already closed by the code under test.
+    }
+  }
+  opened = [];
   rmSync(root, { force: true, recursive: true });
 });
 
 const openDatabase = (path: string) =>
-  Promise.resolve(createTestSqlClient(path));
+  Promise.resolve(openTestDatabase(path));
 
 const clubDatabase = async () => {
-  const db = createTestSqlClient(join(root, "main.db"));
+  const db = openTestDatabase(join(root, "main.db"));
   await applyMigrations(db);
   await db.execute(
     "INSERT INTO boat (id, name, created_at, updated_at) VALUES ('b1', 'Hirondelle', 'x', 'x')"
@@ -79,7 +95,7 @@ describe("backups", () => {
     });
     expect(fileName).toBe("rowingbeacon-2026-10-19_08-00-00-manual.db");
 
-    const copy = createTestSqlClient(join(root, "backups", fileName));
+    const copy = openTestDatabase(join(root, "backups", fileName));
     expect(await names(copy)).toEqual(["Hirondelle"]);
     await copy.close();
   });
@@ -167,7 +183,7 @@ describe("backups", () => {
   test("an older backup is brought to the current schema before restoring", async () => {
     const db = await clubDatabase();
     const oldPath = join(root, "old.db");
-    const old = createTestSqlClient(oldPath);
+    const old = openTestDatabase(oldPath);
     // A database from before the efa2 records table, with one boat.
     await applyMigrations(old);
     await old.execute("DROP TABLE efa_record");
@@ -184,7 +200,7 @@ describe("backups", () => {
   test("refuses a file that is not a Rowing Beacon database", async () => {
     const db = await clubDatabase();
     const other = join(root, "other.db");
-    const foreign = createTestSqlClient(other);
+    const foreign = openTestDatabase(other);
     await foreign.execute("CREATE TABLE t (x)");
     await foreign.close();
     await expect(
@@ -202,7 +218,7 @@ describe("backups", () => {
   test("refuses a backup made by a newer Rowing Beacon", async () => {
     const db = await clubDatabase();
     const newerPath = join(root, "newer.db");
-    const newer = createTestSqlClient(newerPath);
+    const newer = openTestDatabase(newerPath);
     await applyMigrations(newer);
     await newer.execute(
       "INSERT INTO migration (timestamp) VALUES (9999999999999)"
