@@ -27,7 +27,11 @@ const RouteSection = ({ routes, onChange, value }: RouteSectionProps) => {
         id="route"
         className="input"
         onChange={(event) => {
-          const route = routes.find((route) => route.id === event.target.value);
+          // "No route" is not in the list: picking it must still clear the route.
+          const route =
+            event.target.value === defaultRoute.id
+              ? defaultRoute
+              : routes.find((route) => route.id === event.target.value);
 
           if (route) {
             onChange(route);

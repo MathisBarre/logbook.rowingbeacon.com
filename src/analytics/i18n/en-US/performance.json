@@ -1,0 +1,69 @@
+{
+  "title": "Performance",
+  "intro": "The statistics limits (query duration, number of rows, memory) depend on the computer.",
+  "machine_one": "This computer: {{memory}} of memory, {{count}} core. Recommended profile: {{profile}}.",
+  "machine_other": "This computer: {{memory}} of memory, {{count}} cores. Recommended profile: {{profile}}.",
+  "machinePi_one": "Raspberry Pi: {{memory}} of memory, {{count}} core. Recommended profile: {{profile}}.",
+  "machinePi_other": "Raspberry Pi: {{memory}} of memory, {{count}} cores. Recommended profile: {{profile}}.",
+  "machineUnknownMemory_one": "This computer: {{count}} core, unknown memory. Recommended profile: {{profile}}.",
+  "machineUnknownMemory_other": "This computer: {{count}} cores, unknown memory. Recommended profile: {{profile}}.",
+  "machineUnavailable": "The computer is only detected in the installed app. Here, Auto means Economy.",
+  "machineLoading": "Detecting the computer…",
+  "choiceLabel": "Profile",
+  "recommendedBadge": "recommended",
+  "choices": {
+    "auto": {
+      "name": "Auto",
+      "description": "Follows the profile recommended for this computer: {{profile}}."
+    }
+  },
+  "profiles": {
+    "economy": {
+      "name": "Economy",
+      "description": "Raspberry Pi and small computers: at most 10 s per Explorer query, 20 s per report, little memory."
+    },
+    "standard": {
+      "name": "Standard",
+      "description": "Recent laptop (8 GB, 4 cores): three times more time, more rows and more memory."
+    },
+    "powerful": {
+      "name": "Powerful",
+      "description": "Desktop computer (16 GB, 8 cores): one-minute queries, two-minute reports, 50,000 rows."
+    }
+  },
+  "piAdvice": "A Raspberry Pi should stay on Economy: a heavy query would slow it down while rowers log their outings. A more powerful profile does not make queries faster: it gives them more time and memory.",
+  "aboveRecommended": "This profile goes beyond the one recommended for this computer ({{profile}}). A heavy query could slow the app down: go back to Auto if it does.",
+  "aboveRecommendedPi": "This profile is not meant for a Raspberry Pi: a heavy query could slow the outing log down. Go back to Economy or Auto.",
+  "memoryCapped": "Memory stays limited to a quarter of the computer's: here this profile keeps the memory of the {{profile}} profile.",
+  "saved": "The next queries, including those of your AI app (MCP), follow this profile.",
+  "advanced": "Advanced: the limits of the {{profile}} profile",
+  "limits": {
+    "query": "Explorer or assistant query",
+    "report": "Report",
+    "card": "Dashboard card",
+    "editorRows": "Rows shown by the Explorer",
+    "maxRows": "Maximum rows per query",
+    "resultSize": "Size of a result",
+    "memory": "Memory of one query",
+    "heap": "Statistics memory for the whole app",
+    "concurrent": "Queries at the same time",
+    "mcp": "AI apps (MCP)",
+    "mcpValue": "{{query}} per query, {{report}} per report, {{rows}} rows"
+  },
+  "override": {
+    "label": "Maximum duration of an Explorer or assistant query (seconds)",
+    "help": "Between {{min}} and {{max}} s with this profile. Leave empty for the profile's value: {{default}} s.",
+    "reset": "Profile value",
+    "clamped": "Set to {{value}} s (between {{min}} and {{max}} s with this profile)."
+  },
+  "units": {
+    "seconds": "{{value}} s",
+    "mb": "{{value}} MB",
+    "gb": "{{value}} GB",
+    "minutes": "{{value}} min"
+  },
+  "raiseHint": "This computer can go further: choose the {{profile}} profile in Management › Statistics and AI › Performance.",
+  "profileInUse": "Profile in use: {{profile}}.",
+  "profileInUseAuto": "Profile in use: Auto, that is {{profile}} for this computer.",
+  "change": "Change profile"
+}

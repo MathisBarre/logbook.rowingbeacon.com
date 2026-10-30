@@ -18,6 +18,11 @@ import { BoatStatsComparisonsDialog } from "./dialogs/BoatStatsComparisonsDialog
 import { SimpleDialog } from "../../_common/components/SimpleDialog";
 import { UpdateBoat } from "./UpdateBoat";
 import { ModuleSuggestion } from "../../_common/components/ModuleSuggestion";
+import { DamageSeverity } from "../../_common/database/repositories/club.types";
+import { useModule } from "../../_common/store/modules.store";
+import { useDamageStore } from "../../_common/store/damage.store";
+import { getWorstOpenSeverity } from "../../_common/business/damage.rules";
+import { DamageSeverityBadge } from "../../_common/components/damages/DamageSeverityBadge";
 
 export const BoatCrud = () => {
   const { t } = useTranslation();
@@ -28,6 +33,8 @@ export const BoatCrud = () => {
     areStringSimilar(boat.name, search)
   );
   const sortedBoats = sortBoatsByTypeAndName(searchedBoats);
+  const hasDamages = useModule("damages");
+  const damages = useDamageStore((state) => state.damages);
 
   const { archiveBoat: deleteBoat } = useClubOverviewStore();
 
@@ -98,7 +105,13 @@ export const BoatCrud = () => {
                         >
                           {boat.name}{" "}
                           {boat.isInMaintenance &&
+                            !hasDamages &&
                             `(${t("parameters.inMaintenance")})`}
+                          {hasDamages && (
+                            <WorstSeverityBadge
+                              severity={getWorstOpenSeverity(damages, boat.id)}
+                            />
+                          )}
                         </h3>
                         {boat.note && boat.note.trim().length > 0 && (
                           <div className="text-xs text-steel-blue-900 bg-steel-blue-50 border border-steel-blue-200 rounded p-2 whitespace-pre-wrap mt-2">
@@ -177,6 +190,12 @@ export const BoatCrud = () => {
     </div>
   );
 };
+
+const WorstSeverityBadge = ({
+  severity,
+}: {
+  severity: DamageSeverity | null;
+}) => severity && <DamageSeverityBadge severity={severity} className="ml-1" />;
 
 const EditButton = ({
   children,

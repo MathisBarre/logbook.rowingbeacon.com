@@ -1,0 +1,53 @@
+{
+  "title": "L'année civile en chiffres",
+  "explanation": "Nombre de sorties, kilomètres et heures sur l'eau depuis le 1er janvier de cette année.",
+  "sql": "WITH y AS (SELECT CAST(substr(today, 1, 4) AS INTEGER) AS year FROM v_settings)\nSELECT COUNT(*) AS outings, ROUND(SUM(o.distance_km), 0) AS km,\n       ROUND(SUM(CASE WHEN o.is_multi_day = 0 AND o.duration_min > 0 THEN o.duration_min END) / 60.0, 1) AS hours\nFROM v_outings o, y\nWHERE o.start_year = y.year AND o.counts_in_stats = 1 AND o.is_rowing = 1",
+  "params": [],
+  "chart": {
+    "type": "kpi",
+    "x": "",
+    "y": [],
+    "series": "",
+    "orientation": "vertical",
+    "stacked": false,
+    "sort": "none",
+    "limit": 0,
+    "cumulative": false,
+    "label": "",
+    "value": "",
+    "date": "",
+    "kpis": [
+      {
+        "value": "outings",
+        "compare": "",
+        "format": "integer",
+        "higher_is_better": true,
+        "label": ""
+      },
+      {
+        "value": "km",
+        "compare": "",
+        "format": "km",
+        "higher_is_better": true,
+        "label": ""
+      },
+      {
+        "value": "hours",
+        "compare": "",
+        "format": "hours",
+        "higher_is_better": true,
+        "label": ""
+      }
+    ],
+    "columns": [],
+    "column_labels": [],
+    "column_formats": []
+  },
+  "assumptions": [
+    "Année civile : du 1er janvier à aujourd'hui.",
+    "Les sorties sans distance connue ne comptent pas dans les kilomètres.",
+    "Les sorties sur plusieurs jours ne comptent pas dans les heures."
+  ],
+  "clarification": null,
+  "choices": []
+}

@@ -18,13 +18,22 @@
   },
   "productName": "Rowing Beacon",
   "mainBinaryName": "Rowing Beacon",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "identifier": "com.rowing-beacon-tauri-app.app",
   "plugins": {
     "sql": {
       "preload": [
         "sqlite:mydatabase.db"
       ]
+    },
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDc4QkIzQUEyREIzNDY1RUUKUldUdVpUVGJvanE3ZUhpMlBEZW9ZMXRqMVNCd29nVjFtK1RRN2t6VXgrd21pbDk0ZC9FazlHOUUK",
+      "endpoints": [
+        "https://github.com/MathisBarre/logbook.rowingbeacon.com/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
     }
   },
   "app": {

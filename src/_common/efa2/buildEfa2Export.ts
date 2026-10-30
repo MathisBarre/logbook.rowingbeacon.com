@@ -1,13 +1,17 @@
 import { v4 } from "uuid";
 import { SqlClient } from "../database/sqlClient";
+import { DamageSeverity } from "../database/repositories/club.types";
 import { Efa2Project, Efa2StorageObject } from "./efa2Project";
 import { Efa2Fields } from "./efa2Xml";
+import { SEVERITY_TO_EFA, damageFromEfa } from "./efa2Damages";
 import {
   EFA2_FOREVER,
+  efaBoolean,
   efaDateToIso,
   efaDistanceToMetres,
   efaList,
   efaTimeToHhMm,
+  efaTimestamp,
   isoToEfaDate,
   localDateTimeToEfaTime,
   metresToEfaDistance,
@@ -15,16 +19,20 @@ import {
   toEfaList,
 } from "./efa2Values";
 import {
+  RESERVATION_FAR_FUTURE,
+  RESERVATION_FAR_PAST,
   configurationsFromEfa,
   deriveEfa2Id,
+  efa2DayOfWeek,
   normalizeName,
+  readEfa2ReservationTiming,
   toOutingTypeCode,
 } from "./planEfa2Import";
 
 /**
  * Build an efa2 project from the club data (ADR 0004). Fields Rowing
  * Beacon models are written from its tables; every other field, and every
- * record without a screen (reservations, messages…), comes back from the
+ * record without a screen (messages, crews…), comes back from the
  * efa_record table as it was imported.
  */
 
@@ -42,10 +50,14 @@ export interface Efa2ExportReport {
   routes: number;
   outings: number;
   logbooks: string[];
+  /** Damages written as efa2 damage reports (unavailable entries are the boat status). */
+  damagesExported: number;
   /** Incidents have no efa2 equivalent (an efa2 damage is a lasting state). */
   incidentsNotExported: number;
   /** Outings with more than 24 rowers or several coxes: efa2 has no seat for the rest. */
   crewsCut: number;
+  /** Reservations written from Rowing Beacon's table (unreadable efa2 ones come back apart). */
+  reservations: number;
 }
 
 interface EfaRecordRow {
@@ -84,6 +96,7 @@ const REWRITTEN = new Set([
   "efa2groups",
   "efa2destinations",
   "efa2boatstatus",
+  "efa2boatreservations",
   "efa2logbook",
 ]);
 
@@ -166,9 +179,7 @@ const efaDateOf = (raw: string | undefined, iso: string | null | undefined) =>
 /** The imported text when it still says the same time ("14:45" stays "14:45"). */
 const efaTimeOf = (raw: string | undefined, localDateTime: string | null) => {
   const time = localDateTimeToEfaTime(localDateTime);
-  return raw && time && efaTimeToHhMm(raw) === efaTimeToHhMm(time)
-    ? raw
-    : time;
+  return raw && time && efaTimeToHhMm(raw) === efaTimeToHhMm(time) ? raw : time;
 };
 
 const nextIsoDay = (isoDate: string) => {
@@ -388,7 +399,6 @@ export const buildEfa2Export = async (
       id: string;
       name: string;
       note: string | null;
-      is_in_maintenance: number;
       owner: string | null;
       manufacturer: string | null;
       model: string | null;
@@ -637,7 +647,9 @@ export const buildEfa2Export = async (
       rawPerson &&
       (rawStatusType === type ||
         (rower.status === "member" &&
-          !Object.values(ROWER_STATUS_TO_TYPE).some((t) => t === rawStatusType)))
+          !Object.values(ROWER_STATUS_TO_TYPE).some(
+            (t) => t === rawStatusType
+          )))
         ? rawPerson.StatusId
         : statusFor(type).Id;
 
@@ -757,7 +769,9 @@ export const buildEfa2Export = async (
       // Ids the import could not resolve stay in efa's list too.
       const rawMemberIds = [
         ...new Set(
-          efaList(rawGroup?.MemberIdList).filter((id) => exportedRowerIds.has(id))
+          efaList(rawGroup?.MemberIdList).filter((id) =>
+            exportedRowerIds.has(id)
+          )
         ),
       ];
       const sameMembers =
@@ -829,11 +843,23 @@ export const buildEfa2Export = async (
   const logbookForDate = (date: string) => {
     const efaDate = date.slice(0, 10);
     const covering = rawLogbookRecords.find((logbook) => {
-      const from = logbook.StartDate?.split(".").reverse().join("-");
-      const to = logbook.EndDate?.split(".").reverse().join("-");
+      const from = efaDateToIso(logbook.StartDate);
+      const to = efaDateToIso(logbook.EndDate);
       return from && to && from <= efaDate && efaDate <= to;
     });
     return covering?.Name ?? date.slice(0, 4);
+  };
+  /**
+   * Without the logbook's dates, a logbook named after a year holds that
+   * year; any other one holds every date: nothing to compare.
+   */
+  const isInLogbook = (name: string, date: string) => {
+    const logbook = rawLogbookRecords.find((record) => record.Name === name);
+    const from = efaDateToIso(logbook?.StartDate);
+    const to = efaDateToIso(logbook?.EndDate);
+    if (!from || !to) return !/^\d{4}$/.test(name) || date.startsWith(name);
+    const efaDate = date.slice(0, 10);
+    return from <= efaDate && efaDate <= to;
   };
 
   const logbooks = new Map<string, Efa2Fields[]>();
@@ -847,21 +873,58 @@ export const buildEfa2Export = async (
     }
     nextEntryId.set(object.name, max + 1);
   }
-  const openEntries = new Map<string, { logbook: string; entryId: string }>();
-  const unknownBoatEntries = new Set<string>();
+  /** Entry id of each exported outing, for the damages reported from it. */
+  const entryIdOfOuting = new Map<string, string>();
+  const openEntries = new Map<
+    string,
+    { logbook: string; entryId: string; unchanged: boolean }
+  >();
+  // Keyed by the entry's logbook and number in efa's file: a correction may
+  // have moved the entry since.
+  const unknownBoatEntries = new Map<
+    string,
+    { logbook: string; entryId: string; unchanged: boolean }
+  >();
+  // The routes the import made of efa's destinations, as it made them: a
+  // route renamed or added since does not change which one an entry meant.
+  const efaDestinations = [...rawVersions]
+    .filter(([key]) => key.startsWith("efa2destinations|"))
+    .map(([, versions]) => versions[versions.length - 1]);
+  // A typed name matches the destination of that name the import picked:
+  // which homonym was valid then is not known now, so any of them.
+  const routeIdsByName = new Map<string, string[]>();
+  for (const destination of efaDestinations) {
+    const name = normalizeName(destination.Name || "?");
+    routeIdsByName.set(name, [
+      ...(routeIdsByName.get(name) ?? []),
+      destination.Id,
+    ]);
+  }
+  const routeIdsKnown = new Set(efaDestinations.map((d) => d.Id));
   let crewsCut = 0;
 
   for (const outing of outings) {
     const rawEntry = raw("outing", outing.id);
+    // An imported outing stays in its logbook, unless a correction moved its
+    // date out of it: it then gets a new entry in the logbook of that date.
+    const storedLogbook = outingLogbook.get(outing.id);
+    const sameDate =
+      !!rawEntry &&
+      efaDateToIso(rawEntry.Date) === outing.start_date_time.slice(0, 10);
     const logbook =
-      outingLogbook.get(outing.id) ?? logbookForDate(outing.start_date_time);
+      storedLogbook &&
+      (sameDate || isInLogbook(storedLogbook, outing.start_date_time))
+        ? storedLogbook
+        : logbookForDate(outing.start_date_time);
     let entryId = rawEntry?.EntryId;
-    if (!entryId || outingLogbook.get(outing.id) !== logbook) {
+    const moved = storedLogbook !== logbook;
+    if (!entryId || moved) {
       const next = nextEntryId.get(logbook) ?? 1;
       entryId = String(next);
       nextEntryId.set(logbook, next + 1);
     }
 
+    entryIdOfOuting.set(outing.id, entryId);
     const base = baseOf(rawEntry, ["ChangeCount", "LastModified"]);
     for (const field of Object.keys(base)) {
       if (/^(Cox|Crew\d+)(Id|Name)$/.test(field)) delete base[field];
@@ -876,6 +939,28 @@ export const buildEfa2Export = async (
       "EndTime",
     ]) {
       delete base[field];
+    }
+    // Session groups belong to one logbook.
+    if (moved) delete base.SessionGroupId;
+    // The route the import made of efa's destination: when it changed, the
+    // old destination's variant and waters do not stay on the new one.
+    const rawRouteIds: (string | null)[] =
+      rawEntry?.DestinationId && routeIdsKnown.has(rawEntry.DestinationId)
+        ? [rawEntry.DestinationId]
+        : rawEntry?.DestinationName
+          ? (routeIdsByName.get(normalizeName(rawEntry.DestinationName)) ?? [
+              deriveEfa2Id(`route:${normalizeName(rawEntry.DestinationName)}`),
+            ])
+          : [null];
+    const sameRoute = rawRouteIds.includes(outing.route_id);
+    if (!sameRoute) {
+      for (const field of [
+        "DestinationVariantName",
+        "WatersIdList",
+        "WatersNameList",
+      ]) {
+        delete base[field];
+      }
     }
 
     const seats: Record<string, string> = {};
@@ -934,8 +1019,6 @@ export const buildEfa2Export = async (
       !!rawEntry.BoatName &&
       deriveEfa2Id(`boat:${normalizeName(rawEntry.BoatName)}`) ===
         outing.boat_id;
-    if (unknownBoatOnWater) unknownBoatEntries.add(`${logbook}|${entryId}`);
-    else if (ongoing) openEntries.set(outing.boat_id, { logbook, entryId });
 
     const entry = withoutUndefined({
       ...base,
@@ -981,8 +1064,42 @@ export const buildEfa2Export = async (
       ChangeCount: String(Number(rawEntry?.ChangeCount ?? 0) + 1),
       LastModified: isoToMs(outing.updated_at) ?? nowMs,
     });
+    const unchanged = !!rawEntry && sameFields(entry, rawEntry);
+    // efa's "on the water since… with…" status text tells where the boat
+    // went, when, and with whom: it holds while those are what efa recorded,
+    // whatever else a correction changed. The import turned efa's typed
+    // names into records: a typed seat holds while efa's name is still
+    // stored (a crew change removes it), a typed destination while the
+    // route is the one the import made of it.
+    const onWaterTextFields = (fields: Efa2Fields) =>
+      Object.fromEntries(
+        Object.entries(fields).filter(([key]) => {
+          const seat = /^(Cox|Crew\d+)(Id|Name)$/.exec(key);
+          if (seat) return !rawEntry?.[`${seat[1]}Name`];
+          if (/^Destination(Id|Name)$/.test(key)) return false;
+          return /^(Date|StartTime|BoatId|BoatName)$/.test(key);
+        })
+      );
+    const onWaterTextHolds =
+      !!rawEntry &&
+      sameRoute &&
+      sameFields(onWaterTextFields(entry), onWaterTextFields(rawEntry));
+    if (unknownBoatOnWater) {
+      unknownBoatEntries.set(`${storedLogbook}|${rawEntry.EntryId}`, {
+        logbook,
+        entryId,
+        unchanged: onWaterTextHolds,
+      });
+    }
+    if (ongoing && !unknownBoatOnWater) {
+      openEntries.set(outing.boat_id, {
+        logbook,
+        entryId,
+        unchanged: onWaterTextHolds,
+      });
+    }
     const entries = logbooks.get(logbook) ?? [];
-    entries.push(rawEntry && sameFields(entry, rawEntry) ? rawEntry : entry);
+    entries.push(unchanged ? rawEntry : entry);
     logbooks.set(logbook, entries);
   }
   // Entries the import could not read (no date…) come back as they were.
@@ -1006,44 +1123,265 @@ export const buildEfa2Export = async (
   const logbookNames = [...logbooks.keys()].sort();
   const lastLogbook = logbookNames[logbookNames.length - 1];
 
+  // ----- Reservations: from the table, unreadable efa2 ones as they were -----
+  const reservations = await db.select<
+    {
+      id: string;
+      boat_id: string;
+      recurrence: "once" | "weekly";
+      start_date: string | null;
+      end_date: string | null;
+      day_of_week: number | null;
+      start_time: string;
+      end_time: string;
+      rower_id: string | null;
+      person_name: string | null;
+      reason: string | null;
+      contact: string | null;
+      efa_number: number | null;
+      updated_at: string;
+    }[]
+  >("SELECT * FROM boat_reservation ORDER BY efa_number, created_at, id");
+  const reservationPositions = new Map(
+    efaRows
+      .filter(
+        (row) =>
+          row.object_type === "efa2boatreservations" &&
+          row.rb_table === "boat_reservation"
+      )
+      .map((row) => [row.rb_id, row.position])
+  );
+  const keptReservations: { position: number; record: Efa2Fields }[] = [];
+  for (const row of efaRows) {
+    if (row.object_type === "efa2boatreservations" && !row.rb_table) {
+      keptReservations.push({
+        position: row.position,
+        record: JSON.parse(row.fields) as Efa2Fields,
+      });
+    }
+  }
+  const sequenceKey = "efa2boatreservations";
+  const rawSequence = rawObjectsOfType("efa2autoincrement")
+    .flatMap((object) => object.records)
+    .find((record) => record.Sequence === sequenceKey);
+  /** The highest reservation number in use, efa's own counter included. */
+  let highestReservation =
+    Number(rawSequence?.IntValue ?? rawSequence?.LongValue) || 0;
+  for (const { record } of keptReservations) {
+    highestReservation = Math.max(
+      highestReservation,
+      Number(record.Reservation) || 0
+    );
+  }
+  for (const reservation of reservations) {
+    highestReservation = Math.max(
+      highestReservation,
+      reservation.efa_number ?? 0
+    );
+  }
+  const reservationRecords: { position: number; record: Efa2Fields }[] = [
+    ...keptReservations,
+  ];
+  reservations.forEach((reservation, index) => {
+    const rawReservation = raw("boat_reservation", reservation.id);
+    // A reservation made without a number (not by the app) gets the next one.
+    const number = reservation.efa_number ?? ++highestReservation;
+    const startTime =
+      efaTimeToHhMm(reservation.start_time) ?? reservation.start_time;
+    const endTime = efaTimeToHhMm(reservation.end_time) ?? reservation.end_time;
+
+    // The schedule efa had keeps its own text while it means what the table says.
+    const rawTiming = rawReservation
+      ? readEfa2ReservationTiming(rawReservation)
+      : null;
+    const sameSchedule =
+      !!rawTiming &&
+      rawTiming.recurrence === reservation.recurrence &&
+      rawTiming.startDate === reservation.start_date &&
+      rawTiming.endDate === reservation.end_date &&
+      rawTiming.dayOfWeek === reservation.day_of_week;
+    let schedule: Record<string, string | undefined>;
+    if (sameSchedule) {
+      schedule = {
+        Type: rawReservation?.Type,
+        DateFrom: rawReservation?.DateFrom,
+        DateTo: rawReservation?.DateTo,
+        DayOfWeek: rawReservation?.DayOfWeek,
+      };
+    } else if (reservation.recurrence === "once") {
+      schedule = {
+        Type: "ONETIME",
+        DateFrom: efaDateOf(rawReservation?.DateFrom, reservation.start_date),
+        DateTo: efaDateOf(rawReservation?.DateTo, reservation.end_date),
+        DayOfWeek: undefined,
+      };
+    } else {
+      const limited = !!reservation.start_date || !!reservation.end_date;
+      // efa2 has no weekly reservation with a single bound: the missing one
+      // is a date so far from any real one that it never limits anything
+      // (the import reads these dates as "no bound").
+      schedule = {
+        Type: limited ? "WEEKLY_LIMITED" : "WEEKLY",
+        DateFrom: limited
+          ? efaDateOf(
+              rawReservation?.DateFrom,
+              reservation.start_date ?? RESERVATION_FAR_PAST
+            )
+          : undefined,
+        DateTo: limited
+          ? efaDateOf(
+              rawReservation?.DateTo,
+              reservation.end_date ?? RESERVATION_FAR_FUTURE
+            )
+          : undefined,
+        DayOfWeek: reservation.day_of_week
+          ? efa2DayOfWeek(reservation.day_of_week)
+          : undefined,
+      };
+    }
+
+    // The holder efa had keeps its own fields while it means the same
+    // (the import kept only the PersonName of an unknown PersonId).
+    const rawRower =
+      rawReservation?.PersonId && exportedRowerIds.has(rawReservation.PersonId)
+        ? rawReservation.PersonId
+        : null;
+    const rawName = rawRower ? null : rawReservation?.PersonName || null;
+    const sameHolder =
+      !!rawReservation &&
+      rawRower === reservation.rower_id &&
+      rawName === (reservation.rower_id ? null : reservation.person_name);
+    const holder = sameHolder
+      ? {
+          PersonId: rawReservation.PersonId,
+          PersonName: rawReservation.PersonName,
+        }
+      : {
+          PersonId: reservation.rower_id ?? undefined,
+          PersonName: reservation.rower_id
+            ? undefined
+            : (reservation.person_name ?? undefined),
+        };
+
+    const entry = withoutUndefined({
+      ...baseOf(rawReservation, ["ChangeCount", "LastModified"]),
+      BoatId: reservation.boat_id,
+      Reservation:
+        rawReservation && Number(rawReservation.Reservation) === number
+          ? rawReservation.Reservation
+          : String(number),
+      ...schedule,
+      TimeFrom:
+        rawReservation && efaTimeToHhMm(rawReservation.TimeFrom) === startTime
+          ? rawReservation.TimeFrom
+          : `${startTime}:00`,
+      TimeTo:
+        rawReservation && efaTimeToHhMm(rawReservation.TimeTo) === endTime
+          ? rawReservation.TimeTo
+          : `${endTime}:00`,
+      ...holder,
+      Reason: reservation.reason ?? undefined,
+      Contact: reservation.contact ?? undefined,
+      ChangeCount: nextChangeCount(rawReservation),
+      LastModified: isoToMs(reservation.updated_at) ?? nowMs,
+    });
+    reservationRecords.push({
+      // Unchanged records keep efa's order, new ones come last.
+      position: reservationPositions.get(reservation.id) ?? 1e9 + index,
+      record:
+        rawReservation && sameFields(entry, rawReservation)
+          ? rawReservation
+          : entry,
+    });
+  });
+  reservationRecords.sort((a, b) => a.position - b.position);
+  for (const { record } of reservationRecords) {
+    highestReservation = Math.max(
+      highestReservation,
+      Number(record.Reservation) || 0
+    );
+  }
+  /** efa hands out numbers from its counter: it must not fall behind ours. */
+  const withReservationSequence = (records: Efa2Fields[]): Efa2Fields[] => {
+    const field =
+      rawSequence?.LongValue !== undefined && rawSequence.IntValue === undefined
+        ? "LongValue"
+        : "IntValue";
+    const current = records.find((record) => record.Sequence === sequenceKey);
+    if (current) {
+      if ((Number(current[field]) || 0) >= highestReservation) return records;
+      return records.map((record) =>
+        record === current
+          ? {
+              ...record,
+              [field]: String(highestReservation),
+              ChangeCount: nextChangeCount(record),
+              LastModified: nowMs,
+            }
+          : record
+      );
+    }
+    if (reservationRecords.length === 0) return records;
+    return [
+      ...records,
+      {
+        Sequence: sequenceKey,
+        IntValue: String(highestReservation),
+        ChangeCount: "1",
+        LastModified: nowMs,
+      },
+    ];
+  };
+
   // ----- Boat status: availability from the boat, on the water from ongoing outings -----
   const rawStatuses = new Map(
     rawObjectsOfType("efa2boatstatus")
       .flatMap((object) => object.records)
       .map((record) => [record.BoatId, record])
   );
-  const blockingDamageBoatIds = new Set(
-    rawObjectsOfType("efa2boatdamages")
-      .flatMap((object) => object.records)
-      .filter((d) => d.Fixed !== "true" && d.Severity === "NOTUSEABLE")
-      .map((d) => d.BoatId)
+  // A boat is not available while it has an open "unavailable" entry, whose
+  // description is the reason efa shows (the newest one that has a reason).
+  // Open damages are not part of the status: efa shows them through the
+  // damage reports.
+  const unavailableEntries = await db.select<
+    { boat_id: string; description: string; reported_at: string }[]
+  >(
+    "SELECT boat_id, description, reported_at FROM boat_damage WHERE kind = 'unavailable' AND fixed_at IS NULL ORDER BY reported_at DESC, id DESC"
   );
+  const unavailableByBoat = new Map<string, string[]>();
+  // efa dates the status by its last change: the newest entry.
+  const unavailableSince = new Map<string, string>();
+  for (const entry of unavailableEntries) {
+    if (!unavailableSince.has(entry.boat_id)) {
+      unavailableSince.set(entry.boat_id, entry.reported_at);
+    }
+    const descriptions = unavailableByBoat.get(entry.boat_id) ?? [];
+    descriptions.push(entry.description);
+    unavailableByBoat.set(entry.boat_id, descriptions);
+  }
   const boatStatusRecords: Efa2Fields[] = boats.map((boat) => {
     const rawStatus = rawStatuses.get(boat.id);
     const latestVersion = versionsOf("efa2boats", boat.id).at(-1);
     // A boat archived because efa itself expired it keeps efa's status.
     const expiredInEfa =
       !!latestVersion && isEfaExpired(latestVersion, nowNumber);
-    // The import also blocks a boat for an open NOTUSEABLE damage, which
-    // efa shows through the damage, not the status.
-    const blockedByDamage =
-      boat.is_in_maintenance === 1 &&
-      rawStatus?.BaseStatus === "AVAILABLE" &&
-      blockingDamageBoatIds.has(boat.id);
+    const unavailable = unavailableByBoat.get(boat.id);
     const base =
       boat.archived_at && expiredInEfa && rawStatus?.BaseStatus
         ? rawStatus.BaseStatus
         : boat.archived_at
           ? "HIDE"
-          : boat.is_in_maintenance && !blockedByDamage
+          : unavailable !== undefined
             ? "NOTAVAILABLE"
             : "AVAILABLE";
     const open = openEntries.get(boat.id);
     const fields = baseOf(rawStatus, ["Logbook", "EntryNo", "UnknownBoat"]);
-    // efa's "on the water since…" text goes once the outing is over, and
-    // the reason a boat was unavailable once it is back in service.
+    // efa's "on the water since… with…" text goes once the outing is over
+    // or corrected, and the reason a boat was unavailable once it is back in
+    // service.
     const rawComment =
-      (rawStatus?.CurrentStatus === "ONTHEWATER" && !open) ||
+      (rawStatus?.CurrentStatus === "ONTHEWATER" &&
+        !(open?.unchanged && rawStatus.EntryNo === open.entryId)) ||
       (rawStatus?.BaseStatus === "NOTAVAILABLE" && base !== "NOTAVAILABLE")
         ? undefined
         : rawStatus?.Comment;
@@ -1059,25 +1397,50 @@ export const buildEfa2Export = async (
       CurrentStatus: open ? "ONTHEWATER" : base,
       Logbook: open?.logbook,
       EntryNo: open?.entryId,
-      // The reason is the boat's note, emptied in Rowing Beacon or not.
+      // The reason of the entries: an untouched imported entry still holds
+      // efa's comment, and one emptied in Rowing Beacon clears it. Efa's
+      // comment stays only for a status kept from efa, without entries.
       Comment:
-        base === "NOTAVAILABLE" && !blockedByDamage
-          ? boat.note || undefined
+        base === "NOTAVAILABLE"
+          ? unavailable
+            ? unavailable.find((description) => description)
+            : rawStatus?.BaseStatus === "NOTAVAILABLE"
+              ? rawStatus.Comment
+              : undefined
           : rawComment,
       ChangeCount: String(Number(rawStatus?.ChangeCount ?? 0) + 1),
-      LastModified: nowMs,
+      LastModified:
+        (base === "NOTAVAILABLE" &&
+          isoToMs(unavailableSince.get(boat.id))) ||
+        nowMs,
     });
     return rawStatus && sameFields(status, rawStatus) ? rawStatus : status;
   });
   // Status records of boats efa only knew by name, while still on the water.
   for (const object of rawObjectsOfType("efa2boatstatus")) {
     for (const record of object.records) {
-      if (
-        record.UnknownBoat === "true" &&
-        unknownBoatEntries.has(`${record.Logbook}|${record.EntryNo}`)
-      ) {
-        boatStatusRecords.push(record);
-      }
+      const open =
+        record.UnknownBoat === "true"
+          ? unknownBoatEntries.get(`${record.Logbook}|${record.EntryNo}`)
+          : undefined;
+      if (!open) continue;
+      // Follows the entry if a correction moved it, and loses efa's
+      // "on the water since…" text once corrected, as for known boats.
+      const status = withoutUndefined({
+        ...record,
+        Logbook: open.logbook,
+        EntryNo: open.entryId,
+        Comment: open.unchanged ? record.Comment : undefined,
+      });
+      boatStatusRecords.push(
+        sameFields(status, record)
+          ? record
+          : {
+              ...status,
+              ChangeCount: String(Number(record.ChangeCount ?? 0) + 1),
+              LastModified: nowMs,
+            }
+      );
     }
   }
 
@@ -1147,6 +1510,194 @@ export const buildEfa2Export = async (
     ...logbookRecords,
   ];
 
+  // ----- Damage reports: efa2 damages from the damages of Rowing Beacon -----
+  const damages = await db.select<
+    {
+      id: string;
+      boat_id: string;
+      severity: DamageSeverity;
+      description: string;
+      reported_at: string;
+      reported_by_rower_id: string | null;
+      outing_id: string | null;
+      fixed_at: string | null;
+      fixed_by_rower_id: string | null;
+      repair_note: string | null;
+      repair_cost: number | null;
+      created_at: string;
+      updated_at: string;
+    }[]
+  >(
+    "SELECT * FROM boat_damage WHERE kind = 'damage' ORDER BY reported_at, id"
+  );
+  // The import knew every rower, merged ones included: a person reference to
+  // a rower that is not exported is no change.
+  const allRowerIds = new Set(
+    (await db.select<{ id: string }[]>("SELECT id FROM rower")).map(
+      (rower) => rower.id
+    )
+  );
+  const exportedBoatIds = new Set(boats.map((boat) => boat.id));
+  const exportedDamages = damages.filter((damage) =>
+    exportedBoatIds.has(damage.boat_id)
+  );
+  const damageById = new Map(damages.map((d) => [d.id, d]));
+  const personId = (id: string | null) =>
+    id && exportedRowerIds.has(id) ? id : undefined;
+  /** Rewrites the fields Rowing Beacon models; the others stay as efa wrote them. */
+  const writeDamage = (
+    rawDamage: Efa2Fields,
+    damage: (typeof damages)[number]
+  ): Efa2Fields => {
+    const imported = damageFromEfa(rawDamage, { rowerIds: allRowerIds, now });
+    // Without a date, the import dated the damage with its own time: there
+    // is nothing to compare the dates with.
+    const undated = efaTimestamp(rawDamage.LastModified) === null;
+    const reportedAtUnknown = undated && !efaDateToIso(rawDamage.ReportDate);
+    const fixedAtUnknown =
+      undated &&
+      efaBoolean(rawDamage.Fixed) &&
+      !efaDateToIso(rawDamage.FixDate);
+    const next: Record<string, string | undefined> = { ...rawDamage };
+    if (damage.severity !== imported.severity) {
+      next.Severity = SEVERITY_TO_EFA[damage.severity];
+    }
+    if (damage.description !== imported.description) {
+      next.Description = damage.description || undefined;
+    }
+    if (!reportedAtUnknown && damage.reported_at !== imported.reportedAt) {
+      next.ReportDate = isoToEfaDate(damage.reported_at);
+      next.ReportTime = localDateTimeToEfaTime(damage.reported_at);
+    }
+    if (damage.reported_by_rower_id !== imported.reportedByRowerId) {
+      next.ReportedByPersonId = personId(damage.reported_by_rower_id);
+      // efa's free name of the reporter gives way to the person.
+      if (next.ReportedByPersonId) next.ReportedByPersonName = undefined;
+    }
+    if (
+      fixedAtUnknown
+        ? damage.fixed_at === null
+        : damage.fixed_at !== imported.fixedAt
+    ) {
+      next.Fixed = toEfaBoolean(damage.fixed_at !== null);
+      next.FixDate = isoToEfaDate(damage.fixed_at);
+      next.FixTime = localDateTimeToEfaTime(damage.fixed_at);
+      if (damage.fixed_at === null) next.FixedByPersonName = undefined;
+    }
+    if (damage.fixed_by_rower_id !== imported.fixedByRowerId) {
+      next.FixedByPersonId = personId(damage.fixed_by_rower_id);
+      if (next.FixedByPersonId) next.FixedByPersonName = undefined;
+    }
+    if (damage.repair_note !== imported.repairNote) {
+      next.Notes = damage.repair_note || undefined;
+    }
+    if (damage.repair_cost !== imported.repairCost) {
+      next.RepairCosts =
+        damage.repair_cost === null ? undefined : String(damage.repair_cost);
+    }
+    const changed = withoutUndefined(next);
+    if (sameFields(changed, rawDamage)) return rawDamage;
+    return {
+      ...changed,
+      ChangeCount: nextChangeCount(rawDamage),
+      LastModified: isoToMs(damage.updated_at) ?? nowMs,
+    };
+  };
+
+  const rawDamageRows = efaRows.filter(
+    (row) => row.object_type === "efa2boatdamages"
+  );
+  const keptDamages: Efa2Fields[] = [];
+  const linkedDamageIds = new Set<string>();
+  let highestDamage = 0;
+  for (const row of rawDamageRows) {
+    const rawDamage = JSON.parse(row.fields) as Efa2Fields;
+    highestDamage = Math.max(highestDamage, Number(rawDamage.Damage) || 0);
+    const damage =
+      row.rb_table === "boat_damage" && row.rb_id
+        ? damageById.get(row.rb_id)
+        : undefined;
+    if (damage) {
+      linkedDamageIds.add(damage.id);
+      keptDamages.push(writeDamage(rawDamage, damage));
+    } else if (row.rb_table !== "boat_damage") {
+      // Reports of boats efa only knew by name come back as they were; a
+      // damage deleted in Rowing Beacon does not.
+      keptDamages.push(rawDamage);
+    }
+  }
+  // A damage reported in Rowing Beacon takes the next numbers efa has not
+  // used (its counter holds the last one issued), in the order they were
+  // entered: a late entry backdated later does not shift the numbers of
+  // damages already exported.
+  const counter = rawObjectsOfType("efa2autoincrement")
+    .flatMap((object) => object.records)
+    .find((record) => record.Sequence === "efa2boatdamages");
+  let lastDamageNumber = Math.max(highestDamage, Number(counter?.IntValue) || 0);
+  const issuedFrom = lastDamageNumber;
+  const byEntryOrder = (
+    a: (typeof damages)[number],
+    b: (typeof damages)[number]
+  ) =>
+    a.created_at.localeCompare(b.created_at) ||
+    a.reported_at.localeCompare(b.reported_at) ||
+    a.id.localeCompare(b.id);
+  const createdDamages = exportedDamages
+    .filter((damage) => !linkedDamageIds.has(damage.id))
+    .sort(byEntryOrder)
+    .map((damage): Efa2Fields => {
+      const entryId = damage.outing_id
+        ? entryIdOfOuting.get(damage.outing_id)
+        : undefined;
+      lastDamageNumber++;
+      return withoutUndefined({
+        BoatId: damage.boat_id,
+        Damage: String(lastDamageNumber),
+        Description: damage.description || undefined,
+        Severity: SEVERITY_TO_EFA[damage.severity],
+        Fixed: toEfaBoolean(damage.fixed_at !== null),
+        ReportDate: isoToEfaDate(damage.reported_at),
+        ReportTime: localDateTimeToEfaTime(damage.reported_at),
+        FixDate: isoToEfaDate(damage.fixed_at),
+        FixTime: localDateTimeToEfaTime(damage.fixed_at),
+        ReportedByPersonId: personId(damage.reported_by_rower_id),
+        FixedByPersonId: personId(damage.fixed_by_rower_id),
+        RepairCosts:
+          damage.repair_cost === null ? undefined : String(damage.repair_cost),
+        Notes: damage.repair_note || undefined,
+        LogbookText: entryId ? `#${entryId}` : undefined,
+        ChangeCount: "1",
+        LastModified: isoToMs(damage.updated_at) ?? nowMs,
+      });
+    });
+  const damageReports = [...keptDamages, ...createdDamages];
+  const damagesExported = linkedDamageIds.size + createdDamages.length;
+  /** The counter efa keeps for its damage numbers, moved past the new ones. */
+  const withDamageCounter = (records: Efa2Fields[]): Efa2Fields[] => {
+    if (lastDamageNumber === issuedFrom) return records;
+    if (!counter) {
+      return [
+        ...records,
+        {
+          Sequence: "efa2boatdamages",
+          IntValue: String(lastDamageNumber),
+          ChangeCount: "1",
+          LastModified: nowMs,
+        },
+      ];
+    }
+    return records.map((record) =>
+      record === counter
+        ? {
+            ...record,
+            IntValue: String(lastDamageNumber),
+            ChangeCount: nextChangeCount(record),
+            LastModified: nowMs,
+          }
+        : record
+    );
+  };
+
   // ----- Assemble -----
   const objects: Efa2StorageObject[] = [];
   const add = (type: string, records: Efa2Fields[], name = objectName(type)) =>
@@ -1158,41 +1709,32 @@ export const buildEfa2Export = async (
   add("efa2groups", groupRecords);
   add("efa2destinations", destinationRecords);
   add("efa2boatstatus", boatStatusRecords);
+  add(
+    "efa2boatreservations",
+    reservationRecords.map(({ record }) => record)
+  );
   for (const [name, entries] of logbooks) add("efa2logbook", entries, name);
-  // A boat put back in service in Rowing Beacon has its blocking damages
-  // repaired, or efa would still show them and a re-import block the boat.
-  const boatsInService = new Set(
-    boats.filter((boat) => !boat.is_in_maintenance).map((boat) => boat.id)
-  );
-  const today = isoToEfaDate(
-    `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(
-      now.getDate()
-    ).padStart(2, "0")}`
-  );
-  const withRepairs = (records: Efa2Fields[]) =>
-    records.map((damage) =>
-      damage.Fixed !== "true" &&
-      damage.Severity === "NOTUSEABLE" &&
-      boatsInService.has(damage.BoatId)
-        ? withoutUndefined({
-            ...damage,
-            Fixed: "true",
-            FixDate: today,
-            ChangeCount: String(Number(damage.ChangeCount ?? 0) + 1),
-            LastModified: nowMs,
-          })
-        : damage
-    );
   for (const type of Object.keys(OBJECT_NAMES)) {
     if (REWRITTEN.has(type)) continue;
     const kept = rawObjectsOfType(type);
-    if (kept.length === 0) add(type, []);
+    if (kept.length === 0) {
+      add(
+        type,
+        type === "efa2boatdamages"
+          ? damageReports
+          : type === "efa2autoincrement"
+            ? withDamageCounter(withReservationSequence([]))
+            : []
+      );
+    }
     for (const object of kept) {
       add(
         type,
         type === "efa2boatdamages"
-          ? withRepairs(object.records)
-          : object.records,
+          ? damageReports
+          : type === "efa2autoincrement"
+            ? withDamageCounter(withReservationSequence(object.records))
+            : object.records,
         object.name
       );
     }
@@ -1213,7 +1755,7 @@ export const buildEfa2Export = async (
   }
 
   const [{ incidents }] = await db.select<{ incidents: number }[]>(
-    "SELECT COUNT(*) AS incidents FROM incident WHERE id NOT IN (SELECT rb_id FROM efa_record WHERE rb_table = 'incident')"
+    "SELECT COUNT(*) AS incidents FROM incident WHERE id NOT IN (SELECT rb_id FROM efa_record WHERE rb_table = 'incident') AND id NOT IN (SELECT incident_id FROM boat_damage WHERE incident_id IS NOT NULL)"
   );
 
   return {
@@ -1229,8 +1771,10 @@ export const buildEfa2Export = async (
       routes: destinationRecords.length,
       outings: outings.length,
       logbooks: logbookNames,
+      damagesExported,
       incidentsNotExported: Number(incidents),
       crewsCut,
+      reservations: reservations.length,
     },
   };
 };

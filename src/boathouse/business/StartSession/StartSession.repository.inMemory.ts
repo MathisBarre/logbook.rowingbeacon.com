@@ -62,6 +62,10 @@ export const createInMemoryStartSessionRepository = ({
       return Promise.resolve(guest);
     },
 
+    findPersonByName(name) {
+      return Promise.resolve(rowers.find((rower) => rower.name === name));
+    },
+
     getRowersById(rowersId) {
       return Promise.resolve(
         rowers.filter((rower) => rowersId.includes(rower.id))

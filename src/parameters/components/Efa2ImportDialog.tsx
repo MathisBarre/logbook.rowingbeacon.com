@@ -126,9 +126,32 @@ export const Efa2ImportDialog = ({
                   })}
                 </li>
               )}
-              {report.incidents > 0 && (
+              {report.openDamages > 0 && (
                 <li>
-                  {t("efa2.preview.incidents", { count: report.incidents })}
+                  {t("efa2.preview.openDamages", {
+                    count: report.openDamages,
+                  })}
+                </li>
+              )}
+              {report.fixedDamages > 0 && (
+                <li>
+                  {t("efa2.preview.fixedDamages", {
+                    count: report.fixedDamages,
+                  })}
+                </li>
+              )}
+              {report.unavailableBoats > 0 && (
+                <li>
+                  {t("efa2.preview.unavailableBoats", {
+                    count: report.unavailableBoats,
+                  })}
+                </li>
+              )}
+              {report.reservations > 0 && (
+                <li>
+                  {t("efa2.preview.reservations", {
+                    count: report.reservations,
+                  })}
                 </li>
               )}
             </ul>

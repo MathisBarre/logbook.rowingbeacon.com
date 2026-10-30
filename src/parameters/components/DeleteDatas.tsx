@@ -1,9 +1,35 @@
 import { OctagonAlertIcon, SkullIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { isTauri } from "@tauri-apps/api/core";
 import { useAdminEditModeSystem } from "../../_common/store/adminEditMode.system";
 import { useLogout } from "../../_common/utils/logout";
 import Button from "../../_common/components/Button";
+import { aiKeyStatus } from "../../analytics/ai/aiClient";
+import { AI_PROVIDERS } from "../../analytics/engine/ipc";
+
+/**
+ * Whether an AI key (Anthropic, OpenAI or a compatible server's) is
+ * stored on this computer: it outlives the club data (system keychain),
+ * so the user chooses whether it goes too.
+ */
+const useStoredAiKey = () => {
+  const [stored, setStored] = useState(false);
+  useEffect(() => {
+    if (!isTauri()) return;
+    let live = true;
+    for (const provider of AI_PROVIDERS) {
+      aiKeyStatus(provider).then(
+        (status) => live && status.stored && setStored(true),
+        () => undefined
+      );
+    }
+    return () => {
+      live = false;
+    };
+  }, []);
+  return stored;
+};
 
 export const DeleteDatas = () => {
   const { t } = useTranslation();
@@ -12,6 +38,8 @@ export const DeleteDatas = () => {
   const requiredTextToDelete = t("parameters.deleteConfirmationText");
   const logout = useLogout();
   const [adminPassword, setAdminPassword] = useState("");
+  const aiKeyStored = useStoredAiKey();
+  const [deleteAiKey, setDeleteAiKey] = useState(false);
 
   return (
     <div className="text-error-800 flex flex-col gap-2">
@@ -22,6 +50,20 @@ export const DeleteDatas = () => {
       <p>{t("parameters.deleteAllDataWarning1")}</p>
 
       <p>{t("parameters.deleteAllDataWarning2")}</p>
+
+      {aiKeyStored && (
+        <label className="flex items-start gap-3 min-h-11 py-2 cursor-pointer">
+          <input
+            type="checkbox"
+            className="h-5 w-5 mt-0.5 shrink-0"
+            checked={deleteAiKey}
+            onChange={(e) => {
+              setDeleteAiKey(e.target.checked);
+            }}
+          />
+          <span>{t("parameters.deleteAiKeyToo")}</span>
+        </label>
+      )}
 
       <p>
         {t("parameters.deleteConfirmationInstruction", {
@@ -69,7 +111,7 @@ export const DeleteDatas = () => {
             return;
           }
 
-          await logout();
+          await logout({ deleteAiKey: aiKeyStored && deleteAiKey });
         }}
       >
         <SkullIcon />

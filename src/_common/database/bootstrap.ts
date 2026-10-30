@@ -15,6 +15,7 @@ import { appDataDir, join } from "@tauri-apps/api/path";
 import i18n from "../i18n/config";
 import { getDatabase } from "./database";
 import { loadClubData } from "./repositories/club.repository";
+import { upgradeToBoatDamages } from "./upgradeToBoatDamages";
 import {
   runV1Migration,
   V1MigrationResult,
@@ -28,7 +29,13 @@ import {
 } from "../store/clubOverview.store";
 import { useSessionsStore } from "../store/sessions.store";
 import { useModulesStore } from "../store/modules.store";
+import { useBoathouseSettingsStore } from "../store/boathouseSettings.store";
+import { useAnalyticsSettingsStore } from "../../analytics/store/analyticsSettings.store";
+import { ensureMachineInfo } from "../../analytics/engine/activePerformance";
 import useIncidentStore from "../store/incident.store";
+import { useDamageStore } from "../store/damage.store";
+import { useReservationStore } from "../store/reservation.store";
+import { loadReservations } from "./repositories/reservation.repository";
 import { useOnboardingStore } from "../../onboarding/onboarding.store";
 import {
   boatLevelConfigStoreCore,
@@ -54,7 +61,9 @@ const removeV1Backups = async (select: (fileNames: string[]) => string[]) => {
     if (!(await exists("backups", { baseDir: BaseDirectory.AppData }))) {
       return true;
     }
-    const entries = await readDir("backups", { baseDir: BaseDirectory.AppData });
+    const entries = await readDir("backups", {
+      baseDir: BaseDirectory.AppData,
+    });
     const selected = select(
       entries.filter((entry) => entry.isFile).map((entry) => entry.name)
     );
@@ -100,6 +109,8 @@ export const loadIntoStores = async (db: SqlClient) => {
     coachNote: (data.settings[SETTING_COACH_NOTE] as string) ?? "",
   });
   useModulesStore.getState().hydrate(data.settings);
+  useBoathouseSettingsStore.getState().hydrate(data.settings);
+  useAnalyticsSettingsStore.getState().hydrate(data.settings);
   const onboardingToSave = useOnboardingStore
     .getState()
     .hydrate(
@@ -109,6 +120,10 @@ export const loadIntoStores = async (db: SqlClient) => {
     );
   useSessionsStore.getState().hydrate(data.ongoingOutings);
   useIncidentStore.getState().hydrate(data.incidents);
+  useDamageStore
+    .getState()
+    .hydrate(data.damages, data.legacyMaintenanceBoatIds);
+  useReservationStore.getState().hydrate(await loadReservations(db), data.settings);
   boatLevelConfigStoreCore.getState().hydrate({
     boatTypeLevelConfigs: {
       ...DEFAULT_BOAT_TYPE_LEVEL_CONFIGS,
@@ -140,9 +155,19 @@ export const bootstrapClubData = async (): Promise<V1MigrationResult> => {
     },
   });
 
+  try {
+    await upgradeToBoatDamages(db);
+  } catch (error) {
+    // Retried on the next start; the boats keep showing as before.
+    console.error("❌ Failed to move data to boat damages", error);
+  }
+
   if (await loadIntoStores(db)) {
     void useOnboardingStore.getState().saveDerivedFlag();
   }
+  // The performance profile "auto" needs the machine: ask now, so the
+  // first analytics queries start with their final timeouts.
+  void ensureMachineInfo();
   void pruneV1Backups();
   // A boathouse computer may stay on for months: purge daily too.
   if (!pruneTimer) {

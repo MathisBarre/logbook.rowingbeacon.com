@@ -1,0 +1,279 @@
+{
+  "title": "Rapports",
+  "search": "Rechercher un rapport",
+  "noMatch": "Aucun rapport ne correspond à « {{query}} ». Posez la question à l'IA : elle écrit la statistique pour vous.",
+  "categories": {
+    "overview": "Vue d'ensemble",
+    "fleet": "Flotte",
+    "people": "Rameurs",
+    "retention": "Fidélisation",
+    "attendance": "Fréquentation",
+    "safety": "Sécurité et encadrement",
+    "maintenance": "Matériel"
+  },
+  "labels": {
+    "selectedSeason": "Saison choisie",
+    "previousSeason": "Saison précédente",
+    "classAvgOutings": "Sorties moyennes du type",
+    "monthsSinceArrival": "Mois depuis l'arrivée",
+    "avgPerWeek": {
+      "participations": "Rameurs par semaine en moyenne",
+      "outings": "Sorties par semaine en moyenne"
+    },
+    "female": "Femmes",
+    "male": "Hommes",
+    "otherGender": "Autre",
+    "unknownGender": "Sexe non renseigné",
+    "total": "Total",
+    "previous": {
+      "outings": "Sorties, saison précédente",
+      "participations": "Participations, saison précédente",
+      "active_rowers": "Rameurs actifs, saison précédente",
+      "km": "Kilomètres, saison précédente",
+      "hours": "Heures sur l'eau, saison précédente"
+    }
+  },
+  "notes": {
+    "multiDay": "Les sorties sur plusieurs jours ne comptent pas dans les heures.",
+    "km": "Kilomètres : distance saisie au retour, sinon distance du parcours.",
+    "excluded": "Les bateaux et rameurs exclus des statistiques (fiche Gestion) ne sont pas comptés.",
+    "v1Coxes": "Les sorties reprises de la version 1 comptent les barreurs comme rameurs.",
+    "noStartTime": "Les sorties importées sans heure de départ ne figurent pas dans la répartition par heure.",
+    "retention": "Fidélisation calculée depuis la première sortie (la date d'adhésion n'est pas connue).",
+    "motorboat": "Les sorties en bateau moteur (encadrement) ne comptent pas parmi les sorties des rameurs.",
+    "membersOnly": "Seuls les membres sont comptés : les invités et les autres statuts sont exclus."
+  },
+  "coverage": {
+    "gender": "Sexe renseigné pour {{pct}} % des rameurs actifs.",
+    "birth_date": "Date de naissance renseignée pour {{pct}} % des rameurs actifs.",
+    "age_category": "Catégorie d'âge renseignée pour {{pct}} % des rameurs actifs.",
+    "distance": "Distance connue pour {{pct}} % des sorties.",
+    "is_coached": "Encadrement renseigné pour {{pct}} % des sorties.",
+    "has_start_time": "Heure de départ connue pour {{pct}} % des sorties."
+  },
+  "howToRead": "Comment lire ce rapport",
+  "items": {
+    "season-overview": {
+      "title": "Chiffres clés de la saison",
+      "description": "Quels chiffres présenter en assemblée générale ? Sorties, rameurs actifs, kilomètres, heures sur l'eau et part des sorties encadrées, comparés à la même période de la saison précédente.",
+      "howToRead": "Chaque tuile donne la valeur de la saison et l'écart avec la saison précédente arrêtée à la même date : une saison en cours se compare à la même période de l'an dernier, pas à toute la saison passée. Un rameur actif est sorti au moins une fois.",
+      "keywords": "AG assemblée générale bilan résumé chiffres"
+    },
+    "yoy-monthly": {
+      "title": "Mois par mois, saison contre saison",
+      "description": "Le club rame-t-il plus ou moins que la saison dernière, mois par mois ? Au choix : sorties, participations, rameurs actifs, kilomètres ou heures.",
+      "howToRead": "Pour chaque mois, deux barres côte à côte : la saison choisie et la saison précédente. Les mois commencent au début de la saison. Pour le mois en cours, la saison précédente est comptée jusqu'au même jour. Une participation est une place dans un équipage : une sortie en quatre compte quatre participations.",
+      "keywords": "comparaison évolution année précédente progression"
+    },
+    "yoy-cumulative": {
+      "title": "Cumul des sorties, saison contre saison",
+      "description": "La saison est-elle en avance ou en retard sur la précédente ? Le total des sorties semaine après semaine, pour les deux saisons.",
+      "howToRead": "Chaque courbe additionne les sorties depuis le début de la saison. Si la courbe de la saison choisie passe au-dessus de l'autre, le club a déjà fait plus de sorties qu'à la même date l'an dernier. Pour la saison en cours, la courbe s'arrête à aujourd'hui.",
+      "keywords": "comparaison avance retard cumul évolution"
+    },
+    "outing-types": {
+      "title": "Types de sortie",
+      "description": "À quoi servent les sorties : loisir, entraînement, compétition, initiation, randonnée… ? Sorties, kilomètres et heures par type de sortie.",
+      "howToRead": "Les types sont classés du plus fréquent au moins fréquent. Une sortie enregistrée sans type compte comme « Sortie normale ». Utile pour montrer la place de l'école d'aviron, de la compétition ou des randonnées.",
+      "keywords": "école compétition randonnée loisir entraînement"
+    },
+    "routes-usage": {
+      "title": "Parcours les plus fréquentés",
+      "description": "Où rame-t-on ? Sorties, kilomètres et nombre de bateaux différents par parcours.",
+      "howToRead": "Les parcours sont classés du plus fréquenté au moins fréquenté. Les sorties enregistrées sans parcours n'y figurent pas.",
+      "keywords": "parcours trajet circuit km kilomètres"
+    },
+    "boat-usage-ranking": {
+      "title": "Classement des bateaux",
+      "description": "Quels bateaux sortent le plus, et lesquels restent au hangar ? Sorties, jours d'utilisation, heures et kilomètres de chaque bateau, y compris ceux qui ne sont pas sortis.",
+      "howToRead": "Les bateaux sont classés du plus utilisé au moins utilisé. « Jours d'utilisation » compte les jours différents où le bateau est sorti, et la dernière colonne depuis combien de jours il n'est pas sorti. Les bateaux archivés ou exclus des statistiques n'apparaissent pas.",
+      "keywords": "bateaux utilisation classement hangar"
+    },
+    "underused-boats": {
+      "title": "Bateaux peu ou pas utilisés",
+      "description": "Quels bateaux pourrait-on vendre, prêter ou ranger ailleurs ? Les bateaux peu sortis sur la période choisie, à côté de la moyenne de leur type.",
+      "howToRead": "Réglez la période (en jours) et le nombre de sorties au plus. Les bateaux jamais sortis viennent en premier. Un bateau loin sous la moyenne de son type est peut-être mal adapté (réglages, poids, niveau) ; un type entier peu utilisé signale plutôt des bateaux en trop.",
+      "keywords": "vendre vente prêter ranger flotte inutilisés"
+    },
+    "fleet-by-class": {
+      "title": "Flotte par type de bateau",
+      "description": "Faut-il acheter un bateau, et de quel type ? Jours où tous les bateaux d'un type étaient sortis, pic de bateaux sur l'eau en même temps et sorties par bateau.",
+      "howToRead": "Les types sont classés du plus saturé au moins saturé. « Jours où tous étaient sortis » : s'il y en a beaucoup, des rameurs ont sans doute attendu un bateau de ce type. « Maximum sortis en même temps » est le plus grand nombre de bateaux du type sur l'eau au même moment. « Sorties par bateau » compare les types quelle que soit la taille de leur flotte. Les bateaux sans armement renseigné, comme les bateaux moteur, ne font pas partie de la flotte.",
+      "keywords": "achat acheter flotte saturation manque"
+    },
+    "fleet-class-monthly": {
+      "title": "Sorties par type de bateau et par mois",
+      "description": "Quels types de bateaux sont les plus utilisés selon la période de l'année ?",
+      "howToRead": "Chaque barre est un mois, découpée par type de bateau : la hauteur totale donne toutes les sorties du mois, chaque couleur la part d'un type. « Non renseigné » regroupe les bateaux dont l'armement n'est pas renseigné. Les sorties en bateau moteur ne sont pas comptées.",
+      "keywords": "flotte saison période armement"
+    },
+    "boat-class-week-heatmap": {
+      "title": "Types de bateaux semaine par semaine",
+      "description": "À quelles semaines un type de bateau vient-il à manquer ? Sorties par type de bateau, semaine par semaine.",
+      "howToRead": "Une ligne par type de bateau (1x, 2x, 4+…), une colonne par semaine, datée du lundi. Plus la case est foncée, plus le type a été demandé cette semaine-là. « Non renseigné » regroupe les bateaux dont l'armement n'est pas renseigné. Les sorties en bateau moteur ne sont pas comptées.",
+      "keywords": "flotte manque pic semaine armement"
+    },
+    "boat-month-heatmap": {
+      "title": "Bateaux mois par mois",
+      "description": "Quels bateaux sortent à quelle période de l'année ? Sorties de chaque bateau mois par mois (les 40 plus utilisés).",
+      "howToRead": "Une ligne par bateau, une colonne par mois : plus la case est foncée, plus le bateau est sorti ce mois-là. Les mois creux d'un bateau sont le bon moment pour son entretien.",
+      "keywords": "entretien révision planning flotte"
+    },
+    "active-members-demographics": {
+      "title": "Membres actifs par sexe et par âge",
+      "description": "Combien de femmes, d'hommes, de jeunes et d'adultes ont ramé cette saison ? Le tableau demandé dans les dossiers de subvention.",
+      "howToRead": "Membres sortis au moins une fois dans la saison (invités exclus) : une ligne par tranche d'âge, une colonne par sexe et les totaux, comme dans les dossiers de subvention. Jeune : 18 ans ou moins dans l'année de la sortie, d'après la date de naissance, sinon la catégorie d'âge. « Non renseigné » compte les fiches sans sexe ou sans âge : complétez-les dans Gestion avant d'envoyer un dossier.",
+      "keywords": "licenciés effectifs subvention mairie ANS femmes hommes jeunes adultes"
+    },
+    "active-rowers-monthly": {
+      "title": "Rameurs actifs et nouveaux rameurs par mois",
+      "description": "Combien de rameurs viennent chaque mois, et combien de nouveaux ?",
+      "howToRead": "Chaque barre compte les rameurs sortis au moins une fois dans le mois : en bas ceux qui ramaient déjà, en haut les nouveaux. Un rameur est nouveau le mois de sa première sortie s'il n'était jamais sorti avant la saison.",
+      "keywords": "nouveaux arrivées fréquentation"
+    },
+    "rower-frequency": {
+      "title": "Assiduité des membres",
+      "description": "Les membres viennent-ils souvent ou de temps en temps ? Nombre de membres par tranche de sorties sur la saison.",
+      "howToRead": "Chaque barre compte les membres sortis 1 fois, 2 à 5 fois, 6 à 10 fois, et ainsi de suite. Beaucoup de membres dans les premières tranches signale des adhérents peu réguliers, à relancer ou à mieux accueillir.",
+      "keywords": "fidélité assiduité régularité relance"
+    },
+    "retention-cohorts": {
+      "title": "Fidélisation par saison d'arrivée",
+      "description": "Les membres restent-ils au club d'une saison à l'autre ? Part des membres arrivés une saison qui rament encore les saisons suivantes.",
+      "howToRead": "Une ligne par saison d'arrivée, c'est-à-dire la saison de la première sortie. Sous « Saisons après l'arrivée », la colonne 1 donne la part encore active la saison suivante, la colonne 2 celle d'après, et ainsi de suite. La première saison de l'historique regroupe tous les membres déjà présents, et la saison en cours n'est pas finie.",
+      "keywords": "fidélité abandon départ réinscription relance"
+    },
+    "new-rower-survival": {
+      "title": "Fidélité des nouveaux membres",
+      "description": "Combien de temps restent les nouveaux membres ? Part des nouveaux qui rament encore 1, 2, 3, 6, 9, 12, 18 et 24 mois après leur première sortie.",
+      "howToRead": "Chaque barre donne la part des nouveaux membres encore actifs après ce nombre de mois : un membre compte encore s'il est ressorti après ce délai. Une barre ne compte que les membres arrivés depuis assez longtemps, donc les barres ne portent pas sur les mêmes personnes et l'une peut dépasser la précédente. Une forte baisse dans les trois premiers mois montre que l'accueil des débutants est à travailler. Les membres apparus dans les 60 premiers jours de l'historique sont mis de côté : ce sont surtout des anciens.",
+      "keywords": "fidélité abandon départ réinscription relance débutants accueil"
+    },
+    "workload-by-category": {
+      "title": "Activité par public",
+      "description": "Quels publics font vivre le club, mois par mois ? Participations, heures, kilomètres ou rameurs, regroupés par catégorie d'âge, niveau, sexe, statut, type de bateau ou type de sortie.",
+      "howToRead": "Choisissez le regroupement et la valeur affichée. Chaque barre est un mois, découpée par groupe. « Non renseigné » regroupe les fiches où l'information manque : complétez-les dans Gestion pour des chiffres plus justes.",
+      "keywords": "public catégorie âge niveau sexe statut participations"
+    },
+    "guests": {
+      "title": "Invités",
+      "description": "Combien d'invités le club accueille-t-il ? Participations d'invités par mois et part dans l'activité du club.",
+      "howToRead": "Chaque barre compte les places occupées par des invités dans le mois. Le tableau donne aussi le nombre d'invités différents et leur part dans toutes les participations : un bon indicateur pour les journées découverte et les baptêmes.",
+      "keywords": "invités découverte baptême initiation"
+    },
+    "outings-per-rower": {
+      "title": "Sorties par rameur",
+      "description": "Qui rame le plus sur la saison ? Sorties, kilomètres, heures et sorties encadrées de chaque rameur.",
+      "howToRead": "Classement du plus actif au moins actif, filtrable par statut (membre, invité, autre). Ce rapport affiche des noms : il est réservé aux responsables, sauf si les classements nominatifs sont autorisés dans Gestion.",
+      "keywords": "classement assiduité rameurs"
+    },
+    "km-challenge": {
+      "title": "Challenge des kilomètres",
+      "description": "Qui a ramé le plus de kilomètres sur l'eau cette saison ? Classement hors ergomètre, filtrable par sexe et catégorie d'âge.",
+      "howToRead": "Le graphique montre les 20 premiers et le tableau les 100 premiers, du plus grand au plus petit total. Les sorties sans distance ne comptent pas. Ce rapport affiche des noms : il est réservé aux responsables, sauf si les classements nominatifs sont autorisés dans Gestion.",
+      "keywords": "km kilomètres distance défi classement challenge"
+    },
+    "inactive-rowers": {
+      "title": "Membres réguliers qui ne viennent plus",
+      "description": "Quels membres réguliers ne viennent plus ? Les membres assidus dans l'année qui précède leur dernière sortie et absents depuis le nombre de jours choisi : à appeler.",
+      "howToRead": "Réglez le nombre de jours d'absence et le nombre de sorties au moins. La liste commence par les plus assidus. Les membres absents depuis plus de deux ans et les fiches archivées n'y figurent pas. Réservé aux responsables.",
+      "keywords": "fidélité abandon départ relance absents"
+    },
+    "attendance-heatmap": {
+      "title": "Affluence par jour et par heure",
+      "description": "Quels créneaux marchent le mieux ? Nombre moyen de rameurs (ou de sorties) par semaine, selon le jour et l'heure de départ.",
+      "howToRead": "Une ligne par jour de la semaine, une colonne par heure de départ. La valeur est une moyenne par semaine : 6 le samedi à 9 h signifie qu'en moyenne 6 rameurs partent chaque samedi entre 9 h et 10 h. Utile pour placer les créneaux encadrés et les permanences.",
+      "keywords": "créneaux horaires affluence permanence"
+    },
+    "activity-calendar": {
+      "title": "Calendrier de la saison",
+      "description": "Quels jours le club a-t-il ramé ? Participations jour par jour, pour repérer les creux, les vacances et les effets de la météo. Filtrable sur un bateau.",
+      "howToRead": "Une case par jour, une colonne par semaine : plus la case est foncée, plus il y a eu de rameurs ce jour-là. Une case claire signifie aucune sortie.",
+      "keywords": "jours calendrier météo vacances"
+    },
+    "coaching-balance": {
+      "title": "Équilibre de l'encadrement",
+      "description": "Tous les membres profitent-ils de l'encadrement ? Part des sorties encadrées de chaque membre, du moins encadré au plus encadré.",
+      "howToRead": "Les premiers de la liste sont les membres les moins suivis : de quoi répartir l'attention des entraîneurs. Les sorties où l'encadrement n'est pas renseigné ne comptent pas dans le pourcentage. Ce rapport affiche des noms : il est réservé aux responsables, sauf si les classements nominatifs sont autorisés dans Gestion.",
+      "keywords": "entraîneur encadrement suivi coach"
+    },
+    "safety-summary": {
+      "title": "Sécurité mois par mois",
+      "description": "La sécurité s'améliore-t-elle ? Retours en retard, sorties sans heure de retour prévue et sorties jamais clôturées, mois par mois.",
+      "howToRead": "Chaque barre est un mois. Une même sortie peut compter deux fois, par exemple jamais clôturée et sans heure de retour prévue. Réglez la tolérance de retard en minutes. Le détail des sorties est dans « Sorties à vérifier ».",
+      "keywords": "sécurité retard clôture"
+    },
+    "safety-issues": {
+      "title": "Sorties à vérifier",
+      "description": "Quelles sorties méritent une vérification ? Sorties jamais clôturées, retours en retard, sorties sans heure de retour prévue et sorties de jeunes (J10 à J16) sans encadrement.",
+      "howToRead": "Une ligne par sortie, les plus graves d'abord : sorties jamais clôturées, jeunes sans encadrement, retours en retard, puis sorties sans heure de retour prévue, les plus récentes en premier dans chaque cas. Choisissez un point à vérifier pour ne garder que celui-là. Une sortie n'apparaît qu'une fois, avec la raison la plus importante. Les sorties en bateau moteur ne sont pas contrôlées. Réservé aux responsables.",
+      "keywords": "sécurité retard clôture jeunes vérifier"
+    },
+    "boat-km": {
+      "title": "Usure des bateaux",
+      "description": "Quels bateaux s'usent le plus ? Kilomètres, heures et incidents de chaque bateau sur la saison et depuis le début de l'historique.",
+      "howToRead": "Les colonnes « saison » suivent la saison choisie, les colonnes « total » tout l'historique enregistré. Utile pour planifier révisions et remplacements. Les bateaux exclus des statistiques sont gardés ici, car ils s'usent aussi.",
+      "keywords": "usure entretien révision km kilomètres"
+    },
+    "incidents-per-boat": {
+      "title": "Incidents par bateau",
+      "description": "Quels bateaux ont le plus d'incidents ? Incidents signalés en fin de sortie, rapportés au nombre de sorties du bateau.",
+      "howToRead": "Le graphique classe les bateaux par incidents pour 100 sorties, pour comparer un bateau très utilisé et un bateau qui sort peu ; le tableau donne aussi le nombre d'incidents. Seuls les bateaux avec au moins un incident sur la saison apparaissent.",
+      "keywords": "incidents casse entretien"
+    },
+    "damages-per-boat": {
+      "title": "Avaries par bateau",
+      "description": "Où en sont les avaries ? Avaries déclarées par gravité, avaries encore en cours, délai moyen de réparation et coût, par bateau.",
+      "howToRead": "Les barres empilent les avaries par gravité : inutilisable, utilisable avec restrictions, utilisable. Le délai moyen ne compte que les avaries réparées, et le coût additionne les montants saisis à la réparation.",
+      "keywords": "avaries réparation casse entretien"
+    }
+  },
+  "clearSearch": "Effacer la recherche",
+  "askAi": "Demander à l'IA",
+  "noMatchInCategory": "Aucun rapport de ce thème ne correspond à « {{query}} ».",
+  "showAllCategories": "Voir tous les thèmes",
+  "allCategories": "Tous",
+  "categoryFilter": "Thèmes",
+  "resultCount_one": "{{count}} rapport",
+  "resultCount_other": "{{count}} rapports",
+  "lockedBadge": "Mot de passe admin demandé pour l'ouvrir.",
+  "toolbar": "Actions du rapport",
+  "view": {
+    "label": "Affichage",
+    "chart": "Graphique",
+    "table": "Tableau"
+  },
+  "scope": {
+    "season": "Saison {{season}}",
+    "running": "en cours, données jusqu'au {{date}}",
+    "fixed": "fixée sur la carte du tableau de bord",
+    "followHub": "Suivre la saison choisie",
+    "lastDays": "Sur les {{days}} derniers jours",
+    "allHistory": "Tout l'historique du club",
+    "noSeason": "la saison choisie ne s'applique pas"
+  },
+  "hints": {
+    "partialMonth": "{{month}} : mois en cours, données jusqu'au {{date}}. Le même mois de la saison précédente est compté jusqu'au même jour.",
+    "noPrevious": "Aucune donnée pour la saison {{season}} : seule la saison choisie est affichée."
+  },
+  "unavailable": {
+    "data": "Ce rapport utilise des données que cette version de RowingBeacon n'enregistre pas encore."
+  },
+  "module": {
+    "confirmTitle": "Activer le module {{module}} ?",
+    "confirmMessage": "{{adds}} Vous pourrez le désactiver dans Gestion › Modules.",
+    "enabled": "Module {{module}} activé",
+    "seeInSettings": "Voir dans Gestion"
+  },
+  "locked": {
+    "names": "Ce rapport affiche des noms de rameurs. Saisissez le mot de passe admin, ou autorisez les classements nominatifs pour tous dans Gestion › Statistiques.",
+    "admin": "Ce rapport est réservé aux responsables. Saisissez le mot de passe admin pour l'afficher.",
+    "unlock": "Déverrouiller"
+  },
+  "empty": {
+    "filtered": "Aucun résultat avec ces filtres.",
+    "reset": "Réinitialiser les filtres"
+  },
+  "missingParam": "Choisissez « {{name}} » pour afficher ce rapport.",
+  "customiseHint": "Ces réglages ne changent que l'affichage et restent jusqu'à la fermeture de RowingBeacon. Pour les garder, épinglez le graphique au tableau de bord ou enregistrez-le comme requête."
+}

@@ -1,0 +1,224 @@
+{
+  "tabLabel": "Statistieken en AI",
+  "intro": "Elke instelling wordt opgeslagen zodra u ze wijzigt, in de clubdatabase: ze gaat mee in de back-ups. Alleen de AI-sleutels blijven op deze computer, buiten de database.",
+  "on": "Aan",
+  "off": "Uit",
+  "season": {
+    "title": "Seizoen",
+    "startMonth": "Begin van het seizoen",
+    "defaultMonth": "{{month}} (standaard)",
+    "help": "Deze maand geldt voor de statistieken, het jaarverslag en de pagina's Roeiers en Boten in Beheer.",
+    "example": "Huidig seizoen: {{start}} tot en met {{end}}.",
+    "changed": "Rapporten en het dashboard gebruiken nu het seizoen van {{start}} tot {{end}}.",
+    "description": "De data die een seizoen in de statistieken afbakenen.",
+    "monthHints": {
+      "9": "{{month}} (bondsseizoen)",
+      "1": "{{month}} (kalenderjaar)"
+    }
+  },
+  "rankings": {
+    "title": "Ranglijsten",
+    "public": "Ranglijsten met de namen van roeiers tonen in de botenloods, zonder beheerderswachtwoord",
+    "help": "Geldt voor: {{reports}}. Alleen inschakelen als de leden ermee instemmen in ranglijsten in de botenloods te verschijnen.",
+    "noReports": "nog geen rapport",
+    "description": "Wat het scherm in de botenloods zonder wachtwoord toont.",
+    "publicWarning": "Iedereen in de botenloods ziet deze ranglijsten met namen. Controleer dat de leden zijn ingelicht (AVG)."
+  },
+  "ai": {
+    "title": "Ingebouwde AI-assistent",
+    "status": {
+      "none": "Geen sleutel op deze computer.",
+      "keychain": "Sleutel opgeslagen in de sleutelhanger van deze computer: nooit in de clubdatabase, de back-ups of de exports.",
+      "file": "Sleutel opgeslagen in een beveiligd bestand op deze computer: nooit in de clubdatabase, de back-ups of de exports.",
+      "loading": "Status van de sleutel wordt gelezen…",
+      "error": "De status van de sleutel kon niet worden gelezen. Probeer het opnieuw; blijft het probleem, sla de sleutel dan opnieuw op.",
+      "noServer": "Geen server opgeslagen op deze computer.",
+      "serverWithKey": "Server opgeslagen op deze computer: {{url}}, met een sleutel.",
+      "serverWithoutKey": "Server opgeslagen op deze computer: {{url}}, zonder sleutel.",
+      "keychainHint": "Sleutel …{{hint}} opgeslagen in de sleutelhanger van deze computer: nooit in de clubdatabase, de back-ups of de exports.",
+      "fileHint": "Sleutel …{{hint}} opgeslagen in een beveiligd bestand op deze computer: nooit in de clubdatabase, de back-ups of de exports.",
+      "serverWithKeyHint": "Server opgeslagen op deze computer: {{url}}, met sleutel …{{hint}}."
+    },
+    "key": {
+      "anthropic": "Anthropic API-sleutel",
+      "openai": "OpenAI API-sleutel",
+      "openai_compatible": "API-sleutel van de server (optioneel)"
+    },
+    "keyPlaceholder": {
+      "anthropic": "sk-ant-…",
+      "openai": "sk-…",
+      "openai_compatible": "Leeg voor een server zonder sleutel"
+    },
+    "replacePlaceholder": "Nieuwe sleutel (vervangt de huidige)",
+    "save": "Opslaan en controleren",
+    "saved": "Sleutel opgeslagen.",
+    "test": "Controleren",
+    "testing": "Controleren…",
+    "delete": "Sleutel verwijderen",
+    "deleteConfirm": "De {{provider}}-sleutel wordt van deze computer gewist. Zonder andere sleutel schakelt de assistent over op kopiëren en plakken.",
+    "deleted": "Sleutel verwijderd van deze computer.",
+    "testOk": "Geldige sleutel: {{model}} antwoordt.",
+    "invalidFormat": {
+      "anthropic": "Een Anthropic-sleutel begint met \"sk-ant-\".",
+      "openai": "Een OpenAI-sleutel begint met \"sk-\".",
+      "openai_compatible": "De sleutel moet 8 tot 1.000 tekens lang zijn, zonder spaties.",
+      "anthropicKey": "Dit is een Anthropic-sleutel: kies de aanbieder Anthropic om hem te gebruiken."
+    },
+    "model": "Model",
+    "models": {
+      "opus": "Claude Opus 5.5 (aanbevolen, meest betrouwbaar)",
+      "sonnet": "Claude Sonnet 5.5 (sneller, goedkoper)",
+      "haiku": "Claude Haiku 5.5 (goedkoopst)",
+      "astra": "GPT-6 Astra (meest betrouwbaar, duurst)",
+      "sol": "GPT-6.1 Sol (aanbevolen, betrouwbaar en goedkoper)",
+      "terra": "GPT-6.1 Terra (sneller, goedkoper)",
+      "luna": "GPT-6 Luna (goedkoopst)"
+    },
+    "shareAssets": "Namen van boten en trajecten verzenden",
+    "shareAssetsHelp": "Zo kunt u vragen naar \"tochten van de Albatros\". Namen van roeiers worden nooit verzonden.",
+    "createKey": {
+      "anthropic": "Maak een sleutel aan op <site>console.anthropic.com</site> en plak hem hier.",
+      "openai": "Maak een sleutel aan op <site>platform.openai.com</site> en plak hem hier."
+    },
+    "noKeyHint": "Zonder sleutel werkt de assistent ook: hij maakt een verzoek om naar uw AI-assistent (Claude, ChatGPT, Le Chat…) te kopiëren en daarna plakt u het antwoord.",
+    "whatIsSent": "Wat naar {{provider}} wordt verzonden: uw vraag, de structuur van de statistiektabellen, de soorten tochten van de club en de datum van vandaag. Nooit namen van roeiers, tochten of resultaten.",
+    "privacy": {
+      "details": "Wat er wordt verstuurd, in detail",
+      "sentTitle": "Bij elke vraag naar {{provider}} verzonden",
+      "sent": {
+        "question": "uw vraag, precies zoals u die schrijft (daarom het advies er geen namen in te zetten);",
+        "schema": "de structuur van de statistiektabellen: namen en beschrijvingen van de kolommen, nooit de inhoud;",
+        "context": "de soorten tochten van de club, de ingeschakelde modules, het begin van het seizoen en de datum van vandaag;",
+        "assets": "de namen van boten en trajecten, alleen als de optie hierboven aan staat;",
+        "errors": "na een fout de foutmelding van de query, zodat de AI die kan verbeteren."
+      },
+      "neverTitle": "Nooit verzonden",
+      "never": {
+        "people": "namen, geboortedata, contactgegevens en notities van roeiers;",
+        "outings": "tochten, opmerkingen en rekenresultaten: de query draait op deze computer en de resultaten blijven daar;",
+        "password": "het beheerderswachtwoord en de rest van de clubdatabase."
+      },
+      "copyPaste": "Zonder sleutel plakt u hetzelfde verzoek zelf in uw AI-assistent (Claude, ChatGPT…): het bevat precies deze gegevens.",
+      "where": {
+        "anthropic": "Het verzoek gaat rechtstreeks van deze computer naar api.anthropic.com, zonder andere server.",
+        "openai": "Het verzoek gaat rechtstreeks van deze computer naar api.openai.com, zonder andere server. De app vraagt OpenAI het antwoord niet te bewaren (optie \"store\" uit).",
+        "serverLocal": "De server {{host}} draait op deze computer: het verzoek verlaat de computer niet.",
+        "serverRemote": "Het verzoek gaat van deze computer naar {{host}}. Wat die server ermee doet, bepaalt hij zelf: lees de gebruiksvoorwaarden.",
+        "serverUnknown": "Het verzoek gaat naar het serveradres dat u opslaat, en naar geen ander."
+      },
+      "title": "Privacy"
+    },
+    "provider": {
+      "label": "AI-aanbieder",
+      "help": "Elke aanbieder houdt zijn eigen sleutel op deze computer: wisselen verwijdert geen sleutel.",
+      "anthropic": "Anthropic (Claude)",
+      "anthropicHelp": "Een API-sleutel aangemaakt op console.anthropic.com, met wat vooruitbetaald tegoed (een Claude Pro-abonnement is niet genoeg).",
+      "openai": "OpenAI (GPT)",
+      "openaiHelp": "Een API-sleutel aangemaakt op platform.openai.com, met wat vooruitbetaald tegoed (een ChatGPT-abonnement is niet genoeg).",
+      "openai_compatible": "Andere compatibele dienst (Mistral, Ollama…)",
+      "openai_compatibleHelp": "Een dienst die het formaat van OpenAI volgt: Mistral, OpenRouter, of een model dat op deze computer is geïnstalleerd (Ollama, LM Studio, llama.cpp…).",
+      "configured": "Sleutel opgeslagen",
+      "configuredServer": "Server opgeslagen",
+      "mismatch": "De ingebouwde assistent gebruikt de hier gekozen aanbieder. {{provider}} heeft nog geen sleutel: tot dan werkt de assistent met kopiëren en plakken.",
+      "switchBack": "Terug naar {{provider}}"
+    },
+    "savedServer": "Server opgeslagen.",
+    "testOkServer": "Server bereikbaar: {{model}} antwoordt.",
+    "costPerQuestion": "Ongeveer {{cost}} per gewone vraag, gefactureerd op de {{provider}}-account van de club (schatting).",
+    "compatibleModel": {
+      "label": "Modelnaam",
+      "placeholder": "Bijvoorbeeld: llama3.3",
+      "help": "Zoals de server het noemt, bijvoorbeeld \"mistral-large-latest\" of \"llama3.3\".",
+      "required": "Vul de modelnaam in om de server te controleren en vragen te stellen."
+    },
+    "baseUrl": {
+      "label": "Serveradres",
+      "placeholder": "https://api.mistral.ai/v1 of http://localhost:11434/v1",
+      "help": "Het basisadres van de API, vaak eindigend op /v1. Via https, behalve voor een server op deze computer.",
+      "local": "Server op deze computer: de tabelstructuur en uw vragen verlaten de computer niet.",
+      "remote": "{{host}} staat niet op deze computer. Hij ontvangt de tabelstructuur en uw vragen, zoals Anthropic of OpenAI ze zouden ontvangen. Kies een dienst die u vertrouwt.",
+      "changed": "Nieuw adres: vul ook de sleutel in als die nodig is. Een opgeslagen sleutel wordt nooit naar een ander adres gestuurd.",
+      "invalid": {
+        "empty": "Vul het serveradres in.",
+        "invalid": "Adres niet herkend: het moet lijken op https://voorbeeld.org/v1.",
+        "insecure": "Een server die niet op deze computer staat moet https:// gebruiken, zodat de sleutel niet onversleuteld wordt verstuurd.",
+        "credentials": "Het adres mag geen gebruikersnaam of wachtwoord bevatten: zet de sleutel in het eigen veld.",
+        "query": "Het adres mag geen \"?\" of \"#\" bevatten."
+      }
+    },
+    "billedServer": "Eventuele kosten hangen af van de server: een server op deze computer kost niets.",
+    "deleteConfirmServer": "De server en zijn sleutel worden van deze computer gewist. Zonder andere sleutel schakelt de assistent over op kopiëren en plakken.",
+    "description": "Gebruikt door “AI vragen” in de Explorer.",
+    "saving": "Opslaan…",
+    "deleteServer": "Server verwijderen",
+    "deleteTitle": "De {{provider}}-sleutel verwijderen?",
+    "deleteTitleServer": "Deze server verwijderen?",
+    "deletedServer": "Server verwijderd van deze computer.",
+    "savedChecked": "Sleutel opgeslagen en gecontroleerd: {{model}} antwoordt.",
+    "savedCheckedServer": "Server opgeslagen en gecontroleerd: {{model}} antwoordt.",
+    "savedCheckFailed": "Sleutel opgeslagen, maar de controle is mislukt: {{error}}",
+    "savedCheckFailedServer": "Server opgeslagen, maar de controle is mislukt: {{error}}",
+    "keyRequired": "Plak eerst de sleutel."
+  },
+  "mcp": {
+    "title": "Uw AI-app (MCP)",
+    "enabled": "AI-apps op deze computer de clubstatistieken laten lezen",
+    "help": "Stel uw vragen over de clubstatistieken direct in Claude Desktop, de ChatGPT-app (Codex), Cursor of VS Code. Ze lezen de database van deze computer, alleen-lezen, en kunnen grafieken voorstellen, die u accepteert in Explorer › Voorstellen.",
+    "whatIsSent": "Anders dan de ingebouwde assistent leest uw app de resultaten (de cijfers) en stuurt ze naar zijn aanbieder om u te antwoorden: Anthropic voor Claude, OpenAI voor ChatGPT en Codex, de gekozen aanbieder in Cursor of VS Code.",
+    "privacyLabel": "Persoonsgegevens",
+    "privacyModes": {
+      "pseudonymised": {
+        "title": "Codes in plaats van namen (aanbevolen)",
+        "description": "Roeiers verschijnen als code (R-1A2B3C4D): geen naam, geboortedatum, contactgegevens of opmerkingen."
+      },
+      "nominative": {
+        "title": "Namen van roeiers zichtbaar",
+        "description": "Uw app ziet de namen; ze gaan met de resultaten naar zijn aanbieder."
+      }
+    },
+    "nominativeWarning": "De antwoorden van uw app gaan via zijn aanbieder (Anthropic, OpenAI…): de namen van roeiers verlaten deze computer. Controleer of dit past bij wat de leden is verteld (AVG).",
+    "linux": "Claude Desktop bestaat niet op Linux: kies hierboven een andere app (Claude Code, Codex, Cursor, VS Code…).",
+    "copy": "Kopiëren",
+    "copied": "Gekopieerd",
+    "copyFailed": "Kopiëren mislukt: selecteer de tekst en kopieer die.",
+    "appImage": "AppImage-versie: het pad verandert als u het bestand verplaatst. Kopieer de configuratie opnieuw na verplaatsen of bijwerken.",
+    "macosTemporary": "Rowing Beacon draait vanaf een tijdelijke plek (schijfkopie of map Downloads). Sleep de app naar de map Apps, open hem opnieuw en kopieer dan de configuratie: anders vindt uw AI-app hem niet meer.",
+    "disabledNote": "Uit: geen enkele app kan de statistieken lezen. Een app die al is ingesteld krijgt een bericht dat de toegang gesloten is.",
+    "infoError": "De configuratie van de AI-apps kon niet worden voorbereid. Probeer het opnieuw; blijft het probleem, start de applicatie dan opnieuw.",
+    "clientsTitle": "Uw app verbinden",
+    "clientsHelp": "Kies uw app: elke app heeft zijn eigen configuratie.",
+    "clients": {
+      "claudeDesktop": "Claude Desktop",
+      "claudeCode": "Claude Code",
+      "codex": "ChatGPT / Codex",
+      "cursor": "Cursor",
+      "vscode": "VS Code",
+      "other": "Andere"
+    },
+    "otherClients": "Een andere MCP-compatibele app? Geef hem deze opdracht (lokale “stdio”-server):",
+    "copyLabel": "De {{name}}-configuratie kopiëren",
+    "loading": "Configuratie voorbereiden…",
+    "lastCall": "Laatste vraag ontvangen: {{client}}, op {{date}} om {{time}}.",
+    "lastCallNone": "Er heeft nog geen app verbinding gemaakt op deze computer: volg de stappen hieronder.",
+    "unknownClient": "een app",
+    "clientsNote": "Na het wijzigen van deze instellingen hoeft u de configuratie niet opnieuw te kopiëren.",
+    "steps": {
+      "copy": "Kopieer de configuratie:",
+      "copyCommand": "Kopieer deze opdracht:",
+      "pasteMcpServers": "Plak de configuratie. Staat “mcpServers” al in het bestand, voeg dan alleen de vermelding “rowing-beacon” toe.",
+      "ask": "Start {{app}} opnieuw en vraag bijvoorbeeld: “Hoeveel tochten heeft de club dit seizoen gemaakt?”",
+      "yourApp": "uw app",
+      "claudeDesktopOpen": "Open in Claude Desktop Instellingen › Ontwikkelaar › Configuratie bewerken: het bestand claude_desktop_config.json gaat open ({{path}}).",
+      "claudeCodeRun": "Plak hem in een terminal en druk op Enter. Claude Code kan de statistieken dan lezen vanuit elke map op deze computer.",
+      "claudeCodeAsk": "Open Claude Code en vraag bijvoorbeeld: “Hoeveel tochten heeft de club dit seizoen gemaakt?”",
+      "codexOpen": "Open het bestand {{path}} (maak het aan als het niet bestaat). De ChatGPT-desktopapp, Codex CLI en de Codex-extensie delen dit bestand.",
+      "codexPaste": "Voeg de configuratie toe aan het einde van het bestand en sla het op.",
+      "cursorOpen": "Open het bestand {{path}} (maak het aan als het niet bestaat).",
+      "vscodeOpen": "Open in VS Code het opdrachtenpalet en voer “MCP: Open User Configuration” uit.",
+      "vscodePaste": "Plak de configuratie. Staat “servers” al in het bestand, voeg dan alleen de vermelding “rowing-beacon” toe.",
+      "vscodeAsk": "Start VS Code opnieuw en vraag Copilot in Agent-modus, bijvoorbeeld: “Hoeveel tochten heeft de club dit seizoen gemaakt?”"
+    }
+  },
+  "technicalDetails": "Technische details",
+  "retry": "Opnieuw proberen"
+}

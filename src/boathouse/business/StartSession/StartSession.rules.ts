@@ -38,19 +38,6 @@ export const getOutingConfiguration = (
   );
 };
 
-export const checkIfNotSameRowersAsSeatsInBoat = (
-  crewSize: number,
-  boat: Boat & { configurations?: BoatConfiguration[] },
-  boatConfigurationId?: string | null
-) => {
-  const expectedCrewSize = getExpectedCrewSize(boat, boatConfigurationId);
-
-  if (expectedCrewSize === undefined) {
-    return false;
-  }
-
-  return crewSize !== expectedCrewSize;
-};
 export interface SessionToStart {
   routeId: string | null;
   boatId: string;
@@ -109,4 +96,36 @@ export const whatShouldItDo = (
   }
 
   return whatToDo;
+};
+
+/**
+ * Crew count that does not fit the boat, or undefined when it fits (or the
+ * boat has no known size). With a configuration the cox has a field of their
+ * own: rowers are compared to the seats, so 5 rowers in a 4+ without cox are
+ * noticed, and a cox in a coxless boat takes a seat. Without one, the whole
+ * crew is compared to the legacy boat type.
+ */
+export const getCrewSizeMismatch = (
+  boat: Boat & { configurations?: BoatConfiguration[] },
+  crew: {
+    nbOfRowers: number;
+    hasCox: boolean;
+    boatConfigurationId?: string | null;
+  }
+): { nbOfRowers: number; boatRowersQuantity: number } | undefined => {
+  const configuration = getOutingConfiguration(boat, crew.boatConfigurationId);
+
+  if (configuration && configuration.seats !== null) {
+    const nbOfRowers =
+      crew.nbOfRowers + (!configuration.coxed && crew.hasCox ? 1 : 0);
+    return nbOfRowers === configuration.seats
+      ? undefined
+      : { nbOfRowers, boatRowersQuantity: configuration.seats };
+  }
+
+  const crewSize = crew.nbOfRowers + (crew.hasCox ? 1 : 0);
+  const expectedCrewSize = getExpectedCrewSize(boat, crew.boatConfigurationId);
+  return expectedCrewSize !== undefined && crewSize !== expectedCrewSize
+    ? { nbOfRowers: crewSize, boatRowersQuantity: expectedCrewSize }
+    : undefined;
 };

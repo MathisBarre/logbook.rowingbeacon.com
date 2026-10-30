@@ -36,6 +36,7 @@
   },
   "navigation": {
     "boathouse": "Hangar",
+    "reservations": "Prenotazioni",
     "logbook": "Giornale di bordo",
     "stats": "Statistiche",
     "parameters": "Gestione",
@@ -70,7 +71,7 @@
       },
       "fullClub": {
         "name": "Club completo",
-        "description": "Aggiunge distanze, tipi di uscita, schede socio complete, ospiti e capobarca."
+        "description": "Aggiunge distanze, tipi di uscita, schede socio complete, ospiti, capobarca e prenotazioni."
       },
       "efaImport": {
         "name": "Vengo da efa",
@@ -100,7 +101,15 @@
     "noBoatsToDisplay": "Nessuna barca da visualizzare",
     "at": "alle {{time}}",
     "tomorrowAt": "domani alle {{time}}",
-    "onDate": "il {{date}}"
+    "onDate": "il {{date}}",
+    "outOfService": "Fuori servizio",
+    "unavailableBoats": "Barche non disponibili",
+    "allBoatsBack": "Tutte le barche sono rientrate. Ricordati di chiudere l'hangar.",
+    "allBoatsBackClosing": "Chiusura tra {{seconds}} s (clicca per chiudere)",
+    "sunrise": "Alba",
+    "sunset": "Tramonto",
+    "outingsAfterSunset_one": "{{count}} uscita ancora in acqua con il buio",
+    "outingsAfterSunset_other": "{{count}} uscite ancora in acqua con il buio"
   },
   "session": {
     "start": "Inizia un'uscita",
@@ -176,7 +185,19 @@
     "duplicateCrewMember": "La stessa persona è scelta due volte nell'equipaggio.",
     "boatAlreadyOnSession": "Questa barca è già in uscita.",
     "returnBeforeStart": "Il rientro previsto deve essere dopo la partenza.",
-    "invalidDistance": "Distanza non valida: inserisci un numero di km, per esempio 12,5."
+    "invalidDistance": "Distanza non valida: inserisci un numero di km, per esempio 12,5.",
+    "boatUnusable": "Questa barca è fuori servizio.",
+    "boatDamages": "Danni aperti su questa barca",
+    "boatIsDamaged": "La barca è danneggiata",
+    "damageSeverity": "Gravità del danno",
+    "damageSeverityRequired": "Scegli la gravità del danno.",
+    "sessionEndedBoatOutOfService": "Il rientro è stato registrato. La barca è fuori servizio fino alla riparazione.",
+    "seatsRemaining_one": "{{count}} posto rimasto",
+    "seatsRemaining_other": "{{count}} posti rimasti",
+    "rowersOverflow_one": "{{count}} vogatore di troppo",
+    "rowersOverflow_other": "{{count}} vogatori di troppo",
+    "crewComplete": "Equipaggio completo",
+    "coxMissing": "Manca il timoniere"
   },
   "logbook": {
     "title": "Giornale di bordo",
@@ -208,17 +229,13 @@
     "createNewExport": "Crea una nuova esportazione",
     "backToSessionList": "Torna all'elenco delle uscite",
     "captainName": "Capobarca: {{name}}",
-    "coxName": "{{name}} (timoniere)"
+    "coxName": "{{name}} (timoniere)",
+    "editSession": "Modifica l'uscita"
   },
   "stats": {
-    "title": "Statistiche",
-    "infoMessage": "Molte statistiche aggiuntive sono disponibili nella scheda \"Gestione\", pagine \"Vogatori\" e \"Barche\"",
     "sessions": "Uscite",
-    "totalTimeOnWater": "Tempo totale sull'acqua",
-    "averageTimePerSession": "Tempo medio / uscita",
     "noSessionsRecorded": "Ancora nessuna uscita registrata",
     "season": "Stagione",
-    "allMonths": "Tutti i mesi",
     "numberOfSessions": "Numero di uscite",
     "timeOnWater": "Tempo sull'acqua",
     "averagePerSession": "Media per uscita",
@@ -236,23 +253,8 @@
     "boat": "Barca",
     "rower": "Vogatore",
     "aboutBoat": "Informazioni su {{boatName}}",
-    "months": {
-      "january": "Gennaio",
-      "february": "Febbraio",
-      "march": "Marzo",
-      "april": "Aprile",
-      "may": "Maggio",
-      "june": "Giugno",
-      "july": "Luglio",
-      "august": "Agosto",
-      "september": "Settembre",
-      "october": "Ottobre",
-      "november": "Novembre",
-      "december": "Dicembre"
-    },
     "session_one": "{{count}} uscita",
     "session_other": "{{count}} uscite",
-    "totalDistance": "Distanza totale",
     "coxedSessions": "Uscite da timoniere"
   },
   "parameters": {
@@ -298,7 +300,7 @@
     "noType": "Nessun tipo",
     "type": "Tipo",
     "updateConfiguration": "Aggiorna configurazione",
-    "inMaintenance": "In manutenzione",
+    "inMaintenance": "Fuori servizio",
     "noteDisplayedAtSessionStart": "Nota (visualizzata alla partenza)",
     "yourRowers": "I tuoi vogatori",
     "yourBoats": "Le tue barche",
@@ -353,6 +355,7 @@
     "warning": "Attenzione!",
     "deleteAllDataWarning1": "Stai per eliminare tutti i dati dell'applicazione.",
     "deleteAllDataWarning2": "Prima viene creato un backup di sicurezza nella cartella dei backup (Gestione > Dati), insieme ai backup precedenti. Per cancellare definitivamente i dati, elimina anche questi file.",
+    "deleteAiKeyToo": "Elimina anche le chiavi API di IA salvate su questo computer (Anthropic, OpenAI, server compatibile). Altrimenti restano salvate e le domande all'IA continuano a essere addebitate su quegli account.",
     "deleteConfirmationText": "Desidero eliminare tutti i miei dati",
     "deleteConfirmationInstruction": "Conferma scrivendo esattamente \"{{text}}\" nel campo sottostante.",
     "enterAdminPassword": "Inserisci la password admin",
@@ -384,7 +387,15 @@
     "showGuests": "Ospiti ({{count}})",
     "guestsHelp": "Gli ospiti vengono creati quando si digita un nome alla partenza. Non compaiono nell'elenco dei vogatori; imposta lo stato su «Socio» per aggiungerli.",
     "finishOutingBeforeArchiving": "Impossibile archiviare: termina prima l'uscita in corso.",
-    "nameRequired": "Il nome è obbligatorio."
+    "nameRequired": "Il nome è obbligatorio.",
+    "allBoatsBackBanner": "Promemoria di chiusura dell'hangar",
+    "allBoatsBackBannerDescription": "Mostra un grande promemoria per chiudere l'hangar quando termina l'ultima uscita.",
+    "allBoatsBackBannerOption": "Mostra il promemoria quando tutte le barche sono rientrate",
+    "clubLocation": "Posizione del club",
+    "clubLocationDescription": "Serve a mostrare gli orari di alba e tramonto nella schermata dell'hangar. Lascia vuoto per nasconderli. Gradi decimali, ad esempio 48,8566 e 2,3522.",
+    "clubLatitude": "Latitudine",
+    "clubLongitude": "Longitudine",
+    "clubLocationInvalid": "Valore non valido: la latitudine deve essere tra -90 e 90, la longitudine tra -180 e 180."
   },
   "boat": {
     "type": "Tipo",
@@ -460,6 +471,8 @@
     "failedToLoad": "Impossibile caricare il database",
     "failedToSave": "Salvataggio non riuscito: la modifica è stata annullata",
     "backupsNotDeleted": "Non è stato possibile eliminare i vecchi backup v1 dalla cartella backups",
+    "inboxNotCleared": "Non è stato possibile eliminare le proposte di Claude in attesa dalla cartella analytics-inbox",
+    "aiKeyNotDeleted": "Non è stato possibile eliminare una chiave API di IA: eliminala in Gestione › Statistiche e IA",
     "reloadFailed": "Impossibile ricaricare i dati: riavvia l'applicazione"
   },
   "migration": {
@@ -505,6 +518,19 @@
       "adds": "Aggiunge alla partenza la scelta del capobarca nell'equipaggio (proposto il timoniere, altrimenti il primo vogatore adulto), visibile nel registro e negli export.",
       "suggestion": "Vuoi sapere chi è responsabile di ogni barca in acqua? Il modulo Capobarca lo aggiunge alla partenza.",
       "requiredOption": "Rendere obbligatorio il capobarca per partire"
+    },
+    "damages": {
+      "name": "Danni",
+      "description": "Segnala un danno a una barca con la sua gravità, seguilo fino alla riparazione e avvisa l'equipaggio prima della partenza.",
+      "adds": "Aggiunge la scheda Danni nel registro, la segnalazione di un danno da un incidente o dalla scheda della barca, un avviso alla partenza per le barche danneggiate e lo storico dei danni di ogni barca.",
+      "suggestion": "Una barca danneggiata? Il modulo Danni permette di segnalare il danno, seguirne la riparazione e avvisare l'equipaggio alla partenza."
+    },
+    "reservations": {
+      "name": "Prenotazioni",
+      "description": "Prenota una barca per una regata, un corso o un allenamento settimanale.",
+      "adds": "Aggiunge una pagina Prenotazioni, l'indicazione «prenotata» sulle barche interessate nell'hangar e un avviso quando un'uscita si sovrappone a una prenotazione. La partenza non viene mai bloccata.",
+      "suggestion": "Devi tenere libera una barca per una regata, un corso o un orario fisso? Il modulo Prenotazioni lo segnala nell'hangar.",
+      "lookahead": "Mostra una barca come prenotata {{minutes}} minuti prima"
     }
   },
   "outingTypes": {
@@ -518,10 +544,75 @@
     "ergometer": "Remoergometro",
     "motorboat": "Motoscafo"
   },
+  "reservations": {
+    "title": "Prenotazioni",
+    "new": "Nuova prenotazione",
+    "newTitle": "Nuova prenotazione",
+    "editTitle": "Modifica prenotazione",
+    "saved": "Prenotazione salvata",
+    "deleted": "Prenotazione eliminata",
+    "confirmDelete": "Eliminare la prenotazione di {{boat}} ({{when}})?",
+    "emptyTitle": "Nessuna prenotazione",
+    "emptyText": "Prenota una barca per una regata, un corso, un'uscita di gruppo o un appuntamento che torna ogni settimana. Nell'hangar la barca appare come prenotata e compare un avviso se un'uscita si sovrappone alla prenotazione, senza mai impedire di partire.",
+    "noUpcoming": "Nessuna prenotazione in programma.",
+    "filterByBoat": "Barca",
+    "allBoats": "Tutte le barche",
+    "past": "Prenotazioni passate ({{count}})",
+    "inProgress": "In corso",
+    "nextOn": "Prossima volta: {{date}}",
+    "unknownBoat": "Barca sconosciuta",
+    "weekly": "Ogni {{day}} dalle {{start}} alle {{end}}",
+    "periodBetween": "dal {{from}} al {{to}}",
+    "periodFrom": "dal {{from}}",
+    "periodUntil": "fino al {{to}}",
+    "reservedBy": "Prenotata da {{holder}}",
+    "badge": {
+      "until": "prenotata · fine {{time}}",
+      "at": "prenotata · inizio {{time}}"
+    },
+    "notice": {
+      "line": "Questa barca è prenotata da {{from}} a {{to}} da parte di {{holder}}",
+      "withReason": "Questa barca è prenotata da {{from}} a {{to}} da parte di {{holder}} ({{reason}})"
+    },
+    "boat": "Barca",
+    "chooseBoat": "Scegli una barca",
+    "recurrence": "Ripetizione",
+    "recurrences": {
+      "once": "Una volta",
+      "weekly": "Ogni settimana"
+    },
+    "startDate": "Data di inizio",
+    "startTime": "Ora di inizio",
+    "endDate": "Data di fine",
+    "endTime": "Ora di fine",
+    "day": "Giorno",
+    "onlyDuringPeriod": "Solo durante un periodo",
+    "periodStart": "Primo giorno",
+    "periodEnd": "Ultimo giorno",
+    "holder": "Prenotata da",
+    "holderPlaceholder": "Cerca un vogatore o scrivi un nome",
+    "holderNoOptions": "Nessun vogatore trovato",
+    "holderUseName": "Usa il nome «{{name}}»",
+    "reason": "Motivo",
+    "reasonPlaceholder": "Regata, corso, manutenzione…",
+    "moreOptions": "Altre opzioni",
+    "contact": "Contatto",
+    "contactPlaceholder": "Telefono o e-mail",
+    "errors": {
+      "MISSING_BOAT": "Scegli una barca.",
+      "MISSING_HOLDER": "Indica chi prenota: un vogatore o un nome.",
+      "MISSING_DATES": "Compila tutte le date.",
+      "MISSING_DAY": "Scegli un giorno della settimana.",
+      "INVALID_TIME": "Inserisci orari validi.",
+      "END_BEFORE_START": "La fine deve essere successiva all'inizio.",
+      "NO_OCCURRENCE": "Il periodo scelto non contiene quel giorno della settimana: la prenotazione non verrebbe mai applicata.",
+      "OVERLAPS": "Questa barca è già prenotata da {{holder}}: {{when}}."
+    }
+  },
   "backup": {
     "dataTitle": "Dati",
     "title": "Backup",
-    "description": "Rowing Beacon copia automaticamente tutti i dati del club all'avvio, poi ogni 24 ore, e prima di ogni importazione, ripristino o eliminazione. Vengono conservati gli ultimi 14 backup automatici.",
+    "description": "Rowing Beacon copia automaticamente tutti i dati del club all'avvio, poi ogni 24 ore, e prima di ogni importazione, ripristino, eliminazione o aggiornamento. Vengono conservati gli ultimi 14 backup automatici.",
     "lastBackup": "Ultimo backup: {{date}}",
     "noBackupYet": "Ancora nessun backup.",
     "backupNow": "Esegui backup ora",
@@ -549,11 +640,33 @@
       "manual": "Manuale",
       "before-import": "Prima di un'importazione",
       "before-restore": "Prima di un ripristino",
-      "before-delete": "Prima di un'eliminazione"
+      "before-delete": "Prima di un'eliminazione",
+      "before-update": "Prima di un aggiornamento"
     },
     "notABackup": "Questo file non è un backup valido di Rowing Beacon. Nulla è stato modificato.",
     "newerBackup": "Questo backup proviene da una versione più recente di Rowing Beacon. Aggiorna l'applicazione per ripristinarlo. Nulla è stato modificato.",
     "restoreNotStarted": "Il ripristino non è potuto iniziare (file illeggibile o backup di sicurezza non riuscito). Nulla è stato modificato."
+  },
+  "update": {
+    "sectionTitle": "Aggiornamenti",
+    "sectionDescription": "Rowing Beacon cerca una nuova versione all'avvio e poi ogni 6 ore. I dati del club vengono salvati subito prima dell'installazione.",
+    "currentVersion": "Versione installata: {{version}}",
+    "available": "Rowing Beacon {{version}} è disponibile",
+    "see": "Vedi l'aggiornamento",
+    "checkNow": "Cerca aggiornamenti",
+    "upToDate": "Rowing Beacon è aggiornato",
+    "checkFailed": "Impossibile cercare gli aggiornamenti. Il computer è connesso a Internet?",
+    "title": "Aggiorna alla versione {{version}}",
+    "changelog": "Scopri le novità",
+    "safety": "I dati del club vengono salvati prima dell'installazione, poi l'app si riavvia. Le uscite in corso vengono conservate.",
+    "backingUp": "Backup dei dati in corso…",
+    "downloading": "Download in corso…",
+    "downloadingPercent": "Download: {{percent}}%",
+    "installing": "Installazione in corso…",
+    "later": "Più tardi",
+    "install": "Installa e riavvia",
+    "backupFailed": "Il backup non è riuscito: l'aggiornamento non è stato installato.",
+    "failed": "L'aggiornamento non è riuscito. Rowing Beacon resta alla versione attuale."
   },
   "efa2": {
     "title": "efa2",
@@ -588,19 +701,25 @@
       "guests_other": "{{count}} ospiti creati per nomi inseriti liberamente",
       "externalBoats_one": "{{count}} barca esterna, archiviata",
       "externalBoats_other": "{{count}} barche esterne, archiviate",
-      "incidents_one": "{{count}} danno non riparato, ripreso come incidente",
-      "incidents_other": "{{count}} danni non riparati, ripresi come incidenti",
+      "reservations_one": "{{count}} prenotazione di barca",
+      "reservations_other": "{{count}} prenotazioni di barche",
       "keptIntro": "Conservato anche, per ora senza schermata, e riscritto all'esportazione efa2:",
       "closedOpen_one": "{{count}} uscita rimasta aperta in efa prima di oggi, chiusa all'importazione",
       "closedOpen_other": "{{count}} uscite rimaste aperte in efa prima di oggi, chiuse all'importazione",
       "ambiguousNames_one": "{{count}} nome inserito liberamente corrisponde a più schede: diventa un ospite",
       "ambiguousNames_other": "{{count}} nomi inseriti liberamente corrispondono a più schede: diventano ospiti",
       "unreadableEntries_one": "{{count}} voce del registro illeggibile (senza data o numero): conservata così com'è e riscritta all'esportazione efa2",
-      "unreadableEntries_other": "{{count}} voci del registro illeggibili (senza data o numero): conservate così come sono e riscritte all'esportazione efa2"
+      "unreadableEntries_other": "{{count}} voci del registro illeggibili (senza data o numero): conservate così come sono e riscritte all'esportazione efa2",
+      "openDamages_one": "{{count}} danno non riparato, ripreso come danno aperto",
+      "openDamages_other": "{{count}} danni non riparati, ripresi come danni aperti",
+      "fixedDamages_one": "{{count}} danno già riparato, conservato nello storico",
+      "fixedDamages_other": "{{count}} danni già riparati, conservati nello storico",
+      "unavailableBoats_one": "{{count}} barca non disponibile, ripresa con il suo motivo",
+      "unavailableBoats_other": "{{count}} barche non disponibili, riprese con il loro motivo"
     },
     "objects": {
       "efa2boatreservations": "prenotazioni",
-      "efa2boatdamages": "danni riparati",
+      "efa2boatdamages": "danni di una barca sconosciuta",
       "efa2messages": "messaggi",
       "efa2crews": "equipaggi tipo",
       "efa2waters": "specchi d'acqua",
@@ -626,5 +745,104 @@
     "closedOpenOutingNote": "(Uscita rimasta aperta in efa, chiusa all'importazione.)",
     "crewsCut_one": "{{count}} uscita ha più di 24 vogatori o più timonieri: efa2 non ha posto per gli altri, che non vengono esportati.",
     "crewsCut_other": "{{count}} uscite hanno più di 24 vogatori o più timonieri: efa2 non ha posto per gli altri, che non vengono esportati."
+  },
+  "damages": {
+    "title": "Danni",
+    "report": "Segnala un danno",
+    "fix": "Segna come riparato",
+    "reopen": "Riapri",
+    "fixed": "Riparato",
+    "reportDialogTitle": "Segnala un danno",
+    "editDialogTitle": "Modifica il danno",
+    "fixDialogTitle": "Segna il danno come riparato",
+    "reported": "Danno segnalato",
+    "updated": "Danno modificato",
+    "fixedToast": "Danno segnato come riparato",
+    "reopened": "Danno riaperto",
+    "unavailableDescription": "Messa fuori servizio",
+    "noDescription": "Nessuna descrizione",
+    "unavailableSeverityNote": "Una barca messa fuori servizio mantiene la gravità «Fuori servizio».",
+    "reportedByName": "Segnalato da {{name}}",
+    "fixedOn": "Riparato il {{date}}",
+    "fixedByName": "da {{name}}",
+    "repairCostValue": "Costo: {{cost}}",
+    "openOnBoat": "Danni aperti",
+    "noOpenOnBoat": "Nessun danno aperto su questa barca.",
+    "noneOnBoat": "Nessun danno",
+    "filter": {
+      "open": "Aperti",
+      "all": "Tutti",
+      "label": "Filtra i danni"
+    },
+    "empty": {
+      "open": "Nessun danno aperto",
+      "all": "Nessun danno registrato per ora"
+    },
+    "severity": {
+      "usable": "Utilizzabile",
+      "limited": "Con cautela",
+      "unusable": "Fuori servizio"
+    },
+    "severityHelp": {
+      "usable": "La barca è utilizzabile normalmente.",
+      "limited": "La barca è utilizzabile con cautela; il danno viene segnalato alla partenza.",
+      "unusable": "La barca è fuori servizio: la partenza non è possibile."
+    },
+    "fields": {
+      "boat": "Barca",
+      "chooseBoat": "Scegli una barca",
+      "severity": "Gravità",
+      "description": "Descrizione",
+      "reportedBy": "Segnalato da",
+      "reportedAt": "Data e ora",
+      "fixedAt": "Data e ora della riparazione",
+      "fixedBy": "Riparato da",
+      "repairNote": "Nota di riparazione",
+      "repairCost": "Costo",
+      "notSpecified": "Non indicato"
+    },
+    "errors": {
+      "boatRequired": "Scegli una barca.",
+      "descriptionRequired": "Descrivi il danno.",
+      "dateInvalid": "Inserisci una data valida.",
+      "costInvalid": "Inserisci un importo valido, ad esempio 12,50.",
+      "dateInFuture": "La data non può essere nel futuro.",
+      "fixedBeforeReported": "La data non può precedere la segnalazione ({{date}})."
+    },
+    "outOfServiceLocked": "È aperto un danno «Fuori servizio»: segnalo come riparato nell'elenco qui sotto per rimettere la barca in servizio.",
+    "actionOnBoat": "{{action}}: {{boat}}",
+    "unavailable": {
+      "fix": "Rimetti in servizio",
+      "fixed": "Rimessa in servizio",
+      "fixedOn": "Rimessa in servizio il {{date}}",
+      "fixDialogTitle": "Rimetti la barca in servizio",
+      "fixedToast": "Barca rimessa in servizio",
+      "reopened": "Barca di nuovo fuori servizio",
+      "fixedAt": "Data e ora della rimessa in servizio",
+      "fixedBy": "Rimessa in servizio da"
+    }
+  },
+  "outingEditor": {
+    "pastOuting": "Uscita già fatta",
+    "pastTitle": "Uscita già fatta",
+    "editTitle": "Modifica l'uscita",
+    "editOuting": "Modifica l'uscita",
+    "savePast": "Salva l'uscita",
+    "saveEdit": "Salva le modifiche",
+    "pastSaved": "L'uscita è stata aggiunta allo storico",
+    "editSaved": "L'uscita è stata modificata",
+    "endRequired": "Indica la data e l'ora di fine.",
+    "startRequired": "Indica la data e l'ora di inizio.",
+    "endInFuture": "La fine dell'uscita non può essere nel futuro.",
+    "startInFuture": "L'inizio dell'uscita non può essere nel futuro.",
+    "noRowers": "Seleziona almeno un vogatore.",
+    "coachedRequired": "Scegli una risposta.",
+    "notFound": "Uscita non trovata: potrebbe essere stata eliminata.",
+    "fix": "Correggi",
+    "saveAnyway": "Salva comunque",
+    "boatOverlap": "La barca «{{boatName}}» è già in un'altra uscita in questi orari.",
+    "rowersOverlap_one": "{{rowerNames}} è già in un'altra uscita in questi orari.",
+    "rowersOverlap_other": "{{rowerNames}} sono già in un'altra uscita in questi orari.",
+    "boatRequired": "Seleziona una barca."
   }
 }

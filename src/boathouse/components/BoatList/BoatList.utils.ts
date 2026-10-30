@@ -127,3 +127,35 @@ export const getSectionCountLabel = (
 ) => {
   return search ? `${filteredCount} / ${totalCount}` : totalCount.toString();
 };
+
+/**
+ * Dispatches boats between the three boathouse lists.
+ * - in use: any boat with an ongoing session (even archived or in maintenance,
+ *   so its outing can be finished)
+ * - unavailable: not out, not archived, in maintenance
+ * - available: not out, not archived, not in maintenance
+ */
+export const sortBoatsByAvailability = <
+  T extends Boat & { archivedAt?: string },
+>(
+  boats: T[],
+  boatIdsInUse: string[]
+) => {
+  const boatsInUse: T[] = [];
+  const availableBoats: T[] = [];
+  const unavailableBoats: T[] = [];
+
+  for (const boat of boats) {
+    if (boatIdsInUse.includes(boat.id)) {
+      boatsInUse.push(boat);
+    } else if (boat.archivedAt) {
+      continue;
+    } else if (boat.isInMaintenance) {
+      unavailableBoats.push(boat);
+    } else {
+      availableBoats.push(boat);
+    }
+  }
+
+  return { availableBoats, boatsInUse, unavailableBoats };
+};

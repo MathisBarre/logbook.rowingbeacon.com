@@ -1,0 +1,100 @@
+{
+  "unknown": "Keine Angabe",
+  "gender": {
+    "female": "Weiblich",
+    "male": "Männlich",
+    "other": "Divers"
+  },
+  "rower_status": {
+    "member": "Mitglied",
+    "guest": "Gast",
+    "other": "Andere"
+  },
+  "seriousness": {
+    "recreational": "Freizeit",
+    "competitor": "Rennsport"
+  },
+  "rigging": {
+    "scull": "Skull",
+    "sweep": "Riemen"
+  },
+  "role": {
+    "rower": "Ruderer",
+    "cox": "Steuermann"
+  },
+  "age_group": {
+    "youth": "Jugend (bis 18)",
+    "adult": "Erwachsene"
+  },
+  "issue": {
+    "not_closed": "Nie abgeschlossen",
+    "late_return": "Verspätete Rückkehr",
+    "no_estimated_end": "Ohne geplante Rückkehrzeit",
+    "youth_not_coached": "Jugend ohne Betreuung"
+  },
+  "severity": {
+    "usable": "Nutzbar",
+    "limited": "Eingeschränkt nutzbar",
+    "unusable": "Nicht nutzbar"
+  },
+  "damage_kind": {
+    "damage": "Schaden",
+    "unavailable": "Nicht verfügbar"
+  },
+  "distance_source": {
+    "recorded": "Eingetragene Strecke",
+    "route": "Streckenlänge"
+  },
+  "metric": {
+    "outings": "Fahrten",
+    "participations": "Teilnahmen",
+    "active_rowers": "Aktive Ruderer",
+    "km": "Kilometer",
+    "hours": "Stunden auf dem Wasser"
+  },
+  "measure": {
+    "participations": "Teilnahmen",
+    "hours": "Stunden auf dem Wasser",
+    "km": "Kilometer",
+    "rowers": "Ruderer"
+  },
+  "dimension": {
+    "age_category": "Altersklasse",
+    "seriousness": "Ruderertyp (Freizeit, Rennsport)",
+    "gender": "Geschlecht",
+    "rower_status": "Status (Mitglied, Gast)",
+    "boat_class": "Bootstyp",
+    "outing_type": "Fahrtart"
+  },
+  "outing_type_code": {
+    "normal": "Normale Fahrt",
+    "training": "Training",
+    "regatta": "Regatta",
+    "training_camp": "Trainingslager",
+    "instruction": "Ausbildung",
+    "tour": "Wanderfahrt",
+    "club_trip": "Vereinsfahrt",
+    "ergometer": "Ergometer",
+    "motorboat": "Motorboot"
+  },
+  "code": {
+    "normal": "Normale Fahrt",
+    "training": "Training",
+    "regatta": "Regatta",
+    "training_camp": "Trainingslager",
+    "instruction": "Ausbildung",
+    "tour": "Wanderfahrt",
+    "club_trip": "Vereinsfahrt",
+    "ergometer": "Ergometer",
+    "motorboat": "Motorboot"
+  },
+  "status": {
+    "member": "Mitglied",
+    "guest": "Gast",
+    "other": "Andere"
+  },
+  "kind": {
+    "damage": "Schaden",
+    "unavailable": "Nicht verfügbar"
+  }
+}

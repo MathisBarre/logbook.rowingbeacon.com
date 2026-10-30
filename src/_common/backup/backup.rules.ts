@@ -9,6 +9,7 @@ export const BACKUP_KINDS = [
   "before-import",
   "before-restore",
   "before-delete",
+  "before-update",
 ] as const;
 
 export type BackupKind = (typeof BACKUP_KINDS)[number];

@@ -1,0 +1,57 @@
+{
+  "season": "Stagione",
+  "boat_class": "Tipo di barca",
+  "boat_id": "Barca",
+  "rower_id": "Vogatore",
+  "route_id": "Percorso",
+  "outing_type": "Tipo di uscita",
+  "metric": "Mostra",
+  "measure": "Mostra",
+  "dimension": "Raggruppa per",
+  "days": "Numero di giorni",
+  "periodDays": "Negli ultimi (giorni)",
+  "absentDays": "Assente da almeno (giorni)",
+  "max_outings": "Uscite al massimo",
+  "min_outings": "Uscite al minimo",
+  "rower_status": "Stato",
+  "gender": "Sesso",
+  "age_category": "Categoria d'età",
+  "tolerance_min": "Tolleranza di ritardo (minuti)",
+  "start_date": "Dal",
+  "end_date": "Al",
+  "limit": "Numero di righe",
+  "all": {
+    "default": "Tutti",
+    "boat_class": "Tutti i tipi",
+    "boat_id": "Tutte le barche",
+    "rower_status": "Tutti gli stati",
+    "age_category": "Tutte le categorie",
+    "issue": "Tutti i punti"
+  },
+  "types": {
+    "text": "Testo",
+    "integer": "Numero intero",
+    "date": "Data",
+    "boolean": "Sì / no",
+    "season": "Stagione",
+    "boat": "Barca",
+    "rower": "Vogatore",
+    "route": "Percorso",
+    "outing_type": "Tipo di uscita",
+    "boat_class": "Tipo di barca",
+    "choice": "Elenco di scelte"
+  },
+  "validation": {
+    "required": "Valore obbligatorio",
+    "range": "Tra {{min}} e {{max}}",
+    "clampedMin": "Riportato a {{value}} (minimo)",
+    "clampedMax": "Riportato a {{value}} (massimo)",
+    "restored": "Valore predefinito ripristinato: {{value}}"
+  },
+  "issue": "Punto da verificare",
+  "bar": "Parametri del report",
+  "stepper": {
+    "decrease": "Diminuisci: {{label}}",
+    "increase": "Aumenta: {{label}}"
+  }
+}

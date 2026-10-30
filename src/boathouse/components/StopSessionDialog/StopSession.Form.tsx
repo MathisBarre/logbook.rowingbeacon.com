@@ -13,6 +13,9 @@ import { cn, forEnum } from "../../../_common/utils/utils";
 import { toast } from "sonner";
 import { useGetStopSession } from "../../business/StopSession/StopSession.usecase";
 import { useModule } from "../../../_common/store/modules.store";
+import { ModuleSuggestion } from "../../../_common/components/ModuleSuggestion";
+import { DAMAGE_SEVERITIES } from "../../../_common/business/damage.rules";
+import { DamageSeverity } from "../../../_common/database/repositories/club.types";
 import { useClubOverviewStore } from "../../../_common/store/clubOverview.store";
 import {
   isValidKilometreInput,
@@ -54,6 +57,7 @@ export const StopSessionForm = ({
   }
 
   const hasDistances = useModule("distances");
+  const hasDamages = useModule("damages");
   const routeDistanceM = useClubOverviewStore((state) =>
     session.route ? state.getRouteById(session.route.id)?.distanceM : null
   );
@@ -68,6 +72,14 @@ export const StopSessionForm = ({
   });
 
   const [isIncidentOpen, setIsIncidentOpen] = useState(false);
+  const [isBoatDamaged, setIsBoatDamaged] = useState(false);
+  const [damageSeverity, setDamageSeverity] = useState<DamageSeverity | null>(
+    null
+  );
+  const [isSeverityMissing, setIsSeverityMissing] = useState(false);
+  // A damage comes with the incident, and only with the module.
+  const reportedSeverity =
+    hasDamages && isIncidentOpen && isBoatDamaged ? damageSeverity : null;
 
   const stopSession = useGetStopSession();
 
@@ -93,6 +105,11 @@ export const StopSessionForm = ({
       return;
     }
 
+    if (hasDamages && isIncidentOpen && isBoatDamaged && !damageSeverity) {
+      setIsSeverityMissing(true);
+      return;
+    }
+
     const [stopSessionError] = await stopSession.execute({
       sessionId: session.id,
       endDateTime: formPayload.endDateTime,
@@ -101,6 +118,7 @@ export const StopSessionForm = ({
         checked: isIncidentOpen,
         message: formPayload.incident,
       },
+      damage: reportedSeverity ? { severity: reportedSeverity } : undefined,
       coached: formPayload.coached === "yes",
       distanceM: hasDistances
         ? parseKilometres(formPayload.distanceKm ?? "")
@@ -123,7 +141,11 @@ export const StopSessionForm = ({
       });
     }
 
-    toast.success(t("session.sessionEndedSuccessfully"));
+    toast.success(
+      reportedSeverity === "unusable"
+        ? t("session.sessionEndedBoatOutOfService")
+        : t("session.sessionEndedSuccessfully")
+    );
 
     afterSubmit();
   };
@@ -263,6 +285,9 @@ export const StopSessionForm = ({
                       setIsIncidentOpen(e.target.checked);
                       if (!e.target.checked) {
                         field.onChange("");
+                        setIsBoatDamaged(false);
+                        setDamageSeverity(null);
+                        setIsSeverityMissing(false);
                       }
                     }}
                   />
@@ -283,6 +308,63 @@ export const StopSessionForm = ({
             );
           }}
         />
+
+        {isIncidentOpen && !hasDamages && <ModuleSuggestion id="damages" />}
+
+        {isIncidentOpen && hasDamages && (
+          <div className="border p-2 rounded border-gray-300 bg-gray-50 flex flex-col gap-2 text-gray-700">
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                className="rounded-sm"
+                checked={isBoatDamaged}
+                onChange={(e) => {
+                  setIsBoatDamaged(e.target.checked);
+                  if (!e.target.checked) {
+                    setDamageSeverity(null);
+                    setIsSeverityMissing(false);
+                  }
+                }}
+              />
+              {t("session.boatIsDamaged")}
+            </label>
+            {isBoatDamaged && (
+              <fieldset className="flex flex-col gap-2 pl-6">
+                <legend className="sr-only">
+                  {t("session.damageSeverity")}
+                </legend>
+                {DAMAGE_SEVERITIES.map((severity) => (
+                  <label key={severity} className="flex gap-2 items-start">
+                    <input
+                      type="radio"
+                      name="damageSeverity"
+                      className="mt-1"
+                      value={severity}
+                      checked={damageSeverity === severity}
+                      onChange={() => {
+                        setDamageSeverity(severity);
+                        setIsSeverityMissing(false);
+                      }}
+                    />
+                    <span>
+                      <span className="block">
+                        {t(`damages.severity.${severity}`)}
+                      </span>
+                      <span className="block text-xs text-gray-500">
+                        {t(`damages.severityHelp.${severity}`)}
+                      </span>
+                    </span>
+                  </label>
+                ))}
+                {isSeverityMissing && (
+                  <p className="form-error">
+                    {t("session.damageSeverityRequired")}
+                  </p>
+                )}
+              </fieldset>
+            )}
+          </div>
+        )}
 
         <div className="flex gap-4">
           <Button

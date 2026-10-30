@@ -36,6 +36,7 @@
   },
   "navigation": {
     "boathouse": "Bootshaus",
+    "reservations": "Reservierungen",
     "logbook": "Fahrtenbuch",
     "stats": "Statistiken",
     "parameters": "Verwaltung",
@@ -70,11 +71,11 @@
       },
       "fullClub": {
         "name": "Kompletter Verein",
-        "description": "Fügt Distanzen, Fahrtarten, vollständige Mitgliederprofile, Gäste und Obmann hinzu."
+        "description": "Fügt Distanzen, Fahrtarten, vollständige Mitgliederprofile, Gäste, Obmann und Reservierungen hinzu."
       },
       "efaImport": {
         "name": "Ich komme von efa",
-        "description": "Übernehmen Siet Ihr efa2-Projekt direkt: Boote, Ruderer, Ziele und Fahrtenbücher."
+        "description": "Übernehmen Sie Ihr efa2-Projekt direkt: Boote, Ruderer, Ziele und Fahrtenbücher."
       }
     },
     "efa": {
@@ -100,7 +101,15 @@
     "noBoatsToDisplay": "Keine Boote anzuzeigen",
     "at": "um {{time}}",
     "tomorrowAt": "morgen um {{time}}",
-    "onDate": "am {{date}}"
+    "onDate": "am {{date}}",
+    "outOfService": "Außer Betrieb",
+    "unavailableBoats": "Nicht verfügbare Boote",
+    "allBoatsBack": "Alle Boote sind zurück. Denken Sie daran, das Bootshaus abzuschließen.",
+    "allBoatsBackClosing": "Schließt in {{seconds}} s (zum Schließen klicken)",
+    "sunrise": "Sonnenaufgang",
+    "sunset": "Sonnenuntergang",
+    "outingsAfterSunset_one": "{{count}} Fahrt bei Dunkelheit noch auf dem Wasser",
+    "outingsAfterSunset_other": "{{count}} Fahrten bei Dunkelheit noch auf dem Wasser"
   },
   "session": {
     "start": "Fahrt beginnen",
@@ -177,7 +186,19 @@
     "duplicateCrewMember": "Dieselbe Person ist zweimal in der Mannschaft ausgewählt.",
     "boatAlreadyOnSession": "Dieses Boot ist bereits unterwegs.",
     "returnBeforeStart": "Die geplante Rückkehr muss nach dem Start liegen.",
-    "invalidDistance": "Ungültige Strecke: geben Sie eine Zahl in km ein, zum Beispiel 12,5."
+    "invalidDistance": "Ungültige Strecke: geben Sie eine Zahl in km ein, zum Beispiel 12,5.",
+    "boatUnusable": "Dieses Boot ist außer Betrieb.",
+    "boatDamages": "Offene Schäden an diesem Boot",
+    "boatIsDamaged": "Das Boot ist beschädigt",
+    "damageSeverity": "Schwere des Schadens",
+    "damageSeverityRequired": "Wähle die Schwere des Schadens.",
+    "sessionEndedBoatOutOfService": "Fahrtende wurde erfolgreich gespeichert. Das Boot bleibt bis zur Reparatur außer Betrieb.",
+    "seatsRemaining_one": "Noch {{count}} Platz frei",
+    "seatsRemaining_other": "Noch {{count}} Plätze frei",
+    "rowersOverflow_one": "{{count}} Ruderer zu viel",
+    "rowersOverflow_other": "{{count}} Ruderer zu viel",
+    "crewComplete": "Mannschaft komplett",
+    "coxMissing": "Steuermann fehlt"
   },
   "logbook": {
     "title": "Fahrtenbuch",
@@ -209,17 +230,13 @@
     "createNewExport": "Neuen Export erstellen",
     "backToSessionList": "Zurück zum Fahrtenbuch",
     "captainName": "Obmann: {{name}}",
-    "coxName": "{{name}} (Steuermann)"
+    "coxName": "{{name}} (Steuermann)",
+    "editSession": "Fahrt bearbeiten"
   },
   "stats": {
-    "title": "Statistiken",
-    "infoMessage": "Viele zusätzliche Statistiken sind im Tab \"Verwaltung\", Seiten \"Ruderer\" und \"Boote\" verfügbar",
     "sessions": "Fahrten",
-    "totalTimeOnWater": "Gesamtzeit auf dem Wasser",
-    "averageTimePerSession": "Durchschnittliche Zeit / Fahrt",
     "noSessionsRecorded": "Noch keine Fahrten eingetragen",
     "season": "Saison",
-    "allMonths": "Alle Monate",
     "numberOfSessions": "Anzahl der Fahrten",
     "timeOnWater": "Zeit auf dem Wasser",
     "averagePerSession": "Durchschnitt pro Fahrt",
@@ -237,23 +254,8 @@
     "boat": "Boot",
     "rower": "Ruderer",
     "aboutBoat": "Informationen über {{boatName}}",
-    "months": {
-      "january": "Januar",
-      "february": "Februar",
-      "march": "März",
-      "april": "April",
-      "may": "Mai",
-      "june": "Juni",
-      "july": "Juli",
-      "august": "August",
-      "september": "September",
-      "october": "Oktober",
-      "november": "November",
-      "december": "Dezember"
-    },
     "session_one": "{{count}} Fahrt",
     "session_other": "{{count}} Fahrten",
-    "totalDistance": "Gesamtstrecke",
     "coxedSessions": "Fahrten als Steuermann"
   },
   "parameters": {
@@ -299,7 +301,7 @@
     "noType": "Kein Typ",
     "type": "Typ",
     "updateConfiguration": "Konfiguration aktualisieren",
-    "inMaintenance": "In Wartung",
+    "inMaintenance": "Außer Betrieb",
     "noteDisplayedAtSessionStart": "Hinweis (wird bei Fahrtbeginn angezeigt)",
     "yourRowers": "Ihre Ruderer",
     "yourBoats": "Ihre Boote",
@@ -354,6 +356,7 @@
     "warning": "Warnung!",
     "deleteAllDataWarning1": "Sie sind dabei, alle Anwendungsdaten zu löschen.",
     "deleteAllDataWarning2": "Zuerst wird eine Sicherheitskopie im Sicherungsordner (Verwaltung > Daten) erstellt, neben früheren Sicherungen. Um die Daten endgültig zu entfernen, löschen Sie auch diese Dateien.",
+    "deleteAiKeyToo": "Auch die auf diesem Computer gespeicherten KI-API-Schlüssel löschen (Anthropic, OpenAI, kompatibler Server). Sonst bleiben sie erhalten, und Fragen an die KI werden weiter über diese Konten abgerechnet.",
     "deleteConfirmationText": "Ich möchte alle meine Daten löschen",
     "deleteConfirmationInstruction": "Bestätigen Sie, indem Sie genau \"{{text}}\" in das untenstehende Feld schreiben.",
     "enterAdminPassword": "Admin-Passwort eingeben",
@@ -385,7 +388,15 @@
     "showGuests": "Gäste ({{count}})",
     "guestsHelp": "Gäste entstehen, wenn beim Ablegen ein Name eingetippt wird. Sie erscheinen nicht in der Ruderliste; setzen Sie ihren Status auf „Mitglied“, um sie aufzunehmen.",
     "finishOutingBeforeArchiving": "Archivieren nicht möglich: beenden Sie zuerst die laufende Fahrt.",
-    "nameRequired": "Der Name ist erforderlich."
+    "nameRequired": "Der Name ist erforderlich.",
+    "allBoatsBackBanner": "Erinnerung zum Abschließen des Bootshauses",
+    "allBoatsBackBannerDescription": "Zeigt eine große Erinnerung zum Abschließen des Bootshauses an, wenn die letzte Fahrt beendet ist.",
+    "allBoatsBackBannerOption": "Erinnerung anzeigen, wenn alle Boote zurück sind",
+    "clubLocation": "Standort des Vereins",
+    "clubLocationDescription": "Wird verwendet, um Sonnenauf- und -untergang auf der Seite „Bootshaus“ anzuzeigen. Leer lassen, um sie auszublenden. Dezimalgrad, z. B. 48,8566 und 2,3522.",
+    "clubLatitude": "Breitengrad",
+    "clubLongitude": "Längengrad",
+    "clubLocationInvalid": "Ungültiger Wert: Der Breitengrad muss zwischen -90 und 90 liegen, der Längengrad zwischen -180 und 180."
   },
   "boat": {
     "type": "Typ",
@@ -461,6 +472,8 @@
     "failedToLoad": "Fehler beim Laden der Datenbank",
     "failedToSave": "Speichern fehlgeschlagen: die Änderung wurde rückgängig gemacht",
     "backupsNotDeleted": "Die alten v1-Sicherungen konnten nicht aus dem Ordner backups gelöscht werden",
+    "inboxNotCleared": "Die wartenden Vorschläge von Claude konnten nicht aus dem Ordner analytics-inbox gelöscht werden",
+    "aiKeyNotDeleted": "Ein KI-API-Schlüssel konnte nicht gelöscht werden: Löschen Sie ihn unter Verwaltung › Statistiken und KI",
     "reloadFailed": "Daten konnten nicht neu geladen werden: bitte die App neu starten"
   },
   "migration": {
@@ -506,6 +519,19 @@
       "adds": "Fügt beim Ablegen die Wahl des Obmanns aus der Mannschaft hinzu (vorgeschlagen wird der Steuermann, sonst der erste erwachsene Ruderer), sichtbar im Fahrtenbuch und in Exporten.",
       "suggestion": "Möchten Sie wissen, wer für jedes Boot auf dem Wasser verantwortlich ist? Das Modul Obmann fügt das beim Ablegen hinzu.",
       "requiredOption": "Obmann zum Ablegen verpflichtend machen"
+    },
+    "damages": {
+      "name": "Schäden",
+      "description": "Melden Sie einen Bootsschaden mit seiner Schwere, verfolgen Sie ihn bis zur Reparatur und warnen Sie die Mannschaft vor dem Ablegen.",
+      "adds": "Fügt dem Fahrtenbuch den Reiter „Schäden“ hinzu, die Schadensmeldung aus einem Vorfall oder vom Boot aus, eine Warnung beim Ablegen für beschädigte Boote und die Schadenshistorie jedes Boots.",
+      "suggestion": "Ein beschädigtes Boot? Mit dem Modul Schäden melden Sie den Schaden, verfolgen die Reparatur und warnen die Mannschaft beim Ablegen."
+    },
+    "reservations": {
+      "name": "Reservierungen",
+      "description": "Reservieren Sie ein Boot für eine Regatta, einen Lehrgang oder ein wöchentliches Training.",
+      "adds": "Fügt eine Seite Reservierungen hinzu, einen Hinweis „reserviert“ an den betroffenen Booten im Bootshaus und eine Warnung, wenn eine Fahrt eine Reservierung überschneidet. Das Ablegen wird nie blockiert.",
+      "suggestion": "Soll ein Boot für eine Regatta, einen Lehrgang oder feste Zeiten frei bleiben? Das Modul Reservierungen zeigt es im Bootshaus an.",
+      "lookahead": "Boot {{minutes}} Minuten vorher als reserviert anzeigen"
     }
   },
   "outingTypes": {
@@ -519,10 +545,75 @@
     "ergometer": "Ergometer",
     "motorboat": "Motorboot"
   },
+  "reservations": {
+    "title": "Reservierungen",
+    "new": "Neue Reservierung",
+    "newTitle": "Neue Reservierung",
+    "editTitle": "Reservierung bearbeiten",
+    "saved": "Reservierung gespeichert",
+    "deleted": "Reservierung gelöscht",
+    "confirmDelete": "Reservierung von {{boat}} ({{when}}) löschen?",
+    "emptyTitle": "Noch keine Reservierungen",
+    "emptyText": "Reservieren Sie ein Boot für eine Regatta, einen Lehrgang, eine Gruppenfahrt oder einen Termin, der jede Woche wiederkehrt. Im Bootshaus erscheint das Boot als reserviert, und ein Hinweis zeigt sich, wenn eine Fahrt die Reservierung überschneidet – das Ablegen wird aber nie verhindert.",
+    "noUpcoming": "Keine anstehenden Reservierungen.",
+    "filterByBoat": "Boot",
+    "allBoats": "Alle Boote",
+    "past": "Vergangene Reservierungen ({{count}})",
+    "inProgress": "Läuft gerade",
+    "nextOn": "Nächster Termin: {{date}}",
+    "unknownBoat": "Unbekanntes Boot",
+    "weekly": "Jeden {{day}} {{start}}–{{end}}",
+    "periodBetween": "vom {{from}} bis {{to}}",
+    "periodFrom": "ab {{from}}",
+    "periodUntil": "bis {{to}}",
+    "reservedBy": "Reserviert von {{holder}}",
+    "badge": {
+      "until": "reserviert · Ende {{time}}",
+      "at": "reserviert · Beginn {{time}}"
+    },
+    "notice": {
+      "line": "Dieses Boot ist von {{from}} bis {{to}} für {{holder}} reserviert",
+      "withReason": "Dieses Boot ist von {{from}} bis {{to}} für {{holder}} reserviert ({{reason}})"
+    },
+    "boat": "Boot",
+    "chooseBoat": "Boot auswählen",
+    "recurrence": "Wiederholung",
+    "recurrences": {
+      "once": "Einmalig",
+      "weekly": "Wöchentlich"
+    },
+    "startDate": "Startdatum",
+    "startTime": "Startzeit",
+    "endDate": "Enddatum",
+    "endTime": "Endzeit",
+    "day": "Wochentag",
+    "onlyDuringPeriod": "Nur in einem Zeitraum",
+    "periodStart": "Erster Tag",
+    "periodEnd": "Letzter Tag",
+    "holder": "Reserviert von",
+    "holderPlaceholder": "Ruderer suchen oder Namen eingeben",
+    "holderNoOptions": "Kein Ruderer gefunden",
+    "holderUseName": "Namen „{{name}}“ verwenden",
+    "reason": "Grund",
+    "reasonPlaceholder": "Regatta, Lehrgang, Wartung …",
+    "moreOptions": "Weitere Optionen",
+    "contact": "Kontakt",
+    "contactPlaceholder": "Telefon oder E-Mail",
+    "errors": {
+      "MISSING_BOAT": "Wählen Sie ein Boot aus.",
+      "MISSING_HOLDER": "Geben Sie an, wer reserviert: einen Ruderer oder einen Namen.",
+      "MISSING_DATES": "Füllen Sie alle Datumsfelder aus.",
+      "MISSING_DAY": "Wählen Sie einen Wochentag.",
+      "INVALID_TIME": "Geben Sie gültige Uhrzeiten ein.",
+      "END_BEFORE_START": "Das Ende muss nach dem Beginn liegen.",
+      "NO_OCCURRENCE": "Der gewählte Zeitraum enthält diesen Wochentag nicht, die Reservierung würde also nie gelten.",
+      "OVERLAPS": "Dieses Boot ist bereits von {{holder}} reserviert: {{when}}."
+    }
+  },
   "backup": {
     "dataTitle": "Daten",
     "title": "Sicherungen",
-    "description": "Rowing Beacon kopiert alle Vereinsdaten automatisch beim Start, danach alle 24 Stunden sowie vor jedem Import, jeder Wiederherstellung und jedem Löschen. Die letzten 14 automatischen Sicherungen werden aufbewahrt.",
+    "description": "Rowing Beacon kopiert alle Vereinsdaten automatisch beim Start, danach alle 24 Stunden sowie vor jedem Import, jeder Wiederherstellung, jedem Löschen und jeder Aktualisierung. Die letzten 14 automatischen Sicherungen werden aufbewahrt.",
     "lastBackup": "Letzte Sicherung: {{date}}",
     "noBackupYet": "Noch keine Sicherung.",
     "backupNow": "Jetzt sichern",
@@ -550,11 +641,33 @@
       "manual": "Manuell",
       "before-import": "Vor einem Import",
       "before-restore": "Vor einer Wiederherstellung",
-      "before-delete": "Vor einem Löschen"
+      "before-delete": "Vor einem Löschen",
+      "before-update": "Vor einer Aktualisierung"
     },
     "notABackup": "Diese Datei ist keine gültige Rowing-Beacon-Sicherung. Es wurde nichts verändert.",
     "newerBackup": "Diese Sicherung stammt aus einer neueren Version von Rowing Beacon. Aktualisieren Sie die Anwendung, um sie wiederherzustellen. Es wurde nichts verändert.",
     "restoreNotStarted": "Die Wiederherstellung konnte nicht beginnen (Datei nicht lesbar oder Sicherheitskopie fehlgeschlagen). Es wurde nichts verändert."
+  },
+  "update": {
+    "sectionTitle": "Aktualisierungen",
+    "sectionDescription": "Rowing Beacon sucht beim Start und danach alle 6 Stunden nach einer neuen Version. Die Vereinsdaten werden unmittelbar vor der Installation gesichert.",
+    "currentVersion": "Installierte Version: {{version}}",
+    "available": "Rowing Beacon {{version}} ist verfügbar",
+    "see": "Aktualisierung ansehen",
+    "checkNow": "Nach Aktualisierungen suchen",
+    "upToDate": "Rowing Beacon ist auf dem neuesten Stand",
+    "checkFailed": "Die Suche nach Aktualisierungen ist fehlgeschlagen. Ist der Rechner mit dem Internet verbunden?",
+    "title": "Auf Version {{version}} aktualisieren",
+    "changelog": "Neuigkeiten ansehen",
+    "safety": "Die Vereinsdaten werden vor der Installation gesichert, danach startet die App neu. Laufende Fahrten bleiben erhalten.",
+    "backingUp": "Daten werden gesichert…",
+    "downloading": "Wird heruntergeladen…",
+    "downloadingPercent": "Download: {{percent}} %",
+    "installing": "Wird installiert…",
+    "later": "Später",
+    "install": "Installieren und neu starten",
+    "backupFailed": "Die Sicherung ist fehlgeschlagen: Die Aktualisierung wurde nicht installiert.",
+    "failed": "Die Aktualisierung ist fehlgeschlagen. Rowing Beacon bleibt auf der aktuellen Version."
   },
   "efa2": {
     "title": "efa2",
@@ -589,19 +702,25 @@
       "guests_other": "{{count}} Gäste für frei eingegebene Namen angelegt",
       "externalBoats_one": "{{count}} fremdes Boot, archiviert",
       "externalBoats_other": "{{count}} fremde Boote, archiviert",
-      "incidents_one": "{{count}} nicht behobener Schaden, als Vorfall übernommen",
-      "incidents_other": "{{count}} nicht behobene Schäden, als Vorfälle übernommen",
+      "reservations_one": "{{count}} Bootsreservierung",
+      "reservations_other": "{{count}} Bootsreservierungen",
       "keptIntro": "Ebenfalls aufbewahrt, vorerst ohne Ansicht, und beim efa2-Export zurückgeschrieben:",
       "closedOpen_one": "{{count}} Fahrt, die in efa vor heute offen geblieben ist, wird beim Import beendet",
       "closedOpen_other": "{{count}} Fahrten, die in efa vor heute offen geblieben sind, werden beim Import beendet",
       "ambiguousNames_one": "{{count}} frei eingegebener Name passt zu mehreren Personen: er wird ein Gast",
       "ambiguousNames_other": "{{count}} frei eingegebene Namen passen zu mehreren Personen: sie werden Gäste",
       "unreadableEntries_one": "{{count}} unlesbarer Fahrtenbucheintrag (ohne Datum oder Nummer): unverändert behalten und beim efa2-Export zurückgeschrieben",
-      "unreadableEntries_other": "{{count}} unlesbare Fahrtenbucheinträge (ohne Datum oder Nummer): unverändert behalten und beim efa2-Export zurückgeschrieben"
+      "unreadableEntries_other": "{{count}} unlesbare Fahrtenbucheinträge (ohne Datum oder Nummer): unverändert behalten und beim efa2-Export zurückgeschrieben",
+      "openDamages_one": "{{count}} nicht behobener Schaden, als offener Schaden übernommen",
+      "openDamages_other": "{{count}} nicht behobene Schäden, als offene Schäden übernommen",
+      "fixedDamages_one": "{{count}} bereits behobener Schaden, im Verlauf behalten",
+      "fixedDamages_other": "{{count}} bereits behobene Schäden, im Verlauf behalten",
+      "unavailableBoats_one": "{{count}} nicht verfügbares Boot, mit Begründung übernommen",
+      "unavailableBoats_other": "{{count}} nicht verfügbare Boote, mit Begründung übernommen"
     },
     "objects": {
       "efa2boatreservations": "Reservierungen",
-      "efa2boatdamages": "behobene Schäden",
+      "efa2boatdamages": "Schäden eines unbekannten Boots",
       "efa2messages": "Nachrichten",
       "efa2crews": "Standardmannschaften",
       "efa2waters": "Gewässer",
@@ -627,5 +746,104 @@
     "closedOpenOutingNote": "(In efa offen gebliebene Fahrt, beim Import beendet.)",
     "crewsCut_one": "{{count}} Fahrt hat mehr als 24 Ruderer oder mehrere Steuerleute: efa2 hat keinen Platz für die übrigen, sie werden nicht exportiert.",
     "crewsCut_other": "{{count}} Fahrten haben mehr als 24 Ruderer oder mehrere Steuerleute: efa2 hat keinen Platz für die übrigen, sie werden nicht exportiert."
+  },
+  "damages": {
+    "title": "Schäden",
+    "report": "Schaden melden",
+    "fix": "Als repariert markieren",
+    "reopen": "Wieder öffnen",
+    "fixed": "Repariert",
+    "reportDialogTitle": "Schaden melden",
+    "editDialogTitle": "Schaden bearbeiten",
+    "fixDialogTitle": "Schaden als repariert markieren",
+    "reported": "Schaden gemeldet",
+    "updated": "Schaden geändert",
+    "fixedToast": "Schaden als repariert markiert",
+    "reopened": "Schaden wieder geöffnet",
+    "unavailableDescription": "Außer Betrieb genommen",
+    "noDescription": "Keine Beschreibung",
+    "unavailableSeverityNote": "Ein außer Betrieb genommenes Boot behält die Schwere „Außer Betrieb“.",
+    "reportedByName": "Gemeldet von {{name}}",
+    "fixedOn": "Repariert am {{date}}",
+    "fixedByName": "von {{name}}",
+    "repairCostValue": "Kosten: {{cost}}",
+    "openOnBoat": "Offene Schäden",
+    "noOpenOnBoat": "Kein offener Schaden an diesem Boot.",
+    "noneOnBoat": "Kein Schaden",
+    "filter": {
+      "open": "Offen",
+      "all": "Alle",
+      "label": "Schäden filtern"
+    },
+    "empty": {
+      "open": "Kein offener Schaden",
+      "all": "Noch kein Schaden erfasst"
+    },
+    "severity": {
+      "usable": "Nutzbar",
+      "limited": "Mit Vorsicht",
+      "unusable": "Außer Betrieb"
+    },
+    "severityHelp": {
+      "usable": "Das Boot kann normal benutzt werden.",
+      "limited": "Das Boot kann mit Vorsicht benutzt werden; der Schaden wird beim Ablegen angezeigt.",
+      "unusable": "Das Boot ist außer Betrieb: Es kann nicht ablegen."
+    },
+    "fields": {
+      "boat": "Boot",
+      "chooseBoat": "Boot auswählen",
+      "severity": "Schwere",
+      "description": "Beschreibung",
+      "reportedBy": "Gemeldet von",
+      "reportedAt": "Datum und Uhrzeit",
+      "fixedAt": "Datum und Uhrzeit der Reparatur",
+      "fixedBy": "Repariert von",
+      "repairNote": "Reparaturnotiz",
+      "repairCost": "Kosten",
+      "notSpecified": "Nicht angegeben"
+    },
+    "errors": {
+      "boatRequired": "Wählen Sie ein Boot aus.",
+      "descriptionRequired": "Beschreiben Sie den Schaden.",
+      "dateInvalid": "Geben Sie ein gültiges Datum ein.",
+      "costInvalid": "Geben Sie einen gültigen Betrag ein, zum Beispiel 12,50.",
+      "dateInFuture": "Das Datum darf nicht in der Zukunft liegen.",
+      "fixedBeforeReported": "Das Datum darf nicht vor der Meldung liegen ({{date}})."
+    },
+    "outOfServiceLocked": "Ein Schaden mit „Außer Betrieb“ ist offen: Markieren Sie ihn in der Liste unten als repariert, um das Boot wieder in Betrieb zu nehmen.",
+    "actionOnBoat": "{{action}}: {{boat}}",
+    "unavailable": {
+      "fix": "Wieder in Betrieb nehmen",
+      "fixed": "Wieder in Betrieb",
+      "fixedOn": "Wieder in Betrieb seit {{date}}",
+      "fixDialogTitle": "Boot wieder in Betrieb nehmen",
+      "fixedToast": "Boot wieder in Betrieb genommen",
+      "reopened": "Boot wieder außer Betrieb",
+      "fixedAt": "Datum und Uhrzeit der Wiederinbetriebnahme",
+      "fixedBy": "Wieder in Betrieb genommen von"
+    }
+  },
+  "outingEditor": {
+    "pastOuting": "Fahrt nachtragen",
+    "pastTitle": "Bereits erfolgte Fahrt nachtragen",
+    "editTitle": "Fahrt bearbeiten",
+    "editOuting": "Fahrt bearbeiten",
+    "savePast": "Fahrt speichern",
+    "saveEdit": "Änderungen speichern",
+    "pastSaved": "Die Fahrt wurde zum Fahrtenbuch hinzugefügt",
+    "editSaved": "Die Fahrt wurde geändert",
+    "endRequired": "Geben Sie Enddatum und -zeit an.",
+    "startRequired": "Geben Sie Startdatum und -zeit an.",
+    "endInFuture": "Das Ende der Fahrt darf nicht in der Zukunft liegen.",
+    "startInFuture": "Der Beginn der Fahrt darf nicht in der Zukunft liegen.",
+    "noRowers": "Wählen Sie mindestens einen Ruderer aus.",
+    "coachedRequired": "Bitte wählen Sie eine Antwort.",
+    "notFound": "Diese Fahrt wurde nicht gefunden: Sie wurde möglicherweise gelöscht.",
+    "fix": "Korrigieren",
+    "saveAnyway": "Trotzdem speichern",
+    "boatOverlap": "Das Boot „{{boatName}}“ ist zu dieser Zeit bereits auf einer anderen Fahrt.",
+    "rowersOverlap_one": "{{rowerNames}} ist zu dieser Zeit bereits auf einer anderen Fahrt.",
+    "rowersOverlap_other": "{{rowerNames}} sind zu dieser Zeit bereits auf einer anderen Fahrt.",
+    "boatRequired": "Wählen Sie ein Boot aus."
   }
 }

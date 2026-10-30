@@ -1,0 +1,279 @@
+{
+  "title": "Berichte",
+  "search": "Bericht suchen",
+  "noMatch": "Kein Bericht passt zu „{{query}}“. Fragen Sie die KI: Sie schreibt die Statistik für Sie.",
+  "categories": {
+    "overview": "Überblick",
+    "fleet": "Flotte",
+    "people": "Ruderer",
+    "retention": "Mitgliederbindung",
+    "attendance": "Andrang",
+    "safety": "Sicherheit und Betreuung",
+    "maintenance": "Material"
+  },
+  "labels": {
+    "selectedSeason": "Gewählte Saison",
+    "previousSeason": "Vorsaison",
+    "classAvgOutings": "Durchschnittliche Fahrten des Typs",
+    "monthsSinceArrival": "Monate seit dem Eintritt",
+    "avgPerWeek": {
+      "participations": "Ruderer pro Woche im Schnitt",
+      "outings": "Fahrten pro Woche im Schnitt"
+    },
+    "female": "Frauen",
+    "male": "Männer",
+    "otherGender": "Divers",
+    "unknownGender": "Geschlecht nicht angegeben",
+    "total": "Gesamt",
+    "previous": {
+      "outings": "Fahrten, Vorsaison",
+      "participations": "Teilnahmen, Vorsaison",
+      "active_rowers": "Aktive Ruderer, Vorsaison",
+      "km": "Kilometer, Vorsaison",
+      "hours": "Stunden auf dem Wasser, Vorsaison"
+    }
+  },
+  "notes": {
+    "multiDay": "Mehrtägige Fahrten zählen nicht zu den Stunden.",
+    "km": "Kilometer: bei der Rückkehr eingetragene Strecke, sonst Streckenlänge.",
+    "excluded": "Von Statistiken ausgeschlossene Boote und Ruderer (Verwaltung) werden nicht gezählt.",
+    "v1Coxes": "Aus Version 1 übernommene Fahrten zählen Steuerleute als Ruderer.",
+    "noStartTime": "Importierte Fahrten ohne Abfahrtszeit fehlen in der Aufteilung nach Stunde.",
+    "retention": "Bindung ab der ersten Fahrt gerechnet (das Eintrittsdatum ist nicht bekannt).",
+    "motorboat": "Motorbootfahrten (Trainerboote) zählen nicht als Fahrten der Ruderer.",
+    "membersOnly": "Nur Mitglieder werden gezählt: Gäste und andere Status sind ausgeschlossen."
+  },
+  "coverage": {
+    "gender": "Geschlecht bekannt für {{pct}} % der aktiven Ruderer.",
+    "birth_date": "Geburtsdatum bekannt für {{pct}} % der aktiven Ruderer.",
+    "age_category": "Altersklasse bekannt für {{pct}} % der aktiven Ruderer.",
+    "distance": "Strecke bekannt für {{pct}} % der Fahrten.",
+    "is_coached": "Betreuung erfasst für {{pct}} % der Fahrten.",
+    "has_start_time": "Abfahrtszeit bekannt für {{pct}} % der Fahrten."
+  },
+  "howToRead": "So lesen Sie diesen Bericht",
+  "items": {
+    "season-overview": {
+      "title": "Saison auf einen Blick",
+      "description": "Welche Zahlen zeigen Sie auf der Mitgliederversammlung? Fahrten, aktive Ruderer, Kilometer, Stunden auf dem Wasser und betreuter Anteil, verglichen mit dem gleichen Zeitraum der Vorsaison.",
+      "howToRead": "Jede Kachel zeigt den Wert der Saison und die Veränderung gegenüber der Vorsaison bis zum gleichen Datum: Eine laufende Saison wird mit dem gleichen Zeitraum des Vorjahres verglichen, nicht mit der ganzen Vorsaison. Ein aktiver Ruderer war mindestens einmal auf dem Wasser.",
+      "keywords": "Mitgliederversammlung Jahreshauptversammlung Bilanz Zusammenfassung Zahlen"
+    },
+    "yoy-monthly": {
+      "title": "Monat für Monat, Saison gegen Saison",
+      "description": "Rudert der Verein mehr oder weniger als in der Vorsaison, Monat für Monat? Wählbar: Fahrten, Teilnahmen, aktive Ruderer, Kilometer oder Stunden.",
+      "howToRead": "Für jeden Monat zwei Balken nebeneinander: die gewählte Saison und die Vorsaison. Die Monate beginnen mit dem Saisonbeginn. Für den laufenden Monat wird die Vorsaison bis zum gleichen Tag gezählt. Eine Teilnahme ist ein Platz in einer Mannschaft: eine Fahrt im Vierer zählt vier Teilnahmen.",
+      "keywords": "Vergleich Entwicklung Vorjahr"
+    },
+    "yoy-cumulative": {
+      "title": "Kumulierte Fahrten, Saison gegen Saison",
+      "description": "Liegt die Saison vor oder hinter der letzten? Die Summe der Fahrten Woche für Woche, für beide Saisons.",
+      "howToRead": "Jede Linie summiert die Fahrten seit Saisonbeginn. Liegt die Linie der gewählten Saison über der anderen, hat der Verein schon mehr Fahrten als zum gleichen Datum im Vorjahr. Bei der laufenden Saison endet die Linie heute.",
+      "keywords": "Vergleich Vorsprung Rückstand kumuliert"
+    },
+    "outing-types": {
+      "title": "Fahrtarten",
+      "description": "Wofür wird gerudert: Freizeit, Training, Regatta, Ausbildung, Wanderfahrt…? Fahrten, Kilometer und Stunden je Fahrtart.",
+      "howToRead": "Die Arten sind von der häufigsten zur seltensten sortiert. Eine Fahrt ohne Art zählt als „Normale Fahrt“. Hilfreich, um den Anteil von Ausbildung, Regatta oder Wanderfahrten zu zeigen.",
+      "keywords": "Schule Wettkampf Wanderfahrt Freizeit Training"
+    },
+    "routes-usage": {
+      "title": "Meistgenutzte Strecken",
+      "description": "Wo wird gerudert? Fahrten, Kilometer und Zahl verschiedener Boote je Strecke.",
+      "howToRead": "Die Strecken sind von der meistbefahrenen zur seltensten sortiert. Fahrten ohne Strecke fehlen.",
+      "keywords": "Strecke Route km Kilometer"
+    },
+    "boat-usage-ranking": {
+      "title": "Bootsnutzung im Vergleich",
+      "description": "Welche Boote fahren am meisten, welche bleiben in der Halle? Fahrten, Nutzungstage, Stunden und Kilometer je Boot, auch Boote ohne Fahrt.",
+      "howToRead": "Die Boote sind von der meisten zur geringsten Nutzung sortiert. „Nutzungstage“ zählt die verschiedenen Tage mit Fahrt, die letzte Spalte die Tage seit der letzten Fahrt. Archivierte und von Statistiken ausgeschlossene Boote fehlen.",
+      "keywords": "Boote Nutzung Rangliste Bootshaus"
+    },
+    "underused-boats": {
+      "title": "Wenig genutzte Boote",
+      "description": "Welche Boote könnte man verkaufen, verleihen oder anderswo lagern? Boote, die im gewählten Zeitraum selten gefahren sind, neben dem Schnitt ihres Typs.",
+      "howToRead": "Zeitraum (in Tagen) und höchste Zahl an Fahrten einstellen. Boote ohne jede Fahrt stehen oben. Ein Boot weit unter dem Schnitt seines Typs passt vielleicht nicht (Einstellung, Gewicht, Niveau); ein ganzer wenig genutzter Typ deutet eher auf zu viele Boote hin.",
+      "keywords": "verkaufen Verkauf verleihen lagern Flotte ungenutzt"
+    },
+    "fleet-by-class": {
+      "title": "Flotte nach Bootstyp",
+      "description": "Soll der Verein ein Boot kaufen, und welchen Typ? Tage, an denen alle Boote eines Typs unterwegs waren, Höchstzahl gleichzeitig fahrender Boote und Fahrten je Boot.",
+      "howToRead": "Die Typen sind vom am stärksten zum am wenigsten ausgelasteten sortiert. „Tage, an denen alle unterwegs waren“: Sind es viele, haben Ruderer wohl auf ein Boot dieses Typs gewartet. „Höchstens gleichzeitig unterwegs“ ist die größte Zahl Boote des Typs, die zugleich auf dem Wasser waren. „Fahrten je Boot“ vergleicht die Typen unabhängig von ihrer Flottengröße. Boote ohne Riggerangabe, wie Motorboote, gehören nicht zur Flotte.",
+      "keywords": "Kauf kaufen Flotte Auslastung Mangel"
+    },
+    "fleet-class-monthly": {
+      "title": "Fahrten nach Bootstyp und Monat",
+      "description": "Welche Bootstypen werden zu welcher Jahreszeit am meisten genutzt?",
+      "howToRead": "Jeder Balken ist ein Monat, aufgeteilt nach Bootstyp: Die Gesamthöhe zeigt alle Fahrten des Monats, jede Farbe den Anteil eines Typs. „Keine Angabe“ fasst Boote ohne eingetragene Bauart zusammen. Fahrten mit Motorbooten werden nicht gezählt.",
+      "keywords": "Flotte Saison Zeitraum"
+    },
+    "boat-class-week-heatmap": {
+      "title": "Bootstypen Woche für Woche",
+      "description": "In welchen Wochen wird ein Bootstyp knapp? Fahrten je Bootstyp, Woche für Woche.",
+      "howToRead": "Eine Zeile je Bootstyp (1x, 2x, 4+…), eine Spalte je Woche, mit dem Datum des Montags. Je dunkler das Feld, desto gefragter war der Typ in dieser Woche. „Keine Angabe“ fasst Boote ohne eingetragene Bauart zusammen. Fahrten mit Motorbooten werden nicht gezählt.",
+      "keywords": "Flotte Mangel Spitze Woche"
+    },
+    "boat-month-heatmap": {
+      "title": "Boote Monat für Monat",
+      "description": "Welche Boote fahren zu welcher Jahreszeit? Fahrten je Boot und Monat (die 40 meistgenutzten Boote).",
+      "howToRead": "Eine Zeile je Boot, eine Spalte je Monat: Je dunkler das Feld, desto öfter war das Boot in diesem Monat unterwegs. Die ruhigen Monate eines Boots eignen sich für seine Wartung.",
+      "keywords": "Wartung Instandhaltung Planung Flotte"
+    },
+    "active-members-demographics": {
+      "title": "Aktive Mitglieder nach Geschlecht und Alter",
+      "description": "Wie viele Frauen, Männer, Jugendliche und Erwachsene sind in dieser Saison gerudert? Die Tabelle für Förderanträge.",
+      "howToRead": "Mitglieder mit mindestens einer Fahrt in der Saison (ohne Gäste): eine Zeile je Altersgruppe, eine Spalte je Geschlecht und die Summen, wie in Förderanträgen. Jugendlich: im Jahr der Fahrt höchstens 18, nach Geburtsdatum, sonst nach Altersklasse. „Keine Angabe“ zählt Einträge ohne Geschlecht oder Alter: Ergänzen Sie sie in der Verwaltung, bevor Sie einen Antrag senden.",
+      "keywords": "Mitgliederzahl Zuschuss Förderung Gemeinde Frauen Männer Jugend Erwachsene"
+    },
+    "active-rowers-monthly": {
+      "title": "Aktive und neue Ruderer pro Monat",
+      "description": "Wie viele Ruderer kommen jeden Monat, und wie viele davon sind neu?",
+      "howToRead": "Jeder Balken zählt die Ruderer mit mindestens einer Fahrt im Monat: unten die bereits Aktiven, oben die Neuen. Ein Ruderer gilt im Monat seiner ersten Fahrt als neu, wenn er vor der Saison nie gerudert ist.",
+      "keywords": "neu Neuzugänge Andrang"
+    },
+    "rower-frequency": {
+      "title": "Regelmäßigkeit der Mitglieder",
+      "description": "Kommen die Mitglieder oft oder nur ab und zu? Anzahl Mitglieder nach Zahl der Fahrten in der Saison.",
+      "howToRead": "Jeder Balken zählt die Mitglieder mit 1 Fahrt, 2 bis 5, 6 bis 10 Fahrten und so weiter. Viele Mitglieder in den ersten Gruppen deuten auf seltene Ruderer hin, die man ansprechen oder besser aufnehmen sollte.",
+      "keywords": "Treue Regelmäßigkeit Nachfassen"
+    },
+    "retention-cohorts": {
+      "title": "Bindung nach Eintrittssaison",
+      "description": "Bleiben die Mitglieder von Saison zu Saison? Anteil der in einer Saison eingetretenen Mitglieder, die in späteren Saisons noch rudern.",
+      "howToRead": "Eine Zeile je Eintrittssaison, also die Saison der ersten Fahrt. Unter „Saisons nach Eintritt“ zeigt Spalte 1 den Anteil, der in der folgenden Saison noch aktiv ist, Spalte 2 die übernächste, und so weiter. Die erste erfasste Saison enthält alle bereits Anwesenden, und die laufende Saison ist noch nicht vorbei.",
+      "keywords": "Treue Abbruch Austritt Wiederanmeldung Nachfassen"
+    },
+    "new-rower-survival": {
+      "title": "Bindung neuer Mitglieder",
+      "description": "Wie lange bleiben neue Mitglieder? Anteil neuer Mitglieder, die 1, 2, 3, 6, 9, 12, 18 und 24 Monate nach ihrer ersten Fahrt noch rudern.",
+      "howToRead": "Jeder Balken zeigt den Anteil neuer Mitglieder, die nach dieser Zahl von Monaten noch aktiv sind: Ein Mitglied zählt noch, wenn es nach dieser Zeit wieder gerudert ist. Ein Balken zählt nur Mitglieder, die lange genug dabei sind; die Balken betreffen also nicht dieselben Personen, und einer kann höher sein als der vorige. Ein starker Rückgang in den ersten drei Monaten zeigt, dass die Aufnahme von Anfängern verbessert werden sollte. Mitglieder aus den ersten 60 Tagen der Aufzeichnungen bleiben außen vor: Sie waren meist schon da.",
+      "keywords": "Treue Abbruch Austritt Wiederanmeldung Nachfassen Anfänger Aufnahme"
+    },
+    "workload-by-category": {
+      "title": "Aktivität nach Gruppe",
+      "description": "Welche Gruppen tragen den Verein, Monat für Monat? Teilnahmen, Stunden, Kilometer oder Ruderer, gruppiert nach Altersklasse, Niveau, Geschlecht, Status, Bootstyp oder Fahrtart.",
+      "howToRead": "Gruppierung und angezeigten Wert wählen. Jeder Balken ist ein Monat, aufgeteilt nach Gruppe. „Keine Angabe“ fasst Einträge ohne diese Information zusammen: Ergänzen Sie sie in der Verwaltung für genauere Zahlen.",
+      "keywords": "Gruppe Kategorie Alter Niveau Geschlecht Status"
+    },
+    "guests": {
+      "title": "Gäste",
+      "description": "Wie viele Gäste empfängt der Verein? Gastteilnahmen pro Monat und ihr Anteil an der Vereinsaktivität.",
+      "howToRead": "Jeder Balken zählt die von Gästen belegten Plätze im Monat. Die Tabelle zeigt auch die Zahl verschiedener Gäste und ihren Anteil an allen Teilnahmen: ein guter Gradmesser für Schnuppertage.",
+      "keywords": "Gäste Schnupperrudern Probetraining"
+    },
+    "outings-per-rower": {
+      "title": "Fahrten je Ruderer",
+      "description": "Wer rudert in der Saison am meisten? Fahrten, Kilometer, Stunden und betreute Fahrten je Ruderer.",
+      "howToRead": "Rangliste vom aktivsten zum am wenigsten aktiven Ruderer, nach Status filterbar (Mitglied, Gast, andere). Dieser Bericht zeigt Namen: nur für Verantwortliche, außer namentliche Ranglisten sind in der Verwaltung erlaubt.",
+      "keywords": "Rangliste Regelmäßigkeit Ruderer"
+    },
+    "km-challenge": {
+      "title": "Kilometer-Wettbewerb",
+      "description": "Wer ist in dieser Saison die meisten Kilometer auf dem Wasser gerudert? Rangliste ohne Ergometer, filterbar nach Geschlecht und Altersklasse.",
+      "howToRead": "Das Diagramm zeigt die ersten 20, die Tabelle die ersten 100, von der größten zur kleinsten Summe. Fahrten ohne Strecke zählen nicht. Dieser Bericht zeigt Namen: nur für Verantwortliche, außer namentliche Ranglisten sind in der Verwaltung erlaubt.",
+      "keywords": "km Kilometer Strecke Wettbewerb Rangliste"
+    },
+    "inactive-rowers": {
+      "title": "Regelmäßige Mitglieder, die nicht mehr kommen",
+      "description": "Welche regelmäßigen Mitglieder kommen nicht mehr? Mitglieder, die im Jahr vor ihrer letzten Fahrt oft gerudert sind und seit der gewählten Zahl von Tagen fehlen: einen Anruf wert.",
+      "howToRead": "Abwesenheitstage und Mindestzahl an Fahrten einstellen. Die Liste beginnt mit den Regelmäßigsten. Mitglieder, die seit mehr als zwei Jahren fehlen, und archivierte Einträge fehlen. Nur für Verantwortliche.",
+      "keywords": "Treue Abbruch Austritt Nachfassen abwesend"
+    },
+    "attendance-heatmap": {
+      "title": "Andrang nach Tag und Uhrzeit",
+      "description": "Welche Zeitfenster laufen am besten? Durchschnittliche Zahl der Ruderer (oder Fahrten) pro Woche nach Tag und Abfahrtszeit.",
+      "howToRead": "Eine Zeile je Wochentag, eine Spalte je Abfahrtsstunde. Der Wert ist ein Wochendurchschnitt: 6 am Samstag um 9 Uhr heißt, dass im Schnitt jeden Samstag zwischen 9 und 10 Uhr 6 Ruderer losfahren. Hilfreich, um betreute Termine und Dienste zu planen.",
+      "keywords": "Zeitfenster Uhrzeiten Andrang"
+    },
+    "activity-calendar": {
+      "title": "Saisonkalender",
+      "description": "An welchen Tagen wurde gerudert? Teilnahmen Tag für Tag, um Flauten, Ferien und Wettereinflüsse zu erkennen. Auf ein Boot filterbar.",
+      "howToRead": "Ein Feld je Tag, eine Spalte je Woche: Je dunkler das Feld, desto mehr Ruderer waren an diesem Tag unterwegs. Ein helles Feld bedeutet keine Fahrt.",
+      "keywords": "Tage Kalender Wetter Ferien"
+    },
+    "coaching-balance": {
+      "title": "Ausgewogenheit der Betreuung",
+      "description": "Bekommen alle Mitglieder Betreuung? Betreuter Anteil der Fahrten jedes Mitglieds, am wenigsten betreute zuerst.",
+      "howToRead": "Oben stehen die am wenigsten betreuten Mitglieder: So lässt sich die Aufmerksamkeit der Trainer verteilen. Fahrten ohne Angabe zur Betreuung zählen nicht im Prozentsatz. Dieser Bericht zeigt Namen: nur für Verantwortliche, außer namentliche Ranglisten sind in der Verwaltung erlaubt.",
+      "keywords": "Trainer Betreuung Begleitung"
+    },
+    "safety-summary": {
+      "title": "Sicherheit Monat für Monat",
+      "description": "Wird die Sicherheit besser? Verspätete Rückkehr, Fahrten ohne geplante Rückkehrzeit und nie abgeschlossene Fahrten, Monat für Monat.",
+      "howToRead": "Jeder Balken ist ein Monat. Dieselbe Fahrt kann doppelt zählen, etwa nie abgeschlossen und ohne geplante Rückkehrzeit. Verspätungstoleranz in Minuten einstellen. Die einzelnen Fahrten stehen in „Zu prüfende Fahrten“.",
+      "keywords": "Sicherheit Verspätung Abschluss"
+    },
+    "safety-issues": {
+      "title": "Zu prüfende Fahrten",
+      "description": "Welche Fahrten sollte man prüfen? Nie abgeschlossene Fahrten, verspätete Rückkehr, Fahrten ohne geplante Rückkehrzeit und Jugendfahrten (J10 bis J16) ohne Betreuung.",
+      "howToRead": "Eine Zeile je Fahrt, die schwersten zuerst: nie abgeschlossene Fahrten, Jugendliche ohne Betreuung, verspätete Rückkehr, dann Fahrten ohne geplante Rückkehrzeit, jeweils die neueste zuerst. Wählen Sie eine Auffälligkeit, um nur diese zu behalten. Jede Fahrt erscheint nur einmal, mit dem wichtigsten Grund. Motorbootfahrten werden nicht geprüft. Nur für Verantwortliche.",
+      "keywords": "Sicherheit Verspätung Abschluss Jugend prüfen"
+    },
+    "boat-km": {
+      "title": "Abnutzung der Boote",
+      "description": "Welche Boote nutzen sich am stärksten ab? Kilometer, Stunden und Vorfälle je Boot in der Saison und seit Beginn der Aufzeichnungen.",
+      "howToRead": "Die Spalten „Saison“ folgen der gewählten Saison, die Spalten „gesamt“ der ganzen Aufzeichnung. Hilfreich, um Überholungen und Ersatz zu planen. Von Statistiken ausgeschlossene Boote bleiben hier drin, denn sie nutzen sich auch ab.",
+      "keywords": "Abnutzung Wartung Instandhaltung km Kilometer"
+    },
+    "incidents-per-boat": {
+      "title": "Vorfälle je Boot",
+      "description": "Welche Boote haben die meisten Vorfälle? Am Fahrtende gemeldete Vorfälle im Verhältnis zur Zahl der Fahrten des Boots.",
+      "howToRead": "Das Diagramm ordnet die Boote nach Vorfällen je 100 Fahrten, um ein viel genutztes Boot mit einem selten fahrenden zu vergleichen; die Tabelle zeigt auch die Zahl der Vorfälle. Nur Boote mit mindestens einem Vorfall in der Saison erscheinen.",
+      "keywords": "Vorfälle Bruch Wartung"
+    },
+    "damages-per-boat": {
+      "title": "Schäden je Boot",
+      "description": "Wie steht es um die Schäden? Gemeldete Schäden nach Schwere, offene Schäden, mittlere Reparaturdauer und Kosten je Boot.",
+      "howToRead": "Die Balken stapeln die Schäden nach Schwere: nicht nutzbar, eingeschränkt nutzbar, nutzbar. Die mittlere Dauer zählt nur reparierte Schäden, die Kosten summieren die bei der Reparatur eingetragenen Beträge.",
+      "keywords": "Schäden Reparatur Bruch Wartung"
+    }
+  },
+  "clearSearch": "Suche löschen",
+  "askAi": "KI fragen",
+  "noMatchInCategory": "Kein Bericht dieses Themas passt zu „{{query}}“.",
+  "showAllCategories": "Alle Themen anzeigen",
+  "allCategories": "Alle",
+  "categoryFilter": "Themen",
+  "resultCount_one": "{{count}} Bericht",
+  "resultCount_other": "{{count}} Berichte",
+  "lockedBadge": "Zum Öffnen ist das Admin-Passwort nötig.",
+  "toolbar": "Berichtsaktionen",
+  "view": {
+    "label": "Ansicht",
+    "chart": "Diagramm",
+    "table": "Tabelle"
+  },
+  "scope": {
+    "season": "Saison {{season}}",
+    "running": "laufend, Daten bis {{date}}",
+    "fixed": "auf der Dashboard-Karte festgelegt",
+    "followHub": "Der gewählten Saison folgen",
+    "lastDays": "In den letzten {{days}} Tagen",
+    "allHistory": "Die gesamte Vereinsgeschichte",
+    "noSeason": "die gewählte Saison gilt hier nicht"
+  },
+  "hints": {
+    "partialMonth": "{{month}}: laufender Monat, Daten bis {{date}}. Derselbe Monat der Vorsaison wird bis zum gleichen Tag gezählt.",
+    "noPrevious": "Keine Daten für die Saison {{season}}: nur die gewählte Saison wird gezeigt."
+  },
+  "unavailable": {
+    "data": "Dieser Bericht nutzt Daten, die diese Version von RowingBeacon noch nicht erfasst."
+  },
+  "module": {
+    "confirmTitle": "Modul {{module}} aktivieren?",
+    "confirmMessage": "{{adds}} Sie können es unter Verwaltung › Module wieder abschalten.",
+    "enabled": "Modul {{module}} aktiviert",
+    "seeInSettings": "In der Verwaltung ansehen"
+  },
+  "locked": {
+    "names": "Dieser Bericht zeigt Namen von Ruderern. Geben Sie das Admin-Passwort ein oder erlauben Sie namentliche Ranglisten für alle unter Verwaltung › Statistiken.",
+    "admin": "Dieser Bericht ist Verantwortlichen vorbehalten. Geben Sie das Admin-Passwort ein, um ihn anzuzeigen.",
+    "unlock": "Entsperren"
+  },
+  "empty": {
+    "filtered": "Kein Ergebnis mit diesen Filtern.",
+    "reset": "Filter zurücksetzen"
+  },
+  "missingParam": "Wählen Sie „{{name}}“, um diesen Bericht anzuzeigen.",
+  "customiseHint": "Diese Einstellungen ändern nur die Anzeige und bleiben bis zum Schließen von RowingBeacon. Um sie zu behalten, heften Sie das Diagramm an das Dashboard oder speichern Sie es als Abfrage."
+}

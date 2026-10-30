@@ -1,0 +1,147 @@
+{
+  "questionLabel": "Demander à l'IA",
+  "intro": "Posez votre question en français : l'IA écrit la requête et le graphique, vous vérifiez le résultat avant d'enregistrer.",
+  "placeholder": "Ex. : combien de sorties le mardi soir cette saison ?",
+  "ask": "Demander à l'IA",
+  "generating": "En cours…",
+  "newQuestion": "Nouvelle question",
+  "editQuestion": "Modifier la question",
+  "askedQuestion": "Votre question",
+  "shortcut": "{{keys}} pour envoyer",
+  "shortcutCopy": "{{keys}} pour copier la demande",
+  "counter": "{{count}} / {{max}} caractères",
+  "stopped": "Demande arrêtée.",
+  "examples": {
+    "title": "Exemples de questions :",
+    "weekend": "Quels bateaux sortent le plus le week-end ?",
+    "youth": "Combien de jeunes sont sortis chaque mois cette saison ?",
+    "hoursType": "Heures sur l'eau par type de bateau et par mois"
+  },
+  "history": {
+    "title": "Vos dernières questions",
+    "replayed": "Réponse du {{date}}, rejouée sur les données d'aujourd'hui."
+  },
+  "privacy": {
+    "noNames": "Sans noms de personnes : l'IA ne connaît pas les rameurs.",
+    "line": "Envoyé à {{provider}} : la question et la structure des tables, jamais les données des rameurs.",
+    "lineAssets": "Envoyé à {{provider}} : la question, la structure des tables et les noms des bateaux et des parcours, jamais les données des rameurs.",
+    "lineLocal": "Tout reste sur cet ordinateur : la question va au serveur d'IA de cet ordinateur ({{host}}).",
+    "lineCopy": "La demande copiée contient votre question et la structure des tables, jamais les données des rameurs. Vous choisissez l'IA où la coller.",
+    "lineCopyAssets": "La demande copiée contient votre question, la structure des tables et les noms des bateaux et des parcours, jamais les données des rameurs. Vous choisissez l'IA où la coller.",
+    "typicalCost": "Environ {{cost}} par question.",
+    "details": "Ce qui est envoyé"
+  },
+  "names": {
+    "found": "Votre question contient « {{name}} », le nom d'un rameur : il serait envoyé à {{provider}}. Remplacez-le par « un rameur » : vous le choisirez ensuite dans les paramètres.",
+    "foundCopy": "Votre question contient « {{name}} », le nom d'un rameur : il serait copié dans la demande. Remplacez-le par « un rameur » : vous le choisirez ensuite dans les paramètres.",
+    "replacement": "un rameur",
+    "replace": "Remplacer par « un rameur »",
+    "sendAnyway": "Envoyer quand même",
+    "copyAnyway": "Copier quand même"
+  },
+  "status": {
+    "asking": "L'IA écrit la requête…",
+    "running": "Vérification de la requête sur les données du club…",
+    "repairing": "Correction automatique de la requête après une erreur…",
+    "elapsed": "{{seconds}} s",
+    "slow": "Cela peut prendre jusqu'à une minute.",
+    "slower": "Toujours en cours : les questions difficiles prennent plus de temps."
+  },
+  "answer": {
+    "eyebrow": "Réponse de l'IA",
+    "assumptions": "Hypothèses",
+    "clarified": "Précisé : {{text}}",
+    "refined": "Affiné : {{text}}",
+    "cost": "≈ {{cost}} pour cette question",
+    "costTitle": "Estimation d'après le tarif public ; le montant exact figure sur le compte {{provider}} du club.",
+    "repaired": "Requête corrigée automatiquement après une erreur.",
+    "preview": "Aperçu du résultat",
+    "rows_one": "{{count}} ligne en {{ms}} ms",
+    "rows_other": "{{count}} lignes en {{ms}} ms",
+    "inEditor": "La requête est chargée dans l'éditeur : vérifiez le résultat, puis « Enregistrer » ou « Épingler ». Rien n'est enregistré sans vous.",
+    "showResult": "Voir le résultat",
+    "needsValues": "Choisissez une valeur pour {{names}} dans les paramètres de l'éditeur, puis relancez la requête.",
+    "chooseParam": "Choisir {{name}}",
+    "notLoaded": "Cette réponse n'est pas dans l'éditeur.",
+    "load": "Charger dans l'éditeur",
+    "answeredBy": "Réponse de {{provider}} · {{model}}"
+  },
+  "refine": {
+    "placeholder": "Affiner : seulement les jeunes, par mois…",
+    "label": "Affiner ce résultat",
+    "button": "Affiner",
+    "pasted": "Pour affiner, écrivez-le à votre IA dans la même conversation, puis collez sa nouvelle réponse ci-dessus."
+  },
+  "clarification": {
+    "title": "L'IA a besoin d'une précision",
+    "choices": "Réponses possibles",
+    "other": "Autre réponse :",
+    "answer": "Répondre",
+    "placeholder": "Votre réponse…"
+  },
+  "steps": {
+    "title": "Utiliser votre IA habituelle",
+    "copy": "Copiez la demande.",
+    "open": "Collez-la dans votre IA :",
+    "pasteHelp": "Dans votre IA, cliquez sur « Copier » sous sa réponse (ou en haut du bloc de code).",
+    "alreadyHave": "J'ai déjà une réponse à coller",
+    "addKey": "Pour que l'IA réponde directement ici, ajoutez une clé API :",
+    "configure": "Configurer l'IA",
+    "useStored": "Utiliser {{provider}} (clé enregistrée)"
+  },
+  "copy": {
+    "button": "Copier la demande",
+    "header": "Demande préparée par RowingBeacon pour les statistiques du club : l'IA va répondre par un bloc de code à recopier dans RowingBeacon.",
+    "done": "Demande copiée : collez-la dans votre IA habituelle, puis copiez sa réponse.",
+    "doneIn": "Demande copiée : collez-la dans {{name}} (Ctrl + V), puis copiez sa réponse.",
+    "failed": "Copie impossible : sélectionnez tout le texte ci-dessous et copiez-le.",
+    "open": "Ouvrir {{name}}",
+    "needQuestion": "Écrivez d'abord votre question."
+  },
+  "paste": {
+    "label": "Collez ici sa réponse :",
+    "placeholder": "Collez ici toute la réponse de votre IA",
+    "apply": "Utiliser cette réponse",
+    "invalid": "Cette réponse n'est pas reconnue. Dans votre IA, cliquez sur « Copier » sous sa réponse, puis collez-la ici en entier.",
+    "clarification": "Votre IA demande une précision : répondez-lui dans sa conversation, puis collez ici sa nouvelle réponse.",
+    "copyRepair": "Copier l'erreur pour votre IA",
+    "repairCopied": "Erreur copiée : collez-la dans la même conversation de votre IA, puis collez ici la réponse corrigée."
+  },
+  "keyDialog": {
+    "title": "Configurer l'IA",
+    "saved": "Clé enregistrée : vous pouvez demander à l'IA."
+  },
+  "actions": {
+    "fixSettings": "Corriger les réglages de l'IA",
+    "retryIn": "Réessayer ({{seconds}} s)",
+    "copyForUsual": "Copier la demande pour votre IA habituelle",
+    "openInEditor": "Ouvrir la requête dans l'éditeur",
+    "technical": "Détail technique"
+  },
+  "errors": {
+    "no_key": "Aucune clé API configurée ({{provider}}).",
+    "invalid_key": "La clé API est refusée par {{provider}} : elle a peut-être été supprimée, ou mal copiée.",
+    "forbidden": "Cette clé n'a pas accès à ce modèle, ou le crédit du compte est épuisé. Choisissez un autre modèle ou vérifiez le compte ({{provider}}).",
+    "rate_limited": "Trop de demandes pour l'instant. Réessayez dans {{seconds}} s.",
+    "overloaded": "Service surchargé pour l'instant ({{provider}}). Réessayez dans quelques minutes.",
+    "bad_request": "{{provider}} a refusé la demande. Réessayez ; si cela recommence, choisissez un autre modèle.",
+    "network": "Impossible de joindre {{provider}} : vérifiez la connexion à Internet. Sans Internet, les rapports et l'éditeur SQL fonctionnent toujours.",
+    "network_server": "Impossible de joindre {{provider}} : vérifiez que le serveur d'IA est démarré.",
+    "timeout": "L'IA n'a pas répondu à temps. Réessayez.",
+    "refusal": "L'IA a refusé de répondre à cette demande. Reformulez la question.",
+    "truncated": "Réponse trop longue, interrompue. Posez une question plus précise.",
+    "invalid_response": "Réponse de l'IA illisible. Réessayez.",
+    "repair_failed": "L'IA n'a pas réussi à corriger la requête : {{message}}",
+    "too_large": "Question trop longue (2 000 caractères au plus).",
+    "model_not_allowed": "Modèle non pris en charge. Choisissez un modèle dans Gestion › Statistiques et IA.",
+    "desktop_only": "L'assistant IA ne fonctionne que dans l'application installée.",
+    "internal": "Erreur inattendue de l'assistant. Réessayez.",
+    "query": "La requête proposée n'a pas pu s'exécuter : {{message}}",
+    "model_not_found": "Modèle introuvable ({{provider}}). Vérifiez son nom dans Gestion › Statistiques et IA."
+  },
+  "providers": {
+    "generic": "votre service d'IA",
+    "server": "votre serveur d'IA",
+    "local": "le serveur de cet ordinateur"
+  }
+}

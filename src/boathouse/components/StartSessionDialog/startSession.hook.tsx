@@ -134,6 +134,10 @@ export const useStartSession = (onSessionStarted: () => void) => {
         return setSubmissionError(i18n.t("session.boatAlreadyOnSession"));
       }
 
+      if (error.code === "BOAT_UNUSABLE") {
+        return setSubmissionError(i18n.t("session.boatUnusable"));
+      }
+
       if (error.code === "DUPLICATE_CREW_MEMBER") {
         return setSubmissionError(i18n.t("session.duplicateCrewMember"));
       }

@@ -28,4 +28,6 @@ export interface IStartSessionRepository {
   getRoute(routeId: string): Promise<Route>;
   /** Creates the hidden guest record of a name typed at departure. */
   createGuest(name: string): Promise<Rower>;
+  /** The member or guest a typed name stands for, without changing anything. */
+  findPersonByName(name: string): Promise<Rower | undefined>;
 }

@@ -1,0 +1,373 @@
+{
+  "limits": {
+    "economy": {
+      "queryTimeoutMs": 10000,
+      "reportTimeoutMs": 20000,
+      "cardTimeoutMs": 20000,
+      "maxTimeoutMs": 30000,
+      "mcpQueryTimeoutMs": 10000,
+      "mcpReportTimeoutMs": 20000,
+      "editorRows": 1000,
+      "maxRows": 5000,
+      "mcpMaxRows": 500,
+      "resultBytes": 8388608,
+      "memoryBudgetBytes": 268435456,
+      "heapLimitBytes": 536870912,
+      "concurrentQueries": 1
+    },
+    "standard": {
+      "queryTimeoutMs": 30000,
+      "reportTimeoutMs": 60000,
+      "cardTimeoutMs": 30000,
+      "maxTimeoutMs": 120000,
+      "mcpQueryTimeoutMs": 20000,
+      "mcpReportTimeoutMs": 40000,
+      "editorRows": 5000,
+      "maxRows": 20000,
+      "mcpMaxRows": 500,
+      "resultBytes": 33554432,
+      "memoryBudgetBytes": 402653184,
+      "heapLimitBytes": 1073741824,
+      "concurrentQueries": 2
+    },
+    "powerful": {
+      "queryTimeoutMs": 60000,
+      "reportTimeoutMs": 120000,
+      "cardTimeoutMs": 60000,
+      "maxTimeoutMs": 300000,
+      "mcpQueryTimeoutMs": 30000,
+      "mcpReportTimeoutMs": 50000,
+      "editorRows": 10000,
+      "maxRows": 50000,
+      "mcpMaxRows": 500,
+      "resultBytes": 67108864,
+      "memoryBudgetBytes": 805306368,
+      "heapLimitBytes": 2147483648,
+      "concurrentQueries": 2
+    }
+  },
+  "MachineInfo": [
+    {
+      "totalMemoryBytes": 3977293824,
+      "logicalCpus": 4,
+      "arch": "aarch64",
+      "os": "linux",
+      "raspberryPi": true,
+      "recommended": "economy"
+    },
+    {
+      "totalMemoryBytes": 2012217344,
+      "logicalCpus": 4,
+      "arch": "aarch64",
+      "os": "linux",
+      "raspberryPi": true,
+      "recommended": "economy"
+    },
+    {
+      "totalMemoryBytes": 8060403712,
+      "logicalCpus": 8,
+      "arch": "x86_64",
+      "os": "windows",
+      "raspberryPi": false,
+      "recommended": "standard"
+    },
+    {
+      "totalMemoryBytes": 17179869184,
+      "logicalCpus": 10,
+      "arch": "aarch64",
+      "os": "macos",
+      "raspberryPi": false,
+      "recommended": "powerful"
+    },
+    {
+      "totalMemoryBytes": null,
+      "logicalCpus": 2,
+      "arch": "x86_64",
+      "os": "freebsd",
+      "raspberryPi": false,
+      "recommended": "economy"
+    }
+  ],
+  "cases": [
+    {
+      "machine": {
+        "totalMemoryBytes": 3977293824,
+        "logicalCpus": 4,
+        "arch": "aarch64",
+        "os": "linux",
+        "raspberryPi": true,
+        "recommended": "economy"
+      },
+      "choice": "auto",
+      "profile": "economy",
+      "limits": {
+        "queryTimeoutMs": 10000,
+        "reportTimeoutMs": 20000,
+        "cardTimeoutMs": 20000,
+        "maxTimeoutMs": 30000,
+        "mcpQueryTimeoutMs": 10000,
+        "mcpReportTimeoutMs": 20000,
+        "editorRows": 1000,
+        "maxRows": 5000,
+        "mcpMaxRows": 500,
+        "resultBytes": 8388608,
+        "memoryBudgetBytes": 268435456,
+        "heapLimitBytes": 536870912,
+        "concurrentQueries": 1
+      },
+      "couldGoHigher": false
+    },
+    {
+      "machine": {
+        "totalMemoryBytes": 3977293824,
+        "logicalCpus": 4,
+        "arch": "aarch64",
+        "os": "linux",
+        "raspberryPi": true,
+        "recommended": "economy"
+      },
+      "choice": "powerful",
+      "profile": "powerful",
+      "limits": {
+        "queryTimeoutMs": 60000,
+        "reportTimeoutMs": 120000,
+        "cardTimeoutMs": 60000,
+        "maxTimeoutMs": 300000,
+        "mcpQueryTimeoutMs": 30000,
+        "mcpReportTimeoutMs": 50000,
+        "editorRows": 10000,
+        "maxRows": 50000,
+        "mcpMaxRows": 500,
+        "resultBytes": 33554432,
+        "memoryBudgetBytes": 402653184,
+        "heapLimitBytes": 1073741824,
+        "concurrentQueries": 2
+      },
+      "couldGoHigher": false
+    },
+    {
+      "machine": {
+        "totalMemoryBytes": 2012217344,
+        "logicalCpus": 4,
+        "arch": "aarch64",
+        "os": "linux",
+        "raspberryPi": true,
+        "recommended": "economy"
+      },
+      "choice": "standard",
+      "profile": "standard",
+      "limits": {
+        "queryTimeoutMs": 30000,
+        "reportTimeoutMs": 60000,
+        "cardTimeoutMs": 30000,
+        "maxTimeoutMs": 120000,
+        "mcpQueryTimeoutMs": 20000,
+        "mcpReportTimeoutMs": 40000,
+        "editorRows": 5000,
+        "maxRows": 20000,
+        "mcpMaxRows": 500,
+        "resultBytes": 8388608,
+        "memoryBudgetBytes": 268435456,
+        "heapLimitBytes": 536870912,
+        "concurrentQueries": 1
+      },
+      "couldGoHigher": false
+    },
+    {
+      "machine": {
+        "totalMemoryBytes": 8060403712,
+        "logicalCpus": 8,
+        "arch": "x86_64",
+        "os": "windows",
+        "raspberryPi": false,
+        "recommended": "standard"
+      },
+      "choice": "auto",
+      "profile": "standard",
+      "limits": {
+        "queryTimeoutMs": 30000,
+        "reportTimeoutMs": 60000,
+        "cardTimeoutMs": 30000,
+        "maxTimeoutMs": 120000,
+        "mcpQueryTimeoutMs": 20000,
+        "mcpReportTimeoutMs": 40000,
+        "editorRows": 5000,
+        "maxRows": 20000,
+        "mcpMaxRows": 500,
+        "resultBytes": 33554432,
+        "memoryBudgetBytes": 402653184,
+        "heapLimitBytes": 1073741824,
+        "concurrentQueries": 2
+      },
+      "couldGoHigher": false
+    },
+    {
+      "machine": {
+        "totalMemoryBytes": 8060403712,
+        "logicalCpus": 8,
+        "arch": "x86_64",
+        "os": "windows",
+        "raspberryPi": false,
+        "recommended": "standard"
+      },
+      "choice": "economy",
+      "profile": "economy",
+      "limits": {
+        "queryTimeoutMs": 10000,
+        "reportTimeoutMs": 20000,
+        "cardTimeoutMs": 20000,
+        "maxTimeoutMs": 30000,
+        "mcpQueryTimeoutMs": 10000,
+        "mcpReportTimeoutMs": 20000,
+        "editorRows": 1000,
+        "maxRows": 5000,
+        "mcpMaxRows": 500,
+        "resultBytes": 8388608,
+        "memoryBudgetBytes": 268435456,
+        "heapLimitBytes": 536870912,
+        "concurrentQueries": 1
+      },
+      "couldGoHigher": true
+    },
+    {
+      "machine": {
+        "totalMemoryBytes": 8060403712,
+        "logicalCpus": 8,
+        "arch": "x86_64",
+        "os": "windows",
+        "raspberryPi": false,
+        "recommended": "standard"
+      },
+      "choice": "powerful",
+      "profile": "powerful",
+      "limits": {
+        "queryTimeoutMs": 60000,
+        "reportTimeoutMs": 120000,
+        "cardTimeoutMs": 60000,
+        "maxTimeoutMs": 300000,
+        "mcpQueryTimeoutMs": 30000,
+        "mcpReportTimeoutMs": 50000,
+        "editorRows": 10000,
+        "maxRows": 50000,
+        "mcpMaxRows": 500,
+        "resultBytes": 67108864,
+        "memoryBudgetBytes": 805306368,
+        "heapLimitBytes": 2147483648,
+        "concurrentQueries": 2
+      },
+      "couldGoHigher": false
+    },
+    {
+      "machine": {
+        "totalMemoryBytes": 17179869184,
+        "logicalCpus": 10,
+        "arch": "aarch64",
+        "os": "macos",
+        "raspberryPi": false,
+        "recommended": "powerful"
+      },
+      "choice": "auto",
+      "profile": "powerful",
+      "limits": {
+        "queryTimeoutMs": 60000,
+        "reportTimeoutMs": 120000,
+        "cardTimeoutMs": 60000,
+        "maxTimeoutMs": 300000,
+        "mcpQueryTimeoutMs": 30000,
+        "mcpReportTimeoutMs": 50000,
+        "editorRows": 10000,
+        "maxRows": 50000,
+        "mcpMaxRows": 500,
+        "resultBytes": 67108864,
+        "memoryBudgetBytes": 805306368,
+        "heapLimitBytes": 2147483648,
+        "concurrentQueries": 2
+      },
+      "couldGoHigher": false
+    },
+    {
+      "machine": {
+        "totalMemoryBytes": 17179869184,
+        "logicalCpus": 10,
+        "arch": "aarch64",
+        "os": "macos",
+        "raspberryPi": false,
+        "recommended": "powerful"
+      },
+      "choice": "standard",
+      "profile": "standard",
+      "limits": {
+        "queryTimeoutMs": 30000,
+        "reportTimeoutMs": 60000,
+        "cardTimeoutMs": 30000,
+        "maxTimeoutMs": 120000,
+        "mcpQueryTimeoutMs": 20000,
+        "mcpReportTimeoutMs": 40000,
+        "editorRows": 5000,
+        "maxRows": 20000,
+        "mcpMaxRows": 500,
+        "resultBytes": 33554432,
+        "memoryBudgetBytes": 402653184,
+        "heapLimitBytes": 1073741824,
+        "concurrentQueries": 2
+      },
+      "couldGoHigher": true
+    },
+    {
+      "machine": {
+        "totalMemoryBytes": null,
+        "logicalCpus": 2,
+        "arch": "x86_64",
+        "os": "freebsd",
+        "raspberryPi": false,
+        "recommended": "economy"
+      },
+      "choice": "auto",
+      "profile": "economy",
+      "limits": {
+        "queryTimeoutMs": 10000,
+        "reportTimeoutMs": 20000,
+        "cardTimeoutMs": 20000,
+        "maxTimeoutMs": 30000,
+        "mcpQueryTimeoutMs": 10000,
+        "mcpReportTimeoutMs": 20000,
+        "editorRows": 1000,
+        "maxRows": 5000,
+        "mcpMaxRows": 500,
+        "resultBytes": 8388608,
+        "memoryBudgetBytes": 268435456,
+        "heapLimitBytes": 536870912,
+        "concurrentQueries": 1
+      },
+      "couldGoHigher": false
+    },
+    {
+      "machine": {
+        "totalMemoryBytes": null,
+        "logicalCpus": 2,
+        "arch": "x86_64",
+        "os": "freebsd",
+        "raspberryPi": false,
+        "recommended": "economy"
+      },
+      "choice": "powerful",
+      "profile": "powerful",
+      "limits": {
+        "queryTimeoutMs": 60000,
+        "reportTimeoutMs": 120000,
+        "cardTimeoutMs": 60000,
+        "maxTimeoutMs": 300000,
+        "mcpQueryTimeoutMs": 30000,
+        "mcpReportTimeoutMs": 50000,
+        "editorRows": 10000,
+        "maxRows": 50000,
+        "mcpMaxRows": 500,
+        "resultBytes": 8388608,
+        "memoryBudgetBytes": 268435456,
+        "heapLimitBytes": 536870912,
+        "concurrentQueries": 1
+      },
+      "couldGoHigher": false
+    }
+  ]
+}

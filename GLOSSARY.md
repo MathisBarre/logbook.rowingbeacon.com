@@ -119,3 +119,49 @@ _Éviter_ : migration, restauration (pour un projet efa2)
 **Export efa2** :
 Production, à partir des données du club, d'un projet efa2 qu'efa2 sait rouvrir.
 _Éviter_ : sauvegarde (pour un projet efa2)
+
+## Statistiques
+
+**Rapport** :
+Statistique prête à l'emploi, avec ses paramètres et son graphique, que l'on peut personnaliser.
+_Éviter_ : requête prédéfinie, report
+
+**Tableau de bord** :
+Page d'accueil des statistiques, faite des graphiques épinglés.
+_Éviter_ : dashboard, accueil
+
+**Requête** :
+Instruction SQL de lecture, écrite dans l'Explorer, par l'IA ou par un assistant IA branché par MCP, enregistrée avec ses paramètres et son graphique.
+_Éviter_ : query, script
+
+**Épingler** :
+Ajouter un rapport ou une requête au tableau de bord.
+_Éviter_ : mettre en favori
+
+**Saison** :
+Période de douze mois qui commence le premier jour du mois choisi dans Gestion › Statistiques et IA (août par défaut), désignée par ses deux années, par exemple 2025-2026.
+_Éviter_ : exercice, année (pour une saison)
+
+**Rameur actif** :
+Rameur présent dans au moins une sortie d'aviron pendant la période, hors bateaux et rameurs exclus des statistiques.
+_Éviter_ : membre actif (un invité peut être actif), pratiquant
+
+**Participation** :
+Place d'un rameur ou d'un barreur dans l'équipage d'une sortie ; un huit barré compte neuf participations.
+_Éviter_ : présence, passage
+
+**Pseudonymisation** :
+Remplacement des noms des rameurs par un code stable (`R-1A2B3C4D`) dans les statistiques lues par un assistant IA branché par MCP. Contrairement à l'anonymisation, le club peut retrouver la personne.
+_Éviter_ : anonymisation (pour ce cas)
+
+**Proposition** :
+Requête et graphique envoyés par un assistant IA du poste (Claude Desktop, Claude Code, Codex, Cursor…) par MCP, en attente d'acceptation dans l'Explorer, avec le nom de l'assistant.
+_Éviter_ : suggestion
+
+**Fournisseur d'IA** :
+Service qui répond aux questions de l'assistant intégré : Anthropic, OpenAI ou un serveur compatible OpenAI. Chaque fournisseur a sa propre clé sur chaque poste.
+_Éviter_ : modèle (un fournisseur propose plusieurs modèles), IA (pour le fournisseur)
+
+**Serveur compatible OpenAI** :
+Serveur qui parle l'API Chat Completions d'OpenAI (Mistral, OpenRouter, ou un modèle local avec Ollama, LM Studio…), désigné par son adresse ; il ne reçoit la structure des tables que s'il n'est pas sur ce poste.
+_Éviter_ : serveur OpenAI, API locale

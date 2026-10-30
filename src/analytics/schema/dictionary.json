@@ -1,0 +1,1853 @@
+{
+  "version": 1,
+  "objects": [
+    {
+      "name": "v_settings",
+      "kind": "view",
+      "level": "simple",
+      "requires": [],
+      "description": "Session constants: season start month, local time of the request and current season.",
+      "columns": [
+        {
+          "name": "season_start_month",
+          "type": "integer",
+          "semantic": "month",
+          "description": "First month of the club season (1-12)."
+        },
+        {
+          "name": "now",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "Local time of the request, YYYY-MM-DDTHH:mm."
+        },
+        {
+          "name": "today",
+          "type": "text",
+          "semantic": "date",
+          "description": "Local date of the request, YYYY-MM-DD."
+        },
+        {
+          "name": "current_season",
+          "type": "integer",
+          "semantic": "season",
+          "description": "Season containing today, as its start year."
+        }
+      ]
+    },
+    {
+      "name": "v_seasons",
+      "kind": "view",
+      "level": "simple",
+      "requires": ["outing"],
+      "description": "One row per season from the first outing to today.",
+      "columns": [
+        {
+          "name": "season",
+          "type": "integer",
+          "semantic": "season",
+          "description": "Season, as its start year."
+        },
+        {
+          "name": "start_date",
+          "type": "text",
+          "semantic": "date",
+          "description": "First day of the season."
+        },
+        {
+          "name": "end_date",
+          "type": "text",
+          "semantic": "date",
+          "description": "Day after the last day of the season (exclusive bound)."
+        },
+        {
+          "name": "cutoff_date",
+          "type": "text",
+          "semantic": "date",
+          "description": "end_date or tomorrow, whichever comes first (exclusive bound for a season in progress)."
+        },
+        {
+          "name": "is_current",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 for the season containing today."
+        }
+      ]
+    },
+    {
+      "name": "v_days",
+      "kind": "view",
+      "level": "simple",
+      "requires": ["outing"],
+      "description": "Calendar from the first outing to today, one row per day, to show days without outings.",
+      "columns": [
+        {
+          "name": "day",
+          "type": "text",
+          "semantic": "date",
+          "description": "Day, YYYY-MM-DD."
+        },
+        {
+          "name": "year",
+          "type": "integer",
+          "semantic": "year",
+          "description": "Calendar year."
+        },
+        {
+          "name": "month",
+          "type": "integer",
+          "semantic": "month",
+          "description": "Calendar month, 1-12."
+        },
+        {
+          "name": "weekday",
+          "type": "integer",
+          "semantic": "weekday",
+          "description": "ISO weekday, 1 = Monday to 7 = Sunday."
+        },
+        {
+          "name": "season",
+          "type": "integer",
+          "semantic": "season",
+          "description": "Season of the day, as its start year."
+        }
+      ]
+    },
+    {
+      "name": "v_boats",
+      "kind": "view",
+      "level": "simple",
+      "requires": ["boat", "boat_configuration"],
+      "description": "One row per boat (merged duplicates excluded) with its default configuration.",
+      "columns": [
+        {
+          "name": "boat_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Boat id."
+        },
+        {
+          "name": "boat_name",
+          "type": "text",
+          "semantic": "name",
+          "description": "Boat name."
+        },
+        {
+          "name": "seats",
+          "type": "integer",
+          "semantic": "integer",
+          "description": "Rowing seats of the boat configuration, cox excluded; NULL when unknown."
+        },
+        {
+          "name": "rigging",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["scull", "sweep"],
+          "description": "Rigging of the configuration; NULL when unknown."
+        },
+        {
+          "name": "coxed",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when the configuration has a cox seat."
+        },
+        {
+          "name": "boat_class",
+          "type": "text",
+          "semantic": "code",
+          "description": "Boat class in rowing notation (1x, 2-, 2x, 4x+, 8+…); 4 or 4+ when the rigging is unknown; NULL when the seats are unknown."
+        },
+        {
+          "name": "crew_capacity",
+          "type": "integer",
+          "semantic": "integer",
+          "description": "Full crew: rowing seats plus cox; NULL when the seats are unknown."
+        },
+        {
+          "name": "is_in_maintenance",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "Legacy maintenance flag, no longer written (always 0 on current data). A boat is out of service while it has an open (fixed_at IS NULL) damage of severity 'unusable' in v_damages; this exists without the damages module too."
+        },
+        {
+          "name": "exclude_from_stats",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when the boat is excluded from statistics."
+        },
+        {
+          "name": "is_archived",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when the boat is archived."
+        },
+        {
+          "name": "build_year",
+          "type": "integer",
+          "semantic": "year",
+          "description": "Build year; NULL when unknown."
+        },
+        {
+          "name": "purchase_date",
+          "type": "text",
+          "semantic": "date",
+          "description": "Purchase date; NULL when unknown."
+        },
+        {
+          "name": "manufacturer",
+          "type": "text",
+          "semantic": "name",
+          "description": "Manufacturer; NULL when unknown."
+        },
+        {
+          "name": "model",
+          "type": "text",
+          "semantic": "name",
+          "description": "Model; NULL when unknown."
+        },
+        {
+          "name": "owner",
+          "type": "text",
+          "semantic": "name",
+          "class": "personal",
+          "description": "Owner of the boat (often a member's name for a private boat); NULL when unknown and in pseudonymised mode."
+        }
+      ]
+    },
+    {
+      "name": "v_rowers",
+      "kind": "view",
+      "level": "simple",
+      "requires": ["rower", "outing_crew", "outing"],
+      "description": "One row per rower record (merged duplicates excluded); contact data is never available.",
+      "columns": [
+        {
+          "name": "rower_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Rower id."
+        },
+        {
+          "name": "rower_code",
+          "type": "text",
+          "semantic": "id",
+          "description": "Stable pseudonymous code of the rower, R-XXXXXXXX."
+        },
+        {
+          "name": "display_name",
+          "type": "text",
+          "semantic": "name",
+          "class": "personal",
+          "description": "First and last name of the rower; NULL in pseudonymised mode."
+        },
+        {
+          "name": "rower_status",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["member", "guest", "other"],
+          "description": "Status of the rower."
+        },
+        {
+          "name": "gender",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["female", "male", "other"],
+          "description": "Gender; NULL when unknown."
+        },
+        {
+          "name": "age_category",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["J10", "J12", "J14", "J16", "J18", "Senior"],
+          "description": "Age category; NULL when unknown."
+        },
+        {
+          "name": "seriousness",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["recreational", "competitor"],
+          "description": "Rower type; NULL when unknown."
+        },
+        {
+          "name": "birth_year",
+          "type": "integer",
+          "semantic": "year",
+          "class": "personal",
+          "description": "Birth year; NULL when unknown or in pseudonymised mode."
+        },
+        {
+          "name": "exclude_from_stats",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when the rower is excluded from statistics."
+        },
+        {
+          "name": "is_archived",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when the rower is archived."
+        },
+        {
+          "name": "is_anonymized",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when the rower was anonymised (name removed, outings kept)."
+        },
+        {
+          "name": "first_outing_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "Departure of the first outing of the rower, any role; NULL without outing."
+        },
+        {
+          "name": "last_outing_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "Departure of the last outing of the rower, any role; NULL without outing."
+        },
+        {
+          "name": "outing_count",
+          "type": "integer",
+          "semantic": "integer",
+          "description": "Number of outings ever, any role."
+        }
+      ]
+    },
+    {
+      "name": "v_routes",
+      "kind": "view",
+      "level": "simple",
+      "requires": ["route"],
+      "description": "One row per route (merged duplicates excluded).",
+      "columns": [
+        {
+          "name": "route_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Route id."
+        },
+        {
+          "name": "route_name",
+          "type": "text",
+          "semantic": "name",
+          "description": "Route name."
+        },
+        {
+          "name": "distance_m",
+          "type": "integer",
+          "semantic": "metres",
+          "description": "Route distance in metres; NULL when unknown or 0."
+        },
+        {
+          "name": "distance_km",
+          "type": "real",
+          "semantic": "km",
+          "description": "Route distance in kilometres; NULL when unknown."
+        },
+        {
+          "name": "is_archived",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when the route is archived."
+        }
+      ]
+    },
+    {
+      "name": "v_outing_types",
+      "kind": "view",
+      "level": "simple",
+      "requires": ["outing_type"],
+      "description": "Outing types: the built-in ones and the custom types of the club.",
+      "columns": [
+        {
+          "name": "outing_type_code",
+          "type": "text",
+          "semantic": "code",
+          "codes": [
+            "normal",
+            "training",
+            "regatta",
+            "training_camp",
+            "instruction",
+            "tour",
+            "club_trip",
+            "ergometer",
+            "motorboat"
+          ],
+          "description": "Outing type code: built-in or custom."
+        },
+        {
+          "name": "custom_label",
+          "type": "text",
+          "semantic": "name",
+          "description": "Label of a custom type; NULL for built-in types, which the app translates."
+        },
+        {
+          "name": "is_builtin",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 for built-in types."
+        },
+        {
+          "name": "position",
+          "type": "integer",
+          "semantic": "integer",
+          "description": "Display order."
+        },
+        {
+          "name": "is_archived",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when the type is archived."
+        }
+      ]
+    },
+    {
+      "name": "v_outings",
+      "kind": "view",
+      "level": "simple",
+      "requires": [
+        "outing",
+        "outing_crew",
+        "boat",
+        "boat_configuration",
+        "route"
+      ],
+      "description": "One row per outing, with its boat, class, route, dates split for grouping, season, duration, distance and crew counts.",
+      "columns": [
+        {
+          "name": "outing_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Outing id."
+        },
+        {
+          "name": "boat_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Boat id."
+        },
+        {
+          "name": "boat_name",
+          "type": "text",
+          "semantic": "name",
+          "description": "Boat name."
+        },
+        {
+          "name": "boat_class",
+          "type": "text",
+          "semantic": "code",
+          "description": "Boat class in rowing notation (1x, 2-, 2x, 4x+, 8+…); 4 or 4+ when the rigging is unknown; NULL when the seats are unknown."
+        },
+        {
+          "name": "seats",
+          "type": "integer",
+          "semantic": "integer",
+          "description": "Rowing seats of the boat configuration, cox excluded; NULL when unknown."
+        },
+        {
+          "name": "rigging",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["scull", "sweep"],
+          "description": "Rigging of the configuration; NULL when unknown."
+        },
+        {
+          "name": "coxed",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when the configuration has a cox seat."
+        },
+        {
+          "name": "route_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Route id; NULL without route."
+        },
+        {
+          "name": "route_name",
+          "type": "text",
+          "semantic": "name",
+          "description": "Route name; NULL without route."
+        },
+        {
+          "name": "outing_type_code",
+          "type": "text",
+          "semantic": "code",
+          "codes": [
+            "normal",
+            "training",
+            "regatta",
+            "training_camp",
+            "instruction",
+            "tour",
+            "club_trip",
+            "ergometer",
+            "motorboat"
+          ],
+          "description": "Outing type: a built-in code or a custom code of the club; 'normal' when unset."
+        },
+        {
+          "name": "start_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "Departure, local time YYYY-MM-DDTHH:mm."
+        },
+        {
+          "name": "end_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "Return, local time; NULL while the boat is still on the water or when the outing was never closed."
+        },
+        {
+          "name": "estimated_end_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "Planned return, local time; NULL when none was entered."
+        },
+        {
+          "name": "start_date",
+          "type": "text",
+          "semantic": "date",
+          "description": "Departure date YYYY-MM-DD."
+        },
+        {
+          "name": "start_month_key",
+          "type": "text",
+          "semantic": "month_key",
+          "description": "Departure month YYYY-MM."
+        },
+        {
+          "name": "start_year",
+          "type": "integer",
+          "semantic": "year",
+          "description": "Calendar year of the departure."
+        },
+        {
+          "name": "start_month",
+          "type": "integer",
+          "semantic": "month",
+          "description": "Calendar month of the departure, 1-12."
+        },
+        {
+          "name": "start_weekday",
+          "type": "integer",
+          "semantic": "weekday",
+          "description": "ISO weekday of the departure, 1 = Monday to 7 = Sunday."
+        },
+        {
+          "name": "start_hour",
+          "type": "integer",
+          "semantic": "hour",
+          "description": "Hour of the departure, 0-23."
+        },
+        {
+          "name": "start_week",
+          "type": "text",
+          "semantic": "week_start",
+          "description": "Monday of the departure week, YYYY-MM-DD."
+        },
+        {
+          "name": "season",
+          "type": "integer",
+          "semantic": "season",
+          "description": "Season, as its start year (2025 = the season starting in 2025)."
+        },
+        {
+          "name": "season_week",
+          "type": "integer",
+          "semantic": "integer",
+          "description": "Week number counted from the season start, 1-53."
+        },
+        {
+          "name": "is_ongoing",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when the outing has no return yet."
+        },
+        {
+          "name": "is_multi_day",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when the return is on another day than the departure."
+        },
+        {
+          "name": "duration_min",
+          "type": "integer",
+          "semantic": "minutes",
+          "description": "Duration in minutes; NULL when ongoing or when the return is before the departure."
+        },
+        {
+          "name": "has_start_time",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "0 for imported outings without a departure time (stored as 00:00)."
+        },
+        {
+          "name": "is_rowing",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "0 for motorboat outings (coaching launches)."
+        },
+        {
+          "name": "distance_m",
+          "type": "integer",
+          "semantic": "metres",
+          "description": "Distance in metres: recorded distance, else the route distance; NULL when unknown."
+        },
+        {
+          "name": "distance_km",
+          "type": "real",
+          "semantic": "km",
+          "description": "Distance in kilometres: recorded distance, else the route distance; NULL when unknown."
+        },
+        {
+          "name": "distance_source",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["recorded", "route"],
+          "description": "Where the distance comes from; NULL when unknown."
+        },
+        {
+          "name": "is_coached",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when the outing was coached; NULL when not recorded."
+        },
+        {
+          "name": "captain_rower_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Rower id of the captain; NULL without captain."
+        },
+        {
+          "name": "comment",
+          "type": "text",
+          "semantic": "free_text",
+          "class": "freeText",
+          "description": "Comment entered on the outing; NULL in pseudonymised mode."
+        },
+        {
+          "name": "crew_size",
+          "type": "integer",
+          "semantic": "integer",
+          "description": "Crew members, rowers and cox."
+        },
+        {
+          "name": "rower_count",
+          "type": "integer",
+          "semantic": "integer",
+          "description": "Crew members with the rower role (outings migrated from v1 count coxes as rowers)."
+        },
+        {
+          "name": "cox_count",
+          "type": "integer",
+          "semantic": "integer",
+          "description": "Crew members with the cox role."
+        },
+        {
+          "name": "return_delay_min",
+          "type": "integer",
+          "semantic": "minutes",
+          "description": "Return minus planned return, in minutes; negative = early; NULL when either is missing."
+        },
+        {
+          "name": "counts_in_stats",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "0 when the boat is excluded from statistics."
+        }
+      ]
+    },
+    {
+      "name": "v_outing_rowers",
+      "kind": "view",
+      "level": "simple",
+      "requires": [
+        "outing",
+        "outing_crew",
+        "rower",
+        "boat",
+        "boat_configuration",
+        "route"
+      ],
+      "description": "One row per crew member per outing: the unit for participations, active rowers and km per rower.",
+      "columns": [
+        {
+          "name": "outing_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Outing id."
+        },
+        {
+          "name": "boat_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Boat id."
+        },
+        {
+          "name": "boat_name",
+          "type": "text",
+          "semantic": "name",
+          "description": "Boat name."
+        },
+        {
+          "name": "boat_class",
+          "type": "text",
+          "semantic": "code",
+          "description": "Boat class in rowing notation (1x, 2-, 2x, 4x+, 8+…); 4 or 4+ when the rigging is unknown; NULL when the seats are unknown."
+        },
+        {
+          "name": "route_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Route id; NULL without route."
+        },
+        {
+          "name": "route_name",
+          "type": "text",
+          "semantic": "name",
+          "description": "Route name; NULL without route."
+        },
+        {
+          "name": "outing_type_code",
+          "type": "text",
+          "semantic": "code",
+          "codes": [
+            "normal",
+            "training",
+            "regatta",
+            "training_camp",
+            "instruction",
+            "tour",
+            "club_trip",
+            "ergometer",
+            "motorboat"
+          ],
+          "description": "Outing type: a built-in code or a custom code of the club; 'normal' when unset."
+        },
+        {
+          "name": "start_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "Departure, local time YYYY-MM-DDTHH:mm."
+        },
+        {
+          "name": "end_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "Return, local time; NULL while the boat is still on the water or when the outing was never closed."
+        },
+        {
+          "name": "start_date",
+          "type": "text",
+          "semantic": "date",
+          "description": "Departure date YYYY-MM-DD."
+        },
+        {
+          "name": "start_month_key",
+          "type": "text",
+          "semantic": "month_key",
+          "description": "Departure month YYYY-MM."
+        },
+        {
+          "name": "start_year",
+          "type": "integer",
+          "semantic": "year",
+          "description": "Calendar year of the departure."
+        },
+        {
+          "name": "start_month",
+          "type": "integer",
+          "semantic": "month",
+          "description": "Calendar month of the departure, 1-12."
+        },
+        {
+          "name": "start_weekday",
+          "type": "integer",
+          "semantic": "weekday",
+          "description": "ISO weekday of the departure, 1 = Monday to 7 = Sunday."
+        },
+        {
+          "name": "start_hour",
+          "type": "integer",
+          "semantic": "hour",
+          "description": "Hour of the departure, 0-23."
+        },
+        {
+          "name": "start_week",
+          "type": "text",
+          "semantic": "week_start",
+          "description": "Monday of the departure week, YYYY-MM-DD."
+        },
+        {
+          "name": "season",
+          "type": "integer",
+          "semantic": "season",
+          "description": "Season, as its start year (2025 = the season starting in 2025)."
+        },
+        {
+          "name": "season_week",
+          "type": "integer",
+          "semantic": "integer",
+          "description": "Week number counted from the season start, 1-53."
+        },
+        {
+          "name": "is_ongoing",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when the outing has no return yet."
+        },
+        {
+          "name": "is_multi_day",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when the return is on another day than the departure."
+        },
+        {
+          "name": "duration_min",
+          "type": "integer",
+          "semantic": "minutes",
+          "description": "Duration in minutes; NULL when ongoing or when the return is before the departure."
+        },
+        {
+          "name": "has_start_time",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "0 for imported outings without a departure time (stored as 00:00)."
+        },
+        {
+          "name": "is_rowing",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "0 for motorboat outings (coaching launches)."
+        },
+        {
+          "name": "distance_m",
+          "type": "integer",
+          "semantic": "metres",
+          "description": "Distance in metres: recorded distance, else the route distance; NULL when unknown."
+        },
+        {
+          "name": "distance_km",
+          "type": "real",
+          "semantic": "km",
+          "description": "Distance in kilometres: recorded distance, else the route distance; NULL when unknown."
+        },
+        {
+          "name": "is_coached",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when the outing was coached; NULL when not recorded."
+        },
+        {
+          "name": "rower_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Rower id."
+        },
+        {
+          "name": "rower_code",
+          "type": "text",
+          "semantic": "id",
+          "description": "Stable pseudonymous code of the rower, R-XXXXXXXX."
+        },
+        {
+          "name": "display_name",
+          "type": "text",
+          "semantic": "name",
+          "class": "personal",
+          "description": "First and last name of the rower; NULL in pseudonymised mode."
+        },
+        {
+          "name": "rower_status",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["member", "guest", "other"],
+          "description": "Status of the rower."
+        },
+        {
+          "name": "gender",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["female", "male", "other"],
+          "description": "Gender; NULL when unknown."
+        },
+        {
+          "name": "age_category",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["J10", "J12", "J14", "J16", "J18", "Senior"],
+          "description": "Age category; NULL when unknown."
+        },
+        {
+          "name": "seriousness",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["recreational", "competitor"],
+          "description": "Rower type; NULL when unknown."
+        },
+        {
+          "name": "age_in_year",
+          "type": "integer",
+          "semantic": "integer",
+          "class": "personal",
+          "description": "Outing year minus birth year; NULL when unknown or in pseudonymised mode."
+        },
+        {
+          "name": "role",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["rower", "cox"],
+          "description": "Role in the crew."
+        },
+        {
+          "name": "seat_position",
+          "type": "integer",
+          "semantic": "integer",
+          "description": "Seat position in the crew."
+        },
+        {
+          "name": "is_captain",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when this crew member was the captain."
+        },
+        {
+          "name": "counts_in_stats",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "0 when the boat or the rower is excluded from statistics."
+        }
+      ]
+    },
+    {
+      "name": "v_incidents",
+      "kind": "view",
+      "level": "simple",
+      "requires": ["incident", "boat"],
+      "description": "One row per incident reported on a boat.",
+      "columns": [
+        {
+          "name": "incident_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Incident id."
+        },
+        {
+          "name": "boat_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Boat id."
+        },
+        {
+          "name": "boat_name",
+          "type": "text",
+          "semantic": "name",
+          "description": "Boat name."
+        },
+        {
+          "name": "outing_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Outing during which it happened; NULL when not linked."
+        },
+        {
+          "name": "occurred_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "When it happened, local time."
+        },
+        {
+          "name": "occurred_date",
+          "type": "text",
+          "semantic": "date",
+          "description": "Date it happened."
+        },
+        {
+          "name": "season",
+          "type": "integer",
+          "semantic": "season",
+          "description": "Season of the incident, as its start year."
+        },
+        {
+          "name": "message",
+          "type": "text",
+          "semantic": "free_text",
+          "class": "freeText",
+          "description": "Description of the incident; NULL in pseudonymised mode."
+        }
+      ]
+    },
+    {
+      "name": "v_damages",
+      "kind": "view",
+      "level": "simple",
+      "requires": ["boat_damage", "boat"],
+      "description": "One row per damage report or unavailability of a boat (damages module).",
+      "columns": [
+        {
+          "name": "damage_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Damage id."
+        },
+        {
+          "name": "boat_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Boat id."
+        },
+        {
+          "name": "boat_name",
+          "type": "text",
+          "semantic": "name",
+          "description": "Boat name."
+        },
+        {
+          "name": "damage_kind",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["damage", "unavailable"],
+          "description": "Damage, or boat put out of service without a damage."
+        },
+        {
+          "name": "severity",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["usable", "limited", "unusable"],
+          "description": "Severity of the damage."
+        },
+        {
+          "name": "reported_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "When it was reported, local time."
+        },
+        {
+          "name": "reported_date",
+          "type": "text",
+          "semantic": "date",
+          "description": "Date it was reported."
+        },
+        {
+          "name": "season",
+          "type": "integer",
+          "semantic": "season",
+          "description": "Season of the report, as its start year."
+        },
+        {
+          "name": "fixed_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "When it was fixed; NULL while open."
+        },
+        {
+          "name": "is_open",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 while not fixed."
+        },
+        {
+          "name": "days_open",
+          "type": "integer",
+          "semantic": "integer",
+          "description": "Days from the report to the fix, or to now while open."
+        },
+        {
+          "name": "repair_cost",
+          "type": "real",
+          "semantic": "money",
+          "description": "Repair cost; NULL when unknown."
+        },
+        {
+          "name": "outing_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Outing during which it happened; NULL when not linked."
+        },
+        {
+          "name": "incident_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Linked incident; NULL when none."
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "semantic": "free_text",
+          "class": "freeText",
+          "description": "Description of the damage; NULL in pseudonymised mode."
+        }
+      ]
+    },
+    {
+      "name": "boat",
+      "kind": "table",
+      "level": "advanced",
+      "requires": ["boat"],
+      "description": "Boats of the club, including archived and merged ones (prefer v_boats).",
+      "columns": [
+        {
+          "name": "id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Boat id."
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "semantic": "name",
+          "description": "Boat name."
+        },
+        {
+          "name": "note",
+          "type": "text",
+          "semantic": "free_text",
+          "class": "freeText",
+          "description": "Free note on the boat."
+        },
+        {
+          "name": "is_in_maintenance",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "Legacy maintenance flag, no longer written (always 0 on current data); see boat_damage."
+        },
+        {
+          "name": "owner",
+          "type": "text",
+          "semantic": "name",
+          "class": "personal",
+          "description": "Owner (often a member's name for a private boat); NULL when unknown and in pseudonymised mode."
+        },
+        {
+          "name": "manufacturer",
+          "type": "text",
+          "semantic": "name",
+          "description": "Manufacturer; NULL when unknown."
+        },
+        {
+          "name": "model",
+          "type": "text",
+          "semantic": "name",
+          "description": "Model; NULL when unknown."
+        },
+        {
+          "name": "serial_number",
+          "type": "text",
+          "semantic": "name",
+          "description": "Serial number; NULL when unknown."
+        },
+        {
+          "name": "build_year",
+          "type": "integer",
+          "semantic": "year",
+          "description": "Build year; NULL when unknown."
+        },
+        {
+          "name": "purchase_date",
+          "type": "text",
+          "semantic": "date",
+          "description": "Purchase date; NULL when unknown."
+        },
+        {
+          "name": "max_crew_weight_kg",
+          "type": "real",
+          "semantic": "decimal",
+          "description": "Maximum crew weight in kilograms; NULL when unknown."
+        },
+        {
+          "name": "exclude_from_stats",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when the boat is excluded from statistics."
+        },
+        {
+          "name": "archived_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "When the boat was archived; NULL when active."
+        },
+        {
+          "name": "merged_into_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Boat this duplicate was merged into; NULL otherwise."
+        },
+        {
+          "name": "created_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "ISO date-time in UTC when the record was created."
+        },
+        {
+          "name": "updated_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "ISO date-time in UTC of the last change."
+        }
+      ]
+    },
+    {
+      "name": "boat_configuration",
+      "kind": "table",
+      "level": "advanced",
+      "requires": ["boat_configuration"],
+      "description": "Ways a boat can be rigged (4x / 4-); seats counts rowing seats only.",
+      "columns": [
+        {
+          "name": "id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Configuration id."
+        },
+        {
+          "name": "boat_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Boat id."
+        },
+        {
+          "name": "position",
+          "type": "integer",
+          "semantic": "integer",
+          "description": "Display order."
+        },
+        {
+          "name": "seats",
+          "type": "integer",
+          "semantic": "integer",
+          "description": "Rowing seats, cox excluded; NULL when unknown."
+        },
+        {
+          "name": "rigging",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["scull", "sweep"],
+          "description": "Rigging; NULL when unknown."
+        },
+        {
+          "name": "coxed",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 with a cox seat."
+        },
+        {
+          "name": "hull_type",
+          "type": "text",
+          "semantic": "code",
+          "description": "Hull type imported from efa2; NULL when unknown."
+        },
+        {
+          "name": "is_default",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 for the default configuration of the boat."
+        },
+        {
+          "name": "archived_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "When the configuration was archived; NULL when active."
+        }
+      ]
+    },
+    {
+      "name": "rower",
+      "kind": "table",
+      "level": "advanced",
+      "requires": ["rower"],
+      "description": "Rowers of the club, including archived and merged ones (prefer v_rowers). Contact columns always read as NULL.",
+      "columns": [
+        {
+          "name": "id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Rower id."
+        },
+        {
+          "name": "first_name",
+          "type": "text",
+          "semantic": "name",
+          "class": "personal",
+          "description": "First name; NULL in pseudonymised mode."
+        },
+        {
+          "name": "last_name",
+          "type": "text",
+          "semantic": "name",
+          "class": "personal",
+          "description": "Last name; NULL in pseudonymised mode."
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["member", "guest", "other"],
+          "description": "Status of the rower."
+        },
+        {
+          "name": "age_category",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["J10", "J12", "J14", "J16", "J18", "Senior"],
+          "description": "Age category; NULL when unknown."
+        },
+        {
+          "name": "seriousness",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["recreational", "competitor"],
+          "description": "Rower type; NULL when unknown."
+        },
+        {
+          "name": "gender",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["female", "male", "other"],
+          "description": "Gender; NULL when unknown."
+        },
+        {
+          "name": "birth_date",
+          "type": "text",
+          "semantic": "date",
+          "class": "personal",
+          "description": "Birth date; NULL when unknown or in pseudonymised mode."
+        },
+        {
+          "name": "email",
+          "type": "text",
+          "semantic": "free_text",
+          "class": "contact",
+          "description": "Contact data, never available to statistics."
+        },
+        {
+          "name": "phone",
+          "type": "text",
+          "semantic": "free_text",
+          "class": "contact",
+          "description": "Contact data, never available to statistics."
+        },
+        {
+          "name": "license_number",
+          "type": "text",
+          "semantic": "free_text",
+          "class": "contact",
+          "description": "Contact data, never available to statistics."
+        },
+        {
+          "name": "address",
+          "type": "text",
+          "semantic": "free_text",
+          "class": "contact",
+          "description": "Contact data, never available to statistics."
+        },
+        {
+          "name": "note",
+          "type": "text",
+          "semantic": "free_text",
+          "class": "contact",
+          "description": "Private note, never available to statistics."
+        },
+        {
+          "name": "exclude_from_stats",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when the rower is excluded from statistics."
+        },
+        {
+          "name": "archived_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "When the rower was archived; NULL when active."
+        },
+        {
+          "name": "merged_into_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Rower this duplicate was merged into; NULL otherwise."
+        },
+        {
+          "name": "anonymized_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "When the rower was anonymised; NULL otherwise."
+        },
+        {
+          "name": "created_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "ISO date-time in UTC when the record was created."
+        },
+        {
+          "name": "updated_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "ISO date-time in UTC of the last change."
+        }
+      ]
+    },
+    {
+      "name": "route",
+      "kind": "table",
+      "level": "advanced",
+      "requires": ["route"],
+      "description": "Routes of the club, including archived and merged ones (prefer v_routes).",
+      "columns": [
+        {
+          "name": "id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Route id."
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "semantic": "name",
+          "description": "Route name."
+        },
+        {
+          "name": "distance_m",
+          "type": "integer",
+          "semantic": "metres",
+          "description": "Distance in metres; NULL or 0 when unknown."
+        },
+        {
+          "name": "note",
+          "type": "text",
+          "semantic": "free_text",
+          "class": "freeText",
+          "description": "Free note on the route."
+        },
+        {
+          "name": "archived_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "When the route was archived; NULL when active."
+        },
+        {
+          "name": "merged_into_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Route this duplicate was merged into; NULL otherwise."
+        },
+        {
+          "name": "created_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "ISO date-time in UTC when the record was created."
+        },
+        {
+          "name": "updated_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "ISO date-time in UTC of the last change."
+        }
+      ]
+    },
+    {
+      "name": "outing_type",
+      "kind": "table",
+      "level": "advanced",
+      "requires": ["outing_type"],
+      "description": "Outing types: built-in codes (translated by the app) and custom ones (with a label).",
+      "columns": [
+        {
+          "name": "code",
+          "type": "text",
+          "semantic": "code",
+          "codes": [
+            "normal",
+            "training",
+            "regatta",
+            "training_camp",
+            "instruction",
+            "tour",
+            "club_trip",
+            "ergometer",
+            "motorboat"
+          ],
+          "description": "Outing type code."
+        },
+        {
+          "name": "label",
+          "type": "text",
+          "semantic": "name",
+          "description": "Label of a custom type; NULL for built-in types."
+        },
+        {
+          "name": "position",
+          "type": "integer",
+          "semantic": "integer",
+          "description": "Display order."
+        },
+        {
+          "name": "is_builtin",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 for built-in types."
+        },
+        {
+          "name": "archived_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "When the type was archived; NULL when active."
+        }
+      ]
+    },
+    {
+      "name": "outing",
+      "kind": "table",
+      "level": "advanced",
+      "requires": ["outing"],
+      "description": "Outings as stored (prefer v_outings). Dates are local wall-clock text YYYY-MM-DDTHH:mm.",
+      "columns": [
+        {
+          "name": "id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Outing id."
+        },
+        {
+          "name": "boat_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Boat id."
+        },
+        {
+          "name": "boat_configuration_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Configuration used; NULL when not recorded."
+        },
+        {
+          "name": "route_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Route id; NULL without route."
+        },
+        {
+          "name": "outing_type_code",
+          "type": "text",
+          "semantic": "code",
+          "codes": [
+            "normal",
+            "training",
+            "regatta",
+            "training_camp",
+            "instruction",
+            "tour",
+            "club_trip",
+            "ergometer",
+            "motorboat"
+          ],
+          "description": "Outing type; NULL means normal."
+        },
+        {
+          "name": "start_date_time",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "Departure, local time."
+        },
+        {
+          "name": "estimated_end_date_time",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "Planned return, local time; NULL when none."
+        },
+        {
+          "name": "end_date_time",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "Return, local time; NULL while ongoing."
+        },
+        {
+          "name": "distance_m",
+          "type": "integer",
+          "semantic": "metres",
+          "description": "Distance entered on return, in metres; NULL or 0 when unknown."
+        },
+        {
+          "name": "comment",
+          "type": "text",
+          "semantic": "free_text",
+          "class": "freeText",
+          "description": "Comment entered on the outing."
+        },
+        {
+          "name": "has_been_coached",
+          "type": "boolean",
+          "semantic": "boolean",
+          "description": "1 when coached, 0 when not; NULL when not recorded."
+        },
+        {
+          "name": "captain_rower_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Rower id of the captain; NULL without captain."
+        },
+        {
+          "name": "created_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "ISO date-time in UTC when the record was created."
+        },
+        {
+          "name": "updated_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "ISO date-time in UTC of the last change."
+        }
+      ]
+    },
+    {
+      "name": "outing_crew",
+      "kind": "table",
+      "level": "advanced",
+      "requires": ["outing_crew"],
+      "description": "Crew members of each outing.",
+      "columns": [
+        {
+          "name": "outing_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Outing id."
+        },
+        {
+          "name": "rower_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Rower id."
+        },
+        {
+          "name": "role",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["rower", "cox"],
+          "description": "Role in the crew (outings migrated from v1 count coxes as rowers)."
+        },
+        {
+          "name": "position",
+          "type": "integer",
+          "semantic": "integer",
+          "description": "Seat position."
+        }
+      ]
+    },
+    {
+      "name": "incident",
+      "kind": "table",
+      "level": "advanced",
+      "requires": ["incident"],
+      "description": "Incidents reported on boats.",
+      "columns": [
+        {
+          "name": "id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Incident id."
+        },
+        {
+          "name": "outing_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Outing during which it happened; NULL when not linked."
+        },
+        {
+          "name": "boat_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Boat id."
+        },
+        {
+          "name": "message",
+          "type": "text",
+          "semantic": "free_text",
+          "class": "freeText",
+          "description": "Description of the incident."
+        },
+        {
+          "name": "occurred_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "When it happened, local time."
+        },
+        {
+          "name": "created_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "ISO date-time in UTC when the record was created."
+        }
+      ]
+    },
+    {
+      "name": "rower_group",
+      "kind": "table",
+      "level": "advanced",
+      "requires": ["rower_group"],
+      "description": "Groups of rowers imported from efa2.",
+      "columns": [
+        {
+          "name": "id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Group id."
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "semantic": "name",
+          "class": "personal",
+          "description": "Group name (it can name a family or a person); NULL in pseudonymised mode, group by id instead."
+        },
+        {
+          "name": "color",
+          "type": "text",
+          "semantic": "code",
+          "description": "Display colour; NULL when none."
+        },
+        {
+          "name": "archived_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "When the group was archived; NULL when active."
+        },
+        {
+          "name": "created_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "ISO date-time in UTC when the record was created."
+        },
+        {
+          "name": "updated_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "ISO date-time in UTC of the last change."
+        }
+      ]
+    },
+    {
+      "name": "rower_group_member",
+      "kind": "table",
+      "level": "advanced",
+      "requires": ["rower_group_member"],
+      "description": "Members of each rower group.",
+      "columns": [
+        {
+          "name": "group_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Group id."
+        },
+        {
+          "name": "rower_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Rower id."
+        }
+      ]
+    },
+    {
+      "name": "boat_damage",
+      "kind": "table",
+      "level": "advanced",
+      "requires": ["boat_damage"],
+      "description": "Damage reports and unavailabilities of boats (damages module; prefer v_damages).",
+      "columns": [
+        {
+          "name": "id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Damage id."
+        },
+        {
+          "name": "boat_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Boat id."
+        },
+        {
+          "name": "kind",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["damage", "unavailable"],
+          "description": "Damage, or boat put out of service without a damage."
+        },
+        {
+          "name": "severity",
+          "type": "text",
+          "semantic": "code",
+          "codes": ["usable", "limited", "unusable"],
+          "description": "Severity."
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "semantic": "free_text",
+          "class": "freeText",
+          "description": "Description of the damage."
+        },
+        {
+          "name": "reported_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "When it was reported, local time."
+        },
+        {
+          "name": "reported_by_rower_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Rower who reported it; NULL when unknown."
+        },
+        {
+          "name": "outing_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Outing during which it happened; NULL when not linked."
+        },
+        {
+          "name": "incident_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Linked incident; NULL when none."
+        },
+        {
+          "name": "fixed_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "When it was fixed; NULL while open."
+        },
+        {
+          "name": "fixed_by_rower_id",
+          "type": "text",
+          "semantic": "id",
+          "description": "Rower who fixed it; NULL when unknown."
+        },
+        {
+          "name": "repair_note",
+          "type": "text",
+          "semantic": "free_text",
+          "class": "freeText",
+          "description": "Note on the repair."
+        },
+        {
+          "name": "repair_cost",
+          "type": "real",
+          "semantic": "money",
+          "description": "Repair cost; NULL when unknown."
+        },
+        {
+          "name": "created_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "ISO date-time in UTC when the record was created."
+        },
+        {
+          "name": "updated_at",
+          "type": "text",
+          "semantic": "datetime",
+          "description": "ISO date-time in UTC of the last change."
+        }
+      ]
+    }
+  ]
+}

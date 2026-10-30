@@ -1,4 +1,3 @@
- 
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
 import { cn } from "../utils/utils";
 import React from "react";
@@ -99,9 +98,8 @@ const AlertDialogAction = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Action>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
 >(({ className, ...props }, ref) => (
-  <AlertDialogPrimitive.Action ref={ref} className={cn(className)}>
-    {props.children}
-  </AlertDialogPrimitive.Action>
+  // `asChild` and handlers pass through: no button nested in a button.
+  <AlertDialogPrimitive.Action ref={ref} className={cn(className)} {...props} />
 ));
 AlertDialogAction.displayName = AlertDialogPrimitive.Action.displayName;
 
@@ -112,9 +110,8 @@ const AlertDialogCancel = React.forwardRef<
   <AlertDialogPrimitive.Cancel
     ref={ref}
     className={cn("mt-2 sm:mt-0", className)}
-  >
-    {props.children}
-  </AlertDialogPrimitive.Cancel>
+    {...props}
+  />
 ));
 AlertDialogCancel.displayName = AlertDialogPrimitive.Cancel.displayName;
 

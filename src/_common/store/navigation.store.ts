@@ -1,6 +1,11 @@
 import { create } from "zustand";
 
-export type AdminPage = "boathouse" | "logbook" | "parameters" | "stats";
+export type AdminPage =
+  | "boathouse"
+  | "logbook"
+  | "parameters"
+  | "stats"
+  | "reservations";
 
 interface ZustandNavigation {
   page: AdminPage;

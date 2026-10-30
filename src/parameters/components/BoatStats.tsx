@@ -18,6 +18,11 @@ import {
 import { SeasonSelector } from "../../stats/components/SeasonSelector";
 import { getSeasonDate, Season } from "../../_common/utils/seasons";
 import { useGetFirstAndLastRegisteredSessionDate } from "../../stats/utils/getFirstAndLastRegisteredSessionDate";
+import { useModule } from "../../_common/store/modules.store";
+import { useDamageStore } from "../../_common/store/damage.store";
+import { sortDamagesChronologically } from "../../_common/business/damage.rules";
+import { DamageSeverityBadge } from "../../_common/components/damages/DamageSeverityBadge";
+import { DamageDescription } from "../../_common/components/damages/DamageFields";
 
 export const BoatStats = ({ boatId }: { boatId: string }) => {
   const { t } = useTranslation();
@@ -32,6 +37,11 @@ export const BoatStats = ({ boatId }: { boatId: string }) => {
   const { count, totalDuration } = useGetBoatStats(boatId, selectedSeason);
   const { getIncidentsByBoatId } = useIncidentStore();
   const incidents = getIncidentsByBoatId(boatId);
+  const hasDamages = useModule("damages");
+  const allDamages = useDamageStore((state) => state.damages);
+  const damages = sortDamagesChronologically(
+    allDamages.filter((damage) => damage.boatId === boatId)
+  );
 
   if (count === undefined) return <Loading />;
 
@@ -74,6 +84,55 @@ export const BoatStats = ({ boatId }: { boatId: string }) => {
           )}
         />
       </div>
+
+      {hasDamages && (
+        <div className="mt-6">
+          <h1 className="font-medium text-lg mb-4">{t("damages.title")}</h1>
+
+          {damages.length === 0 ? (
+            <p className="text-gray-500">{t("damages.noneOnBoat")}</p>
+          ) : (
+            <ul className="space-y-2">
+              {damages.map((damage) => (
+                <li
+                  key={damage.id}
+                  className="bg-white rounded-lg shadow-sm border p-4"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-gray-900">
+                      {formatDate(damage.reportedAt)}
+                    </span>
+                    <DamageSeverityBadge severity={damage.severity} />
+                    {damage.fixedAt && (
+                      <span className="text-xs text-gray-500">
+                        {t(
+                          damage.kind === "unavailable"
+                            ? "damages.unavailable.fixed"
+                            : "damages.fixed"
+                        )}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-gray-600 mt-1">
+                    <DamageDescription damage={damage} />
+                  </p>
+                  {damage.fixedAt && (
+                    <p className="text-sm text-gray-500 mt-1">
+                      {t(
+                        damage.kind === "unavailable"
+                          ? "damages.unavailable.fixedOn"
+                          : "damages.fixedOn",
+                        { date: formatDate(damage.fixedAt) }
+                      )}
+                      {damage.repairNote && ` · ${damage.repairNote}`}
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
 
       <div className="mt-6">
         <h1 className="font-medium text-lg mb-4">{t("stats.incidents")}</h1>

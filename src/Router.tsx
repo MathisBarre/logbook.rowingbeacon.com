@@ -10,6 +10,8 @@ import { OnboardingScreen } from "./onboarding/Onboarding.screen";
 import { useOnboardingStore } from "./onboarding/onboarding.store";
 import { ParametersScreen } from "./parameters/Parameters.screen";
 import { StatsScreen } from "./stats/Stats.screen";
+import { ReservationsScreen } from "./reservations/Reservations.screen";
+import { useModule } from "./_common/store/modules.store";
 import { ErrorBoundary } from "react-error-boundary";
 import { useLocaleStore } from "./_common/store/locale.store";
 import { LocaleSelectionScreen } from "./localeSelection/LocaleSelection.screen";
@@ -17,6 +19,8 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { bootstrapClubData } from "./_common/database/bootstrap";
 import { startAutoBackups } from "./_common/backup/backup.tauri";
+import { startUpdateChecks } from "./_common/update/update.tauri";
+import { UpdateDialog } from "./_common/update/UpdateDialog";
 import Loading from "./_common/components/Loading";
 import { getErrorMessage } from "./_common/utils/error";
 import { changeLanguage } from "./_common/i18n/config";
@@ -30,6 +34,12 @@ export function Router() {
     navigation: { page },
     setPage,
   } = useNavigationStore();
+
+  // Turning the module off while on its page: back to the boathouse.
+  const hasReservations = useModule("reservations");
+  useEffect(() => {
+    if (page === "reservations" && !hasReservations) setPage("boathouse");
+  }, [page, hasReservations]);
 
   const adminEditSystem = useAdminEditModeSystem();
   // Same password as the Parameters button: the shortcut is no back door.
@@ -100,6 +110,12 @@ export function Router() {
             <StatsScreen />
           </ErrorBoundary>
         ),
+        reservations: () =>
+          hasReservations ? (
+            <ErrorBoundary key={page} fallback={<ErrorFallback />}>
+              <ReservationsScreen />
+            </ErrorBoundary>
+          ) : null,
       })}
     </AppTemplate>
   );
@@ -141,6 +157,7 @@ const useClubDataBootstrap = () => {
         }
         setState({ status: "ready" });
         startAutoBackups();
+        startUpdateChecks();
       })
       .catch((error) => {
         console.error(error);
@@ -191,6 +208,7 @@ const AppTemplate = ({ children }: { children: React.ReactNode }) => {
     <div className="absolute inset-0 flex flex-col p-1 gap-1 h-screen max-h-screen">
       <main className="flex-1 relative">{children}</main>
       <NavigationBar />
+      <UpdateDialog />
     </div>
   );
 };

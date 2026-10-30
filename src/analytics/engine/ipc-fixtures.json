@@ -1,0 +1,239 @@
+{
+  "RunQueryRequest": [
+    {
+      "requestId": "6f1c2a7e-3b4d-4c5e-9f60-7a8b9c0d1e2f",
+      "sql": "SELECT boat_name, COUNT(*) AS outings FROM v_outings WHERE season = :season GROUP BY boat_id",
+      "params": {
+        "season": 2025,
+        "boat_class": null,
+        "is_rowing": true,
+        "label": "4x+",
+        "ratio": 0.5
+      },
+      "maxRows": 5000,
+      "timeoutMs": 20000,
+      "privacy": "nominative",
+      "now": "2026-06-20T09:47",
+      "useCache": true
+    },
+    {
+      "requestId": "0b6d8f4e-8c2a-4e1b-a7d3-5f9e0c1b2a3d",
+      "sql": "SELECT 1",
+      "params": {},
+      "maxRows": 500,
+      "timeoutMs": 10000,
+      "privacy": "pseudonymised",
+      "now": "2026-01-01T00:00",
+      "useCache": false
+    }
+  ],
+  "QueryResult": [
+    {
+      "columns": [
+        { "name": "boat_name", "declType": "TEXT" },
+        { "name": "outings", "declType": null },
+        { "name": "outings", "declType": null }
+      ],
+      "rows": [
+        ["Albatros", 42, 3.5],
+        [null, 0, "9007199254740993"]
+      ],
+      "truncated": true,
+      "elapsedMs": 12,
+      "ignoredColumns": ["rower.email", "rower.first_name"],
+      "cached": false
+    }
+  ],
+  "EngineObjects": [
+    {
+      "views": ["v_settings", "v_boats", "v_outings"],
+      "tables": ["boat", "outing", "rower"],
+      "missingViews": ["v_damages"]
+    }
+  ],
+  "AnalyticsErrorPayload": [
+    { "code": "syntax", "message": "near \"FORM\": syntax error", "offset": 7 },
+    {
+      "code": "denied",
+      "message": "access to setting.key is prohibited",
+      "object": "setting.key"
+    },
+    { "code": "not_read_only", "message": "Only read queries are allowed" },
+    {
+      "code": "multiple_statements",
+      "message": "Only one statement is allowed",
+      "offset": 10
+    },
+    { "code": "timeout", "message": "interrupted" },
+    { "code": "cancelled", "message": "interrupted" },
+    { "code": "too_large", "message": "Result larger than 8 MB" },
+    {
+      "code": "missing_param",
+      "message": "Missing parameter: season",
+      "object": "season"
+    },
+    {
+      "code": "invalid_param",
+      "message": "Invalid value for season",
+      "object": "season"
+    },
+    { "code": "busy", "message": "database is locked" },
+    {
+      "code": "desktop_only",
+      "message": "Analytics needs the installed application"
+    },
+    { "code": "internal", "message": "unexpected engine failure" }
+  ],
+  "AiErrorPayload": [
+    { "code": "no_key", "message": "No API key" },
+    { "code": "invalid_key", "message": "invalid x-api-key" },
+    {
+      "code": "rate_limited",
+      "message": "rate limited",
+      "retryAfterSeconds": 30
+    },
+    { "code": "model_not_allowed", "message": "Model not allowed: claude-x" },
+    {
+      "code": "model_not_found",
+      "message": "OpenAI does not know this model, or this key cannot use it"
+    }
+  ],
+  "AiAskRequest": [
+    {
+      "requestId": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+      "provider": "anthropic",
+      "model": "claude-opus-5-5",
+      "effort": "medium",
+      "system": [
+        { "text": "You write SQLite queries for a rowing club.", "cache": true }
+      ],
+      "messages": [
+        {
+          "role": "user",
+          "content": "Quels bateaux sortent le plus le week-end ?"
+        },
+        { "role": "assistant", "content": "{\"title\":\"…\"}" },
+        {
+          "role": "user",
+          "content": "The query failed in the app: syntax: near \"FORM\". Return a corrected complete answer."
+        }
+      ],
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title"],
+        "properties": { "title": { "type": "string" } }
+      },
+      "maxTokens": 8000
+    },
+    {
+      "requestId": "2b3c4d5e-6f70-4a8b-9c0d-1e2f3a4b5c6d",
+      "provider": "openai_compatible",
+      "model": "mistral-large-latest",
+      "effort": "medium",
+      "system": [
+        { "text": "You write SQLite queries for a rowing club.", "cache": true }
+      ],
+      "messages": [
+        { "role": "user", "content": "Heures sur l'eau par type de sortie" }
+      ],
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title"],
+        "properties": { "title": { "type": "string" } }
+      },
+      "maxTokens": 16000
+    }
+  ],
+  "AiAskResponse": [
+    {
+      "text": "{\"title\":\"Bateaux les plus sortis le week-end\"}",
+      "stopReason": "end_turn",
+      "model": "claude-opus-5-5",
+      "usage": {
+        "inputTokens": 18234,
+        "outputTokens": 512,
+        "cacheReadInputTokens": 17000,
+        "cacheCreationInputTokens": 0
+      }
+    },
+    {
+      "text": "{\"title\":\"Sorties par mois\"}",
+      "stopReason": "completed",
+      "model": "gpt-6.1-sol",
+      "usage": {
+        "inputTokens": 1234,
+        "outputTokens": 640,
+        "cacheReadInputTokens": 17000,
+        "cacheCreationInputTokens": 0
+      }
+    }
+  ],
+  "KeyStatus": [
+    { "stored": false, "storage": null },
+    { "stored": true, "storage": "keychain" },
+    { "stored": true, "storage": "file" },
+    {
+      "stored": true,
+      "storage": "keychain",
+      "baseUrl": "https://api.mistral.ai/v1",
+      "hasKey": true
+    },
+    {
+      "stored": true,
+      "storage": "file",
+      "baseUrl": "http://localhost:11434/v1",
+      "hasKey": false
+    }
+  ],
+  "AiKeyTest": [
+    { "ok": true },
+    { "ok": false, "code": "invalid_key" },
+    { "ok": false, "code": "model_not_found" }
+  ],
+  "McpInfo": [
+    {
+      "exePath": "C:\\Program Files\\Rowing Beacon\\Rowing Beacon.exe",
+      "args": ["--mcp"],
+      "dbPath": "C:\\Users\\Club\\AppData\\Roaming\\com.rowing-beacon-tauri-app.app\\main.db",
+      "inboxDir": "C:\\Users\\Club\\AppData\\Roaming\\com.rowing-beacon-tauri-app.app\\analytics-inbox",
+      "claudeDesktopConfigPath": "C:\\Users\\Club\\AppData\\Roaming\\Claude\\claude_desktop_config.json",
+      "platform": "windows",
+      "isAppImage": false
+    },
+    {
+      "exePath": "/home/club/Applications/rowing-beacon.AppImage",
+      "args": ["--mcp"],
+      "dbPath": "/home/club/.config/com.rowing-beacon-tauri-app.app/main.db",
+      "inboxDir": "/home/club/.local/share/com.rowing-beacon-tauri-app.app/analytics-inbox",
+      "claudeDesktopConfigPath": null,
+      "platform": "linux",
+      "isAppImage": true
+    }
+  ],
+  "InboxProposal": [
+    {
+      "id": "3f2504e0-4f89-41d3-9a0c-0305e82c3301",
+      "createdAt": "2026-06-20T07:47:00Z",
+      "client": "claude-ai",
+      "title": "Sorties du samedi matin",
+      "description": "Nombre de sorties le samedi avant midi, par mois.",
+      "sql": "SELECT start_month_key AS month, COUNT(*) AS outings FROM v_outings WHERE start_weekday = 6 AND start_hour < 12 GROUP BY month",
+      "params": [],
+      "chart": { "type": "bar", "x": "month", "y": ["outings"] },
+      "error": null
+    },
+    {
+      "id": "9b2c1d0e-5f4a-4b3c-8d2e-1f0a9b8c7d6e",
+      "createdAt": null,
+      "client": null,
+      "title": null,
+      "description": null,
+      "sql": null,
+      "params": null,
+      "chart": null,
+      "error": "expected value at line 1 column 1"
+    }
+  ]
+}

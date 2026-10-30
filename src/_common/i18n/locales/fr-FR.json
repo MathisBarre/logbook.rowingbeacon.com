@@ -36,6 +36,7 @@
   },
   "navigation": {
     "boathouse": "Boathouse",
+    "reservations": "Réservations",
     "logbook": "Logbook",
     "stats": "Statistiques",
     "parameters": "Gestion",
@@ -70,7 +71,7 @@
       },
       "fullClub": {
         "name": "Club complet",
-        "description": "Ajoute distances, types de sortie, fiches membres complètes, invités et chef de bord."
+        "description": "Ajoute distances, types de sortie, fiches membres complètes, invités, chef de bord et réservations."
       },
       "efaImport": {
         "name": "Je viens d'efa",
@@ -100,7 +101,15 @@
     "noBoatsToDisplay": "Aucun bateau à afficher",
     "at": "à {{time}}",
     "tomorrowAt": "demain à {{time}}",
-    "onDate": "le {{date}}"
+    "onDate": "le {{date}}",
+    "outOfService": "Hors service",
+    "unavailableBoats": "Bateaux indisponibles",
+    "allBoatsBack": "Tous les bateaux sont rentrés. Pensez à fermer le hangar.",
+    "allBoatsBackClosing": "Fermeture dans {{seconds}} s (cliquer pour fermer)",
+    "sunrise": "Lever du soleil",
+    "sunset": "Coucher du soleil",
+    "outingsAfterSunset_one": "{{count}} sortie encore sur l'eau alors qu'il fait nuit",
+    "outingsAfterSunset_other": "{{count}} sorties encore sur l'eau alors qu'il fait nuit"
   },
   "session": {
     "start": "Commencer une sortie",
@@ -176,7 +185,19 @@
     "duplicateCrewMember": "Une même personne est choisie deux fois dans l'équipage.",
     "boatAlreadyOnSession": "Ce bateau est déjà en sortie.",
     "returnBeforeStart": "Le retour prévu doit être après le départ.",
-    "invalidDistance": "Distance invalide : saisissez un nombre de km, par exemple 12,5."
+    "invalidDistance": "Distance invalide : saisissez un nombre de km, par exemple 12,5.",
+    "boatUnusable": "Ce bateau est hors service.",
+    "boatDamages": "Avaries ouvertes sur ce bateau",
+    "boatIsDamaged": "Le bateau est endommagé",
+    "damageSeverity": "Gravité de l'avarie",
+    "damageSeverityRequired": "Choisissez la gravité de l'avarie.",
+    "sessionEndedBoatOutOfService": "La fin de la sortie a bien été enregistrée. Le bateau est hors service jusqu'à sa réparation.",
+    "seatsRemaining_one": "{{count}} place restante",
+    "seatsRemaining_other": "{{count}} places restantes",
+    "rowersOverflow_one": "{{count}} rameur de trop",
+    "rowersOverflow_other": "{{count}} rameurs de trop",
+    "crewComplete": "Équipage complet",
+    "coxMissing": "Il manque le barreur"
   },
   "logbook": {
     "title": "Journal de bord",
@@ -208,17 +229,13 @@
     "createNewExport": "Créer un nouveau export",
     "backToSessionList": "Revenir à la liste des sorties",
     "captainName": "Chef de bord : {{name}}",
-    "coxName": "{{name}} (barreur)"
+    "coxName": "{{name}} (barreur)",
+    "editSession": "Modifier la sortie"
   },
   "stats": {
-    "title": "Statistiques",
-    "infoMessage": "De nombreuses statistiques complémentaires sont disponibles dans l'onglet \"Gestion\", pages \"Rameurs\" et \"Bateaux\"",
     "sessions": "Sessions",
-    "totalTimeOnWater": "Temps total sur l'eau",
-    "averageTimePerSession": "Moyenne temps / session",
     "noSessionsRecorded": "Aucune session enregistrée pour le moment",
     "season": "Saison",
-    "allMonths": "Tous les mois",
     "numberOfSessions": "Nombre de sessions",
     "timeOnWater": "Temps sur l'eau",
     "averagePerSession": "Moyenne par session",
@@ -236,23 +253,8 @@
     "boat": "Bateau",
     "rower": "Rameur",
     "aboutBoat": "Informations à propos de {{boatName}}",
-    "months": {
-      "january": "Janvier",
-      "february": "Février",
-      "march": "Mars",
-      "april": "Avril",
-      "may": "Mai",
-      "june": "Juin",
-      "july": "Juillet",
-      "august": "Août",
-      "september": "Septembre",
-      "october": "Octobre",
-      "november": "Novembre",
-      "december": "Décembre"
-    },
     "session_one": "{{count}} sortie",
     "session_other": "{{count}} sorties",
-    "totalDistance": "Distance totale",
     "coxedSessions": "Sorties barrées"
   },
   "parameters": {
@@ -298,7 +300,7 @@
     "noType": "Aucun type",
     "type": "Type",
     "updateConfiguration": "Mettre à jour la configuration",
-    "inMaintenance": "En maintenance",
+    "inMaintenance": "Hors service",
     "noteDisplayedAtSessionStart": "Note (affichée au début d'une séance)",
     "yourRowers": "Vos rameurs",
     "yourBoats": "Vos bateaux",
@@ -353,6 +355,7 @@
     "warning": "Attention !",
     "deleteAllDataWarning1": "Vous êtes sur le point de supprimer toutes les données de l'application.",
     "deleteAllDataWarning2": "Une sauvegarde de sécurité est d'abord créée dans le dossier des sauvegardes (Gestion > Données), avec les sauvegardes précédentes. Pour effacer définitivement les données, supprimez aussi ces fichiers.",
+    "deleteAiKeyToo": "Supprimer aussi les clés d'API d'IA enregistrées sur cet ordinateur (Anthropic, OpenAI, serveur compatible). Sinon, elles restent en place et les questions posées à l'IA restent facturées sur ces comptes.",
     "deleteConfirmationText": "Je souhaite supprimer toutes mes données",
     "deleteConfirmationInstruction": "Confirmez en écrivant exactement \"{{text}}\" dans le champ ci-dessous.",
     "enterAdminPassword": "Renseignez le mot de passe admin",
@@ -384,7 +387,15 @@
     "showGuests": "Invités ({{count}})",
     "guestsHelp": "Les invités sont créés quand un nom est tapé au départ. Ils n'apparaissent pas dans la liste des rameurs ; passez leur statut à « Membre » pour les y ajouter.",
     "finishOutingBeforeArchiving": "Impossible d'archiver : terminez d'abord la sortie en cours.",
-    "nameRequired": "Le nom est obligatoire."
+    "nameRequired": "Le nom est obligatoire.",
+    "allBoatsBackBanner": "Rappel de fermeture du hangar",
+    "allBoatsBackBannerDescription": "Affiche un grand rappel pour fermer le hangar quand la dernière sortie est terminée.",
+    "allBoatsBackBannerOption": "Afficher le rappel quand tous les bateaux sont rentrés",
+    "clubLocation": "Position du club",
+    "clubLocationDescription": "Sert à afficher les heures de lever et de coucher du soleil sur l'écran du hangar. Laissez vide pour les masquer. Degrés décimaux, par exemple 48,8566 et 2,3522.",
+    "clubLatitude": "Latitude",
+    "clubLongitude": "Longitude",
+    "clubLocationInvalid": "Valeur invalide : la latitude doit être entre -90 et 90, la longitude entre -180 et 180."
   },
   "boat": {
     "type": "Type",
@@ -460,6 +471,8 @@
     "failedToLoad": "Échec du chargement de la base de données",
     "failedToSave": "Échec de l'enregistrement : la modification a été annulée",
     "backupsNotDeleted": "Les anciennes sauvegardes v1 n'ont pas pu être supprimées du dossier backups",
+    "inboxNotCleared": "Les propositions de Claude en attente n'ont pas pu être supprimées du dossier analytics-inbox",
+    "aiKeyNotDeleted": "Une clé d'API d'IA n'a pas pu être supprimée : supprimez-la dans Gestion › Statistiques et IA",
     "reloadFailed": "Impossible de relire les données : redémarrez l'application"
   },
   "migration": {
@@ -505,6 +518,19 @@
       "adds": "Ajoute au départ le choix du chef de bord parmi l'équipage (barreur, sinon premier rameur adulte, proposé par défaut), affiché dans le cahier et les exports.",
       "suggestion": "Vous voulez savoir qui est responsable de chaque bateau sur l'eau ? Le module Chef de bord l'ajoute au départ.",
       "requiredOption": "Rendre le chef de bord obligatoire pour partir"
+    },
+    "damages": {
+      "name": "Avaries",
+      "description": "Déclarez un dégât avec sa gravité, suivez-le jusqu'à la réparation et prévenez l'équipage avant le départ.",
+      "adds": "Ajoute l'onglet Avaries dans le cahier, la déclaration d'une avarie depuis un incident ou une fiche bateau, un avertissement au départ pour les bateaux abîmés et l'historique des avaries de chaque bateau.",
+      "suggestion": "Un bateau abîmé ? Le module Avaries permet de déclarer le dégât, de suivre sa réparation et de prévenir l'équipage au départ."
+    },
+    "reservations": {
+      "name": "Réservations",
+      "description": "Réservez un bateau pour une régate, un stage ou un entraînement hebdomadaire.",
+      "adds": "Ajoute une page Réservations, une mention « réservé » sur les bateaux concernés au hangar et un avertissement quand une sortie chevauche une réservation. Une réservation n'empêche jamais de partir.",
+      "suggestion": "Un bateau à garder pour une régate, un stage ou un créneau fixe ? Le module Réservations le signale au hangar.",
+      "lookahead": "Afficher un bateau comme réservé {{minutes}} minutes avant"
     }
   },
   "outingTypes": {
@@ -518,10 +544,75 @@
     "ergometer": "Ergomètre",
     "motorboat": "Bateau à moteur"
   },
+  "reservations": {
+    "title": "Réservations",
+    "new": "Nouvelle réservation",
+    "newTitle": "Nouvelle réservation",
+    "editTitle": "Modifier la réservation",
+    "saved": "Réservation enregistrée",
+    "deleted": "Réservation supprimée",
+    "confirmDelete": "Supprimer la réservation de {{boat}} ({{when}}) ?",
+    "emptyTitle": "Aucune réservation",
+    "emptyText": "Réservez un bateau pour une régate, un stage, une sortie de groupe ou un créneau qui revient chaque semaine. Au hangar, le bateau apparaît comme réservé et un avertissement s'affiche si une sortie empiète sur la réservation, sans jamais empêcher de partir.",
+    "noUpcoming": "Aucune réservation à venir.",
+    "filterByBoat": "Bateau",
+    "allBoats": "Tous les bateaux",
+    "past": "Réservations passées ({{count}})",
+    "inProgress": "En cours",
+    "nextOn": "Prochaine fois : {{date}}",
+    "unknownBoat": "Bateau inconnu",
+    "weekly": "Chaque {{day}} de {{start}} à {{end}}",
+    "periodBetween": "du {{from}} au {{to}}",
+    "periodFrom": "à partir du {{from}}",
+    "periodUntil": "jusqu'au {{to}}",
+    "reservedBy": "Réservé par {{holder}}",
+    "badge": {
+      "until": "réservé · fin {{time}}",
+      "at": "réservé · début {{time}}"
+    },
+    "notice": {
+      "line": "Ce bateau est réservé de {{from}} à {{to}} par {{holder}}",
+      "withReason": "Ce bateau est réservé de {{from}} à {{to}} par {{holder}} ({{reason}})"
+    },
+    "boat": "Bateau",
+    "chooseBoat": "Choisir un bateau",
+    "recurrence": "Répétition",
+    "recurrences": {
+      "once": "Une fois",
+      "weekly": "Chaque semaine"
+    },
+    "startDate": "Date de début",
+    "startTime": "Heure de début",
+    "endDate": "Date de fin",
+    "endTime": "Heure de fin",
+    "day": "Jour",
+    "onlyDuringPeriod": "Seulement pendant une période",
+    "periodStart": "Premier jour",
+    "periodEnd": "Dernier jour",
+    "holder": "Réservé par",
+    "holderPlaceholder": "Chercher un rameur ou saisir un nom",
+    "holderNoOptions": "Aucun rameur trouvé",
+    "holderUseName": "Utiliser le nom « {{name}} »",
+    "reason": "Motif",
+    "reasonPlaceholder": "Régate, stage, entretien…",
+    "moreOptions": "Plus d'options",
+    "contact": "Contact",
+    "contactPlaceholder": "Téléphone ou e-mail",
+    "errors": {
+      "MISSING_BOAT": "Choisissez un bateau.",
+      "MISSING_HOLDER": "Indiquez qui réserve : un rameur ou un nom.",
+      "MISSING_DATES": "Renseignez toutes les dates.",
+      "MISSING_DAY": "Choisissez un jour de la semaine.",
+      "INVALID_TIME": "Renseignez des heures valides.",
+      "END_BEFORE_START": "La fin doit être après le début.",
+      "NO_OCCURRENCE": "La période choisie ne contient aucun jour correspondant : cette réservation ne s'appliquerait jamais.",
+      "OVERLAPS": "Ce bateau est déjà réservé par {{holder}} : {{when}}."
+    }
+  },
   "backup": {
     "dataTitle": "Données",
     "title": "Sauvegardes",
-    "description": "Rowing Beacon copie automatiquement toutes les données du club au démarrage puis toutes les 24 heures, et avant chaque import, restauration ou suppression. Les 14 dernières sauvegardes automatiques sont gardées.",
+    "description": "Rowing Beacon copie automatiquement toutes les données du club au démarrage puis toutes les 24 heures, et avant chaque import, restauration, suppression ou mise à jour. Les 14 dernières sauvegardes automatiques sont gardées.",
     "lastBackup": "Dernière sauvegarde : {{date}}",
     "noBackupYet": "Aucune sauvegarde pour l'instant.",
     "backupNow": "Sauvegarder maintenant",
@@ -549,11 +640,33 @@
       "manual": "Manuelle",
       "before-import": "Avant un import",
       "before-restore": "Avant une restauration",
-      "before-delete": "Avant une suppression"
+      "before-delete": "Avant une suppression",
+      "before-update": "Avant une mise à jour"
     },
     "notABackup": "Ce fichier n'est pas une sauvegarde Rowing Beacon valide. Rien n'a été modifié.",
     "newerBackup": "Cette sauvegarde vient d'une version plus récente de Rowing Beacon. Mettez l'application à jour pour la restaurer. Rien n'a été modifié.",
     "restoreNotStarted": "La restauration n'a pas pu commencer (fichier illisible ou sauvegarde de sécurité impossible). Rien n'a été modifié."
+  },
+  "update": {
+    "sectionTitle": "Mises à jour",
+    "sectionDescription": "Rowing Beacon cherche une nouvelle version au démarrage puis toutes les 6 heures. Les données du club sont sauvegardées juste avant l'installation.",
+    "currentVersion": "Version installée : {{version}}",
+    "available": "La version {{version}} de Rowing Beacon est disponible",
+    "see": "Voir la mise à jour",
+    "checkNow": "Rechercher une mise à jour",
+    "upToDate": "Rowing Beacon est à jour",
+    "checkFailed": "Impossible de vérifier les mises à jour. L'ordinateur est-il connecté à Internet ?",
+    "title": "Mettre à jour vers la version {{version}}",
+    "changelog": "Voir toutes les nouveautés",
+    "safety": "Les données du club sont sauvegardées avant l'installation, puis l'application redémarre. Les sorties en cours sont conservées.",
+    "backingUp": "Sauvegarde des données…",
+    "downloading": "Téléchargement…",
+    "downloadingPercent": "Téléchargement : {{percent}} %",
+    "installing": "Installation…",
+    "later": "Plus tard",
+    "install": "Installer et redémarrer",
+    "backupFailed": "La sauvegarde a échoué : la mise à jour n'a pas été installée.",
+    "failed": "La mise à jour a échoué. Rowing Beacon reste dans sa version actuelle."
   },
   "efa2": {
     "title": "efa2",
@@ -588,19 +701,25 @@
       "guests_other": "{{count}} invités créés pour des noms saisis librement",
       "externalBoats_one": "{{count}} bateau extérieur, archivé",
       "externalBoats_other": "{{count}} bateaux extérieurs, archivés",
-      "incidents_one": "{{count}} avarie non réparée, reprise comme incident",
-      "incidents_other": "{{count}} avaries non réparées, reprises comme incidents",
+      "reservations_one": "{{count}} réservation de bateau",
+      "reservations_other": "{{count}} réservations de bateau",
       "keptIntro": "Gardé aussi, sans écran pour l'instant, et réécrit à l'export efa2 :",
       "closedOpen_one": "{{count}} sortie restée ouverte dans efa avant aujourd'hui, terminée à l'import",
       "closedOpen_other": "{{count}} sorties restées ouvertes dans efa avant aujourd'hui, terminées à l'import",
       "ambiguousNames_one": "{{count}} nom saisi librement correspond à plusieurs fiches : il devient un invité",
       "ambiguousNames_other": "{{count}} noms saisis librement correspondent à plusieurs fiches : ils deviennent des invités",
       "unreadableEntries_one": "{{count}} entrée du journal illisible (sans date ou sans numéro) : gardée telle quelle et réécrite à l'export efa2",
-      "unreadableEntries_other": "{{count}} entrées du journal illisibles (sans date ou sans numéro) : gardées telles quelles et réécrites à l'export efa2"
+      "unreadableEntries_other": "{{count}} entrées du journal illisibles (sans date ou sans numéro) : gardées telles quelles et réécrites à l'export efa2",
+      "openDamages_one": "{{count}} avarie non réparée, reprise comme avarie ouverte",
+      "openDamages_other": "{{count}} avaries non réparées, reprises comme avaries ouvertes",
+      "fixedDamages_one": "{{count}} avarie déjà réparée, gardée dans l'historique",
+      "fixedDamages_other": "{{count}} avaries déjà réparées, gardées dans l'historique",
+      "unavailableBoats_one": "{{count}} bateau indisponible, repris avec son motif",
+      "unavailableBoats_other": "{{count}} bateaux indisponibles, repris avec leur motif"
     },
     "objects": {
       "efa2boatreservations": "réservations",
-      "efa2boatdamages": "avaries réparées",
+      "efa2boatdamages": "avaries d'un bateau inconnu",
       "efa2messages": "messages",
       "efa2crews": "équipages types",
       "efa2waters": "plans d'eau",
@@ -626,5 +745,104 @@
     "closedOpenOutingNote": "(Sortie restée ouverte dans efa, terminée à l'import.)",
     "crewsCut_one": "{{count}} sortie a plus de 24 rameurs ou plusieurs barreurs : efa2 n'a pas de place pour les autres, ils ne sont pas exportés.",
     "crewsCut_other": "{{count}} sorties ont plus de 24 rameurs ou plusieurs barreurs : efa2 n'a pas de place pour les autres, ils ne sont pas exportés."
+  },
+  "damages": {
+    "title": "Avaries",
+    "report": "Déclarer une avarie",
+    "fix": "Marquer réparée",
+    "reopen": "Rouvrir",
+    "fixed": "Réparée",
+    "reportDialogTitle": "Déclarer une avarie",
+    "editDialogTitle": "Modifier l'avarie",
+    "fixDialogTitle": "Marquer l'avarie comme réparée",
+    "reported": "Avarie déclarée",
+    "updated": "Avarie modifiée",
+    "fixedToast": "Avarie marquée comme réparée",
+    "reopened": "Avarie rouverte",
+    "unavailableDescription": "Mis hors service",
+    "noDescription": "Sans description",
+    "unavailableSeverityNote": "Un bateau mis hors service garde la gravité « Hors service ».",
+    "reportedByName": "Déclarée par {{name}}",
+    "fixedOn": "Réparée le {{date}}",
+    "fixedByName": "par {{name}}",
+    "repairCostValue": "Coût : {{cost}}",
+    "openOnBoat": "Avaries ouvertes",
+    "noOpenOnBoat": "Aucune avarie ouverte sur ce bateau.",
+    "noneOnBoat": "Aucune avarie",
+    "filter": {
+      "open": "Ouvertes",
+      "all": "Toutes",
+      "label": "Filtrer les avaries"
+    },
+    "empty": {
+      "open": "Aucune avarie ouverte",
+      "all": "Aucune avarie enregistrée pour le moment"
+    },
+    "severity": {
+      "usable": "Utilisable",
+      "limited": "Précaution",
+      "unusable": "Hors service"
+    },
+    "severityHelp": {
+      "usable": "Le bateau reste utilisable normalement.",
+      "limited": "Le bateau reste utilisable avec précaution ; l'avarie est signalée au départ.",
+      "unusable": "Le bateau est hors service : le départ est impossible."
+    },
+    "fields": {
+      "boat": "Bateau",
+      "chooseBoat": "Choisir un bateau",
+      "severity": "Gravité",
+      "description": "Description",
+      "reportedBy": "Déclarée par",
+      "reportedAt": "Date et heure",
+      "fixedAt": "Date et heure de la réparation",
+      "fixedBy": "Réparée par",
+      "repairNote": "Note de réparation",
+      "repairCost": "Coût",
+      "notSpecified": "Non renseigné"
+    },
+    "errors": {
+      "boatRequired": "Choisissez un bateau.",
+      "descriptionRequired": "Décrivez l'avarie.",
+      "dateInvalid": "Saisissez une date valide.",
+      "costInvalid": "Saisissez un montant valide, par exemple 12,50.",
+      "dateInFuture": "La date ne peut pas être dans le futur.",
+      "fixedBeforeReported": "La date ne peut pas précéder la déclaration ({{date}})."
+    },
+    "outOfServiceLocked": "Une avarie « Hors service » est ouverte : marquez-la comme réparée dans la liste ci-dessous pour remettre le bateau en service.",
+    "actionOnBoat": "{{action}} : {{boat}}",
+    "unavailable": {
+      "fix": "Remettre en service",
+      "fixed": "Remis en service",
+      "fixedOn": "Remis en service le {{date}}",
+      "fixDialogTitle": "Remettre le bateau en service",
+      "fixedToast": "Bateau remis en service",
+      "reopened": "Bateau de nouveau hors service",
+      "fixedAt": "Date et heure de la remise en service",
+      "fixedBy": "Remis en service par"
+    }
+  },
+  "outingEditor": {
+    "pastOuting": "Sortie déjà faite",
+    "pastTitle": "Sortie déjà faite",
+    "editTitle": "Modifier la sortie",
+    "editOuting": "Modifier la sortie",
+    "savePast": "Enregistrer la sortie",
+    "saveEdit": "Enregistrer les modifications",
+    "pastSaved": "La sortie a bien été ajoutée à l'historique",
+    "editSaved": "La sortie a bien été modifiée",
+    "endRequired": "Indiquez la date et l'heure de la fin.",
+    "startRequired": "Indiquez la date et l'heure du début.",
+    "endInFuture": "La fin de la sortie ne peut pas être dans le futur.",
+    "startInFuture": "Le début de la sortie ne peut pas être dans le futur.",
+    "noRowers": "Choisissez au moins un rameur.",
+    "coachedRequired": "Choisissez une réponse.",
+    "notFound": "Cette sortie est introuvable : elle a peut-être été supprimée.",
+    "fix": "Corriger",
+    "saveAnyway": "Enregistrer quand même",
+    "boatOverlap": "Le bateau « {{boatName}} » est déjà sur une autre sortie à ces horaires.",
+    "rowersOverlap_one": "{{rowerNames}} est déjà sur une autre sortie à ces horaires.",
+    "rowersOverlap_other": "{{rowerNames}} sont déjà sur une autre sortie à ces horaires.",
+    "boatRequired": "Choisissez un bateau."
   }
 }

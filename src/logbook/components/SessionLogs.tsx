@@ -8,10 +8,19 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   FileUpIcon,
+  HistoryIcon,
   LogsIcon,
 } from "lucide-react";
 import { useAdminEditModeSystem } from "../../_common/store/adminEditMode.system";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import { OutingEditorDialog } from "./OutingEditor/OutingEditor.Dialog";
+import type {
+  OutingDraft,
+  OutingEditorMode,
+} from "../business/EditOuting/outingDraft";
+import { getEmptyPastOutingDraft } from "../business/EditOuting/outingDraft.rules";
+import { loadFinishedOutingDraft } from "../business/EditOuting/loadOutingDraft";
 
 export const SessionLogs = () => {
   const { t } = useTranslation();
@@ -32,6 +41,28 @@ export const SessionLogs = () => {
 
   const adminEditSystem = useAdminEditModeSystem();
 
+  const [editor, setEditor] = useState<{
+    mode: OutingEditorMode;
+    draft: OutingDraft;
+  } | null>(null);
+
+  const editFinishedOuting = async (outingId: string) => {
+    let draft: OutingDraft | null;
+    try {
+      draft = await loadFinishedOutingDraft(outingId);
+    } catch (error) {
+      console.error("Failed to load the outing", error);
+      toast.error(t("error.generic"));
+      return;
+    }
+    if (!draft) {
+      toast.error(t("outingEditor.notFound"));
+      await refresh();
+      return;
+    }
+    setEditor({ mode: "finished", draft });
+  };
+
   return (
     <div className="flex-1 shadow-md bg-white flex flex-col absolute inset-0 right-1/2 mr-[.125rem] rounded overflow-hidden">
       <div className="bg-border p-2 bg-gradient-to-r from-steel-blue-800 to-steel-blue-700 text-white flex justify-between h-12 max-h-12 min-h-12 items-center">
@@ -39,21 +70,36 @@ export const SessionLogs = () => {
           <LogsIcon />
           {t("session.sessionHistory")}
         </h1>
-        <button
-          type="button"
-          className="bg-gray-100 rounded flex items-center justify-center px-4 text-gray-700 py-1 text-sm h-full"
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          onClick={async () => {
-            if (!(await adminEditSystem.askForAdminAccess())) {
-              return;
+        <div className="flex gap-2 h-full">
+          <button
+            type="button"
+            className="bg-white/10 border border-white/30 hover:bg-white/20 rounded flex items-center justify-center px-3 text-white py-1 text-sm h-full"
+            onClick={() =>
+              setEditor({
+                mode: "past",
+                draft: getEmptyPastOutingDraft(new Date()),
+              })
             }
+          >
+            <HistoryIcon className="h-4 w-4 mr-1" />
+            {t("outingEditor.pastOuting")}
+          </button>
+          <button
+            type="button"
+            className="bg-gray-100 rounded flex items-center justify-center px-4 text-gray-700 py-1 text-sm h-full"
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            onClick={async () => {
+              if (!(await adminEditSystem.askForAdminAccess())) {
+                return;
+              }
 
-            setIsExportOpen(true);
-          }}
-        >
-          {t("session.export")}
-          <FileUpIcon className="h-4 w-4 ml-1" />
-        </button>
+              setIsExportOpen(true);
+            }}
+          >
+            {t("session.export")}
+            <FileUpIcon className="h-4 w-4 ml-1" />
+          </button>
+        </div>
 
         <Dialog
           open={isExportOpen}
@@ -79,6 +125,18 @@ export const SessionLogs = () => {
         loading={loading}
         errorMessage={errorMessage}
         refresh={refresh}
+        onEditSession={editFinishedOuting}
+      />
+
+      <OutingEditorDialog
+        mode={editor?.mode ?? "past"}
+        initialDraft={editor?.draft ?? null}
+        onClose={() => setEditor(null)}
+        onSaved={() => {
+          refresh().catch((error) => {
+            console.error("Failed to refresh the logbook", error);
+          });
+        }}
       />
 
       <section className="absolute z-10 p-2 bottom-0 left-0 rounded flex justify-center items-center gap-4 bg-steel-blue-800 text-white">

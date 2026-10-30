@@ -1,0 +1,279 @@
+{
+  "title": "Report",
+  "search": "Cerca un report",
+  "noMatch": "Nessun report corrisponde a «{{query}}». Chiedi all'IA: scrive la statistica per te.",
+  "categories": {
+    "overview": "Panoramica",
+    "fleet": "Flotta",
+    "people": "Vogatori",
+    "retention": "Fidelizzazione",
+    "attendance": "Affluenza",
+    "safety": "Sicurezza e accompagnamento",
+    "maintenance": "Materiale"
+  },
+  "labels": {
+    "selectedSeason": "Stagione scelta",
+    "previousSeason": "Stagione precedente",
+    "classAvgOutings": "Uscite medie del tipo",
+    "monthsSinceArrival": "Mesi dall'arrivo",
+    "avgPerWeek": {
+      "participations": "Vogatori per settimana in media",
+      "outings": "Uscite per settimana in media"
+    },
+    "female": "Donne",
+    "male": "Uomini",
+    "otherGender": "Altro",
+    "unknownGender": "Sesso non specificato",
+    "total": "Totale",
+    "previous": {
+      "outings": "Uscite, stagione precedente",
+      "participations": "Partecipazioni, stagione precedente",
+      "active_rowers": "Vogatori attivi, stagione precedente",
+      "km": "Chilometri, stagione precedente",
+      "hours": "Ore in acqua, stagione precedente"
+    }
+  },
+  "notes": {
+    "multiDay": "Le uscite di più giorni non sono contate nelle ore.",
+    "km": "Chilometri: distanza inserita al rientro, altrimenti distanza del percorso.",
+    "excluded": "Barche e vogatori esclusi dalle statistiche (scheda Gestione) non sono contati.",
+    "v1Coxes": "Le uscite riprese dalla versione 1 contano i timonieri come vogatori.",
+    "noStartTime": "Le uscite importate senza ora di partenza non compaiono nella ripartizione per ora.",
+    "retention": "Fidelizzazione calcolata dalla prima uscita (la data d'iscrizione non è nota).",
+    "motorboat": "Le uscite in motoscafo (accompagnamento) non contano tra le uscite dei vogatori.",
+    "membersOnly": "Sono contati solo i soci: ospiti e altri stati sono esclusi."
+  },
+  "coverage": {
+    "gender": "Sesso indicato per il {{pct}}% dei vogatori attivi.",
+    "birth_date": "Data di nascita indicata per il {{pct}}% dei vogatori attivi.",
+    "age_category": "Categoria d'età indicata per il {{pct}}% dei vogatori attivi.",
+    "distance": "Distanza nota per il {{pct}}% delle uscite.",
+    "is_coached": "Accompagnamento indicato per il {{pct}}% delle uscite.",
+    "has_start_time": "Ora di partenza nota per il {{pct}}% delle uscite."
+  },
+  "howToRead": "Come leggere questo report",
+  "items": {
+    "season-overview": {
+      "title": "La stagione in cifre",
+      "description": "Quali numeri presentare in assemblea? Uscite, vogatori attivi, chilometri, ore in acqua e quota di uscite seguite, rispetto allo stesso periodo della stagione precedente.",
+      "howToRead": "Ogni riquadro mostra il valore della stagione e la differenza con la stagione precedente alla stessa data: una stagione in corso si confronta con lo stesso periodo dell'anno scorso, non con tutta la stagione passata. Un vogatore attivo è uscito almeno una volta.",
+      "keywords": "assemblea generale bilancio riepilogo cifre"
+    },
+    "yoy-monthly": {
+      "title": "Mese per mese, stagione contro stagione",
+      "description": "Il club voga più o meno della stagione scorsa, mese per mese? A scelta: uscite, partecipazioni, vogatori attivi, chilometri o ore.",
+      "howToRead": "Per ogni mese, due barre affiancate: la stagione scelta e quella precedente. I mesi partono dall'inizio della stagione. Per il mese in corso, la stagione precedente è contata fino allo stesso giorno. Una partecipazione è un posto in un equipaggio: un'uscita in quattro conta quattro partecipazioni.",
+      "keywords": "confronto andamento anno precedente"
+    },
+    "yoy-cumulative": {
+      "title": "Uscite cumulate, stagione contro stagione",
+      "description": "La stagione è in anticipo o in ritardo rispetto alla precedente? Il totale delle uscite settimana dopo settimana, per le due stagioni.",
+      "howToRead": "Ogni curva somma le uscite dall'inizio della stagione. Se la curva della stagione scelta sta sopra l'altra, il club ha già fatto più uscite che alla stessa data dell'anno scorso. Per la stagione in corso, la curva si ferma a oggi.",
+      "keywords": "confronto anticipo ritardo cumulo"
+    },
+    "outing-types": {
+      "title": "Tipi di uscita",
+      "description": "A cosa servono le uscite: svago, allenamento, gara, scuola, gita…? Uscite, chilometri e ore per tipo di uscita.",
+      "howToRead": "I tipi sono ordinati dal più frequente al meno frequente. Un'uscita registrata senza tipo conta come «Uscita normale». Utile per mostrare il peso della scuola di canottaggio, delle gare o delle gite.",
+      "keywords": "scuola gara escursione tempo libero allenamento"
+    },
+    "routes-usage": {
+      "title": "Percorsi più frequentati",
+      "description": "Dove si voga? Uscite, chilometri e numero di barche diverse per percorso.",
+      "howToRead": "I percorsi sono ordinati dal più frequentato al meno frequentato. Le uscite registrate senza percorso non compaiono.",
+      "keywords": "percorso tragitto km chilometri"
+    },
+    "boat-usage-ranking": {
+      "title": "Classifica delle barche",
+      "description": "Quali barche escono di più e quali restano in rimessa? Uscite, giorni di utilizzo, ore e chilometri per barca, comprese quelle mai uscite.",
+      "howToRead": "Le barche sono ordinate dalla più utilizzata alla meno utilizzata. «Giorni di utilizzo» conta i giorni diversi in cui la barca è uscita, l'ultima colonna da quanti giorni non esce. Le barche archiviate o escluse dalle statistiche non compaiono.",
+      "keywords": "barche utilizzo classifica rimessa"
+    },
+    "underused-boats": {
+      "title": "Barche poco utilizzate",
+      "description": "Quali barche si potrebbero vendere, prestare o sistemare altrove? Le barche uscite poco nel periodo scelto, accanto alla media del loro tipo.",
+      "howToRead": "Imposta il periodo (in giorni) e il numero massimo di uscite. Le barche mai uscite vengono per prime. Una barca molto sotto la media del suo tipo forse non è adatta (regolazioni, peso, livello); un intero tipo poco usato indica piuttosto barche in eccesso.",
+      "keywords": "vendere vendita prestare sistemare flotta inutilizzate"
+    },
+    "fleet-by-class": {
+      "title": "Flotta per tipo di barca",
+      "description": "Bisogna comprare una barca, e di che tipo? Giorni in cui tutte le barche di un tipo erano fuori, picco di barche in acqua insieme e uscite per barca.",
+      "howToRead": "I tipi sono ordinati dal più saturo al meno saturo. «Giorni con tutte fuori»: se sono molti, alcuni vogatori hanno probabilmente aspettato una barca di quel tipo. «Massimo fuori insieme» è il numero più alto di barche del tipo in acqua nello stesso momento. «Uscite per barca» confronta i tipi qualunque sia la dimensione della loro flotta. Le barche senza armo indicato, come i motoscafi, non fanno parte della flotta.",
+      "keywords": "acquisto comprare flotta saturazione carenza"
+    },
+    "fleet-class-monthly": {
+      "title": "Uscite per tipo di barca e per mese",
+      "description": "Quali tipi di barca sono più usati in ogni periodo dell'anno?",
+      "howToRead": "Ogni barra è un mese, suddivisa per tipo di barca: l'altezza totale dà tutte le uscite del mese, ogni colore la quota di un tipo. «Non specificato» raggruppa le barche senza armamento indicato. Le uscite in motoscafo non sono contate.",
+      "keywords": "flotta stagione periodo"
+    },
+    "boat-class-week-heatmap": {
+      "title": "Tipi di barca settimana per settimana",
+      "description": "In quali settimane un tipo di barca scarseggia? Uscite per tipo di barca, settimana per settimana.",
+      "howToRead": "Una riga per tipo di barca (1x, 2x, 4+…), una colonna per settimana, datata dal lunedì. Più la casella è scura, più il tipo è stato richiesto quella settimana. «Non specificato» raggruppa le barche senza armamento indicato. Le uscite in motoscafo non sono contate.",
+      "keywords": "flotta carenza picco settimana"
+    },
+    "boat-month-heatmap": {
+      "title": "Barche mese per mese",
+      "description": "Quali barche escono in quale periodo dell'anno? Uscite per barca e per mese (le 40 più utilizzate).",
+      "howToRead": "Una riga per barca, una colonna per mese: più la casella è scura, più la barca è uscita quel mese. I mesi tranquilli di una barca sono il momento giusto per la manutenzione.",
+      "keywords": "manutenzione revisione pianificazione flotta"
+    },
+    "active-members-demographics": {
+      "title": "Soci attivi per sesso ed età",
+      "description": "Quante donne, uomini, giovani e adulti hanno vogato in questa stagione? La tabella richiesta nelle domande di contributo.",
+      "howToRead": "Soci usciti almeno una volta nella stagione (ospiti esclusi): una riga per fascia d'età, una colonna per sesso e i totali, come nelle domande di contributo. Giovane: 18 anni o meno nell'anno dell'uscita, secondo la data di nascita, altrimenti la categoria d'età. «Non specificato» conta le schede senza sesso o età: completale in Gestione prima di inviare una domanda.",
+      "keywords": "tesserati iscritti contributo comune donne uomini giovani adulti"
+    },
+    "active-rowers-monthly": {
+      "title": "Vogatori attivi e nuovi per mese",
+      "description": "Quanti vogatori vengono ogni mese, e quanti sono nuovi?",
+      "howToRead": "Ogni barra conta i vogatori usciti almeno una volta nel mese: in basso chi vogava già, in alto i nuovi. Un vogatore è nuovo nel mese della prima uscita se non era mai uscito prima della stagione.",
+      "keywords": "nuovi arrivi affluenza"
+    },
+    "rower-frequency": {
+      "title": "Assiduità dei soci",
+      "description": "I soci vengono spesso o ogni tanto? Numero di soci per fascia di uscite nella stagione.",
+      "howToRead": "Ogni barra conta i soci usciti 1 volta, da 2 a 5 volte, da 6 a 10 volte e così via. Molti soci nelle prime fasce indicano soci poco assidui, da ricontattare o da accogliere meglio.",
+      "keywords": "fedeltà assiduità regolarità richiamo"
+    },
+    "retention-cohorts": {
+      "title": "Fidelizzazione per stagione di arrivo",
+      "description": "I soci restano da una stagione all'altra? Quota di soci arrivati in una stagione che vogano ancora nelle stagioni successive.",
+      "howToRead": "Una riga per stagione di arrivo, cioè la stagione della prima uscita. Sotto «Stagioni dopo l'ingresso», la colonna 1 dà la quota ancora attiva la stagione successiva, la colonna 2 quella dopo, e così via. La prima stagione dello storico comprende tutti i soci già presenti, e la stagione in corso non è finita.",
+      "keywords": "fedeltà abbandono partenza rinnovo richiamo"
+    },
+    "new-rower-survival": {
+      "title": "Fidelizzazione dei nuovi soci",
+      "description": "Quanto restano i nuovi soci? Quota di nuovi soci che vogano ancora 1, 2, 3, 6, 9, 12, 18 e 24 mesi dopo la prima uscita.",
+      "howToRead": "Ogni barra dà la quota di nuovi soci ancora attivi dopo quel numero di mesi: un socio conta ancora se è uscito di nuovo dopo quel periodo. Una barra conta solo i soci arrivati da abbastanza tempo, quindi le barre non riguardano le stesse persone e una può superare la precedente. Un forte calo nei primi tre mesi mostra che l'accoglienza dei principianti va migliorata. I soci comparsi nei primi 60 giorni dello storico sono esclusi: per lo più c'erano già.",
+      "keywords": "fedeltà abbandono partenza rinnovo richiamo principianti accoglienza"
+    },
+    "workload-by-category": {
+      "title": "Attività per gruppo",
+      "description": "Quali gruppi fanno vivere il club, mese per mese? Partecipazioni, ore, chilometri o vogatori, raggruppati per categoria d'età, livello, sesso, stato, tipo di barca o tipo di uscita.",
+      "howToRead": "Scegli il raggruppamento e il valore mostrato. Ogni barra è un mese, suddivisa per gruppo. «Non specificato» raggruppa le schede in cui manca l'informazione: completale in Gestione per numeri più precisi.",
+      "keywords": "gruppo categoria età livello sesso stato"
+    },
+    "guests": {
+      "title": "Ospiti",
+      "description": "Quanti ospiti accoglie il club? Partecipazioni di ospiti per mese e quota sull'attività del club.",
+      "howToRead": "Ogni barra conta i posti occupati da ospiti nel mese. La tabella dà anche il numero di ospiti diversi e la loro quota su tutte le partecipazioni: un buon indicatore per le giornate di prova.",
+      "keywords": "ospiti prova battesimo"
+    },
+    "outings-per-rower": {
+      "title": "Uscite per vogatore",
+      "description": "Chi voga di più nella stagione? Uscite, chilometri, ore e uscite seguite per vogatore.",
+      "howToRead": "Classifica dal più attivo al meno attivo, filtrabile per stato (socio, ospite, altro). Questo report mostra i nomi: è riservato ai responsabili, salvo se le classifiche nominative sono permesse in Gestione.",
+      "keywords": "classifica assiduità vogatori"
+    },
+    "km-challenge": {
+      "title": "Sfida dei chilometri",
+      "description": "Chi ha vogato più chilometri in acqua in questa stagione? Classifica senza ergometro, filtrabile per sesso e categoria d'età.",
+      "howToRead": "Il grafico mostra i primi 20 e la tabella i primi 100, dal totale più alto al più basso. Le uscite senza distanza non contano. Questo report mostra i nomi: è riservato ai responsabili, salvo se le classifiche nominative sono permesse in Gestione.",
+      "keywords": "km chilometri distanza sfida classifica"
+    },
+    "inactive-rowers": {
+      "title": "Soci assidui che non vengono più",
+      "description": "Quali soci assidui non vengono più? I soci usciti spesso nell'anno prima della loro ultima uscita e assenti dal numero di giorni scelto: da ricontattare.",
+      "howToRead": "Imposta i giorni di assenza e il numero minimo di uscite. L'elenco inizia dai più assidui. I soci assenti da più di due anni e le schede archiviate non compaiono. Riservato ai responsabili.",
+      "keywords": "fedeltà abbandono partenza richiamo assenti"
+    },
+    "attendance-heatmap": {
+      "title": "Affluenza per giorno e ora",
+      "description": "Quali fasce orarie funzionano meglio? Numero medio di vogatori (o di uscite) per settimana, per giorno e ora di partenza.",
+      "howToRead": "Una riga per giorno della settimana, una colonna per ora di partenza. Il valore è una media settimanale: 6 il sabato alle 9 significa che in media 6 vogatori partono ogni sabato tra le 9 e le 10. Utile per fissare le sessioni seguite e i turni.",
+      "keywords": "fasce orari affluenza"
+    },
+    "activity-calendar": {
+      "title": "Calendario della stagione",
+      "description": "In quali giorni il club ha vogato? Partecipazioni giorno per giorno, per individuare cali, vacanze ed effetti del meteo. Filtrabile per barca.",
+      "howToRead": "Una casella per giorno, una colonna per settimana: più la casella è scura, più vogatori sono usciti quel giorno. Una casella chiara significa nessuna uscita.",
+      "keywords": "giorni calendario meteo vacanze"
+    },
+    "coaching-balance": {
+      "title": "Equilibrio dell'allenamento seguito",
+      "description": "Tutti i soci ricevono attenzione dagli allenatori? Quota di uscite seguite per ogni socio, dal meno seguito.",
+      "howToRead": "I primi dell'elenco sono i soci meno seguiti: utile per distribuire l'attenzione degli allenatori. Le uscite senza indicazione sull'accompagnamento non contano nella percentuale. Questo report mostra i nomi: è riservato ai responsabili, salvo se le classifiche nominative sono permesse in Gestione.",
+      "keywords": "allenatore accompagnamento seguito"
+    },
+    "safety-summary": {
+      "title": "Sicurezza mese per mese",
+      "description": "La sicurezza migliora? Rientri in ritardo, uscite senza orario di rientro previsto e uscite mai chiuse, mese per mese.",
+      "howToRead": "Ogni barra è un mese. La stessa uscita può contare due volte, per esempio mai chiusa e senza orario di rientro previsto. Imposta la tolleranza di ritardo in minuti. Le singole uscite sono in «Uscite da verificare».",
+      "keywords": "sicurezza ritardo chiusura"
+    },
+    "safety-issues": {
+      "title": "Uscite da verificare",
+      "description": "Quali uscite meritano una verifica? Uscite mai chiuse, rientri in ritardo, uscite senza orario di rientro previsto e uscite di giovani (da J10 a J16) senza accompagnamento.",
+      "howToRead": "Una riga per uscita, le più gravi per prime: uscite mai chiuse, giovani senza accompagnamento, rientri in ritardo, poi uscite senza ora di rientro prevista, le più recenti per prime in ogni caso. Scegli un punto da verificare per tenere solo quello. Ogni uscita compare una sola volta, con il motivo più importante. Le uscite in motoscafo non sono controllate. Riservato ai responsabili.",
+      "keywords": "sicurezza ritardo chiusura giovani verificare"
+    },
+    "boat-km": {
+      "title": "Usura delle barche",
+      "description": "Quali barche si consumano di più? Chilometri, ore e incidenti per barca nella stagione e dall'inizio dello storico.",
+      "howToRead": "Le colonne «stagione» seguono la stagione scelta, le colonne «totale» tutto lo storico registrato. Utile per pianificare revisioni e sostituzioni. Le barche escluse dalle statistiche restano qui, perché si consumano anche loro.",
+      "keywords": "usura manutenzione revisione km chilometri"
+    },
+    "incidents-per-boat": {
+      "title": "Incidenti per barca",
+      "description": "Quali barche hanno più incidenti? Incidenti segnalati a fine uscita, rapportati al numero di uscite della barca.",
+      "howToRead": "Il grafico ordina le barche per incidenti ogni 100 uscite, per confrontare una barca molto usata con una che esce poco; la tabella dà anche il numero di incidenti. Compaiono solo le barche con almeno un incidente nella stagione.",
+      "keywords": "incidenti rottura manutenzione"
+    },
+    "damages-per-boat": {
+      "title": "Avarie per barca",
+      "description": "A che punto sono le avarie? Avarie segnalate per gravità, avarie ancora aperte, tempo medio di riparazione e costo, per barca.",
+      "howToRead": "Le barre impilano le avarie per gravità: inutilizzabile, utilizzabile con limitazioni, utilizzabile. Il tempo medio conta solo le avarie riparate, e il costo somma gli importi inseriti alla riparazione.",
+      "keywords": "avarie riparazione rottura manutenzione"
+    }
+  },
+  "clearSearch": "Cancella la ricerca",
+  "askAi": "Chiedi all'IA",
+  "noMatchInCategory": "Nessun report di questo tema corrisponde a «{{query}}».",
+  "showAllCategories": "Vedi tutti i temi",
+  "allCategories": "Tutti",
+  "categoryFilter": "Temi",
+  "resultCount_one": "{{count}} report",
+  "resultCount_other": "{{count}} report",
+  "lockedBadge": "Serve la password admin per aprirlo.",
+  "toolbar": "Azioni del report",
+  "view": {
+    "label": "Visualizzazione",
+    "chart": "Grafico",
+    "table": "Tabella"
+  },
+  "scope": {
+    "season": "Stagione {{season}}",
+    "running": "in corso, dati fino al {{date}}",
+    "fixed": "fissata sulla scheda della dashboard",
+    "followHub": "Segui la stagione scelta",
+    "lastDays": "Negli ultimi {{days}} giorni",
+    "allHistory": "Tutto lo storico del club",
+    "noSeason": "la stagione scelta non si applica"
+  },
+  "hints": {
+    "partialMonth": "{{month}}: mese in corso, dati fino al {{date}}. Lo stesso mese della stagione precedente è contato fino allo stesso giorno.",
+    "noPrevious": "Nessun dato per la stagione {{season}}: è mostrata solo la stagione scelta."
+  },
+  "unavailable": {
+    "data": "Questo report usa dati che questa versione di RowingBeacon non registra ancora."
+  },
+  "module": {
+    "confirmTitle": "Attivare il modulo {{module}}?",
+    "confirmMessage": "{{adds}} Potrai disattivarlo in Gestione › Moduli.",
+    "enabled": "Modulo {{module}} attivato",
+    "seeInSettings": "Vedi in Gestione"
+  },
+  "locked": {
+    "names": "Questo report mostra i nomi dei vogatori. Inserisci la password admin, oppure permetti le classifiche nominative per tutti in Gestione › Statistiche.",
+    "admin": "Questo report è riservato ai responsabili. Inserisci la password admin per vederlo.",
+    "unlock": "Sblocca"
+  },
+  "empty": {
+    "filtered": "Nessun risultato con questi filtri.",
+    "reset": "Reimposta i filtri"
+  },
+  "missingParam": "Scegli «{{name}}» per mostrare questo report.",
+  "customiseHint": "Queste impostazioni cambiano solo la visualizzazione e restano fino alla chiusura di RowingBeacon. Per conservarle, fissa il grafico alla dashboard o salvalo come query."
+}

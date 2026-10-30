@@ -1,0 +1,279 @@
+{
+  "title": "Reports",
+  "search": "Search reports",
+  "noMatch": "No report matches \"{{query}}\". Ask the AI: it writes the statistic for you.",
+  "categories": {
+    "overview": "Overview",
+    "fleet": "Fleet",
+    "people": "Rowers",
+    "retention": "Retention",
+    "attendance": "Attendance",
+    "safety": "Safety and coaching",
+    "maintenance": "Equipment"
+  },
+  "labels": {
+    "selectedSeason": "Selected season",
+    "previousSeason": "Previous season",
+    "classAvgOutings": "Class average outings",
+    "monthsSinceArrival": "Months since joining",
+    "avgPerWeek": {
+      "participations": "Rowers per week on average",
+      "outings": "Outings per week on average"
+    },
+    "female": "Women",
+    "male": "Men",
+    "otherGender": "Other",
+    "unknownGender": "Gender not specified",
+    "total": "Total",
+    "previous": {
+      "outings": "Outings, previous season",
+      "participations": "Participations, previous season",
+      "active_rowers": "Active rowers, previous season",
+      "km": "Kilometers, previous season",
+      "hours": "Hours on the water, previous season"
+    }
+  },
+  "notes": {
+    "multiDay": "Outings over several days are not counted in hours.",
+    "km": "Kilometers: distance entered on return, otherwise the route distance.",
+    "excluded": "Boats and rowers excluded from statistics (Management record) are not counted.",
+    "v1Coxes": "Outings migrated from version 1 count coxes as rowers.",
+    "noStartTime": "Imported outings without a departure time are left out of the hourly breakdown.",
+    "retention": "Retention is counted from the first outing (the joining date is not known).",
+    "motorboat": "Motorboat outings (coaching launches) are not counted as rowers' outings.",
+    "membersOnly": "Only members are counted: guests and other statuses are left out."
+  },
+  "coverage": {
+    "gender": "Gender known for {{pct}}% of active rowers.",
+    "birth_date": "Birth date known for {{pct}}% of active rowers.",
+    "age_category": "Age category known for {{pct}}% of active rowers.",
+    "distance": "Distance known for {{pct}}% of outings.",
+    "is_coached": "Coaching recorded for {{pct}}% of outings.",
+    "has_start_time": "Departure time known for {{pct}}% of outings."
+  },
+  "howToRead": "How to read this report",
+  "items": {
+    "season-overview": {
+      "title": "Season at a glance",
+      "description": "Which figures should you present at the general meeting? Outings, active rowers, kilometers, hours on the water and coached share, compared with the same period last season.",
+      "howToRead": "Each tile shows the season's value and the change from last season up to the same date: a season in progress is compared with the same period last year, not with the whole of last season. An active rower went out at least once.",
+      "keywords": "AGM annual general meeting summary key figures"
+    },
+    "yoy-monthly": {
+      "title": "Month by month, season vs season",
+      "description": "Is the club rowing more or less than last season, month by month? Pick outings, participations, active rowers, kilometers or hours.",
+      "howToRead": "For each month, two bars side by side: the selected season and the previous one. Months start at the beginning of the season. For the month in progress, the previous season is counted up to the same day. A participation is one seat in a crew: an outing in a four counts four participations.",
+      "keywords": "comparison trend last year growth"
+    },
+    "yoy-cumulative": {
+      "title": "Cumulative outings, season vs season",
+      "description": "Is this season ahead of or behind the last one? Total outings week after week, for both seasons.",
+      "howToRead": "Each line adds up outings since the start of the season. When the selected season's line is above the other one, the club has already done more outings than at the same date last year. For the season in progress, the line stops today.",
+      "keywords": "comparison ahead behind cumulative trend"
+    },
+    "outing-types": {
+      "title": "Outing types",
+      "description": "What are outings for: leisure, training, racing, instruction, touring…? Outings, kilometers and hours per outing type.",
+      "howToRead": "Types are sorted from most to least frequent. An outing recorded without a type counts as \"Regular outing\". Useful to show the weight of the rowing school, racing or touring.",
+      "keywords": "school competition touring leisure training"
+    },
+    "routes-usage": {
+      "title": "Most used routes",
+      "description": "Where do members row? Outings, kilometers and number of different boats per route.",
+      "howToRead": "Routes are sorted from most to least used. Outings recorded without a route are left out.",
+      "keywords": "route course km kilometers distance"
+    },
+    "boat-usage-ranking": {
+      "title": "Boat usage ranking",
+      "description": "Which boats go out most, and which stay in the boathouse? Outings, days used, hours and kilometers per boat, including boats that never went out.",
+      "howToRead": "Boats are sorted from most to least used. \"Days used\" counts the different days the boat went out, and the last column how many days ago it last went out. Archived boats and boats excluded from statistics are left out.",
+      "keywords": "boats use ranking boathouse"
+    },
+    "underused-boats": {
+      "title": "Little-used boats",
+      "description": "Which boats could be sold, lent or stored elsewhere? Boats that went out little over the chosen period, next to the average of their class.",
+      "howToRead": "Set the period (in days) and the maximum number of outings. Boats that never went out come first. A boat far below its class average may be ill-suited (rigging, weight, level); a whole class that is little used rather points to too many boats.",
+      "keywords": "sell sale lend store fleet unused"
+    },
+    "fleet-by-class": {
+      "title": "Fleet by boat class",
+      "description": "Should the club buy a boat, and of which class? Days when every boat of a class was out, peak number of boats out at once and outings per boat.",
+      "howToRead": "Classes are sorted from the most to the least saturated. \"Days when all were out\": if there are many, rowers probably waited for a boat of that class. \"Most out at once\" is the largest number of boats of the class on the water at the same time. \"Outings per boat\" compares classes whatever the size of their fleet. Boats without a rigging, such as motorboats, are not part of the fleet.",
+      "keywords": "buy purchase fleet saturation shortage"
+    },
+    "fleet-class-monthly": {
+      "title": "Outings by boat class and month",
+      "description": "Which boat classes are used most at each time of year?",
+      "howToRead": "Each bar is a month, split by boat class: the full height gives all outings of the month, each colour the share of one class. \"Not specified\" groups boats whose rigging is not recorded. Motorboat outings are not counted.",
+      "keywords": "fleet season period rigging"
+    },
+    "boat-class-week-heatmap": {
+      "title": "Boat classes week by week",
+      "description": "In which weeks does a boat class run short? Outings per boat class, week by week.",
+      "howToRead": "One row per boat class (1x, 2x, 4+…), one column per week, dated by its Monday. The darker the cell, the more the class was in demand that week. \"Not specified\" groups boats whose rigging is not recorded. Motorboat outings are not counted.",
+      "keywords": "fleet shortage peak week rigging"
+    },
+    "boat-month-heatmap": {
+      "title": "Boats month by month",
+      "description": "Which boats go out at which time of year? Outings per boat and month (the 40 most used boats).",
+      "howToRead": "One row per boat, one column per month: the darker the cell, the more the boat went out that month. A boat's quiet months are the right time for its maintenance.",
+      "keywords": "maintenance service planning fleet"
+    },
+    "active-members-demographics": {
+      "title": "Active members by gender and age",
+      "description": "How many women, men, young people and adults rowed this season? The table asked for in grant applications.",
+      "howToRead": "Members who went out at least once in the season (guests excluded): one row per age group, one column per gender and the totals, as in grant applications. Young: 18 or younger in the year of the outing, from the birth date, otherwise the age category. \"Not specified\" counts records without gender or age: complete them in Management before sending an application.",
+      "keywords": "licensed headcount grant council subsidy women men youth adults"
+    },
+    "active-rowers-monthly": {
+      "title": "Active and new rowers per month",
+      "description": "How many rowers come each month, and how many are new?",
+      "howToRead": "Each bar counts the rowers who went out at least once in the month: at the bottom those who already rowed, on top the new ones. A rower is new in the month of their first outing if they had never rowed before the season.",
+      "keywords": "new arrivals attendance"
+    },
+    "rower-frequency": {
+      "title": "Member attendance",
+      "description": "Do members come often or now and then? Number of members by number of outings this season.",
+      "howToRead": "Each bar counts the members who went out once, 2 to 5 times, 6 to 10 times, and so on. Many members in the first groups point to occasional members, worth a call or a better welcome.",
+      "keywords": "loyalty attendance regularity follow-up"
+    },
+    "retention-cohorts": {
+      "title": "Retention by joining season",
+      "description": "Do members stay from one season to the next? Share of members who joined in a season and still row in later seasons.",
+      "howToRead": "One row per joining season, that is the season of the first outing. Under \"Seasons after joining\", column 1 gives the share still active the following season, column 2 the one after, and so on. The first season on record holds everyone already there, and the current season is not over yet.",
+      "keywords": "loyalty dropout leaving renewal follow-up churn"
+    },
+    "new-rower-survival": {
+      "title": "New member retention",
+      "description": "How long do new members stay? Share of new members still rowing 1, 2, 3, 6, 9, 12, 18 and 24 months after their first outing.",
+      "howToRead": "Each bar gives the share of new members still active after that number of months: a member still counts if they went out again after that delay. A bar only counts members who joined long enough ago, so the bars are not about the same people and one can be higher than the one before. A sharp drop in the first three months shows that the welcome of beginners needs work. Members who appear in the first 60 days on record are set aside: most of them were already there.",
+      "keywords": "loyalty dropout leaving renewal follow-up beginners welcome churn"
+    },
+    "workload-by-category": {
+      "title": "Activity by group",
+      "description": "Which groups keep the club going, month by month? Participations, hours, kilometers or rowers, grouped by age category, level, gender, status, boat class or outing type.",
+      "howToRead": "Pick the grouping and the value shown. Each bar is a month, split by group. \"Not specified\" groups the records where the information is missing: complete them in Management for more accurate figures.",
+      "keywords": "group category age level gender status"
+    },
+    "guests": {
+      "title": "Guests",
+      "description": "How many guests does the club welcome? Guest participations per month and their share of club activity.",
+      "howToRead": "Each bar counts the seats taken by guests in the month. The table also gives the number of different guests and their share of all participations: a good indicator for open days and try-outs.",
+      "keywords": "guests taster trial introduction"
+    },
+    "outings-per-rower": {
+      "title": "Outings per rower",
+      "description": "Who rows most this season? Outings, kilometers, hours and coached outings per rower.",
+      "howToRead": "Ranking from most to least active, filterable by status (member, guest, other). This report shows names: only officials can open it, unless named rankings are allowed in Management.",
+      "keywords": "ranking attendance rowers"
+    },
+    "km-challenge": {
+      "title": "Kilometer challenge",
+      "description": "Who rowed the most kilometers on the water this season? Ranking without the ergometer, filterable by gender and age category.",
+      "howToRead": "The chart shows the top 20 and the table the top 100, from the largest to the smallest total. Outings without a distance do not count. This report shows names: only officials can open it, unless named rankings are allowed in Management.",
+      "keywords": "km kilometers distance challenge ranking"
+    },
+    "inactive-rowers": {
+      "title": "Regular members who stopped coming",
+      "description": "Which regular members stopped coming? Members who rowed often in the year before their last outing and have been away for the chosen number of days: worth a call.",
+      "howToRead": "Set the number of days of absence and the minimum number of outings. The list starts with the most regular members. Members absent for more than two years and archived records are left out. Officials only.",
+      "keywords": "loyalty dropout leaving follow-up absent churn"
+    },
+    "attendance-heatmap": {
+      "title": "Busy days and hours",
+      "description": "Which slots work best? Average number of rowers (or outings) per week, by day and start time.",
+      "howToRead": "One row per weekday, one column per start hour. The value is a weekly average: 6 on Saturday at 9 AM means that on average 6 rowers leave every Saturday between 9 and 10 AM. Useful to place coached sessions and duty slots.",
+      "keywords": "slots hours busy times"
+    },
+    "activity-calendar": {
+      "title": "Season calendar",
+      "description": "On which days did the club row? Participations day by day, to spot dips, holidays and the effect of the weather. Can be filtered on one boat.",
+      "howToRead": "One cell per day, one column per week: the darker the cell, the more rowers went out that day. A light cell means no outing.",
+      "keywords": "days calendar weather holidays"
+    },
+    "coaching-balance": {
+      "title": "Coaching balance",
+      "description": "Do all members get coaching? Coached share of each member's outings, least coached first.",
+      "howToRead": "The first members in the list get the least coaching: a way to spread coaches' attention. Outings where coaching is not recorded do not count in the percentage. This report shows names: only officials can open it, unless named rankings are allowed in Management.",
+      "keywords": "coach coaching supervision"
+    },
+    "safety-summary": {
+      "title": "Safety month by month",
+      "description": "Is safety improving? Late returns, outings without a planned return time and outings never closed, month by month.",
+      "howToRead": "Each bar is a month. The same outing can count twice, for example never closed and without a planned return time. Set the late tolerance in minutes. The outings themselves are listed in \"Outings to check\".",
+      "keywords": "safety late closing"
+    },
+    "safety-issues": {
+      "title": "Outings to check",
+      "description": "Which outings deserve a check? Outings never closed, late returns, outings without a planned return time and youth outings (J10 to J16) without coaching.",
+      "howToRead": "One row per outing, most serious first: outings never closed, youth without coaching, late returns, then outings without a planned return time, most recent first in each case. Pick an issue to keep only that one. An outing appears only once, with the most important reason. Motorboat outings are not checked. Officials only.",
+      "keywords": "safety late closing youth check"
+    },
+    "boat-km": {
+      "title": "Boat wear",
+      "description": "Which boats wear out fastest? Kilometers, hours and incidents per boat this season and since records began.",
+      "howToRead": "The \"season\" columns follow the selected season, the \"all time\" columns the whole recorded history. Useful to plan overhauls and replacements. Boats excluded from statistics are kept here, since they wear out too.",
+      "keywords": "wear maintenance service km kilometers"
+    },
+    "incidents-per-boat": {
+      "title": "Incidents per boat",
+      "description": "Which boats have the most incidents? Incidents reported at the end of outings, relative to the boat's number of outings.",
+      "howToRead": "The chart ranks boats by incidents per 100 outings, to compare a busy boat with one that rarely goes out; the table also gives the number of incidents. Only boats with at least one incident in the season appear.",
+      "keywords": "incidents breakage maintenance"
+    },
+    "damages-per-boat": {
+      "title": "Damage per boat",
+      "description": "Where do we stand on damage? Reported damage by severity, damage still open, average repair time and cost, per boat.",
+      "howToRead": "The bars stack damage by severity: unusable, usable with restrictions, usable. The average delay only counts repaired damage, and the cost adds up the amounts entered at repair.",
+      "keywords": "damage repair breakage maintenance"
+    }
+  },
+  "clearSearch": "Clear search",
+  "askAi": "Ask the AI",
+  "noMatchInCategory": "No report of this theme matches \"{{query}}\".",
+  "showAllCategories": "See all themes",
+  "allCategories": "All",
+  "categoryFilter": "Themes",
+  "resultCount_one": "{{count}} report",
+  "resultCount_other": "{{count}} reports",
+  "lockedBadge": "Admin password needed to open it.",
+  "toolbar": "Report actions",
+  "view": {
+    "label": "View",
+    "chart": "Chart",
+    "table": "Table"
+  },
+  "scope": {
+    "season": "Season {{season}}",
+    "running": "in progress, data up to {{date}}",
+    "fixed": "fixed on the dashboard card",
+    "followHub": "Follow the selected season",
+    "lastDays": "Over the last {{days}} days",
+    "allHistory": "The club's whole history",
+    "noSeason": "the selected season does not apply"
+  },
+  "hints": {
+    "partialMonth": "{{month}}: month in progress, data up to {{date}}. The same month of the previous season is counted up to the same day.",
+    "noPrevious": "No data for the {{season}} season: only the selected season is shown."
+  },
+  "unavailable": {
+    "data": "This report uses data that this version of RowingBeacon does not record yet."
+  },
+  "module": {
+    "confirmTitle": "Turn on the {{module}} module?",
+    "confirmMessage": "{{adds}} You can turn it off in Management › Modules.",
+    "enabled": "{{module}} module turned on",
+    "seeInSettings": "See in Management"
+  },
+  "locked": {
+    "names": "This report shows rowers' names. Enter the admin password, or allow named rankings for everyone in Management › Statistics.",
+    "admin": "This report is for officials only. Enter the admin password to show it.",
+    "unlock": "Unlock"
+  },
+  "empty": {
+    "filtered": "No result with these filters.",
+    "reset": "Reset filters"
+  },
+  "missingParam": "Choose \"{{name}}\" to show this report.",
+  "customiseHint": "These settings only change the display and last until RowingBeacon is closed. To keep them, pin the chart to the dashboard or save it as a query."
+}

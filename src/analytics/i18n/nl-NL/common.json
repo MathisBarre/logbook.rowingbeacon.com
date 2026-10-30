@@ -1,0 +1,93 @@
+{
+  "hub": {
+    "title": "Statistieken"
+  },
+  "tabs": {
+    "dashboard": "Dashboard",
+    "reports": "Rapporten",
+    "annual": "Jaarverslag",
+    "explorer": "Verkenner"
+  },
+  "season": {
+    "label": "Seizoen",
+    "value": "Seizoen {{label}}",
+    "valueCurrent": "Seizoen {{label}} (huidig)",
+    "current": "Huidig seizoen",
+    "partial": "Seizoen loopt nog: gegevens tot {{date}}."
+  },
+  "admin": {
+    "unlock": "Ontgrendelen",
+    "lock": "Vergrendelen",
+    "locked": "Alleen voor bestuursleden",
+    "lockedHint": "Voer het beheerderswachtwoord in om dit rapport te zien.",
+    "autoLock": "Vergrendelt automatisch na 15 minuten zonder activiteit.",
+    "autoLocked": "Statistieken vergrendeld na 15 minuten zonder activiteit.",
+    "lockedExplorerHint": "Voer het beheerderswachtwoord in om vragen aan de AI te stellen of zelf query's te schrijven."
+  },
+  "badges": {
+    "nominative": "Met namen",
+    "admin": "Bestuur",
+    "heavy": "Lange berekening"
+  },
+  "actions": {
+    "showTable": "Tabel tonen",
+    "showChart": "Grafiek tonen",
+    "open": "Openen",
+    "export": "Exporteren",
+    "pin": "Vastzetten op dashboard",
+    "customise": "Aanpassen",
+    "viewSql": "SQL-query bekijken",
+    "retry": "Opnieuw proberen",
+    "stop": "Stoppen",
+    "cancel": "Annuleren",
+    "save": "Opslaan",
+    "close": "Sluiten",
+    "confirm": "Bevestigen",
+    "more": "Meer acties"
+  },
+  "states": {
+    "loading": "Bezig met berekenen…",
+    "loadingHeavy": "Berekenen over de hele geschiedenis…",
+    "empty": "Geen gegevens voor deze criteria.",
+    "noData": "Geen gegevens",
+    "noOutingsTitle": "Nog geen statistieken",
+    "noOutingsBody": "Statistieken verschijnen zodra de eerste tochten in de botenloods zijn vastgelegd, of na het importeren van een efa2-geschiedenis (Beheer › Gegevens).",
+    "importEfa2": "Een efa2-geschiedenis importeren",
+    "truncated": "Alleen de eerste {{count}} rijen worden getoond.",
+    "hiddenColumns": "Persoonsgegevens verborgen: {{columns}} blijven leeg in de statistieken.",
+    "desktopOnly": "Geavanceerde statistieken werken alleen in de geïnstalleerde app."
+  },
+  "unavailable": {
+    "module": "Vereist de module \"{{module}}\".",
+    "enableModule": "Module {{module}} inschakelen",
+    "table": "Gegevens niet beschikbaar in deze versie."
+  },
+  "export": {
+    "csv": "CSV (spreadsheet)",
+    "xlsx": "Excel",
+    "png": "PNG-afbeelding",
+    "saved": "Bestand opgeslagen in Downloads: {{name}}",
+    "failed": "Export mislukt: {{message}}"
+  },
+  "values": {
+    "yes": "ja",
+    "no": "nee",
+    "null": "—"
+  },
+  "errors": {
+    "syntax": "Fout in de query (regel {{line}}, kolom {{column}}): {{message}}",
+    "syntaxNoPosition": "Fout in de query: {{message}}",
+    "denied": "Toegang tot \"{{object}}\" geweigerd: statistieken lezen alleen de views en tabellen uit het woordenboek.",
+    "deniedNoObject": "Bewerking geweigerd: statistieken zijn alleen-lezen.",
+    "not_read_only": "Alleen leesquery's (SELECT, WITH) zijn toegestaan.",
+    "multiple_statements": "Eén query tegelijk: verwijder wat na de eerste puntkomma staat.",
+    "timeout": "De query is na {{seconds}} s gestopt. Verkort de periode of voeg filters toe.",
+    "cancelled": "Query gestopt.",
+    "too_large": "Resultaat te groot: voeg filters of een GROUP BY toe.",
+    "missing_param": "Ontbrekende parameter: {{name}}.",
+    "invalid_param": "Ongeldige waarde voor {{name}}.",
+    "busy": "De database is bezet (back-up of import bezig). Probeer het zo meteen opnieuw.",
+    "desktop_only": "Geavanceerde statistieken werken alleen in de geïnstalleerde app.",
+    "internal": "Onverwachte fout in de statistiekmodule: {{message}}"
+  }
+}

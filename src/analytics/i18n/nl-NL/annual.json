@@ -1,0 +1,152 @@
+{
+  "title": "Jaarverslag van de activiteiten",
+  "meta": {
+    "period": "Periode: {{range}}",
+    "range": "{{start}} tot en met {{end}}",
+    "rangePartial": "{{start}} tot en met {{end}} (lopend seizoen)",
+    "issued": "Uitgegeven op {{date}}"
+  },
+  "clubName": {
+    "label": "Clubnaam",
+    "placeholder": "Bovenaan het verslag getoond"
+  },
+  "logo": {
+    "label": "Clublogo (optioneel)",
+    "hint": "PNG, JPEG of SVG, hoogstens 200 KB.",
+    "choose": "Afbeelding kiezen",
+    "replace": "Afbeelding wijzigen",
+    "remove": "Logo verwijderen",
+    "tooLarge": "Deze afbeelding is groter dan 200 KB: kies een lichtere.",
+    "badType": "Formaat niet ondersteund: kies een PNG-, JPEG- of SVG-afbeelding.",
+    "readFailed": "De afbeelding kon niet worden gelezen."
+  },
+  "notes": {
+    "heading": "Een woord van de club",
+    "label": "Een woord van de club, seizoen {{season}}",
+    "placeholder": "Hoogtepunten, projecten, bedankjes… (hoogstens 2.000 tekens)",
+    "length": "{{count}} / {{max}} tekens"
+  },
+  "edit": {
+    "open": "Clubnaam en woord van de club bewerken",
+    "addClubName": "Clubnaam toevoegen",
+    "saved": "Opgeslagen"
+  },
+  "chapters": {
+    "activity": "De activiteit",
+    "rowers": "De roeiers",
+    "fleet": "De vloot",
+    "safety": "Veiligheid en materiaal"
+  },
+  "sections": {
+    "overview": "Kerncijfers",
+    "outingsMonthly": "Tochten per maand",
+    "activeRowersMonthly": "Actieve roeiers per maand",
+    "demographics": "Actieve leden per leeftijd en geslacht",
+    "fleet": "Gebruik van de vloot per boottype",
+    "topBoats_one": "De meest gebruikte boot",
+    "topBoats_other": "De {{count}} meest gebruikte boten",
+    "routes_one": "Het meest gevaren traject",
+    "routes_other": "De {{count}} meest gevaren trajecten",
+    "outingTypes": "Soorten tochten",
+    "incidents": "Incidenten per boot",
+    "damages": "Schade per boot",
+    "retention": "Behoud van nieuwe roeiers",
+    "safety": "Veiligheid per maand"
+  },
+  "intros": {
+    "overview": "Elk cijfer wordt vergeleken met vorig seizoen tot dezelfde datum.",
+    "outingsMonthly": "Aantal tochten per maand, vergeleken met dezelfde maand vorig seizoen.",
+    "activeRowersMonthly": "Aantal verschillende roeiers dat in de maand minstens één keer op het water was, vergeleken met vorig seizoen.",
+    "demographics": "Clubleden die in het seizoen minstens één keer op het water waren, per leeftijdsgroep en geslacht (gasten worden niet geteld). Jeugd: 18 jaar of jonger.",
+    "fleet": "Gemiddeld aantal tochten per boot voor elk boottype: hoe hoger, hoe drukker de boten van dat type.",
+    "topBoats": "Aantal tochten van elke boot in het seizoen.",
+    "routes": "Aantal tochten per traject (tochten zonder traject worden niet geteld).",
+    "outingTypes": "Aantal tochten per soort: leren roeien, training, wedstrijd, toertocht…",
+    "incidents": "Aantal gemelde incidenten voor elke betrokken boot.",
+    "damages": "In het seizoen gemelde schade, per boot en naar ernst.",
+    "retention": "Aandeel roeiers dat één en twee seizoenen na hun komst nog actief is.",
+    "safety": "Tochten die te laat terugkwamen, zonder geplande terugkomsttijd of nooit afgesloten in het logboek, per maand. Eén tocht kan in twee categorieën staan."
+  },
+  "introsAlone": {
+    "outingsMonthly": "Aantal tochten per maand.",
+    "activeRowersMonthly": "Aantal verschillende roeiers dat in de maand minstens één keer op het water was."
+  },
+  "empty": {
+    "incidents": "Geen incident gemeld tijdens het seizoen.",
+    "damages": "Geen schade gemeld tijdens het seizoen.",
+    "safety": "Geen late terugkomst en geen open tocht tijdens het seizoen."
+  },
+  "omitted": "Geen gegevens dit seizoen, niet afgedrukt: {{titles}}.",
+  "labels": {
+    "coachedPct": "Aandeel begeleide tochten"
+  },
+  "retention": {
+    "joined": "Komst",
+    "after_one": "+{{count}} seizoen",
+    "after_other": "+{{count}} seizoenen"
+  },
+  "notesFor": {
+    "demographics": "{{members}} clubleden van de {{active}} actieve roeiers; de {{guests}} gasten worden hier niet geteld.",
+    "retentionBoth": "{{arrivals}} nieuwe roeiers in {{season}}; {{pct}} van wie in {{prev}} kwam, is dit seizoen teruggekomen.",
+    "retentionArrivals": "{{arrivals}} nieuwe roeiers in {{season}}.",
+    "retentionReturned": "{{pct}} van wie in {{prev}} kwam, is dit seizoen teruggekomen.",
+    "retentionFirst": "Het eerste geregistreerde seizoen omvat alle leden die er al waren.",
+    "firstSeason": "Eerste seizoen geregistreerd in Rowing Beacon: geen vergelijking met vorig seizoen.",
+    "partialMonth": "{{month}}: lopende maand, gegevens tot en met {{date}}.",
+    "incidents_one": "{{count}} incident gemeld.",
+    "incidents_other": "{{count}} incidenten gemeld op {{boats}} boten.",
+    "incidentsOneBoat": "{{count}} incidenten gemeld, allemaal op dezelfde boot."
+  },
+  "definitions": {
+    "title": "Definities",
+    "activeRower": "Actieve roeier: iedereen die in het seizoen minstens één keer in een boot zat, lid of gast.",
+    "coached": "Begeleide tocht: een tocht die in het logboek als begeleid is aangegeven; het aandeel telt alleen tochten waarbij dit is ingevuld.",
+    "hours": "Uren op het water: duur van tochten van één dag; meerdaagse tochten worden niet geteld.",
+    "km": "Kilometers: afstanden ingevoerd in het logboek."
+  },
+  "footer": "Gemaakt door Rowing Beacon op basis van het logboek van de club.",
+  "appendix": "Bijlage: de cijfers in detail",
+  "pdfBanner": "Een pdf maken: Afdrukken (Ctrl+P, of ⌘P op een Mac), bestemming 'Opslaan als pdf'. Vink 'Kop- en voetteksten' uit voor een net resultaat.",
+  "summarySheet": "Samenvatting",
+  "summary": {
+    "club": "Club",
+    "season": "Seizoen",
+    "period": "Periode",
+    "issued": "Uitgegeven op",
+    "notes": "Een woord van de club",
+    "indicator": "Indicator",
+    "change": "Verandering (%)",
+    "contents": "Inhoud"
+  },
+  "sheets": {
+    "outingsMonthly": "Tochten per maand",
+    "activeRowersMonthly": "Roeiers per maand",
+    "demographics": "Leden",
+    "fleet": "Vloot",
+    "topBoats": "Boten",
+    "routes": "Trajecten",
+    "outingTypes": "Soorten tochten",
+    "incidents": "Incidenten",
+    "damages": "Schade",
+    "retention": "Behoud",
+    "safety": "Veiligheid"
+  },
+  "fileSlug": "jaarverslag",
+  "exportXlsx": "Exporteren naar Excel",
+  "exportHtml": "Openen in de browser",
+  "print": "Afdrukken of opslaan als pdf",
+  "present": "Presenteren",
+  "open": "Openen",
+  "preparing": "Verslag wordt voorbereid…",
+  "preparingCount": "Verslag wordt voorbereid… {{done}} / {{total}} onderdelen",
+  "ready": "Verslag klaar",
+  "htmlSaved": "Pagina opgeslagen in Downloads ({{name}}) en geopend in uw browser. Voor een pdf: Afdrukken › Opslaan als pdf.",
+  "htmlSavedNotOpened": "Pagina opgeslagen in Downloads ({{name}}): open hem en kies dan Afdrukken › Opslaan als pdf.",
+  "failedSections_one": "{{count}} onderdeel kon niet worden berekend en staat niet in het document: {{titles}}.",
+  "failedSections_other": "{{count}} onderdelen konden niet worden berekend en staan niet in het document: {{titles}}.",
+  "callout": {
+    "partial": "Seizoen {{season}} is nog niet voorbij (gegevens tot en met {{date}}). Voor de algemene ledenvergadering toont men meestal het laatste volledige seizoen.",
+    "showSeason": "Seizoen {{season}} tonen"
+  },
+  "noOutings": "Geen tochten geregistreerd voor seizoen {{season}}."
+}

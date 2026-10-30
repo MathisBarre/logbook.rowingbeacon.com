@@ -9,11 +9,18 @@ import { SimpleAlertDialog } from "./SimpleAlertDialog";
 import Button from "./Button";
 import { useState } from "react";
 import useNavigationStore from "../store/navigation.store";
-import { BookIcon, LockIcon, ShipIcon, BarChartIcon } from "lucide-react";
+import {
+  BookIcon,
+  CalendarIcon,
+  LockIcon,
+  ShipIcon,
+  BarChartIcon,
+} from "lucide-react";
 import logo from "../../_common/images/logo.svg";
 import { Popover, PopoverContent, PopoverTrigger } from "./Popover";
 import PageButton from "./PageButton";
 import { useTranslation } from "react-i18next";
+import { useModule } from "../store/modules.store";
 
 export const NavigationBar = () => {
   const { t } = useTranslation();
@@ -24,6 +31,7 @@ export const NavigationBar = () => {
   } = useNavigationStore();
   const [isLogoutAlertOpen, setIsLogoutAlertOpen] = useState(false);
   const adminEditSystem = useAdminEditModeSystem();
+  const hasReservations = useModule("reservations");
 
   return (
     <>
@@ -93,6 +101,16 @@ export const NavigationBar = () => {
             icon={<ShipIcon className="h-4 w-4" />}
             label={t("navigation.boathouse")}
           />
+
+          {hasReservations && (
+            <PageButton
+              page="reservations"
+              currentPage={page}
+              setPage={setPage}
+              icon={<CalendarIcon className="h-4 w-4" />}
+              label={t("navigation.reservations")}
+            />
+          )}
 
           <PageButton
             page="logbook"

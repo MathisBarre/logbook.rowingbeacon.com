@@ -7,6 +7,8 @@ interface BoatListWrapperProps {
   children: React.ReactNode;
   label: string;
   icon: ReactNode;
+  /** Secondary action shown next to the search field. */
+  headerAction?: ReactNode;
 }
 
 export const BoatListWrapper = ({
@@ -15,6 +17,7 @@ export const BoatListWrapper = ({
   children,
   label,
   icon,
+  headerAction,
 }: BoatListWrapperProps) => {
   const { t } = useTranslation();
 
@@ -25,7 +28,8 @@ export const BoatListWrapper = ({
           {icon}
           {label}
         </h1>
-        <div>
+        <div className="flex items-center gap-2">
+          {headerAction}
           <label htmlFor="boatFilter" className="font-normal sr-only">
             {t("common.search")}:{" "}
           </label>
@@ -34,7 +38,7 @@ export const BoatListWrapper = ({
             value={search}
             type="text"
             placeholder={t("boathouse.searchBoat")}
-            className="border border-gray-400 rounded shadow-sm px-1 py-0 w-64 h-8 text-black placeholder-gray-500 opacity-90"
+            className="border border-gray-400 rounded shadow-sm px-1 py-0 w-64 min-w-0 shrink h-8 text-black placeholder-gray-500 opacity-90"
           />
         </div>
       </div>

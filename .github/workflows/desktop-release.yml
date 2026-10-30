@@ -5,16 +5,67 @@ on:
     tags:
       - v*
 
+# Only the publish job writes; the build jobs run every dependency's build
+# scripts and must not be able to touch releases.
 permissions:
-  contents: write
+  contents: read
+
+# Two tags pushed close together must not race on which release is latest.
+concurrency:
+  group: desktop-release
+  cancel-in-progress: false
 
 jobs:
+  preflight:
+    name: Check the version and the updater key
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Check the tag, the versions and the updater key
+        shell: bash
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          tag="$GITHUB_REF_NAME"
+          # latest.json announces the tag's version: it must be the built one.
+          if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Tag $tag is not a vX.Y.Z release tag" >&2
+            exit 1
+          fi
+          version="${tag#v}"
+          conf_version="$(node -p 'require("./src-tauri/tauri.conf.json").version')"
+          package_version="$(node -p 'require("./package.json").version')"
+          cargo_version="$(sed -n 's/^version = "\(.*\)"/\1/p' src-tauri/Cargo.toml | head -n 1)"
+          for found in "$conf_version" "$package_version" "$cargo_version"; do
+            if [[ "$found" != "$version" ]]; then
+              echo "Tag $tag does not match the app versions (tauri.conf.json $conf_version, package.json $package_version, Cargo.toml $cargo_version)" >&2
+              exit 1
+            fi
+          done
+          if [[ -z "$TAURI_SIGNING_PRIVATE_KEY" || -z "$TAURI_SIGNING_PRIVATE_KEY_PASSWORD" ]]; then
+            echo "Missing GitHub secret TAURI_SIGNING_PRIVATE_KEY or TAURI_SIGNING_PRIVATE_KEY_PASSWORD (see release-notes/README.md)" >&2
+            exit 1
+          fi
+          if grep -q "A_REMPLACER_PAR_LA_CLE_PUBLIQUE" src-tauri/tauri.conf.json; then
+            echo "plugins.updater.pubkey in tauri.conf.json is still the placeholder" >&2
+            exit 1
+          fi
+
   linux:
     name: Build signed Linux AppImage
+    needs: preflight
     runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: pnpm/action-setup@v4
         with:
@@ -33,7 +84,6 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
-            src-tauri/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('src-tauri/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
@@ -85,7 +135,13 @@ jobs:
           SIGN_KEY: ${{ steps.linux-signing.outputs.fingerprint }}
           APPIMAGETOOL_SIGN_PASSPHRASE: ${{ secrets.LINUX_GPG_PRIVATE_KEY_PASSWORD }}
           APPIMAGETOOL_FORCE_SIGN: "1"
-        run: pnpm tauri build
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        # Updater artifacts only here: a local build has no signing key. The
+        # release config also skips beforeBuildCommand (already built above),
+        # so the frontend build never sees the key.
+        # AppImage only: nothing ships the .deb, and its bundler could fail the release.
+        run: pnpm tauri build --bundles appimage --config src-tauri/tauri.release.conf.json
 
       - name: Verify AppImage contains an embedded signature
         shell: bash
@@ -99,21 +155,29 @@ jobs:
           fi
           for appimage in "${appimages[@]}"; do
             chmod +x "$appimage"
-            "$appimage" --appimage-signature | grep -q -- "-----BEGIN PGP SIGNATURE-----"
+            # Captured first: grep -q closing the pipe early would fail it.
+            signature="$("$appimage" --appimage-signature)"
+            grep -q -- "-----BEGIN PGP SIGNATURE-----" <<< "$signature"
           done
 
       - uses: actions/upload-artifact@v4
         with:
           name: linux-installers
-          path: src-tauri/target/release/bundle/appimage/*.AppImage
+          # The .sig files are the updater signatures (latest.json).
+          path: |
+            src-tauri/target/release/bundle/appimage/*.AppImage
+            src-tauri/target/release/bundle/appimage/*.AppImage.sig
           if-no-files-found: error
 
   windows:
     name: Build Windows installers
+    needs: preflight
     runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: pnpm/action-setup@v4
         with:
@@ -132,21 +196,28 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
-            src-tauri/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('src-tauri/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - run: pnpm tauri build
+
+      - name: Build Windows installers
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        # NSIS only: the updater (2.0.x) has one Windows entry, so an MSI
+        # install would be updated by the setup exe into a second install.
+        # The release config skips beforeBuildCommand (already built above).
+        run: pnpm tauri build --bundles nsis --config src-tauri/tauri.release.conf.json
 
       - uses: actions/upload-artifact@v4
         with:
           name: windows-installers
           path: |
-            src-tauri/target/release/bundle/msi/*.msi
             src-tauri/target/release/bundle/nsis/*.exe
+            src-tauri/target/release/bundle/nsis/*.exe.sig
           if-no-files-found: error
 
   publish:
@@ -155,8 +226,18 @@ jobs:
       - linux
       - windows
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            release-notes
+            src-tauri/tauri.conf.json
+          sparse-checkout-cone-mode: false
+
       - uses: actions/download-artifact@v4
         with:
           path: release-assets
@@ -168,22 +249,68 @@ jobs:
           set -euo pipefail
           shopt -s nullglob
 
-          # The Windows artifact keeps its msi/ and nsis/ folders.
+          # The Windows artifact keeps its nsis/ folder.
           find release-assets -mindepth 2 -type f -exec mv {} release-assets/ \;
           find release-assets -mindepth 1 -type d -empty -delete
+          # "Rowing Beacon_…": GitHub stores spaces as dots, so --clobber on a
+          # re-run would not find the old asset and SHA256SUMS would not match.
+          for file in release-assets/*' '*; do
+            mv -- "$file" "${file// /-}"
+          done
 
           appimages=(release-assets/*.AppImage)
           setup_exes=(release-assets/*-setup.exe)
-          msis=(release-assets/*.msi)
 
           (( ${#appimages[@]} > 0 )) || { echo "Missing AppImage" >&2; exit 1; }
           (( ${#setup_exes[@]} > 0 )) || { echo "Missing Windows setup executable" >&2; exit 1; }
+          [[ -f "${appimages[0]}.sig" ]] || { echo "Missing AppImage updater signature" >&2; exit 1; }
+          [[ -f "${setup_exes[0]}.sig" ]] || { echo "Missing Windows setup updater signature" >&2; exit 1; }
+
+          # A private key that does not match the pubkey in tauri.conf.json
+          # would ship an app that can never update: check every signature.
+          sudo apt-get update -qq && sudo apt-get install -y -qq minisign
+          node -p 'require("./src-tauri/tauri.conf.json").plugins.updater.pubkey' | base64 --decode > updater.pub
+          for installer in "${appimages[0]}" "${setup_exes[0]}"; do
+            base64 --decode < "$installer.sig" > updater.minisig
+            minisign -V -q -p updater.pub -m "$installer" -x updater.minisig \
+              || { echo "The updater signature of $installer does not match the pubkey in tauri.conf.json" >&2; exit 1; }
+          done
+          rm updater.pub updater.minisig
 
           cp "${appimages[0]}" release-assets/Rowing-Beacon-Linux-x86_64.AppImage
           cp "${setup_exes[0]}" release-assets/Rowing-Beacon-Windows-x64-setup.exe
-          if (( ${#msis[@]} > 0 )); then
-            cp "${msis[0]}" release-assets/Rowing-Beacon-Windows-x64.msi
+
+          # Read by the app's updater from the latest release; the stable
+          # names keep the same bytes, so the signatures still match.
+          tag="$GITHUB_REF_NAME"
+          notes_file="release-notes/${tag}.md"
+          if [[ -f "$notes_file" ]]; then
+            echo "notes_file=$notes_file" >> "$GITHUB_ENV"
           fi
+          download="https://github.com/${GITHUB_REPOSITORY}/releases/download/${tag}"
+          VERSION="${tag#v}" \
+          NOTES_FILE="$notes_file" \
+          LINUX_URL="$download/Rowing-Beacon-Linux-x86_64.AppImage" \
+          LINUX_SIG="${appimages[0]}.sig" \
+          WINDOWS_URL="$download/Rowing-Beacon-Windows-x64-setup.exe" \
+          WINDOWS_SIG="${setup_exes[0]}.sig" \
+          node -e '
+            const fs = require("fs");
+            const env = process.env;
+            const read = (path) => fs.readFileSync(path, "utf8").trim();
+            const manifest = {
+              version: env.VERSION,
+              notes: fs.existsSync(env.NOTES_FILE)
+                ? read(env.NOTES_FILE)
+                : `Rowing Beacon v${env.VERSION}`,
+              pub_date: new Date().toISOString(),
+              platforms: {
+                "linux-x86_64": { signature: read(env.LINUX_SIG), url: env.LINUX_URL },
+                "windows-x86_64": { signature: read(env.WINDOWS_SIG), url: env.WINDOWS_URL },
+              },
+            };
+            fs.writeFileSync("release-assets/latest.json", JSON.stringify(manifest, null, 2) + "\n");
+          '
 
           cd release-assets
           sha256sum -- * > SHA256SUMS.txt
@@ -195,13 +322,59 @@ jobs:
         run: |
           set -euo pipefail
           tag="$GITHUB_REF_NAME"
-          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            gh release upload "$tag" release-assets/* --clobber --repo "$GITHUB_REPOSITORY"
-          else
-            gh release create "$tag" release-assets/* \
-              --repo "$GITHUB_REPOSITORY" \
-              --title "Rowing Beacon $tag" \
-              --generate-notes \
-              --verify-tag \
-              --latest
+          repo=(--repo "$GITHUB_REPOSITORY")
+
+          # A hotfix of an older line must not become the latest release, or
+          # clients on the newer line would be offered it.
+          # Only "no release yet" counts as no latest: any other error stops
+          # the job instead of letting an older hotfix become latest.
+          latest=true
+          if ! current="$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" --jq .tag_name 2>latest.err)"; then
+            grep -q "Not Found" latest.err || { cat latest.err >&2; exit 1; }
+            current=""
           fi
+          if [[ -n "$current" && "$current" != "$tag" ]] \
+            && [[ "$(printf '%s\n%s\n' "${current#v}" "${tag#v}" | sort -V | head -n 1)" == "${tag#v}" ]]; then
+            latest=false
+          fi
+
+          # Created as a draft: clients only see the release once every asset
+          # is there, and a re-run after a failed upload still publishes it.
+          # A published release is never rebuilt in place: clients could get
+          # new installers with the old latest.json, whose signatures fail.
+          # Only "not found" means no release: an API error must not create a
+          # second draft for the same tag.
+          if ! is_draft="$(gh release view "$tag" "${repo[@]}" --json isDraft -q .isDraft 2>view.err)"; then
+            grep -q "release not found" view.err || { cat view.err >&2; exit 1; }
+            is_draft=missing
+          fi
+          if [[ "$is_draft" == "false" ]]; then
+            if [[ -n "${notes_file:-}" ]]; then
+              gh release edit "$tag" "${repo[@]}" --notes-file "$notes_file"
+              echo "Release $tag is already public: only its notes were refreshed."
+              exit 0
+            fi
+            echo "Release $tag is already public; publish a new version instead of rebuilding it." >&2
+            exit 1
+          fi
+          if [[ "$is_draft" == "missing" ]]; then
+            if [[ -n "${notes_file:-}" ]]; then
+              notes_args=(--notes-file "$notes_file")
+            else
+              notes_args=(--generate-notes)
+            fi
+            gh release create "$tag" "${repo[@]}" \
+              --title "Rowing Beacon $tag" \
+              "${notes_args[@]}" \
+              --verify-tag \
+              --draft
+          elif [[ -n "${notes_file:-}" ]]; then
+            # A re-run after editing release-notes/ refreshes the text.
+            gh release edit "$tag" "${repo[@]}" --notes-file "$notes_file"
+          fi
+          # Installers first, latest.json last, so the manifest never points
+          # at assets that are not uploaded yet.
+          find release-assets -maxdepth 1 -type f ! -name latest.json -print0 \
+            | xargs -0 gh release upload "$tag" "${repo[@]}" --clobber
+          gh release upload "$tag" release-assets/latest.json "${repo[@]}" --clobber
+          gh release edit "$tag" "${repo[@]}" --draft=false --latest="$latest"

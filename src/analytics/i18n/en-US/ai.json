@@ -1,0 +1,147 @@
+{
+  "questionLabel": "Ask the AI",
+  "intro": "Ask in plain English: the AI writes the query and the chart, and you check the result before saving.",
+  "placeholder": "E.g. how many outings on Tuesday evenings this season?",
+  "ask": "Ask the AI",
+  "generating": "Working…",
+  "newQuestion": "New question",
+  "editQuestion": "Edit the question",
+  "askedQuestion": "Your question",
+  "shortcut": "{{keys}} to send",
+  "shortcutCopy": "{{keys}} to copy the request",
+  "counter": "{{count}} / {{max}} characters",
+  "stopped": "Request stopped.",
+  "examples": {
+    "title": "Example questions:",
+    "weekend": "Which boats go out most on weekends?",
+    "youth": "How many youth rowers went out each month this season?",
+    "hoursType": "Hours on the water by boat type and month"
+  },
+  "history": {
+    "title": "Your recent questions",
+    "replayed": "Answer from {{date}}, run again on today's data."
+  },
+  "privacy": {
+    "noNames": "No people's names: the AI does not know the rowers.",
+    "line": "Sent to {{provider}}: the question and the table structure, never rowers' data.",
+    "lineAssets": "Sent to {{provider}}: the question, the table structure and boat and route names, never rowers' data.",
+    "lineLocal": "Everything stays on this computer: the question goes to the AI server on this computer ({{host}}).",
+    "lineCopy": "The copied request holds your question and the table structure, never rowers' data. You choose which AI to paste it into.",
+    "lineCopyAssets": "The copied request holds your question, the table structure and boat and route names, never rowers' data. You choose which AI to paste it into.",
+    "typicalCost": "About {{cost}} per question.",
+    "details": "What is sent"
+  },
+  "names": {
+    "found": "Your question contains \"{{name}}\", a rower's name: it would be sent to {{provider}}. Replace it with \"a rower\": you will pick them afterwards in the parameters.",
+    "foundCopy": "Your question contains \"{{name}}\", a rower's name: it would be copied into the request. Replace it with \"a rower\": you will pick them afterwards in the parameters.",
+    "replacement": "a rower",
+    "replace": "Replace with \"a rower\"",
+    "sendAnyway": "Send anyway",
+    "copyAnyway": "Copy anyway"
+  },
+  "status": {
+    "asking": "The AI is writing the query…",
+    "running": "Checking the query on the club's data…",
+    "repairing": "Fixing the query automatically after an error…",
+    "elapsed": "{{seconds}} s",
+    "slow": "This can take up to a minute.",
+    "slower": "Still working: hard questions take longer."
+  },
+  "answer": {
+    "eyebrow": "AI answer",
+    "assumptions": "Assumptions",
+    "clarified": "Clarified: {{text}}",
+    "refined": "Refined: {{text}}",
+    "cost": "≈ {{cost}} for this question",
+    "costTitle": "Estimate based on the public price; the exact amount is on the club's {{provider}} account.",
+    "repaired": "Query corrected automatically after an error.",
+    "preview": "Result preview",
+    "rows_one": "{{count}} row in {{ms}} ms",
+    "rows_other": "{{count}} rows in {{ms}} ms",
+    "inEditor": "The query is loaded in the editor: check the result, then \"Save\" or \"Pin\". Nothing is saved without you.",
+    "showResult": "See the result",
+    "needsValues": "Choose a value for {{names}} in the editor's parameters, then run the query again.",
+    "chooseParam": "Choose {{name}}",
+    "notLoaded": "This answer is not in the editor.",
+    "load": "Load into the editor",
+    "answeredBy": "Answer from {{provider}} · {{model}}"
+  },
+  "refine": {
+    "placeholder": "Refine: youth only, by month…",
+    "label": "Refine this result",
+    "button": "Refine",
+    "pasted": "To refine it, tell your AI in the same conversation, then paste its new answer above."
+  },
+  "clarification": {
+    "title": "The AI needs one more detail",
+    "choices": "Possible answers",
+    "other": "Another answer:",
+    "answer": "Reply",
+    "placeholder": "Your answer…"
+  },
+  "steps": {
+    "title": "Use your usual AI",
+    "copy": "Copy the request.",
+    "open": "Paste it into your AI:",
+    "pasteHelp": "In your AI, click \"Copy\" under its answer (or at the top of the code block).",
+    "alreadyHave": "I already have an answer to paste",
+    "addKey": "To let the AI answer right here, add an API key:",
+    "configure": "Set up the AI",
+    "useStored": "Use {{provider}} (saved key)"
+  },
+  "copy": {
+    "button": "Copy the request",
+    "header": "Request prepared by RowingBeacon for the club's statistics: the AI will answer with a code block to copy back into RowingBeacon.",
+    "done": "Request copied: paste it into your usual AI, then copy its answer.",
+    "doneIn": "Request copied: paste it into {{name}} (Ctrl + V), then copy its answer.",
+    "failed": "Could not copy: select all the text below and copy it.",
+    "open": "Open {{name}}",
+    "needQuestion": "Write your question first."
+  },
+  "paste": {
+    "label": "Paste its answer here:",
+    "placeholder": "Paste your AI's whole answer here",
+    "apply": "Use this answer",
+    "invalid": "This answer isn't recognized. In your AI, click \"Copy\" under its answer, then paste all of it here.",
+    "clarification": "Your AI asks for a detail: answer it in its conversation, then paste its new answer here.",
+    "copyRepair": "Copy the error for your AI",
+    "repairCopied": "Error copied: paste it into the same conversation with your AI, then paste the corrected answer here."
+  },
+  "keyDialog": {
+    "title": "Set up the AI",
+    "saved": "Key saved: you can ask the AI."
+  },
+  "actions": {
+    "fixSettings": "Fix the AI settings",
+    "retryIn": "Try again ({{seconds}} s)",
+    "copyForUsual": "Copy the request for your usual AI",
+    "openInEditor": "Open the query in the editor",
+    "technical": "Technical detail"
+  },
+  "errors": {
+    "no_key": "No API key set up ({{provider}}).",
+    "invalid_key": "The API key was rejected by {{provider}}: it may have been deleted, or copied incorrectly.",
+    "forbidden": "This key has no access to this model, or the account is out of credit. Choose another model or check the account ({{provider}}).",
+    "rate_limited": "Too many requests right now. Try again in {{seconds}} s.",
+    "overloaded": "Overloaded right now ({{provider}}). Try again in a few minutes.",
+    "bad_request": "{{provider}} rejected the request. Try again; if it happens again, choose another model.",
+    "network": "Cannot reach {{provider}}: check the Internet connection. Without Internet, reports and the SQL editor still work.",
+    "network_server": "Cannot reach {{provider}}: check that the AI server is running.",
+    "timeout": "The AI did not answer in time. Try again.",
+    "refusal": "The AI declined this request. Rephrase the question.",
+    "truncated": "Answer too long and cut off. Ask a more specific question.",
+    "invalid_response": "Unreadable AI answer. Try again.",
+    "repair_failed": "The AI could not fix the query: {{message}}",
+    "too_large": "Question too long (2,000 characters at most).",
+    "model_not_allowed": "Model not supported. Choose a model in Management › Statistics and AI.",
+    "desktop_only": "The AI assistant only works in the installed application.",
+    "internal": "Unexpected assistant error. Try again.",
+    "query": "The proposed query could not run: {{message}}",
+    "model_not_found": "Model not found ({{provider}}). Check its name in Management › Statistics and AI."
+  },
+  "providers": {
+    "generic": "the AI service",
+    "server": "your AI server",
+    "local": "the server on this computer"
+  }
+}

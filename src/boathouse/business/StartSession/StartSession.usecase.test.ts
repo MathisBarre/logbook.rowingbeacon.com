@@ -436,6 +436,27 @@ describe("StartSession", () => {
       );
     });
 
+    it("refuses a boat that is out of service", async () => {
+      init();
+      repository = createInMemoryStartSessionRepository({
+        ...getHappyCaseInMemoryData(),
+        boats: [
+          {
+            id: BOAT_ID,
+            name: "DUMMY:boat",
+            type: BoatTypeEnum.ONE_ROWER_COXLESS,
+            isInMaintenance: true,
+          },
+        ],
+      });
+      vi.spyOn(repository, "saveSession");
+
+      result = await getUsecase().execute(happyCasePayload);
+
+      expect(result).toEqual(asError({ code: "BOAT_UNUSABLE" }));
+      expect(repository.saveSession).not.toHaveBeenCalled();
+    });
+
     it("never lets a guest or the cox fail the level check", async () => {
       init();
       repository = createInMemoryStartSessionRepository({

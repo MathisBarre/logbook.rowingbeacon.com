@@ -1,6 +1,6 @@
 [package]
 name = "rowing-beacon-tauri-app"
-version = "2.0.1"
+version = "2.1.0"
 description = "A Tauri App"
 authors = ["you"]
 license = ""
@@ -8,6 +8,10 @@ repository = ""
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+# One Cargo.lock for the app and the analytics crate (ADR 0008).
+[workspace]
+members = ["crates/rb-analytics"]
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
@@ -20,6 +24,8 @@ tauri-plugin-shell = "2"
 tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
 tauri-plugin-persisted-scope = "2"
+rb-analytics = { path = "crates/rb-analytics" }
+tauri-plugin-process = "~2.0.1"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
@@ -31,6 +37,8 @@ tauri-plugin-autostart = "2"
 
 [target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
 tauri-plugin-autostart = "2"
+# Kept on the 2.0 line of the tauri crate in Cargo.lock.
+tauri-plugin-updater = "~2.0.2"
 
 [dependencies.tauri-plugin-sql]
 features = ["sqlite"] # or "postgres", or "mysql"

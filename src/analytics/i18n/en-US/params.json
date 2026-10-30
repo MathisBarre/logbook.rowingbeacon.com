@@ -1,0 +1,57 @@
+{
+  "season": "Season",
+  "boat_class": "Boat class",
+  "boat_id": "Boat",
+  "rower_id": "Rower",
+  "route_id": "Route",
+  "outing_type": "Outing type",
+  "metric": "Show",
+  "measure": "Show",
+  "dimension": "Group by",
+  "days": "Number of days",
+  "periodDays": "Over the last (days)",
+  "absentDays": "Absent for at least (days)",
+  "max_outings": "Maximum outings",
+  "min_outings": "Minimum outings",
+  "rower_status": "Status",
+  "gender": "Gender",
+  "age_category": "Age category",
+  "tolerance_min": "Late tolerance (minutes)",
+  "start_date": "From",
+  "end_date": "To",
+  "limit": "Number of rows",
+  "all": {
+    "default": "All",
+    "boat_class": "All classes",
+    "boat_id": "All boats",
+    "rower_status": "All statuses",
+    "age_category": "All categories",
+    "issue": "All issues"
+  },
+  "types": {
+    "text": "Text",
+    "integer": "Whole number",
+    "date": "Date",
+    "boolean": "Yes / no",
+    "season": "Season",
+    "boat": "Boat",
+    "rower": "Rower",
+    "route": "Route",
+    "outing_type": "Outing type",
+    "boat_class": "Boat class",
+    "choice": "List of choices"
+  },
+  "validation": {
+    "required": "Required",
+    "range": "Between {{min}} and {{max}}",
+    "clampedMin": "Set to {{value}} (minimum)",
+    "clampedMax": "Set to {{value}} (maximum)",
+    "restored": "Default value restored: {{value}}"
+  },
+  "issue": "Issue to check",
+  "bar": "Report parameters",
+  "stepper": {
+    "decrease": "Decrease: {{label}}",
+    "increase": "Increase: {{label}}"
+  }
+}

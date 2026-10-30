@@ -1,0 +1,147 @@
+{
+  "questionLabel": "AI vragen",
+  "intro": "Stel uw vraag in het Nederlands: de AI schrijft de query en de grafiek, u controleert het resultaat voordat u opslaat.",
+  "placeholder": "Bijv.: hoeveel tochten op dinsdagavond dit seizoen?",
+  "ask": "AI vragen",
+  "generating": "Bezig…",
+  "newQuestion": "Nieuwe vraag",
+  "editQuestion": "Vraag bewerken",
+  "askedQuestion": "Uw vraag",
+  "shortcut": "{{keys}} om te verzenden",
+  "shortcutCopy": "{{keys}} om het verzoek te kopiëren",
+  "counter": "{{count}} / {{max}} tekens",
+  "stopped": "Verzoek gestopt.",
+  "examples": {
+    "title": "Voorbeeldvragen:",
+    "weekend": "Welke boten varen het meest in het weekend?",
+    "youth": "Hoeveel jeugdroeiers voeren er elke maand dit seizoen?",
+    "hoursType": "Uren op het water per boottype en per maand"
+  },
+  "history": {
+    "title": "Uw laatste vragen",
+    "replayed": "Antwoord van {{date}}, opnieuw uitgevoerd op de gegevens van vandaag."
+  },
+  "privacy": {
+    "noNames": "Geen namen van personen: de AI kent de roeiers niet.",
+    "line": "Verzonden naar {{provider}}: de vraag en de tabelstructuur, nooit de gegevens van roeiers.",
+    "lineAssets": "Verzonden naar {{provider}}: de vraag, de tabelstructuur en de namen van boten en routes, nooit de gegevens van roeiers.",
+    "lineLocal": "Alles blijft op deze computer: de vraag gaat naar de AI-server op deze computer ({{host}}).",
+    "lineCopy": "Het gekopieerde verzoek bevat uw vraag en de tabelstructuur, nooit de gegevens van roeiers. U kiest zelf in welke AI u het plakt.",
+    "lineCopyAssets": "Het gekopieerde verzoek bevat uw vraag, de tabelstructuur en de namen van boten en routes, nooit de gegevens van roeiers. U kiest zelf in welke AI u het plakt.",
+    "typicalCost": "Ongeveer {{cost}} per vraag.",
+    "details": "Wat er wordt verzonden"
+  },
+  "names": {
+    "found": "Uw vraag bevat \"{{name}}\", de naam van een roeier: die zou naar {{provider}} worden verzonden. Vervang hem door \"een roeier\": u kiest die daarna in de parameters.",
+    "foundCopy": "Uw vraag bevat \"{{name}}\", de naam van een roeier: die zou in het verzoek worden gekopieerd. Vervang hem door \"een roeier\": u kiest die daarna in de parameters.",
+    "replacement": "een roeier",
+    "replace": "Vervangen door \"een roeier\"",
+    "sendAnyway": "Toch verzenden",
+    "copyAnyway": "Toch kopiëren"
+  },
+  "status": {
+    "asking": "De AI schrijft de query…",
+    "running": "De query wordt gecontroleerd op de gegevens van de club…",
+    "repairing": "De query wordt na een fout automatisch verbeterd…",
+    "elapsed": "{{seconds}} s",
+    "slow": "Dit kan tot een minuut duren.",
+    "slower": "Nog bezig: moeilijke vragen duren langer."
+  },
+  "answer": {
+    "eyebrow": "Antwoord van de AI",
+    "assumptions": "Aannames",
+    "clarified": "Verduidelijkt: {{text}}",
+    "refined": "Verfijnd: {{text}}",
+    "cost": "≈ {{cost}} voor deze vraag",
+    "costTitle": "Schatting op basis van het openbare tarief; het exacte bedrag staat op het {{provider}}-account van de club.",
+    "repaired": "Query automatisch verbeterd na een fout.",
+    "preview": "Voorbeeld van het resultaat",
+    "rows_one": "{{count}} rij in {{ms}} ms",
+    "rows_other": "{{count}} rijen in {{ms}} ms",
+    "inEditor": "De query staat in de editor: controleer het resultaat en kies dan \"Opslaan\" of \"Vastzetten\". Zonder u wordt niets opgeslagen.",
+    "showResult": "Resultaat bekijken",
+    "needsValues": "Kies een waarde voor {{names}} in de parameters van de editor en voer de query opnieuw uit.",
+    "chooseParam": "{{name}} kiezen",
+    "notLoaded": "Dit antwoord staat niet in de editor.",
+    "load": "In de editor laden",
+    "answeredBy": "Antwoord van {{provider}} · {{model}}"
+  },
+  "refine": {
+    "placeholder": "Verfijnen: alleen jeugd, per maand…",
+    "label": "Dit resultaat verfijnen",
+    "button": "Verfijnen",
+    "pasted": "Om te verfijnen, schrijf het aan uw AI in hetzelfde gesprek en plak het nieuwe antwoord hierboven."
+  },
+  "clarification": {
+    "title": "De AI heeft nog één detail nodig",
+    "choices": "Mogelijke antwoorden",
+    "other": "Ander antwoord:",
+    "answer": "Antwoorden",
+    "placeholder": "Uw antwoord…"
+  },
+  "steps": {
+    "title": "Uw gewone AI gebruiken",
+    "copy": "Kopieer het verzoek.",
+    "open": "Plak het in uw AI:",
+    "pasteHelp": "Klik in uw AI op \"Kopiëren\" onder het antwoord (of bovenaan het codeblok).",
+    "alreadyHave": "Ik heb al een antwoord om te plakken",
+    "addKey": "Voeg een API-sleutel toe zodat de AI hier direct antwoordt:",
+    "configure": "AI instellen",
+    "useStored": "{{provider}} gebruiken (opgeslagen sleutel)"
+  },
+  "copy": {
+    "button": "Verzoek kopiëren",
+    "header": "Verzoek voorbereid door RowingBeacon voor de statistieken van de club: de AI antwoordt met een codeblok om terug te kopiëren in RowingBeacon.",
+    "done": "Verzoek gekopieerd: plak het in uw gewone AI en kopieer daarna het antwoord.",
+    "doneIn": "Verzoek gekopieerd: plak het in {{name}} (Ctrl + V) en kopieer daarna het antwoord.",
+    "failed": "Kopiëren mislukt: selecteer alle tekst hieronder en kopieer die.",
+    "open": "{{name}} openen",
+    "needQuestion": "Schrijf eerst uw vraag."
+  },
+  "paste": {
+    "label": "Plak hier het antwoord:",
+    "placeholder": "Plak hier het hele antwoord van uw AI",
+    "apply": "Dit antwoord gebruiken",
+    "invalid": "Dit antwoord wordt niet herkend. Klik in uw AI op \"Kopiëren\" onder het antwoord en plak het hier volledig.",
+    "clarification": "Uw AI vraagt om een verduidelijking: antwoord in het gesprek en plak het nieuwe antwoord hier.",
+    "copyRepair": "Fout kopiëren voor uw AI",
+    "repairCopied": "Fout gekopieerd: plak hem in hetzelfde gesprek met uw AI en plak daarna het verbeterde antwoord hier."
+  },
+  "keyDialog": {
+    "title": "AI instellen",
+    "saved": "Sleutel opgeslagen: u kunt de AI vragen."
+  },
+  "actions": {
+    "fixSettings": "AI-instellingen corrigeren",
+    "retryIn": "Opnieuw proberen ({{seconds}} s)",
+    "copyForUsual": "Verzoek kopiëren voor uw gewone AI",
+    "openInEditor": "Query openen in de editor",
+    "technical": "Technisch detail"
+  },
+  "errors": {
+    "no_key": "Geen API-sleutel ingesteld ({{provider}}).",
+    "invalid_key": "De API-sleutel wordt geweigerd door {{provider}}: hij is misschien verwijderd of verkeerd gekopieerd.",
+    "forbidden": "Deze sleutel heeft geen toegang tot dit model, of het tegoed van het account is op. Kies een ander model of controleer het account ({{provider}}).",
+    "rate_limited": "Te veel verzoeken op dit moment. Probeer het over {{seconds}} s opnieuw.",
+    "overloaded": "Op dit moment overbelast ({{provider}}). Probeer het over een paar minuten opnieuw.",
+    "bad_request": "{{provider}} heeft het verzoek geweigerd. Probeer het opnieuw; gebeurt het weer, kies dan een ander model.",
+    "network": "Kan {{provider}} niet bereiken: controleer de internetverbinding. Zonder internet werken de rapporten en de SQL-editor gewoon.",
+    "network_server": "Kan {{provider}} niet bereiken: controleer of de AI-server draait.",
+    "timeout": "De AI antwoordde niet op tijd. Probeer het opnieuw.",
+    "refusal": "De AI heeft dit verzoek geweigerd. Herformuleer de vraag.",
+    "truncated": "Antwoord te lang en afgebroken. Stel een preciezere vraag.",
+    "invalid_response": "Onleesbaar AI-antwoord. Probeer het opnieuw.",
+    "repair_failed": "De AI kon de query niet verbeteren: {{message}}",
+    "too_large": "Vraag te lang (hoogstens 2.000 tekens).",
+    "model_not_allowed": "Model niet ondersteund. Kies een model in Beheer › Statistieken en AI.",
+    "desktop_only": "De AI-assistent werkt alleen in de geïnstalleerde toepassing.",
+    "internal": "Onverwachte fout van de assistent. Probeer het opnieuw.",
+    "query": "De voorgestelde query kon niet worden uitgevoerd: {{message}}",
+    "model_not_found": "Model niet gevonden ({{provider}}). Controleer de naam in Beheer › Statistieken en AI."
+  },
+  "providers": {
+    "generic": "de AI-dienst",
+    "server": "uw AI-server",
+    "local": "de server op deze computer"
+  }
+}

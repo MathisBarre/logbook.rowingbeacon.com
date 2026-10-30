@@ -1,0 +1,224 @@
+{
+  "tabLabel": "Statistics and AI",
+  "intro": "Each setting is saved as soon as you change it, in the club database, so it follows its backups. Only the AI keys stay on this computer, outside the database.",
+  "on": "On",
+  "off": "Off",
+  "season": {
+    "title": "Season",
+    "startMonth": "Season starts in",
+    "defaultMonth": "{{month}} (default)",
+    "help": "This month applies to statistics, the annual report and the Rowers and Boats pages in Management.",
+    "example": "Current season: {{start}} to {{end}}.",
+    "changed": "Reports and the dashboard now use the season from {{start}} to {{end}}.",
+    "description": "The dates that bound a season in the statistics.",
+    "monthHints": {
+      "9": "{{month}} (federation season)",
+      "1": "{{month}} (calendar year)"
+    }
+  },
+  "rankings": {
+    "title": "Rankings",
+    "public": "Show rankings with rowers' names at the boathouse, without the admin password",
+    "help": "Applies to: {{reports}}. Turn on only if members agree to appear in rankings shown at the boathouse.",
+    "noReports": "no report yet",
+    "description": "What the boathouse screen shows without a password.",
+    "publicWarning": "Everyone at the boathouse sees these rankings with names. Check that members were told (GDPR)."
+  },
+  "ai": {
+    "title": "Built-in AI assistant",
+    "status": {
+      "none": "No key on this computer.",
+      "keychain": "Key saved in this computer's keychain: never in the club database, its backups or its exports.",
+      "file": "Key saved in a protected file on this computer: never in the club database, its backups or its exports.",
+      "loading": "Reading the key status…",
+      "error": "Could not read the key status. Try again; if the problem continues, save the key again.",
+      "noServer": "No server saved on this computer.",
+      "serverWithKey": "Server saved on this computer: {{url}}, with a key.",
+      "serverWithoutKey": "Server saved on this computer: {{url}}, without a key.",
+      "keychainHint": "Key …{{hint}} saved in this computer's keychain: never in the club database, its backups or its exports.",
+      "fileHint": "Key …{{hint}} saved in a protected file on this computer: never in the club database, its backups or its exports.",
+      "serverWithKeyHint": "Server saved on this computer: {{url}}, with key …{{hint}}."
+    },
+    "key": {
+      "anthropic": "Anthropic API key",
+      "openai": "OpenAI API key",
+      "openai_compatible": "Server API key (optional)"
+    },
+    "keyPlaceholder": {
+      "anthropic": "sk-ant-…",
+      "openai": "sk-…",
+      "openai_compatible": "Empty for a server without a key"
+    },
+    "replacePlaceholder": "New key (replaces the current one)",
+    "save": "Save and check",
+    "saved": "Key saved.",
+    "test": "Check",
+    "testing": "Checking…",
+    "delete": "Delete key",
+    "deleteConfirm": "The {{provider}} key will be erased from this computer. Without another key, the assistant switches to copy-paste mode.",
+    "deleted": "Key deleted from this computer.",
+    "testOk": "Valid key: {{model}} answers.",
+    "invalidFormat": {
+      "anthropic": "An Anthropic key starts with \"sk-ant-\".",
+      "openai": "An OpenAI key starts with \"sk-\".",
+      "openai_compatible": "The key must be 8 to 1,000 characters, without spaces.",
+      "anthropicKey": "This is an Anthropic key: choose the Anthropic provider to use it."
+    },
+    "model": "Model",
+    "models": {
+      "opus": "Claude Opus 5.5 (recommended, most reliable)",
+      "sonnet": "Claude Sonnet 5.5 (faster, cheaper)",
+      "haiku": "Claude Haiku 5.5 (cheapest)",
+      "astra": "GPT-6 Astra (most reliable, most expensive)",
+      "sol": "GPT-6.1 Sol (recommended, reliable and cheaper)",
+      "terra": "GPT-6.1 Terra (faster, cheaper)",
+      "luna": "GPT-6 Luna (cheapest)"
+    },
+    "shareAssets": "Send boat and route names",
+    "shareAssetsHelp": "Lets you ask for \"outings of the Albatross\". Rowers' names are never sent.",
+    "createKey": {
+      "anthropic": "Create a key on <site>console.anthropic.com</site>, then paste it here.",
+      "openai": "Create a key on <site>platform.openai.com</site>, then paste it here."
+    },
+    "noKeyHint": "Without a key, the assistant still works: it prepares a request to copy into your AI assistant (Claude, ChatGPT, Le Chat…), then you paste its answer.",
+    "whatIsSent": "What is sent to {{provider}}: your question, the structure of the statistics tables, the club's outing types and today's date. Never rowers' names, outings or results.",
+    "privacy": {
+      "details": "What is sent, in detail",
+      "sentTitle": "Sent to {{provider}} with each question",
+      "sent": {
+        "question": "your question, exactly as you write it (hence the advice not to put names in it);",
+        "schema": "the structure of the statistics tables: column names and descriptions, never their content;",
+        "context": "the club's outing types, the enabled modules, the season start and today's date;",
+        "assets": "boat and route names, only when the option above is on;",
+        "errors": "after an error, the query's error message, so that the AI can fix it."
+      },
+      "neverTitle": "Never sent",
+      "never": {
+        "people": "rowers' names, birth dates, contact details and notes;",
+        "outings": "outings, comments and calculation results: the query runs on this computer and its results stay there;",
+        "password": "the admin password and the rest of the club database."
+      },
+      "copyPaste": "Without a key, you paste the same request into your AI assistant (Claude, ChatGPT…) yourself: it contains exactly these items.",
+      "where": {
+        "anthropic": "The request goes straight from this computer to api.anthropic.com, through no other server.",
+        "openai": "The request goes straight from this computer to api.openai.com, through no other server. The app asks OpenAI not to keep the answer (\"store\" turned off).",
+        "serverLocal": "The server {{host}} runs on this computer: the request does not leave it.",
+        "serverRemote": "The request goes from this computer to {{host}}. What that server does with it is up to it: read its terms of use.",
+        "serverUnknown": "The request goes to the server address you save, and to no other."
+      },
+      "title": "Privacy"
+    },
+    "provider": {
+      "label": "AI provider",
+      "help": "Each provider keeps its own key on this computer: switching does not delete any key.",
+      "anthropic": "Anthropic (Claude)",
+      "anthropicHelp": "An API key created on console.anthropic.com, with prepaid credit (a Claude Pro subscription is not enough).",
+      "openai": "OpenAI (GPT)",
+      "openaiHelp": "An API key created on platform.openai.com, with prepaid credit (a ChatGPT subscription is not enough).",
+      "openai_compatible": "Other compatible service (Mistral, Ollama…)",
+      "openai_compatibleHelp": "A service that follows OpenAI's format: Mistral, OpenRouter, or a model installed on this computer (Ollama, LM Studio, llama.cpp…).",
+      "configured": "Key saved",
+      "configuredServer": "Server saved",
+      "mismatch": "The built-in assistant uses the provider chosen here. {{provider}} has no key yet: until then, the assistant works in copy-paste mode.",
+      "switchBack": "Switch back to {{provider}}"
+    },
+    "savedServer": "Server saved.",
+    "testOkServer": "Server reachable: {{model}} answers.",
+    "costPerQuestion": "About {{cost}} per typical question, billed to the club's {{provider}} account (estimate).",
+    "compatibleModel": {
+      "label": "Model name",
+      "placeholder": "For example: llama3.3",
+      "help": "As the server names it, for example \"mistral-large-latest\" or \"llama3.3\".",
+      "required": "Enter the model name to check the server and ask questions."
+    },
+    "baseUrl": {
+      "label": "Server address",
+      "placeholder": "https://api.mistral.ai/v1 or http://localhost:11434/v1",
+      "help": "The API's base address, often ending in /v1. Over https, except for a server on this computer.",
+      "local": "Server on this computer: the table structure and your questions do not leave it.",
+      "remote": "{{host}} is not on this computer. It will receive the table structure and your questions, as Anthropic or OpenAI would. Choose a service you trust.",
+      "changed": "New address: also enter its key if it needs one. A saved key is never sent to another address.",
+      "invalid": {
+        "empty": "Enter the server address.",
+        "invalid": "Address not recognised: it should look like https://example.org/v1.",
+        "insecure": "A server that is not on this computer must use https://, so that the key is not sent in clear text.",
+        "credentials": "The address must not contain a user name or password: put the key in its own field.",
+        "query": "The address must not contain \"?\" or \"#\"."
+      }
+    },
+    "billedServer": "Any cost depends on the server: a server on this computer costs nothing.",
+    "deleteConfirmServer": "The server and its key will be erased from this computer. Without another key, the assistant switches to copy-paste mode.",
+    "description": "Used by \"Ask the AI\" in the Explorer.",
+    "saving": "Saving…",
+    "deleteServer": "Delete server",
+    "deleteTitle": "Delete the {{provider}} key?",
+    "deleteTitleServer": "Delete this server?",
+    "deletedServer": "Server deleted from this computer.",
+    "savedChecked": "Key saved and checked: {{model}} answers.",
+    "savedCheckedServer": "Server saved and checked: {{model}} answers.",
+    "savedCheckFailed": "Key saved, but the check failed: {{error}}",
+    "savedCheckFailedServer": "Server saved, but the check failed: {{error}}",
+    "keyRequired": "Paste the key first."
+  },
+  "mcp": {
+    "title": "Your AI app (MCP)",
+    "enabled": "Let the AI apps on this computer read the club's statistics",
+    "help": "Ask questions about the club's statistics right in Claude Desktop, the ChatGPT app (Codex), Cursor or VS Code. They read this computer's database, read-only, and can propose charts, which you accept in Explorer › Proposals.",
+    "whatIsSent": "Unlike the built-in assistant, your app reads the results (the figures) and sends them to its provider to answer you: Anthropic for Claude, OpenAI for ChatGPT and Codex, the one chosen in Cursor or VS Code.",
+    "privacyLabel": "Personal data",
+    "privacyModes": {
+      "pseudonymised": {
+        "title": "Codes instead of names (recommended)",
+        "description": "Rowers appear as a code (R-1A2B3C4D): no name, birth date, contact details or comments."
+      },
+      "nominative": {
+        "title": "Rowers' names visible",
+        "description": "Your app sees the names; they go to its provider with the results."
+      }
+    },
+    "nominativeWarning": "Your app's answers go through its provider (Anthropic, OpenAI…): rowers' names will leave this computer. Check that this matches what members were told (GDPR).",
+    "linux": "Claude Desktop does not exist on Linux: choose another app above (Claude Code, Codex, Cursor, VS Code…).",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyFailed": "Could not copy: select the text and copy it.",
+    "appImage": "AppImage version: the path changes if you move the file. Copy the configuration again after moving or updating it.",
+    "macosTemporary": "Rowing Beacon runs from a temporary location (disk image or Downloads folder). Drag the app into the Applications folder, open it again, then copy the configuration: otherwise your AI app will no longer find it.",
+    "disabledNote": "Off: no app can read the statistics. An app already set up gets a message saying access is closed.",
+    "infoError": "Could not prepare the AI app configuration. Try again; if the problem continues, restart the application.",
+    "clientsTitle": "Connect your app",
+    "clientsHelp": "Choose your app: each has its own configuration.",
+    "clients": {
+      "claudeDesktop": "Claude Desktop",
+      "claudeCode": "Claude Code",
+      "codex": "ChatGPT / Codex",
+      "cursor": "Cursor",
+      "vscode": "VS Code",
+      "other": "Other"
+    },
+    "otherClients": "Another MCP-compatible app? Give it this command (local \"stdio\" server):",
+    "copyLabel": "Copy the {{name}} configuration",
+    "loading": "Preparing the configuration…",
+    "lastCall": "Last question received: {{client}}, on {{date}} at {{time}}.",
+    "lastCallNone": "No app has connected on this computer yet: follow the steps below.",
+    "unknownClient": "an app",
+    "clientsNote": "Changing these settings does not require copying the configuration again.",
+    "steps": {
+      "copy": "Copy the configuration:",
+      "copyCommand": "Copy this command:",
+      "pasteMcpServers": "Paste the configuration. If the file already contains \"mcpServers\", only add the \"rowing-beacon\" entry.",
+      "ask": "Restart {{app}}, then ask it for example: \"How many outings did the club do this season?\"",
+      "yourApp": "your app",
+      "claudeDesktopOpen": "In Claude Desktop, open Settings › Developer › Edit Config: the claude_desktop_config.json file opens ({{path}}).",
+      "claudeCodeRun": "Paste it in a terminal and press Enter. Claude Code can then read the statistics from any folder on this computer.",
+      "claudeCodeAsk": "Open Claude Code, then ask it for example: \"How many outings did the club do this season?\"",
+      "codexOpen": "Open the file {{path}} (create it if it does not exist). The ChatGPT desktop app, Codex CLI and the Codex extension share this file.",
+      "codexPaste": "Add the configuration at the end of the file, then save it.",
+      "cursorOpen": "Open the file {{path}} (create it if it does not exist).",
+      "vscodeOpen": "In VS Code, open the Command Palette and run \"MCP: Open User Configuration\".",
+      "vscodePaste": "Paste the configuration. If the file already contains \"servers\", only add the \"rowing-beacon\" entry.",
+      "vscodeAsk": "Restart VS Code, then ask Copilot in Agent mode, for example: \"How many outings did the club do this season?\""
+    }
+  },
+  "technicalDetails": "Technical details",
+  "retry": "Try again"
+}

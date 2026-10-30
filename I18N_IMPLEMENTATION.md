@@ -31,7 +31,7 @@
 - ✅ NavigationBar.tsx - Full navigation with all labels and dialogs
 - ✅ Boathouse.screen.tsx - Boathouse screen with boat lists
 - ✅ Parameters.screen.tsx - Parameter navigation tabs
-- ✅ Stats.screen.tsx - Statistics screen with month names and stats
+- ✅ Stats.screen.tsx - Statistics hub (strings in `src/analytics/i18n/<locale>/<namespace>.json`, merged under `analytics.*`)
 - ✅ Onboarding.screen.tsx - Complete onboarding flow
 - ✅ SessionLogs.tsx - Session history with pagination
 - ✅ StartSession.Dialog.tsx - Start session dialog
@@ -113,8 +113,7 @@ const { t } = useTranslation();
 **Stats Components:**
 
 - `src/stats/components/SeasonSelector.tsx`
-- `src/stats/components/MonthSelector.tsx`
-- `src/stats/components/StackedBarChart.tsx`
+- `src/analytics/**` (namespaces in `src/analytics/i18n/`, one JSON file per namespace and locale)
 
 **Common Components:**
 
@@ -160,7 +159,8 @@ The translation files are organized into these categories:
 - `boathouse`: Boathouse screen specific
 - `session`: Session management (start, stop, details)
 - `logbook`: Logbook and history
-- `stats`: Statistics screen
+- `stats`: Gestion's rower and boat statistics
+- `analytics.*`: the Statistiques hub, kept in `src/analytics/i18n/`
 - `parameters`: Settings/parameters screen
 - `boat`: Boat-related terms
 - `rower`: Rower-related terms

@@ -36,6 +36,7 @@
   },
   "navigation": {
     "boathouse": "Botenhuis",
+    "reservations": "Reserveringen",
     "logbook": "Logboek",
     "stats": "Statistieken",
     "parameters": "Beheer",
@@ -70,7 +71,7 @@
       },
       "fullClub": {
         "name": "Volledige club",
-        "description": "Voegt afstanden, soorten tochten, volledige ledenprofielen, gasten en een schipper per boot toe."
+        "description": "Voegt afstanden, soorten tochten, volledige ledenprofielen, gasten, een schipper per boot en reserveringen toe."
       },
       "efaImport": {
         "name": "Ik kom van efa",
@@ -100,7 +101,15 @@
     "noBoatsToDisplay": "Geen boten om weer te geven",
     "at": "om {{time}}",
     "tomorrowAt": "morgen om {{time}}",
-    "onDate": "op {{date}}"
+    "onDate": "op {{date}}",
+    "outOfService": "Buiten gebruik",
+    "unavailableBoats": "Niet beschikbare boten",
+    "allBoatsBack": "Alle boten zijn terug. Vergeet niet het botenhuis af te sluiten.",
+    "allBoatsBackClosing": "Sluit over {{seconds}} s (klik om te sluiten)",
+    "sunrise": "Zonsopgang",
+    "sunset": "Zonsondergang",
+    "outingsAfterSunset_one": "{{count}} tocht nog op het water in het donker",
+    "outingsAfterSunset_other": "{{count}} tochten nog op het water in het donker"
   },
   "session": {
     "start": "Sessie starten",
@@ -177,7 +186,19 @@
     "duplicateCrewMember": "Dezelfde persoon is twee keer in de ploeg gekozen.",
     "boatAlreadyOnSession": "Deze boot is al op het water.",
     "returnBeforeStart": "De verwachte terugkeer moet na het vertrek liggen.",
-    "invalidDistance": "Ongeldige afstand: voer een aantal km in, bijvoorbeeld 12,5."
+    "invalidDistance": "Ongeldige afstand: voer een aantal km in, bijvoorbeeld 12,5.",
+    "boatUnusable": "Deze boot is buiten gebruik.",
+    "boatDamages": "Openstaande schades aan deze boot",
+    "boatIsDamaged": "De boot is beschadigd",
+    "damageSeverity": "Ernst van de schade",
+    "damageSeverityRequired": "Kies hoe ernstig de schade is.",
+    "sessionEndedBoatOutOfService": "Sessie-einde is succesvol geregistreerd. De boot is buiten gebruik tot hij is hersteld.",
+    "seatsRemaining_one": "Nog {{count}} plaats vrij",
+    "seatsRemaining_other": "Nog {{count}} plaatsen vrij",
+    "rowersOverflow_one": "{{count}} roeier te veel",
+    "rowersOverflow_other": "{{count}} roeiers te veel",
+    "crewComplete": "Ploeg compleet",
+    "coxMissing": "Stuurman ontbreekt"
   },
   "logbook": {
     "title": "Logboek",
@@ -209,17 +230,13 @@
     "createNewExport": "Nieuwe export maken",
     "backToSessionList": "Terug naar sessielijst",
     "captainName": "Schipper: {{name}}",
-    "coxName": "{{name}} (stuurman)"
+    "coxName": "{{name}} (stuurman)",
+    "editSession": "Tocht aanpassen"
   },
   "stats": {
-    "title": "Statistieken",
-    "infoMessage": "Veel aanvullende statistieken zijn beschikbaar in het tabblad \"Beheer\", pagina's \"Roeiers\" en \"Boten\"",
     "sessions": "Sessies",
-    "totalTimeOnWater": "Totale tijd op het water",
-    "averageTimePerSession": "Gemiddelde tijd / sessie",
     "noSessionsRecorded": "Nog geen sessies geregistreerd",
     "season": "Seizoen",
-    "allMonths": "Alle maanden",
     "numberOfSessions": "Aantal sessies",
     "timeOnWater": "Tijd op het water",
     "averagePerSession": "Gemiddelde per sessie",
@@ -237,23 +254,8 @@
     "boat": "Boot",
     "rower": "Roeier",
     "aboutBoat": "Informatie over {{boatName}}",
-    "months": {
-      "january": "Januari",
-      "february": "Februari",
-      "march": "Maart",
-      "april": "April",
-      "may": "Mei",
-      "june": "Juni",
-      "july": "Juli",
-      "august": "Augustus",
-      "september": "September",
-      "october": "Oktober",
-      "november": "November",
-      "december": "December"
-    },
     "session_one": "{{count}} sessie",
     "session_other": "{{count}} sessies",
-    "totalDistance": "Totale afstand",
     "coxedSessions": "Vaarten als stuurman"
   },
   "parameters": {
@@ -299,7 +301,7 @@
     "noType": "Geen type",
     "type": "Type",
     "updateConfiguration": "Configuratie bijwerken",
-    "inMaintenance": "In onderhoud",
+    "inMaintenance": "Buiten dienst",
     "noteDisplayedAtSessionStart": "Notitie (weergegeven bij sessiestart)",
     "yourRowers": "Uw roeiers",
     "yourBoats": "Uw boten",
@@ -354,6 +356,7 @@
     "warning": "Waarschuwing!",
     "deleteAllDataWarning1": "U staat op het punt alle applicatiegegevens te verwijderen.",
     "deleteAllDataWarning2": "Eerst wordt een veiligheidsback-up gemaakt in de back-upmap (Beheer > Gegevens), naast eerdere back-ups. Verwijder ook die bestanden om de gegevens definitief te wissen.",
+    "deleteAiKeyToo": "Verwijder ook de AI-API-sleutels die op deze computer zijn opgeslagen (Anthropic, OpenAI, compatibele server). Anders blijven ze bewaard en worden vragen aan de AI nog steeds via die accounts gefactureerd.",
     "deleteConfirmationText": "Ik wil al mijn gegevens verwijderen",
     "deleteConfirmationInstruction": "Bevestig door exact \"{{text}}\" in het onderstaande veld te typen.",
     "enterAdminPassword": "Voer het beheerderswachtwoord in",
@@ -385,7 +388,15 @@
     "showGuests": "Gasten ({{count}})",
     "guestsHelp": "Gasten worden aangemaakt als bij vertrek een naam wordt getypt. Ze staan niet in de roeierslijst; zet hun status op ‘Lid’ om ze toe te voegen.",
     "finishOutingBeforeArchiving": "Archiveren niet mogelijk: beëindig eerst de lopende vaart.",
-    "nameRequired": "De naam is verplicht."
+    "nameRequired": "De naam is verplicht.",
+    "allBoatsBackBanner": "Herinnering om het botenhuis af te sluiten",
+    "allBoatsBackBannerDescription": "Toont een grote herinnering om het botenhuis af te sluiten wanneer de laatste tocht is afgelopen.",
+    "allBoatsBackBannerOption": "Herinnering tonen wanneer alle boten terug zijn",
+    "clubLocation": "Locatie van de club",
+    "clubLocationDescription": "Wordt gebruikt om zonsopgang en zonsondergang op het scherm van het botenhuis te tonen. Laat leeg om ze te verbergen. Decimale graden, bijv. 48,8566 en 2,3522.",
+    "clubLatitude": "Breedtegraad",
+    "clubLongitude": "Lengtegraad",
+    "clubLocationInvalid": "Ongeldige waarde: de breedtegraad moet tussen -90 en 90 liggen, de lengtegraad tussen -180 en 180."
   },
   "boat": {
     "type": "Type",
@@ -461,6 +472,8 @@
     "failedToLoad": "Kan database niet laden",
     "failedToSave": "Opslaan mislukt: de wijziging is ongedaan gemaakt",
     "backupsNotDeleted": "De oude v1-back-ups konden niet uit de map backups worden verwijderd",
+    "inboxNotCleared": "De wachtende voorstellen van Claude konden niet uit de map analytics-inbox worden verwijderd",
+    "aiKeyNotDeleted": "Een AI-API-sleutel kon niet worden verwijderd: verwijder hem in Beheer › Statistieken en AI",
     "reloadFailed": "Gegevens konden niet opnieuw worden geladen: start de app opnieuw"
   },
   "migration": {
@@ -506,6 +519,19 @@
       "adds": "Voegt bij vertrek de keuze van de verantwoordelijke uit de ploeg toe (voorgesteld wordt de stuurman, anders de eerste volwassen roeier), zichtbaar in het logboek en de exports.",
       "suggestion": "Wilt u weten wie verantwoordelijk is voor elke boot op het water? De module Schipper voegt dat bij vertrek toe.",
       "requiredOption": "Schipper verplicht maken om te vertrekken"
+    },
+    "damages": {
+      "name": "Schades",
+      "description": "Meld een schade aan een boot met de ernst ervan, volg die tot het herstel en waarschuw de ploeg vóór het vertrek.",
+      "adds": "Voegt een tabblad Schades toe aan het logboek, het melden van een schade vanuit een incident of de botenfiche, een waarschuwing bij het vertrek voor beschadigde boten en de schadegeschiedenis van elke boot.",
+      "suggestion": "Een beschadigde boot? Met de module Schades meld je de schade, volg je het herstel en waarschuw je de ploeg bij het vertrek."
+    },
+    "reservations": {
+      "name": "Reserveringen",
+      "description": "Reserveer een boot voor een wedstrijd, een cursus of een wekelijkse training.",
+      "adds": "Voegt een pagina Reserveringen toe, een label ‘gereserveerd’ bij de betreffende boten in het botenhuis en een waarschuwing wanneer een tocht een reservering overlapt. Vertrekken wordt nooit geblokkeerd.",
+      "suggestion": "Moet een boot vrij blijven voor een wedstrijd, een cursus of een vast tijdstip? De module Reserveringen toont dat in het botenhuis.",
+      "lookahead": "Boot {{minutes}} minuten van tevoren als gereserveerd tonen"
     }
   },
   "outingTypes": {
@@ -519,10 +545,75 @@
     "ergometer": "Ergometer",
     "motorboat": "Motorboot"
   },
+  "reservations": {
+    "title": "Reserveringen",
+    "new": "Nieuwe reservering",
+    "newTitle": "Nieuwe reservering",
+    "editTitle": "Reservering bewerken",
+    "saved": "Reservering opgeslagen",
+    "deleted": "Reservering verwijderd",
+    "confirmDelete": "Reservering van {{boat}} ({{when}}) verwijderen?",
+    "emptyTitle": "Nog geen reserveringen",
+    "emptyText": "Reserveer een boot voor een wedstrijd, een cursus, een groepstocht of een moment dat elke week terugkomt. In het botenhuis staat de boot dan als gereserveerd en verschijnt een waarschuwing als een tocht de reservering overlapt, zonder het vertrek ooit te blokkeren.",
+    "noUpcoming": "Geen komende reserveringen.",
+    "filterByBoat": "Boot",
+    "allBoats": "Alle boten",
+    "past": "Eerdere reserveringen ({{count}})",
+    "inProgress": "Bezig",
+    "nextOn": "Eerstvolgende keer: {{date}}",
+    "unknownBoat": "Onbekende boot",
+    "weekly": "Elke {{day}} {{start}}–{{end}}",
+    "periodBetween": "van {{from}} tot {{to}}",
+    "periodFrom": "vanaf {{from}}",
+    "periodUntil": "tot {{to}}",
+    "reservedBy": "Gereserveerd door {{holder}}",
+    "badge": {
+      "until": "gereserveerd · einde {{time}}",
+      "at": "gereserveerd · start {{time}}"
+    },
+    "notice": {
+      "line": "Deze boot is van {{from}} tot {{to}} gereserveerd door {{holder}}",
+      "withReason": "Deze boot is van {{from}} tot {{to}} gereserveerd door {{holder}} ({{reason}})"
+    },
+    "boat": "Boot",
+    "chooseBoat": "Kies een boot",
+    "recurrence": "Herhaling",
+    "recurrences": {
+      "once": "Eenmalig",
+      "weekly": "Wekelijks"
+    },
+    "startDate": "Startdatum",
+    "startTime": "Starttijd",
+    "endDate": "Einddatum",
+    "endTime": "Eindtijd",
+    "day": "Dag",
+    "onlyDuringPeriod": "Alleen gedurende een periode",
+    "periodStart": "Eerste dag",
+    "periodEnd": "Laatste dag",
+    "holder": "Gereserveerd door",
+    "holderPlaceholder": "Zoek een roeier of typ een naam",
+    "holderNoOptions": "Geen roeier gevonden",
+    "holderUseName": "Naam ‘{{name}}’ gebruiken",
+    "reason": "Reden",
+    "reasonPlaceholder": "Wedstrijd, cursus, onderhoud…",
+    "moreOptions": "Meer opties",
+    "contact": "Contact",
+    "contactPlaceholder": "Telefoon of e-mail",
+    "errors": {
+      "MISSING_BOAT": "Kies een boot.",
+      "MISSING_HOLDER": "Geef aan wie reserveert: een roeier of een naam.",
+      "MISSING_DATES": "Vul alle datums in.",
+      "MISSING_DAY": "Kies een dag van de week.",
+      "INVALID_TIME": "Vul geldige tijden in.",
+      "END_BEFORE_START": "Het einde moet na het begin liggen.",
+      "NO_OCCURRENCE": "De gekozen periode bevat die weekdag niet, dus deze reservering zou nooit gelden.",
+      "OVERLAPS": "Deze boot is al gereserveerd door {{holder}}: {{when}}."
+    }
+  },
   "backup": {
     "dataTitle": "Gegevens",
     "title": "Back-ups",
-    "description": "Rowing Beacon kopieert alle clubgegevens automatisch bij het opstarten, daarna elke 24 uur, en vóór elke import, herstel of verwijdering. De laatste 14 automatische back-ups worden bewaard.",
+    "description": "Rowing Beacon kopieert alle clubgegevens automatisch bij het opstarten, daarna elke 24 uur, en vóór elke import, herstel, verwijdering of update. De laatste 14 automatische back-ups worden bewaard.",
     "lastBackup": "Laatste back-up: {{date}}",
     "noBackupYet": "Nog geen back-up.",
     "backupNow": "Nu een back-up maken",
@@ -550,11 +641,33 @@
       "manual": "Handmatig",
       "before-import": "Vóór een import",
       "before-restore": "Vóór een herstel",
-      "before-delete": "Vóór een verwijdering"
+      "before-delete": "Vóór een verwijdering",
+      "before-update": "Vóór een update"
     },
     "notABackup": "Dit bestand is geen geldige Rowing Beacon-back-up. Er is niets gewijzigd.",
     "newerBackup": "Deze back-up komt uit een nieuwere versie van Rowing Beacon. Werk de applicatie bij om hem terug te zetten. Er is niets gewijzigd.",
     "restoreNotStarted": "Het terugzetten kon niet beginnen (bestand onleesbaar of veiligheidsback-up mislukt). Er is niets gewijzigd."
+  },
+  "update": {
+    "sectionTitle": "Updates",
+    "sectionDescription": "Rowing Beacon zoekt bij het opstarten en daarna elke 6 uur naar een nieuwe versie. De clubgegevens worden vlak voor de installatie geback-upt.",
+    "currentVersion": "Geïnstalleerde versie: {{version}}",
+    "available": "Rowing Beacon {{version}} is beschikbaar",
+    "see": "De update bekijken",
+    "checkNow": "Zoeken naar updates",
+    "upToDate": "Rowing Beacon is up-to-date",
+    "checkFailed": "Zoeken naar updates is mislukt. Heeft de computer verbinding met internet?",
+    "title": "Bijwerken naar versie {{version}}",
+    "changelog": "Bekijk wat er nieuw is",
+    "safety": "De clubgegevens worden vóór de installatie geback-upt, daarna start de app opnieuw. Lopende tochten blijven behouden.",
+    "backingUp": "Back-up van de gegevens maken…",
+    "downloading": "Downloaden…",
+    "downloadingPercent": "Downloaden: {{percent}}%",
+    "installing": "Installeren…",
+    "later": "Later",
+    "install": "Installeren en opnieuw starten",
+    "backupFailed": "De back-up is mislukt: de update is niet geïnstalleerd.",
+    "failed": "De update is mislukt. Rowing Beacon blijft op de huidige versie."
   },
   "efa2": {
     "title": "efa2",
@@ -589,19 +702,25 @@
       "guests_other": "{{count}} gasten aangemaakt voor vrij ingevoerde namen",
       "externalBoats_one": "{{count}} externe boot, gearchiveerd",
       "externalBoats_other": "{{count}} externe boten, gearchiveerd",
-      "incidents_one": "{{count}} niet-herstelde schade, overgenomen als incident",
-      "incidents_other": "{{count}} niet-herstelde schades, overgenomen als incidenten",
+      "reservations_one": "{{count}} bootreservering",
+      "reservations_other": "{{count}} bootreserveringen",
       "keptIntro": "Ook bewaard, voorlopig zonder scherm, en teruggeschreven bij de efa2-export:",
       "closedOpen_one": "{{count}} tocht die vóór vandaag open bleef in efa, bij de import afgesloten",
       "closedOpen_other": "{{count}} tochten die vóór vandaag open bleven in efa, bij de import afgesloten",
       "ambiguousNames_one": "{{count}} vrij ingevoerde naam past bij meerdere personen: hij wordt een gast",
       "ambiguousNames_other": "{{count}} vrij ingevoerde namen passen bij meerdere personen: ze worden gasten",
       "unreadableEntries_one": "{{count}} onleesbare logboekregel (zonder datum of nummer): ongewijzigd bewaard en bij de efa2-export teruggeschreven",
-      "unreadableEntries_other": "{{count}} onleesbare logboekregels (zonder datum of nummer): ongewijzigd bewaard en bij de efa2-export teruggeschreven"
+      "unreadableEntries_other": "{{count}} onleesbare logboekregels (zonder datum of nummer): ongewijzigd bewaard en bij de efa2-export teruggeschreven",
+      "openDamages_one": "{{count}} niet-herstelde schade, overgenomen als open schade",
+      "openDamages_other": "{{count}} niet-herstelde schades, overgenomen als open schades",
+      "fixedDamages_one": "{{count}} al herstelde schade, bewaard in de geschiedenis",
+      "fixedDamages_other": "{{count}} al herstelde schades, bewaard in de geschiedenis",
+      "unavailableBoats_one": "{{count}} onbeschikbare boot, overgenomen met reden",
+      "unavailableBoats_other": "{{count}} onbeschikbare boten, overgenomen met reden"
     },
     "objects": {
       "efa2boatreservations": "reserveringen",
-      "efa2boatdamages": "herstelde schades",
+      "efa2boatdamages": "schades van een onbekende boot",
       "efa2messages": "berichten",
       "efa2crews": "standaardploegen",
       "efa2waters": "wateren",
@@ -627,5 +746,104 @@
     "closedOpenOutingNote": "(Tocht die in efa open bleef, bij de import afgesloten.)",
     "crewsCut_one": "{{count}} tocht heeft meer dan 24 roeiers of meerdere stuurlieden: efa2 heeft geen plaats voor de anderen, zij worden niet geëxporteerd.",
     "crewsCut_other": "{{count}} tochten hebben meer dan 24 roeiers of meerdere stuurlieden: efa2 heeft geen plaats voor de anderen, zij worden niet geëxporteerd."
+  },
+  "damages": {
+    "title": "Schades",
+    "report": "Schade melden",
+    "fix": "Markeren als hersteld",
+    "reopen": "Heropenen",
+    "fixed": "Hersteld",
+    "reportDialogTitle": "Schade melden",
+    "editDialogTitle": "Schade bewerken",
+    "fixDialogTitle": "Schade als hersteld markeren",
+    "reported": "Schade gemeld",
+    "updated": "Schade aangepast",
+    "fixedToast": "Schade als hersteld gemarkeerd",
+    "reopened": "Schade heropend",
+    "unavailableDescription": "Buiten dienst gesteld",
+    "noDescription": "Geen beschrijving",
+    "unavailableSeverityNote": "Een boot die buiten dienst is gesteld behoudt de ernst „Buiten dienst”.",
+    "reportedByName": "Gemeld door {{name}}",
+    "fixedOn": "Hersteld op {{date}}",
+    "fixedByName": "door {{name}}",
+    "repairCostValue": "Kosten: {{cost}}",
+    "openOnBoat": "Openstaande schades",
+    "noOpenOnBoat": "Geen openstaande schade op deze boot.",
+    "noneOnBoat": "Geen schade",
+    "filter": {
+      "open": "Openstaand",
+      "all": "Alle",
+      "label": "Schades filteren"
+    },
+    "empty": {
+      "open": "Geen openstaande schade",
+      "all": "Nog geen schade geregistreerd"
+    },
+    "severity": {
+      "usable": "Bruikbaar",
+      "limited": "Voorzichtig",
+      "unusable": "Buiten dienst"
+    },
+    "severityHelp": {
+      "usable": "De boot is normaal bruikbaar.",
+      "limited": "De boot is met voorzichtigheid bruikbaar; de schade wordt bij het vertrek getoond.",
+      "unusable": "De boot is buiten dienst: vertrekken is niet mogelijk."
+    },
+    "fields": {
+      "boat": "Boot",
+      "chooseBoat": "Kies een boot",
+      "severity": "Ernst",
+      "description": "Beschrijving",
+      "reportedBy": "Gemeld door",
+      "reportedAt": "Datum en tijd",
+      "fixedAt": "Datum en tijd van herstel",
+      "fixedBy": "Hersteld door",
+      "repairNote": "Herstelnotitie",
+      "repairCost": "Kosten",
+      "notSpecified": "Niet ingevuld"
+    },
+    "errors": {
+      "boatRequired": "Kies een boot.",
+      "descriptionRequired": "Beschrijf de schade.",
+      "dateInvalid": "Voer een geldige datum in.",
+      "costInvalid": "Voer een geldig bedrag in, bijvoorbeeld 12,50.",
+      "dateInFuture": "De datum mag niet in de toekomst liggen.",
+      "fixedBeforeReported": "De datum mag niet vóór de melding liggen ({{date}})."
+    },
+    "outOfServiceLocked": "Er staat een schade „Buiten dienst” open: markeer die in de lijst hieronder als hersteld om de boot weer in dienst te nemen.",
+    "actionOnBoat": "{{action}}: {{boat}}",
+    "unavailable": {
+      "fix": "Weer in dienst nemen",
+      "fixed": "Weer in dienst",
+      "fixedOn": "Weer in dienst genomen op {{date}}",
+      "fixDialogTitle": "Boot weer in dienst nemen",
+      "fixedToast": "Boot weer in dienst genomen",
+      "reopened": "Boot weer buiten dienst",
+      "fixedAt": "Datum en tijd van terugkeer in dienst",
+      "fixedBy": "Weer in dienst genomen door"
+    }
+  },
+  "outingEditor": {
+    "pastOuting": "Tocht achteraf invoeren",
+    "pastTitle": "Tocht achteraf invoeren",
+    "editTitle": "Tocht aanpassen",
+    "editOuting": "Tocht aanpassen",
+    "savePast": "Tocht opslaan",
+    "saveEdit": "Wijzigingen opslaan",
+    "pastSaved": "De tocht is aan de geschiedenis toegevoegd",
+    "editSaved": "De tocht is aangepast",
+    "endRequired": "Vul de einddatum en -tijd in.",
+    "startRequired": "Vul de begindatum en -tijd in.",
+    "endInFuture": "Het einde van de tocht kan niet in de toekomst liggen.",
+    "startInFuture": "Het begin van de tocht kan niet in de toekomst liggen.",
+    "noRowers": "Kies minstens één roeier.",
+    "coachedRequired": "Kies een antwoord.",
+    "notFound": "Deze tocht is niet gevonden: hij is mogelijk verwijderd.",
+    "fix": "Corrigeren",
+    "saveAnyway": "Toch opslaan",
+    "boatOverlap": "De boot ‘{{boatName}}’ zit op deze tijden al op een andere tocht.",
+    "rowersOverlap_one": "{{rowerNames}} zit op deze tijden al op een andere tocht.",
+    "rowersOverlap_other": "{{rowerNames}} zitten op deze tijden al op een andere tocht.",
+    "boatRequired": "Kies een boot."
   }
 }

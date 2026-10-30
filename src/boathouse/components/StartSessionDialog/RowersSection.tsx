@@ -19,6 +19,7 @@ import {
 } from "../../../_common/business/crew.rules";
 import { components } from "react-select";
 import CreatableSelect from "react-select/creatable";
+import { SeatSlots } from "./SeatSlots";
 
 export interface CrewOption {
   id: string;
@@ -36,6 +37,9 @@ interface RowersSectionProps {
   allowGuests?: boolean;
   /** Crew already picked in the other field (cox or rowers). */
   excluded?: CrewOption[];
+  /** The chosen configuration has a cox, picked in the cox field. */
+  coxed?: boolean;
+  cox?: CrewOption | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -147,6 +151,8 @@ export const RowersSection = ({
   seats,
   allowGuests,
   excluded,
+  coxed = false,
+  cox = null,
 }: RowersSectionProps) => {
   const { t } = useTranslation();
 
@@ -170,6 +176,15 @@ export const RowersSection = ({
         selected={toSelectOptions(values)}
         onSelect={(options) => onChange(fromSelectOptions(options))}
       />
+      {seats ? (
+        <SeatSlots
+          seats={seats}
+          rowers={rowers}
+          values={values}
+          coxed={coxed}
+          cox={cox}
+        />
+      ) : null}
       {errorMessage && <p className="form-error">{errorMessage}</p>}
     </div>
   );

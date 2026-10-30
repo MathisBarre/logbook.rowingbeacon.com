@@ -1,0 +1,57 @@
+{
+  "season": "Saison",
+  "boat_class": "Type de bateau",
+  "boat_id": "Bateau",
+  "rower_id": "Rameur",
+  "route_id": "Parcours",
+  "outing_type": "Type de sortie",
+  "metric": "Afficher",
+  "measure": "Afficher",
+  "dimension": "Regrouper par",
+  "days": "Nombre de jours",
+  "periodDays": "Sur les derniers (jours)",
+  "absentDays": "Absent depuis au moins (jours)",
+  "max_outings": "Sorties au maximum",
+  "min_outings": "Sorties au minimum",
+  "rower_status": "Statut",
+  "gender": "Sexe",
+  "age_category": "Catégorie d'âge",
+  "tolerance_min": "Tolérance de retard (minutes)",
+  "start_date": "Du",
+  "end_date": "Au",
+  "limit": "Nombre de lignes",
+  "all": {
+    "default": "Tous",
+    "boat_class": "Tous les types",
+    "boat_id": "Tous les bateaux",
+    "rower_status": "Tous les statuts",
+    "age_category": "Toutes les catégories",
+    "issue": "Tous les points"
+  },
+  "types": {
+    "text": "Texte",
+    "integer": "Nombre entier",
+    "date": "Date",
+    "boolean": "Oui / non",
+    "season": "Saison",
+    "boat": "Bateau",
+    "rower": "Rameur",
+    "route": "Parcours",
+    "outing_type": "Type de sortie",
+    "boat_class": "Type de bateau",
+    "choice": "Liste de choix"
+  },
+  "validation": {
+    "required": "Valeur requise",
+    "range": "Entre {{min}} et {{max}}",
+    "clampedMin": "Ramené à {{value}} (minimum)",
+    "clampedMax": "Ramené à {{value}} (maximum)",
+    "restored": "Valeur par défaut rétablie : {{value}}"
+  },
+  "issue": "Point à vérifier",
+  "bar": "Paramètres du rapport",
+  "stepper": {
+    "decrease": "Diminuer : {{label}}",
+    "increase": "Augmenter : {{label}}"
+  }
+}

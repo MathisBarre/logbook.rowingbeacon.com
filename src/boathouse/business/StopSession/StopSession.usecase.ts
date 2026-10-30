@@ -13,7 +13,14 @@ import {
   enqueueWrite,
   flushWrites,
 } from "../../../_common/database/writeQueue";
-import { OngoingOuting } from "../../../_common/database/repositories/club.types";
+import {
+  DamageSeverity,
+  OngoingOuting,
+} from "../../../_common/database/repositories/club.types";
+import {
+  ReportDamageInput,
+  useDamageStore,
+} from "../../../_common/store/damage.store";
 import i18n from "../../../_common/i18n/config";
 
 interface ISessionRepository {
@@ -54,11 +61,16 @@ interface IIncidentStore {
   }): void;
 }
 
-class StopSession {
+interface IDamageReporter {
+  reportDamage(input: ReportDamageInput): void;
+}
+
+export class StopSession {
   constructor(
     private readonly sessionStore: ISessionRepository,
     private readonly sessionDatabaseRepository: ISessionDatabaseRepository,
-    private readonly incidentStore: IIncidentStore
+    private readonly incidentStore: IIncidentStore,
+    private readonly damageReporter: IDamageReporter
   ) {}
 
   async execute(stopSessionPayload: {
@@ -69,6 +81,8 @@ class StopSession {
       checked: boolean;
       message: string | undefined;
     };
+    /** The boat is damaged: reported with the incident, which must be checked. */
+    damage?: { severity: DamageSeverity } | undefined;
     coached: boolean;
     distanceM?: number | null;
   }): Promise<
@@ -139,6 +153,32 @@ class StopSession {
       };
 
       this.incidentStore.addIncident(incidentPayload);
+
+      if (stopSessionPayload.damage) {
+        const rowersOnly = ongoingSessionInStore.rowers.filter(
+          (rower) => rower.role === "rower"
+        );
+        const soleRowerId = rowersOnly.length === 1 ? rowersOnly[0].id : null;
+        this.damageReporter.reportDamage({
+          boatId: ongoingSessionInStore.boat.id,
+          severity: stopSessionPayload.damage.severity,
+          // The placeholder for an empty incident is not a reason.
+          description:
+            incidentMessage === emptyMessage ? "" : incidentMessage,
+          outingId: ongoingSessionInStore.id,
+          incidentId: incidentPayload.id,
+          // Without a chef de bord, a single sculler is the reporter.
+          reportedByRowerId:
+            ongoingSessionInStore.captainRowerId ?? soleRowerId,
+          // A damage cannot be reported later than now, or it could never be repaired.
+          reportedAt: new Date(
+            Math.min(
+              new Date(stopSessionPayload.endDateTime).getTime(),
+              Date.now()
+            )
+          ).toISOString(),
+        });
+      }
     }
 
     this.sessionStore.removeSession(stopSessionPayload.sessionId);
@@ -242,6 +282,9 @@ export const useGetStopSession = () => {
   return new StopSession(
     sessionStore,
     sessionDatabaseRepository,
-    incidentStore
+    incidentStore,
+    {
+      reportDamage: (input) => useDamageStore.getState().reportDamage(input),
+    }
   );
 };

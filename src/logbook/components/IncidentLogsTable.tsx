@@ -1,14 +1,41 @@
+import { useState } from "react";
 import { ChatBubbleLeftIcon } from "@heroicons/react/16/solid";
 import { useTranslation } from "react-i18next";
 import useIncidentStore from "../../_common/store/incident.store";
 import { getTime, getDateOnly } from "../../_common/utils/date.utils";
 import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
+import { useModule } from "../../_common/store/modules.store";
+import { useDamageStore } from "../../_common/store/damage.store";
+import { ClubIncident } from "../../_common/database/repositories/club.types";
+import {
+  getDamageDefaultsFromIncident,
+  getIncidentsWithoutDamage,
+} from "../../_common/business/damageLog.rules";
+import Button from "../../_common/components/Button";
+import { ReportDamageDialog } from "../../_common/components/damages/ReportDamageDialog";
+import i18n from "../../_common/i18n/config";
+
+/** The text an incident without details was saved with, in every language. */
+const getNoDetailsTexts = () =>
+  new Set(
+    Object.keys(i18n.options.resources ?? {}).map((language) =>
+      i18n.t("session.noIncidentDetails", { lng: language })
+    )
+  );
 
 export function IncidentLogsTable() {
   const { t } = useTranslation();
   const incidents = useIncidentStore((state) => state.getIncidents());
 
   const clubOverview = useClubOverviewStore();
+  const hasDamages = useModule("damages");
+  const damages = useDamageStore((state) => state.damages);
+  const [fromIncident, setFromIncident] = useState<ClubIncident | null>(null);
+  const withoutDamage = new Set(
+    hasDamages
+      ? getIncidentsWithoutDamage(incidents, damages).map(({ id }) => id)
+      : []
+  );
 
   return (
     <div className="overflow-auto pb-32">
@@ -38,9 +65,34 @@ export function IncidentLogsTable() {
                 {incident.message || t("logbook.noMessage")}
               </div>
             </div>
+
+            {withoutDamage.has(incident.id) && (
+              <Button
+                type="button"
+                variant="outlined"
+                className="text-sm py-1 ml-4"
+                onClick={() => setFromIncident(incident)}
+              >
+                {t("damages.report")}
+              </Button>
+            )}
           </div>
         );
       })}
+
+      {hasDamages && (
+        <ReportDamageDialog
+          open={fromIncident !== null}
+          onOpenChange={(open) => !open && setFromIncident(null)}
+          // The damage is linked to the incident's outing: keep its boat.
+          lockBoat
+          defaults={
+            fromIncident
+              ? getDamageDefaultsFromIncident(fromIncident, getNoDetailsTexts())
+              : undefined
+          }
+        />
+      )}
     </div>
   );
 }

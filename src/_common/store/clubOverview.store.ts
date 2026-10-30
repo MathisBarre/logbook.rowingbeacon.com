@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { v4 } from "uuid";
 import {
-  toggleBoatIsInMaintenanceFn,
   updateBoatNameFn,
   updateBoatNoteFn,
 } from "./clubOverview.store.functions";
@@ -20,11 +19,14 @@ import { SETTING_ONBOARDING_DONE } from "../../onboarding/onboarding.store";
 import {
   deleteAllClubData,
   saveBoat,
+  saveBoatDamage,
   saveRoute,
   saveRower,
   saveSetting,
 } from "../database/repositories/club.repository";
+import { useDamageStore } from "./damage.store";
 import {
+  BoatDamage,
   ClubBoat,
   ClubRoute,
   ClubRower,
@@ -85,7 +87,11 @@ export interface ClubOverviewStoreState {
   updateBoatName: (boatId: string, name: string) => void;
   updateBoatNote: (boatId: string, note: string) => void;
   updateBoat: (boatId: string, boat: Partial<Omit<ClubBoat, "id">>) => void;
-  toggleBoatIsInMaintenance: (boatId: string) => void;
+  /**
+   * In memory only: whether a boat is unusable comes from its damages
+   * (damage store, ADR 0007).
+   */
+  syncUnusableBoats: (unusableBoatIds: Set<string>) => void;
   addBoat: (boat: { name: string; type?: BoatTypeEnum }) => ClubBoat;
   /** False, and nothing archived, while it is in an ongoing outing. */
   archiveBoat: (boatId: string) => boolean;
@@ -283,6 +289,25 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
         };
 
         set({ clubOverview });
+        // A boat given as in maintenance starts with an "unavailable" entry.
+        const damages: BoatDamage[] = clubOverview.boats
+          .filter((boat) => boat.isInMaintenance)
+          .map((boat) => ({
+            id: v4(),
+            boatId: boat.id,
+            kind: "unavailable",
+            severity: "unusable",
+            description: "",
+            reportedAt: new Date().toISOString(),
+            reportedByRowerId: null,
+            outingId: null,
+            incidentId: null,
+            fixedAt: null,
+            fixedByRowerId: null,
+            repairNote: null,
+            repairCost: null,
+          }));
+        useDamageStore.getState().hydrate(damages);
 
         return enqueueWrite("club", async (db) => {
           try {
@@ -299,6 +324,7 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
             for (const boat of clubOverview.boats) await saveBoat(db, boat);
             for (const rower of clubOverview.rowers) await saveRower(db, rower);
             for (const route of clubOverview.routes) await saveRoute(db, route);
+            for (const damage of damages) await saveBoatDamage(db, damage);
           } catch (error) {
             // Not atomic: a half-saved club would read as set up on the next
             // start. Remove it so the onboarding can simply be done again.
@@ -369,9 +395,14 @@ export const useClubOverviewStore = create<ClubOverviewStoreState>()(
         writeBoat(boatId);
       },
 
-      toggleBoatIsInMaintenance: (boatId: string) => {
-        setBoats((boats) => toggleBoatIsInMaintenanceFn(boats, boatId));
-        writeBoat(boatId);
+      syncUnusableBoats: (unusableBoatIds) => {
+        setBoats((boats) =>
+          boats.map((boat) =>
+            Boolean(boat.isInMaintenance) === unusableBoatIds.has(boat.id)
+              ? boat
+              : { ...boat, isInMaintenance: unusableBoatIds.has(boat.id) }
+          )
+        );
       },
 
       getRouteById: (routeId: string) => {

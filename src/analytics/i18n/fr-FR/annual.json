@@ -1,0 +1,152 @@
+{
+  "title": "Rapport annuel d'activité",
+  "meta": {
+    "period": "Période : {{range}}",
+    "range": "du {{start}} au {{end}}",
+    "rangePartial": "du {{start}} au {{end}} (saison en cours)",
+    "issued": "Édité le {{date}}"
+  },
+  "clubName": {
+    "label": "Nom du club",
+    "placeholder": "Affiché en tête du rapport"
+  },
+  "logo": {
+    "label": "Logo du club (facultatif)",
+    "hint": "PNG, JPEG ou SVG, 200 Ko au plus.",
+    "choose": "Choisir une image",
+    "replace": "Changer d'image",
+    "remove": "Retirer le logo",
+    "tooLarge": "Cette image dépasse 200 Ko : choisissez-en une plus légère.",
+    "badType": "Format non pris en charge : choisissez une image PNG, JPEG ou SVG.",
+    "readFailed": "L'image n'a pas pu être lue."
+  },
+  "notes": {
+    "heading": "Le mot du club",
+    "label": "Le mot du club, saison {{season}}",
+    "placeholder": "Faits marquants, projets, remerciements… (2 000 caractères au plus)",
+    "length": "{{count}} / {{max}} caractères"
+  },
+  "edit": {
+    "open": "Modifier le nom et le mot du club",
+    "addClubName": "Ajouter le nom du club",
+    "saved": "Enregistré"
+  },
+  "chapters": {
+    "activity": "L'activité",
+    "rowers": "Les rameurs",
+    "fleet": "La flotte",
+    "safety": "Sécurité et matériel"
+  },
+  "sections": {
+    "overview": "Chiffres clés",
+    "outingsMonthly": "Sorties par mois",
+    "activeRowersMonthly": "Rameurs actifs par mois",
+    "demographics": "Membres actifs par âge et par sexe",
+    "fleet": "Utilisation de la flotte par type de bateau",
+    "topBoats_one": "Le bateau le plus utilisé",
+    "topBoats_other": "Les {{count}} bateaux les plus utilisés",
+    "routes_one": "Le parcours le plus fréquenté",
+    "routes_other": "Les {{count}} parcours les plus fréquentés",
+    "outingTypes": "Types de sortie",
+    "incidents": "Incidents par bateau",
+    "damages": "Avaries par bateau",
+    "retention": "Fidélisation des nouveaux rameurs",
+    "safety": "Sécurité mois par mois"
+  },
+  "intros": {
+    "overview": "Chaque chiffre est comparé à la saison précédente arrêtée à la même date.",
+    "outingsMonthly": "Nombre de sorties chaque mois, comparé au même mois de la saison précédente.",
+    "activeRowersMonthly": "Nombre de rameurs différents sortis au moins une fois dans le mois, comparé à la saison précédente.",
+    "demographics": "Membres du club sortis au moins une fois dans la saison, par tranche d'âge et par sexe (les invités ne sont pas comptés). Jeunes : 18 ans ou moins.",
+    "fleet": "Nombre moyen de sorties par bateau pour chaque type : plus il est élevé, plus les bateaux de ce type sont sollicités.",
+    "topBoats": "Nombre de sorties de chaque bateau sur la saison.",
+    "routes": "Nombre de sorties par parcours (les sorties enregistrées sans parcours ne sont pas comptées).",
+    "outingTypes": "Nombre de sorties par type : école d'aviron, entraînement, compétition, randonnée…",
+    "incidents": "Nombre d'incidents déclarés pour chaque bateau concerné.",
+    "damages": "Avaries déclarées sur la saison, par bateau et par gravité.",
+    "retention": "Part des rameurs encore actifs une, puis deux saisons après leur arrivée au club.",
+    "safety": "Sorties rentrées en retard, sans heure de retour prévue ou jamais clôturées dans le cahier, mois par mois. Une même sortie peut figurer dans deux catégories."
+  },
+  "introsAlone": {
+    "outingsMonthly": "Nombre de sorties chaque mois.",
+    "activeRowersMonthly": "Nombre de rameurs différents sortis au moins une fois dans le mois."
+  },
+  "empty": {
+    "incidents": "Aucun incident déclaré pendant la saison.",
+    "damages": "Aucune avarie déclarée pendant la saison.",
+    "safety": "Aucun retour en retard ni sortie non clôturée pendant la saison."
+  },
+  "omitted": "Sans données cette saison, non imprimées : {{titles}}.",
+  "labels": {
+    "coachedPct": "Part des sorties encadrées"
+  },
+  "retention": {
+    "joined": "Arrivée",
+    "after_one": "+{{count}} saison",
+    "after_other": "+{{count}} saisons"
+  },
+  "notesFor": {
+    "demographics": "{{members}} membres du club parmi les {{active}} rameurs actifs ; les {{guests}} invités ne sont pas comptés ici.",
+    "retentionBoth": "{{arrivals}} nouveaux rameurs en {{season}} ; {{pct}} des arrivés de {{prev}} sont revenus cette saison.",
+    "retentionArrivals": "{{arrivals}} nouveaux rameurs en {{season}}.",
+    "retentionReturned": "{{pct}} des arrivés de {{prev}} sont revenus cette saison.",
+    "retentionFirst": "La première saison de l'historique regroupe tous les membres déjà présents.",
+    "firstSeason": "Première saison enregistrée dans Rowing Beacon : pas de comparaison avec la saison précédente.",
+    "partialMonth": "{{month}} : mois en cours, données jusqu'au {{date}}.",
+    "incidents_one": "{{count}} incident déclaré.",
+    "incidents_other": "{{count}} incidents déclarés sur {{boats}} bateaux.",
+    "incidentsOneBoat": "{{count}} incidents déclarés, tous sur le même bateau."
+  },
+  "definitions": {
+    "title": "Définitions",
+    "activeRower": "Rameur actif : personne sortie au moins une fois en bateau pendant la saison, membre ou invité.",
+    "coached": "Sortie encadrée : sortie notée comme encadrée dans le cahier ; la part est calculée sur les sorties où l'information est renseignée.",
+    "hours": "Heures sur l'eau : durée des sorties d'une journée ; les sorties sur plusieurs jours ne sont pas comptées.",
+    "km": "Kilomètres : distances saisies dans le cahier de sorties."
+  },
+  "footer": "Généré par Rowing Beacon à partir du cahier de sorties du club.",
+  "appendix": "Annexe : les chiffres détaillés",
+  "pdfBanner": "Pour obtenir un PDF : Imprimer (Ctrl+P, ou ⌘P sur Mac), destination « Enregistrer au format PDF ». Décochez « En-têtes et pieds de page » pour un rendu propre.",
+  "summarySheet": "Synthèse",
+  "summary": {
+    "club": "Club",
+    "season": "Saison",
+    "period": "Période",
+    "issued": "Édité le",
+    "notes": "Le mot du club",
+    "indicator": "Indicateur",
+    "change": "Évolution (%)",
+    "contents": "Contenu"
+  },
+  "sheets": {
+    "outingsMonthly": "Sorties par mois",
+    "activeRowersMonthly": "Rameurs par mois",
+    "demographics": "Membres",
+    "fleet": "Flotte",
+    "topBoats": "Bateaux",
+    "routes": "Parcours",
+    "outingTypes": "Types de sortie",
+    "incidents": "Incidents",
+    "damages": "Avaries",
+    "retention": "Fidélisation",
+    "safety": "Sécurité"
+  },
+  "fileSlug": "rapport-annuel",
+  "exportXlsx": "Exporter en Excel",
+  "exportHtml": "Ouvrir dans le navigateur",
+  "print": "Imprimer ou enregistrer en PDF",
+  "present": "Présenter",
+  "open": "Ouvrir",
+  "preparing": "Préparation du rapport…",
+  "preparingCount": "Préparation du rapport… {{done}} / {{total}} sections",
+  "ready": "Rapport prêt",
+  "htmlSaved": "Page enregistrée dans Téléchargements ({{name}}) et ouverte dans votre navigateur. Pour un PDF : Imprimer › Enregistrer en PDF.",
+  "htmlSavedNotOpened": "Page enregistrée dans Téléchargements ({{name}}) : ouvrez-la, puis Imprimer › Enregistrer en PDF.",
+  "failedSections_one": "{{count}} section n'a pas pu être calculée et ne figure pas dans le document : {{titles}}.",
+  "failedSections_other": "{{count}} sections n'ont pas pu être calculées et ne figurent pas dans le document : {{titles}}.",
+  "callout": {
+    "partial": "La saison {{season}} n'est pas terminée (données jusqu'au {{date}}). Pour l'assemblée générale, on présente en général la dernière saison terminée.",
+    "showSeason": "Afficher la saison {{season}}"
+  },
+  "noOutings": "Aucune sortie enregistrée pour la saison {{season}}."
+}

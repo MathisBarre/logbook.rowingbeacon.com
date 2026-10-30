@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { Boat, BoatTypeEnum } from "../../../_common/business/boat.rules";
 import {
-  checkIfNotSameRowersAsSeatsInBoat,
+  getCrewSizeMismatch,
   getAlreadyOnStartedSessionRowersId,
   isInvalidStartSessionDate,
   SessionToStart,
@@ -20,23 +20,32 @@ describe("Boat Business Logic", () => {
     type: BOAT_TYPE,
   };
 
-  describe("notSameRowersAsSeatsInBoat", () => {
-    it("should return true when there are fewer rowers than required", () => {
-      expect(checkIfNotSameRowersAsSeatsInBoat(ROWER_QUANTITY - 1, boat)).toBe(
-        true
-      );
+  describe("getCrewSizeMismatch", () => {
+    it("reports a mismatch when there are fewer rowers than required", () => {
+      expect(
+        getCrewSizeMismatch(boat, {
+          nbOfRowers: ROWER_QUANTITY - 1,
+          hasCox: false,
+        }),
+      ).toBeDefined();
     });
 
-    it("should return false when there are the same number of rowers as required", () => {
-      expect(checkIfNotSameRowersAsSeatsInBoat(ROWER_QUANTITY, boat)).toBe(
-        false
-      );
+    it("fits when there are the same number of rowers as required", () => {
+      expect(
+        getCrewSizeMismatch(boat, {
+          nbOfRowers: ROWER_QUANTITY,
+          hasCox: false,
+        }),
+      ).toBeUndefined();
     });
 
-    it("should return true when there are more rowers than required", () => {
-      expect(checkIfNotSameRowersAsSeatsInBoat(ROWER_QUANTITY + 1, boat)).toBe(
-        true
-      );
+    it("reports a mismatch when there are more rowers than required", () => {
+      expect(
+        getCrewSizeMismatch(boat, {
+          nbOfRowers: ROWER_QUANTITY + 1,
+          hasCox: false,
+        }),
+      ).toBeDefined();
     });
   });
 });
@@ -53,7 +62,7 @@ describe("SessionToStart", () => {
   };
 
   describe("isInvalidStartSessionDate", () => {
-    it("should return true when start date is after estimated end date", () => {
+    it("reports a mismatch when start date is after estimated end date", () => {
       const session: SessionToStart = {
         ...baseSession,
         startDatetime: addDays(baseDate, 1),
@@ -62,7 +71,7 @@ describe("SessionToStart", () => {
       expect(isInvalidStartSessionDate(session)).toBe(true);
     });
 
-    it("should return false when start date is before estimated end date", () => {
+    it("fits when start date is before estimated end date", () => {
       const session: SessionToStart = {
         ...baseSession,
         startDatetime: addDays(baseDate, -1),
@@ -71,7 +80,7 @@ describe("SessionToStart", () => {
       expect(isInvalidStartSessionDate(session)).toBe(false);
     });
 
-    it("should return false when start date equals estimated end date", () => {
+    it("fits when start date equals estimated end date", () => {
       const session: SessionToStart = {
         ...baseSession,
       };

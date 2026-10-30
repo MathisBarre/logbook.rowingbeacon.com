@@ -1,0 +1,69 @@
+{
+  "title": "Performances",
+  "intro": "Les limites des statistiques (durée d'une requête, nombre de lignes, mémoire) dépendent de l'ordinateur.",
+  "machine_one": "Cet ordinateur : {{memory}} de mémoire, {{count}} cœur. Profil conseillé : {{profile}}.",
+  "machine_other": "Cet ordinateur : {{memory}} de mémoire, {{count}} cœurs. Profil conseillé : {{profile}}.",
+  "machinePi_one": "Raspberry Pi : {{memory}} de mémoire, {{count}} cœur. Profil conseillé : {{profile}}.",
+  "machinePi_other": "Raspberry Pi : {{memory}} de mémoire, {{count}} cœurs. Profil conseillé : {{profile}}.",
+  "machineUnknownMemory_one": "Cet ordinateur : {{count}} cœur, mémoire inconnue. Profil conseillé : {{profile}}.",
+  "machineUnknownMemory_other": "Cet ordinateur : {{count}} cœurs, mémoire inconnue. Profil conseillé : {{profile}}.",
+  "machineUnavailable": "L'ordinateur n'est détecté que dans l'application installée. Ici, Auto vaut Économe.",
+  "machineLoading": "Détection de l'ordinateur…",
+  "choiceLabel": "Profil",
+  "recommendedBadge": "conseillé",
+  "choices": {
+    "auto": {
+      "name": "Auto",
+      "description": "Suit le profil conseillé pour cet ordinateur : {{profile}}."
+    }
+  },
+  "profiles": {
+    "economy": {
+      "name": "Économe",
+      "description": "Raspberry Pi et petits ordinateurs : requêtes de 10 s au plus dans l'Explorer, 20 s pour un rapport, peu de mémoire."
+    },
+    "standard": {
+      "name": "Standard",
+      "description": "Ordinateur portable récent (8 Go, 4 cœurs) : trois fois plus de temps, plus de lignes et de mémoire."
+    },
+    "powerful": {
+      "name": "Puissant",
+      "description": "Ordinateur de bureau (16 Go, 8 cœurs) : requêtes d'une minute, rapports de deux minutes, 50 000 lignes."
+    }
+  },
+  "piAdvice": "Un Raspberry Pi doit rester sur Économe : une requête lourde le ralentirait pendant que les rameurs enregistrent leurs sorties. Un profil plus puissant ne rend pas les requêtes plus rapides : il leur laisse plus de temps et de mémoire.",
+  "aboveRecommended": "Ce profil dépasse le profil conseillé pour cet ordinateur ({{profile}}). Une requête lourde pourrait ralentir l'application : revenez à Auto en cas de souci.",
+  "aboveRecommendedPi": "Ce profil n'est pas fait pour un Raspberry Pi : une requête lourde pourrait ralentir le registre des sorties. Revenez à Économe ou à Auto.",
+  "memoryCapped": "La mémoire reste limitée au quart de celle de l'ordinateur : ce profil garde ici la mémoire du profil {{profile}}.",
+  "saved": "Les prochaines requêtes, y compris celles de votre application d'IA (MCP), suivent ce profil.",
+  "advanced": "Avancé : les limites du profil {{profile}}",
+  "limits": {
+    "query": "Requête de l'Explorer ou de l'assistant",
+    "report": "Rapport",
+    "card": "Carte du tableau de bord",
+    "editorRows": "Lignes affichées par l'Explorer",
+    "maxRows": "Lignes au plus pour une requête",
+    "resultSize": "Taille d'un résultat",
+    "memory": "Mémoire d'une requête",
+    "heap": "Mémoire des statistiques pour toute l'application",
+    "concurrent": "Requêtes en même temps",
+    "mcp": "Applications d'IA (MCP)",
+    "mcpValue": "{{query}} par requête, {{report}} par rapport, {{rows}} lignes"
+  },
+  "override": {
+    "label": "Durée maximale d'une requête de l'Explorer et de l'assistant (secondes)",
+    "help": "Entre {{min}} et {{max}} s avec ce profil. Laissez vide pour la valeur du profil : {{default}} s.",
+    "reset": "Valeur du profil",
+    "clamped": "Ramené à {{value}} s (entre {{min}} et {{max}} s avec ce profil)."
+  },
+  "units": {
+    "seconds": "{{value}} s",
+    "mb": "{{value}} Mo",
+    "gb": "{{value}} Go",
+    "minutes": "{{value}} min"
+  },
+  "raiseHint": "Cet ordinateur peut aller plus loin : choisissez le profil {{profile}} dans Gestion › Statistiques et IA › Performances.",
+  "profileInUse": "Profil utilisé : {{profile}}.",
+  "profileInUseAuto": "Profil utilisé : Auto, soit {{profile}} pour cet ordinateur.",
+  "change": "Changer de profil"
+}

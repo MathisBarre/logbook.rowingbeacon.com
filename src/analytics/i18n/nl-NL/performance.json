@@ -1,0 +1,69 @@
+{
+  "title": "Prestaties",
+  "intro": "De grenzen van de statistieken (duur van een query, aantal rijen, geheugen) hangen af van de computer.",
+  "machine_one": "Deze computer: {{memory}} geheugen, {{count}} kern. Aanbevolen profiel: {{profile}}.",
+  "machine_other": "Deze computer: {{memory}} geheugen, {{count}} kernen. Aanbevolen profiel: {{profile}}.",
+  "machinePi_one": "Raspberry Pi: {{memory}} geheugen, {{count}} kern. Aanbevolen profiel: {{profile}}.",
+  "machinePi_other": "Raspberry Pi: {{memory}} geheugen, {{count}} kernen. Aanbevolen profiel: {{profile}}.",
+  "machineUnknownMemory_one": "Deze computer: {{count}} kern, onbekend geheugen. Aanbevolen profiel: {{profile}}.",
+  "machineUnknownMemory_other": "Deze computer: {{count}} kernen, onbekend geheugen. Aanbevolen profiel: {{profile}}.",
+  "machineUnavailable": "De computer wordt alleen in de geïnstalleerde app herkend. Hier staat Auto gelijk aan Zuinig.",
+  "machineLoading": "Computer wordt herkend…",
+  "choiceLabel": "Profiel",
+  "recommendedBadge": "aanbevolen",
+  "choices": {
+    "auto": {
+      "name": "Auto",
+      "description": "Volgt het aanbevolen profiel voor deze computer: {{profile}}."
+    }
+  },
+  "profiles": {
+    "economy": {
+      "name": "Zuinig",
+      "description": "Raspberry Pi en kleine computers: hoogstens 10 s per Verkenner-query, 20 s per rapport, weinig geheugen."
+    },
+    "standard": {
+      "name": "Standaard",
+      "description": "Recente laptop (8 GB, 4 kernen): drie keer meer tijd, meer rijen en meer geheugen."
+    },
+    "powerful": {
+      "name": "Krachtig",
+      "description": "Desktopcomputer (16 GB, 8 kernen): query's van een minuut, rapporten van twee minuten, 50.000 rijen."
+    }
+  },
+  "piAdvice": "Een Raspberry Pi blijft het best op Zuinig: een zware query zou hem vertragen terwijl roeiers hun tochten invoeren. Een krachtiger profiel maakt query's niet sneller: het geeft ze meer tijd en geheugen.",
+  "aboveRecommended": "Dit profiel gaat verder dan het aanbevolen profiel voor deze computer ({{profile}}). Een zware query kan de app vertragen: ga dan terug naar Auto.",
+  "aboveRecommendedPi": "Dit profiel is niet bedoeld voor een Raspberry Pi: een zware query kan het afschrijfregister vertragen. Ga terug naar Zuinig of Auto.",
+  "memoryCapped": "Het geheugen blijft beperkt tot een kwart van dat van de computer: hier houdt dit profiel het geheugen van het profiel {{profile}}.",
+  "saved": "De volgende query's, ook die van uw AI-app (MCP), volgen dit profiel.",
+  "advanced": "Geavanceerd: de grenzen van het profiel {{profile}}",
+  "limits": {
+    "query": "Query van de Verkenner of de assistent",
+    "report": "Rapport",
+    "card": "Dashboardkaart",
+    "editorRows": "Rijen getoond door de Verkenner",
+    "maxRows": "Hoogstens rijen per query",
+    "resultSize": "Grootte van een resultaat",
+    "memory": "Geheugen van een query",
+    "heap": "Statistiekgeheugen voor de hele applicatie",
+    "concurrent": "Query's tegelijk",
+    "mcp": "AI-apps (MCP)",
+    "mcpValue": "{{query}} per query, {{report}} per rapport, {{rows}} rijen"
+  },
+  "override": {
+    "label": "Langste query van de Verkenner en de assistent (seconden)",
+    "help": "Tussen {{min}} en {{max}} s met dit profiel. Laat leeg voor de waarde van het profiel: {{default}} s.",
+    "reset": "Waarde van het profiel",
+    "clamped": "Teruggezet op {{value}} s (tussen {{min}} en {{max}} s met dit profiel)."
+  },
+  "units": {
+    "seconds": "{{value}} s",
+    "mb": "{{value}} MB",
+    "gb": "{{value}} GB",
+    "minutes": "{{value}} min"
+  },
+  "raiseHint": "Deze computer kan verder: kies het profiel {{profile}} via Beheer › Statistieken en AI › Prestaties.",
+  "profileInUse": "Gebruikt profiel: {{profile}}.",
+  "profileInUseAuto": "Gebruikt profiel: Auto, dus {{profile}} voor deze computer.",
+  "change": "Profiel wijzigen"
+}

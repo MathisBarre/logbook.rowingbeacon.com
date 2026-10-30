@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { getTime, getDateOnly } from "../../_common/utils/date.utils";
 import Loading from "../../_common/components/Loading";
 import {
+  PencilIcon,
   ShieldCheckIcon,
   Trash2Icon,
   UserCheckIcon,
@@ -44,6 +45,8 @@ interface SessionHistoryTableProps {
   loading: boolean;
   errorMessage?: string | null;
   refresh: () => Promise<void>;
+  /** Opens the editor on a finished outing, once the admin is confirmed. */
+  onEditSession?: (sessionId: string) => Promise<void>;
 }
 
 export function SessionHistoryTable({
@@ -51,6 +54,7 @@ export function SessionHistoryTable({
   loading,
   errorMessage,
   refresh,
+  onEditSession,
 }: SessionHistoryTableProps) {
   const { t } = useTranslation();
   const { removeSession } = useRemoveSession();
@@ -84,19 +88,37 @@ export function SessionHistoryTable({
             key={session.id}
             className="flex even:bg-gray-100 py-6 px-12 items-center relative"
           >
-            <span
-              className="absolute bottom-2 right-2 text-error-800 underline text-sm cursor-pointer"
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              onClick={async () => {
-                if (await adminEditSystem.askForAdminAccess()) {
-                  const deleted = await removeSession(session.id);
-                  await refresh();
-                  if (deleted) toast.success(t("logbook.sessionDeleted"));
-                }
-              }}
-            >
-              <Trash2Icon className="h-4 w-4" />
-            </span>
+            <div className="absolute bottom-2 right-2 flex items-center gap-3 text-sm">
+              {onEditSession && session.endDateTime && (
+                <button
+                  type="button"
+                  className="text-gray-500 hover:text-steel-blue-800"
+                  title={t("logbook.editSession")}
+                  aria-label={t("logbook.editSession")}
+                  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                  onClick={async () => {
+                    if (await adminEditSystem.askForAdminAccess()) {
+                      await onEditSession(session.id);
+                    }
+                  }}
+                >
+                  <PencilIcon className="h-4 w-4" />
+                </button>
+              )}
+              <span
+                className="text-error-800 underline cursor-pointer"
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                onClick={async () => {
+                  if (await adminEditSystem.askForAdminAccess()) {
+                    const deleted = await removeSession(session.id);
+                    await refresh();
+                    if (deleted) toast.success(t("logbook.sessionDeleted"));
+                  }
+                }}
+              >
+                <Trash2Icon className="h-4 w-4" />
+              </span>
+            </div>
 
             <div className="mr-12 font-mono tracking-tighter">
               <FormattedDate

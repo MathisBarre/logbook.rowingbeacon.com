@@ -1,0 +1,41 @@
+{
+  "title": "Bateaux les plus sortis le week-end",
+  "explanation": "Nombre de sorties du samedi et du dimanche pour chaque bateau sur la saison choisie. Les bateaux en haut du classement sont les plus demandés le week-end : c'est là que des créneaux ou un bateau de plus seraient utiles.",
+  "params": [
+    {
+      "name": "season",
+      "type": "season",
+      "label": "Saison",
+      "required": true,
+      "default": "current",
+      "options": [],
+      "min": null,
+      "max": null
+    }
+  ],
+  "chart": {
+    "type": "bar",
+    "x": "boat_name",
+    "y": ["outings"],
+    "series": "",
+    "orientation": "horizontal",
+    "stacked": false,
+    "sort": "none",
+    "limit": 20,
+    "cumulative": false,
+    "label": "",
+    "value": "",
+    "date": "",
+    "kpis": [],
+    "columns": [],
+    "column_labels": [],
+    "column_formats": []
+  },
+  "assumptions": [
+    "Week-end = samedi et dimanche.",
+    "Sorties en bateau à moteur et bateaux exclus des statistiques non comptés.",
+    "Les 20 premiers bateaux sont affichés."
+  ],
+  "clarification": null,
+  "choices": []
+}

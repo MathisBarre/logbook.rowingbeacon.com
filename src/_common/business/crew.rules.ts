@@ -16,6 +16,12 @@ export const isSamePersonName = (a: string, b: string) =>
   simplifyString(normalizePersonName(a)) ===
   simplifyString(normalizePersonName(b));
 
+/** A search typed in a name list, with the same tolerance as isSamePersonName. */
+export const personNameIncludes = (name: string, search: string) =>
+  simplifyString(normalizePersonName(name)).includes(
+    simplifyString(normalizePersonName(search))
+  );
+
 export const toNewGuestOptionId = (name: string) =>
   `${NEW_GUEST_PREFIX}${normalizePersonName(name)}`;
 

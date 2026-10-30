@@ -1,0 +1,100 @@
+{
+  "unknown": "Niet opgegeven",
+  "gender": {
+    "female": "Vrouw",
+    "male": "Man",
+    "other": "Anders"
+  },
+  "rower_status": {
+    "member": "Lid",
+    "guest": "Gast",
+    "other": "Anders"
+  },
+  "seriousness": {
+    "recreational": "Recreatief",
+    "competitor": "Wedstrijdroeier"
+  },
+  "rigging": {
+    "scull": "Scull",
+    "sweep": "Boord"
+  },
+  "role": {
+    "rower": "Roeier",
+    "cox": "Stuurman"
+  },
+  "age_group": {
+    "youth": "Jeugd (tot en met 18)",
+    "adult": "Volwassenen"
+  },
+  "issue": {
+    "not_closed": "Nooit afgesloten",
+    "late_return": "Te laat terug",
+    "no_estimated_end": "Zonder geplande terugkomsttijd",
+    "youth_not_coached": "Jeugd zonder begeleiding"
+  },
+  "severity": {
+    "usable": "Bruikbaar",
+    "limited": "Beperkt bruikbaar",
+    "unusable": "Onbruikbaar"
+  },
+  "damage_kind": {
+    "damage": "Schade",
+    "unavailable": "Niet beschikbaar"
+  },
+  "distance_source": {
+    "recorded": "Ingevoerde afstand",
+    "route": "Afstand van het traject"
+  },
+  "metric": {
+    "outings": "Tochten",
+    "participations": "Deelnames",
+    "active_rowers": "Actieve roeiers",
+    "km": "Kilometers",
+    "hours": "Uren op het water"
+  },
+  "measure": {
+    "participations": "Deelnames",
+    "hours": "Uren op het water",
+    "km": "Kilometers",
+    "rowers": "Roeiers"
+  },
+  "dimension": {
+    "age_category": "Leeftijdscategorie",
+    "seriousness": "Roeierstype (recreatief, wedstrijd)",
+    "gender": "Geslacht",
+    "rower_status": "Status (lid, gast)",
+    "boat_class": "Boottype",
+    "outing_type": "Soort tocht"
+  },
+  "outing_type_code": {
+    "normal": "Gewone tocht",
+    "training": "Training",
+    "regatta": "Wedstrijd",
+    "training_camp": "Trainingskamp",
+    "instruction": "Instructie",
+    "tour": "Toertocht",
+    "club_trip": "Clubtocht",
+    "ergometer": "Ergometer",
+    "motorboat": "Motorboot"
+  },
+  "code": {
+    "normal": "Gewone tocht",
+    "training": "Training",
+    "regatta": "Wedstrijd",
+    "training_camp": "Trainingskamp",
+    "instruction": "Instructie",
+    "tour": "Toertocht",
+    "club_trip": "Clubtocht",
+    "ergometer": "Ergometer",
+    "motorboat": "Motorboot"
+  },
+  "status": {
+    "member": "Lid",
+    "guest": "Gast",
+    "other": "Anders"
+  },
+  "kind": {
+    "damage": "Schade",
+    "unavailable": "Niet beschikbaar"
+  }
+}

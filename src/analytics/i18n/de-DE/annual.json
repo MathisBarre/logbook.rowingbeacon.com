@@ -1,0 +1,152 @@
+{
+  "title": "Jahresbericht",
+  "meta": {
+    "period": "Zeitraum: {{range}}",
+    "range": "{{start}} bis {{end}}",
+    "rangePartial": "{{start}} bis {{end}} (laufende Saison)",
+    "issued": "Ausgestellt am {{date}}"
+  },
+  "clubName": {
+    "label": "Vereinsname",
+    "placeholder": "Wird oben im Bericht angezeigt"
+  },
+  "logo": {
+    "label": "Vereinslogo (optional)",
+    "hint": "PNG, JPEG oder SVG, höchstens 200 KB.",
+    "choose": "Bild auswählen",
+    "replace": "Bild ändern",
+    "remove": "Logo entfernen",
+    "tooLarge": "Dieses Bild ist größer als 200 KB: Wählen Sie ein kleineres.",
+    "badType": "Format nicht unterstützt: Wählen Sie ein PNG-, JPEG- oder SVG-Bild.",
+    "readFailed": "Das Bild konnte nicht gelesen werden."
+  },
+  "notes": {
+    "heading": "Ein Wort des Vereins",
+    "label": "Ein Wort des Vereins, Saison {{season}}",
+    "placeholder": "Höhepunkte, Projekte, Dank… (höchstens 2.000 Zeichen)",
+    "length": "{{count}} / {{max}} Zeichen"
+  },
+  "edit": {
+    "open": "Vereinsname und Vereinswort bearbeiten",
+    "addClubName": "Vereinsnamen hinzufügen",
+    "saved": "Gespeichert"
+  },
+  "chapters": {
+    "activity": "Aktivität",
+    "rowers": "Die Ruderer",
+    "fleet": "Die Flotte",
+    "safety": "Sicherheit und Material"
+  },
+  "sections": {
+    "overview": "Kennzahlen",
+    "outingsMonthly": "Fahrten pro Monat",
+    "activeRowersMonthly": "Aktive Ruderer pro Monat",
+    "demographics": "Aktive Mitglieder nach Alter und Geschlecht",
+    "fleet": "Nutzung der Flotte nach Bootstyp",
+    "topBoats_one": "Das am häufigsten genutzte Boot",
+    "topBoats_other": "Die {{count}} am häufigsten genutzten Boote",
+    "routes_one": "Die am häufigsten befahrene Strecke",
+    "routes_other": "Die {{count}} am häufigsten befahrenen Strecken",
+    "outingTypes": "Fahrtarten",
+    "incidents": "Vorfälle pro Boot",
+    "damages": "Schäden pro Boot",
+    "retention": "Bindung neuer Ruderer",
+    "safety": "Sicherheit Monat für Monat"
+  },
+  "intros": {
+    "overview": "Jede Zahl wird mit der Vorsaison bis zum selben Datum verglichen.",
+    "outingsMonthly": "Anzahl der Fahrten pro Monat, verglichen mit demselben Monat der Vorsaison.",
+    "activeRowersMonthly": "Anzahl verschiedener Ruderer, die im Monat mindestens einmal auf dem Wasser waren, verglichen mit der Vorsaison.",
+    "demographics": "Vereinsmitglieder, die in der Saison mindestens einmal auf dem Wasser waren, nach Altersgruppe und Geschlecht (Gäste werden nicht gezählt). Jugend: 18 Jahre oder jünger.",
+    "fleet": "Durchschnittliche Anzahl Fahrten pro Boot für jeden Bootstyp: Je höher der Wert, desto stärker sind die Boote dieses Typs ausgelastet.",
+    "topBoats": "Anzahl der Fahrten jedes Bootes in der Saison.",
+    "routes": "Anzahl der Fahrten pro Strecke (Fahrten ohne eingetragene Strecke werden nicht gezählt).",
+    "outingTypes": "Anzahl der Fahrten pro Art: Ruderausbildung, Training, Wettkampf, Wanderfahrt…",
+    "incidents": "Anzahl der gemeldeten Vorfälle für jedes betroffene Boot.",
+    "damages": "In der Saison gemeldete Schäden, pro Boot und nach Schwere.",
+    "retention": "Anteil der Ruderer, die eine und zwei Saisons nach ihrem Eintritt noch aktiv sind.",
+    "safety": "Fahrten mit verspäteter Rückkehr, ohne geplante Rückkehrzeit oder nie im Fahrtenbuch abgeschlossen, Monat für Monat. Eine Fahrt kann in zwei Kategorien erscheinen."
+  },
+  "introsAlone": {
+    "outingsMonthly": "Anzahl der Fahrten pro Monat.",
+    "activeRowersMonthly": "Anzahl verschiedener Ruderer, die im Monat mindestens einmal auf dem Wasser waren."
+  },
+  "empty": {
+    "incidents": "In der Saison wurde kein Vorfall gemeldet.",
+    "damages": "In der Saison wurde kein Schaden gemeldet.",
+    "safety": "In der Saison gab es keine verspätete Rückkehr und keine offene Fahrt."
+  },
+  "omitted": "Keine Daten in dieser Saison, nicht gedruckt: {{titles}}.",
+  "labels": {
+    "coachedPct": "Anteil betreuter Fahrten"
+  },
+  "retention": {
+    "joined": "Eintritt",
+    "after_one": "+{{count}} Saison",
+    "after_other": "+{{count}} Saisons"
+  },
+  "notesFor": {
+    "demographics": "{{members}} Vereinsmitglieder unter den {{active}} aktiven Ruderern; die {{guests}} Gäste werden hier nicht gezählt.",
+    "retentionBoth": "{{arrivals}} neue Ruderer in {{season}}; {{pct}} der in {{prev}} Eingetretenen sind diese Saison wiedergekommen.",
+    "retentionArrivals": "{{arrivals}} neue Ruderer in {{season}}.",
+    "retentionReturned": "{{pct}} der in {{prev}} Eingetretenen sind diese Saison wiedergekommen.",
+    "retentionFirst": "Die erste erfasste Saison umfasst alle Mitglieder, die schon da waren.",
+    "firstSeason": "Erste in Rowing Beacon erfasste Saison: kein Vergleich mit der Vorsaison.",
+    "partialMonth": "{{month}}: laufender Monat, Daten bis {{date}}.",
+    "incidents_one": "{{count}} Vorfall gemeldet.",
+    "incidents_other": "{{count}} Vorfälle an {{boats}} Booten gemeldet.",
+    "incidentsOneBoat": "{{count}} Vorfälle gemeldet, alle am selben Boot."
+  },
+  "definitions": {
+    "title": "Definitionen",
+    "activeRower": "Aktiver Ruderer: jede Person, die in der Saison mindestens einmal im Boot war, Mitglied oder Gast.",
+    "coached": "Betreute Fahrt: im Fahrtenbuch als betreut markierte Fahrt; der Anteil zählt nur Fahrten, bei denen diese Angabe ausgefüllt ist.",
+    "hours": "Stunden auf dem Wasser: Dauer der eintägigen Fahrten; mehrtägige Fahrten werden nicht gezählt.",
+    "km": "Kilometer: im Fahrtenbuch eingetragene Strecken."
+  },
+  "footer": "Erstellt von Rowing Beacon aus dem Fahrtenbuch des Vereins.",
+  "appendix": "Anhang: die Zahlen im Detail",
+  "pdfBanner": "So erhalten Sie ein PDF: Drucken (Strg+P, oder ⌘P auf dem Mac), Ziel „Als PDF speichern“. Entfernen Sie den Haken bei „Kopf- und Fußzeilen“ für ein sauberes Ergebnis.",
+  "summarySheet": "Zusammenfassung",
+  "summary": {
+    "club": "Verein",
+    "season": "Saison",
+    "period": "Zeitraum",
+    "issued": "Ausgestellt am",
+    "notes": "Ein Wort des Vereins",
+    "indicator": "Kennzahl",
+    "change": "Veränderung (%)",
+    "contents": "Inhalt"
+  },
+  "sheets": {
+    "outingsMonthly": "Fahrten pro Monat",
+    "activeRowersMonthly": "Ruderer pro Monat",
+    "demographics": "Mitglieder",
+    "fleet": "Flotte",
+    "topBoats": "Boote",
+    "routes": "Strecken",
+    "outingTypes": "Fahrtarten",
+    "incidents": "Vorfälle",
+    "damages": "Schäden",
+    "retention": "Bindung",
+    "safety": "Sicherheit"
+  },
+  "fileSlug": "jahresbericht",
+  "exportXlsx": "Als Excel exportieren",
+  "exportHtml": "Im Browser öffnen",
+  "print": "Drucken oder als PDF speichern",
+  "present": "Präsentieren",
+  "open": "Öffnen",
+  "preparing": "Bericht wird vorbereitet…",
+  "preparingCount": "Bericht wird vorbereitet… {{done}} / {{total}} Abschnitte",
+  "ready": "Bericht bereit",
+  "htmlSaved": "Seite in Downloads gespeichert ({{name}}) und im Browser geöffnet. Für ein PDF: Drucken › Als PDF speichern.",
+  "htmlSavedNotOpened": "Seite in Downloads gespeichert ({{name}}): Öffnen Sie sie, dann Drucken › Als PDF speichern.",
+  "failedSections_one": "{{count}} Abschnitt konnte nicht berechnet werden und fehlt im Dokument: {{titles}}.",
+  "failedSections_other": "{{count}} Abschnitte konnten nicht berechnet werden und fehlen im Dokument: {{titles}}.",
+  "callout": {
+    "partial": "Die Saison {{season}} ist noch nicht zu Ende (Daten bis {{date}}). Für die Mitgliederversammlung zeigt man meist die letzte abgeschlossene Saison.",
+    "showSeason": "Saison {{season}} anzeigen"
+  },
+  "noOutings": "Keine Fahrten für die Saison {{season}} erfasst."
+}

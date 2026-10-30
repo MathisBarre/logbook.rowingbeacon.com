@@ -102,7 +102,9 @@ type V2Table =
 /** Tables wiped before a (re)run, children first. */
 export const V2_DATA_TABLES_IN_DELETE_ORDER = [
   "change_log",
+  "boat_reservation",
   "boat_level_config",
+  "boat_damage",
   "incident",
   "outing_crew",
   "outing",

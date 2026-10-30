@@ -9,6 +9,8 @@ export const MODULE_IDS = [
   "memberProfile",
   "guests",
   "captain",
+  "damages",
+  "reservations",
 ] as const;
 
 export type ModuleId = (typeof MODULE_IDS)[number];

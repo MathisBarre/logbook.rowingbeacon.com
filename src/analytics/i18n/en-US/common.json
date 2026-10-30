@@ -1,0 +1,93 @@
+{
+  "hub": {
+    "title": "Statistics"
+  },
+  "tabs": {
+    "dashboard": "Dashboard",
+    "reports": "Reports",
+    "annual": "Annual report",
+    "explorer": "Explorer"
+  },
+  "season": {
+    "label": "Season",
+    "value": "Season {{label}}",
+    "valueCurrent": "Season {{label}} (current)",
+    "current": "Current season",
+    "partial": "Season in progress: data up to {{date}}."
+  },
+  "admin": {
+    "unlock": "Unlock",
+    "lock": "Lock",
+    "locked": "For club officials only",
+    "lockedHint": "Enter the admin password to see this report.",
+    "autoLock": "Locks automatically after 15 minutes without activity.",
+    "autoLocked": "Statistics locked after 15 minutes without activity.",
+    "lockedExplorerHint": "Enter the admin password to ask the AI or write your own queries."
+  },
+  "badges": {
+    "nominative": "Shows names",
+    "admin": "Officials",
+    "heavy": "Slow to compute"
+  },
+  "actions": {
+    "showTable": "Show table",
+    "showChart": "Show chart",
+    "open": "Open",
+    "export": "Export",
+    "pin": "Pin to dashboard",
+    "customise": "Customize",
+    "viewSql": "View SQL query",
+    "retry": "Try again",
+    "stop": "Stop",
+    "cancel": "Cancel",
+    "save": "Save",
+    "close": "Close",
+    "confirm": "Confirm",
+    "more": "More actions"
+  },
+  "states": {
+    "loading": "Calculating…",
+    "loadingHeavy": "Calculating over the whole history…",
+    "empty": "No data for these criteria.",
+    "noData": "No data",
+    "noOutingsTitle": "No statistics yet",
+    "noOutingsBody": "Statistics appear as soon as the first outings are recorded at the boathouse, or after importing an efa2 history (Management › Data).",
+    "importEfa2": "Import an efa2 history",
+    "truncated": "Only the first {{count}} rows are shown.",
+    "hiddenColumns": "Personal data hidden: {{columns}} stay empty in statistics.",
+    "desktopOnly": "Advanced statistics only work in the installed app."
+  },
+  "unavailable": {
+    "module": "Needs the \"{{module}}\" module.",
+    "enableModule": "Turn on the {{module}} module",
+    "table": "Data not available in this version."
+  },
+  "export": {
+    "csv": "CSV (spreadsheet)",
+    "xlsx": "Excel",
+    "png": "PNG image",
+    "saved": "File saved to Downloads: {{name}}",
+    "failed": "Export failed: {{message}}"
+  },
+  "values": {
+    "yes": "yes",
+    "no": "no",
+    "null": "—"
+  },
+  "errors": {
+    "syntax": "Error in the query (line {{line}}, column {{column}}): {{message}}",
+    "syntaxNoPosition": "Error in the query: {{message}}",
+    "denied": "Access denied to \"{{object}}\": statistics only read the views and tables of the dictionary.",
+    "deniedNoObject": "Operation refused: statistics are read-only.",
+    "not_read_only": "Only read queries (SELECT, WITH) are allowed.",
+    "multiple_statements": "One query at a time: remove what follows the first semicolon.",
+    "timeout": "The query was stopped after {{seconds}} s. Shorten the period or add filters.",
+    "cancelled": "Query stopped.",
+    "too_large": "Result too large: add filters or a GROUP BY.",
+    "missing_param": "Missing parameter: {{name}}.",
+    "invalid_param": "Invalid value for {{name}}.",
+    "busy": "The database is busy (backup or import in progress). Try again in a moment.",
+    "desktop_only": "Advanced statistics only work in the installed app.",
+    "internal": "Unexpected error in the statistics engine: {{message}}"
+  }
+}

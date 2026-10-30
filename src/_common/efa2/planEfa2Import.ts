@@ -10,6 +10,8 @@ import {
   findObjects,
 } from "./efa2Project";
 import { Efa2Fields } from "./efa2Xml";
+import { damageFromEfa, efaDate } from "./efa2Damages";
+import { getDateTimeWithoutTimezone } from "../utils/date.utils";
 import {
   efaBoolean,
   efaDateToIso,
@@ -122,7 +124,14 @@ export interface Efa2ImportPlan {
     ambiguousNames: number;
     /** Logbook entries without date or number: kept as is, not shown. */
     unreadableEntries: number;
-    incidents: number;
+    /** efa2 damage reports not fixed yet, imported as open damages. */
+    openDamages: number;
+    /** efa2 damage reports already fixed, imported as fixed damages. */
+    fixedDamages: number;
+    /** Boats efa2 shows as not available, imported as "unavailable" entries. */
+    unavailableBoats: number;
+    /** Reservations imported (past ones included). */
+    reservations: number;
     groups: number;
     logbooks: string[];
     /** efa2 records kept without a screen, by storage type. */
@@ -246,6 +255,101 @@ const isExpired = (record: Efa2Fields, nowMs: number) => {
   return invalidFrom !== null && invalidFrom <= nowMs;
 };
 
+/**
+ * efa2 has no open-ended weekly reservation with only one bound, so Rowing
+ * Beacon writes a missing bound of a limited weekly reservation as one of
+ * these far dates; the import reads them back as "no bound".
+ */
+export const RESERVATION_FAR_PAST = "1970-01-01";
+export const RESERVATION_FAR_FUTURE = "2999-12-31";
+
+const EFA2_DAYS_OF_WEEK = [
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY",
+  "SUNDAY",
+];
+
+/** The part of a reservation that is not its holder, as Rowing Beacon stores it. */
+export interface Efa2ReservationTiming {
+  recurrence: "once" | "weekly";
+  startDate: string | null;
+  endDate: string | null;
+  dayOfWeek: number | null;
+  startTime: string;
+  endTime: string;
+}
+
+/**
+ * What an efa2 reservation record means for Rowing Beacon, or null when it
+ * cannot be read (a one-time reservation without date, a weekly one without
+ * a day of the week, no times…): such a record is only kept.
+ */
+export const readEfa2ReservationTiming = (
+  record: Efa2Fields
+): Efa2ReservationTiming | null => {
+  const startTime = efaTimeToHhMm(record.TimeFrom);
+  const endTime = efaTimeToHhMm(record.TimeTo);
+  if (!startTime || !endTime) return null;
+  const dateFrom = efaDateToIso(record.DateFrom);
+  const dateTo = efaDateToIso(record.DateTo);
+
+  if (record.Type === "ONETIME") {
+    const startDate = dateFrom ?? dateTo;
+    if (!startDate) return null;
+    return {
+      recurrence: "once",
+      startDate,
+      endDate: dateTo ?? startDate,
+      dayOfWeek: null,
+      startTime,
+      endTime,
+    };
+  }
+  if (record.Type === "WEEKLY" || record.Type === "WEEKLY_LIMITED") {
+    const dayIndex = EFA2_DAYS_OF_WEEK.indexOf(record.DayOfWeek ?? "");
+    if (dayIndex === -1) return null;
+    const limited = record.Type === "WEEKLY_LIMITED";
+    return {
+      recurrence: "weekly",
+      startDate:
+        limited && dateFrom && dateFrom > RESERVATION_FAR_PAST
+          ? dateFrom
+          : null,
+      endDate:
+        limited && dateTo && dateTo < RESERVATION_FAR_FUTURE ? dateTo : null,
+      dayOfWeek: dayIndex + 1,
+      startTime,
+      endTime,
+    };
+  }
+  return null;
+};
+
+/**
+ * A schedule the app can show and edit: times within the day and an end
+ * after the start. Other ones (an overnight weekly slot, a "24:00") stay
+ * as efa records and come back unchanged in the export.
+ */
+const isUsableReservationTiming = (timing: Efa2ReservationTiming) => {
+  const withinDay = (time: string) => /^([01]\d|2[0-3]):[0-5]\d$/.test(time);
+  if (!withinDay(timing.startTime) || !withinDay(timing.endTime)) return false;
+  if (timing.startDate && timing.endDate && timing.endDate < timing.startDate)
+    return false;
+  if (timing.recurrence === "once")
+    return (
+      `${timing.endDate}T${timing.endTime}` >
+      `${timing.startDate}T${timing.startTime}`
+    );
+  return timing.endTime > timing.startTime;
+};
+
+export const efa2DayOfWeek = (dayOfWeek: number) =>
+  EFA2_DAYS_OF_WEEK[dayOfWeek - 1];
+
 export const planEfa2Import = ({
   project,
   labels,
@@ -367,14 +471,6 @@ export const planEfa2Import = ({
       .filter((status) => !efaBoolean(status.UnknownBoat))
       .map((status) => [status.BoatId, status])
   );
-  const unusableBoats = new Set(
-    records("efa2boatdamages")
-      .filter(
-        (damage) =>
-          !efaBoolean(damage.Fixed) && damage.Severity === "NOTUSEABLE"
-      )
-      .map((damage) => damage.BoatId)
-  );
   const boatRows: unknown[][] = [];
   const configurationRows: unknown[][] = [];
   const boatIds = new Set<string>();
@@ -388,16 +484,11 @@ export const planEfa2Import = ({
       efaBoolean(latest.Deleted) ||
       isExpired(latest, nowMs) ||
       boatStatus?.BaseStatus === "HIDE";
-    const maintenance =
-      boatStatus?.BaseStatus === "NOTAVAILABLE" || unusableBoats.has(id);
-
     boatRows.push([
       id,
       latest.Name || "?",
-      boatStatus?.BaseStatus === "NOTAVAILABLE"
-        ? boatStatus.Comment || null
-        : null,
-      maintenance ? 1 : 0,
+      null,
+      0,
       latest.Owner || null,
       latest.Manufacturer || null,
       latest.Model || null,
@@ -690,32 +781,140 @@ export const planEfa2Import = ({
   }
   if (outingRows.some((row) => row[7] !== null)) hasDistances = true;
 
-  // ----- Open damages become incidents -----
-  const incidentRows: unknown[][] = [];
+  // ----- Damages, and boats efa2 shows as not available -----
+  const damageRows: unknown[][] = [];
+  let openDamages = 0;
+  let fixedDamages = 0;
   const damagesObject = findObject(project, "efa2boatdamages");
   const lastDamage = lastPositionByKey(
     damagesObject?.records ?? [],
     (damage) => `${damage.BoatId}:${damage.Damage}`
   );
+  const damageColumns = (
+    id: string,
+    kind: "damage" | "unavailable",
+    values: ReturnType<typeof damageFromEfa>,
+    timestamp: string
+  ) => [
+    id,
+    values.boatId,
+    kind,
+    values.severity,
+    values.description,
+    values.reportedAt,
+    values.reportedByRowerId,
+    values.fixedAt,
+    values.fixedByRowerId,
+    values.repairNote,
+    values.repairCost,
+    timestamp,
+    timestamp,
+  ];
   damagesObject?.records.forEach((damage, position) => {
     if (lastDamage.get(`${damage.BoatId}:${damage.Damage}`) !== position)
       return;
-    if (efaBoolean(damage.Fixed) || !boatIds.has(damage.BoatId)) return;
+    if (!boatIds.has(damage.BoatId)) return;
     const id = deriveEfa2Id(`damage:${damage.BoatId}:${damage.Damage}`);
-    const date = efaDateToIso(damage.ReportDate) ?? nowIso.slice(0, 10);
-    const time = efaTimeToHhMm(damage.ReportTime) ?? "00:00";
-    incidentRows.push([
-      id,
-      null,
-      damage.BoatId,
-      damage.Description || "?",
-      `${date}T${time}`,
-      msToIso(damage.LastModified, nowIso),
-    ]);
+    const values = damageFromEfa(damage, { rowerIds, now });
+    damageRows.push(
+      damageColumns(id, "damage", values, msToIso(damage.LastModified, nowIso))
+    );
+    if (values.fixedAt) fixedDamages++;
+    else openDamages++;
     link("efa2boatdamages", damagesObject.name, damage, position, {
-      table: "incident",
+      table: "boat_damage",
       id,
     });
+  });
+  // The reason of an unavailable boat is the comment of its status.
+  let unavailableBoats = 0;
+  for (const [boatId, status] of boatStatuses) {
+    if (status.BaseStatus !== "NOTAVAILABLE" || !boatIds.has(boatId)) continue;
+    const reportedAt = getDateTimeWithoutTimezone(
+      efaDate(status.LastModified) ?? now
+    );
+    damageRows.push(
+      damageColumns(
+        deriveEfa2Id(`unavailable:${boatId}`),
+        "unavailable",
+        {
+          boatId,
+          severity: "unusable",
+          description: status.Comment ?? "",
+          reportedAt,
+          reportedByRowerId: null,
+          fixedAt: null,
+          fixedByRowerId: null,
+          repairNote: null,
+          repairCost: null,
+        },
+        msToIso(status.LastModified, nowIso)
+      )
+    );
+    unavailableBoats++;
+  }
+
+  // ----- Reservations -----
+  // Past ones too (history). A record that cannot be read, or whose boat
+  // is unknown, is only kept in efa_record and comes back unchanged.
+  const reservationRows: unknown[][] = [];
+  const reservationsObject = findObject(project, "efa2boatreservations");
+  const lastReservation = lastPositionByKey(
+    reservationsObject?.records ?? [],
+    (reservation) => `${reservation.BoatId}:${reservation.Reservation}`
+  );
+  reservationsObject?.records.forEach((reservation, position) => {
+    if (
+      lastReservation.get(
+        `${reservation.BoatId}:${reservation.Reservation}`
+      ) !== position
+    )
+      return;
+    const number = Number(reservation.Reservation);
+    const timing = readEfa2ReservationTiming(reservation);
+    if (
+      !timing ||
+      !isUsableReservationTiming(timing) ||
+      !reservation.Reservation ||
+      !Number.isInteger(number) ||
+      !boatIds.has(reservation.BoatId)
+    )
+      return;
+    const id = deriveEfa2Id(
+      `reservation:${reservation.BoatId}:${reservation.Reservation}`
+    );
+    // A holder efa knows by id, else by name: never a guest rower.
+    const rowerId =
+      reservation.PersonId && rowerIds.has(reservation.PersonId)
+        ? reservation.PersonId
+        : null;
+    reservationRows.push([
+      id,
+      reservation.BoatId,
+      timing.recurrence,
+      timing.startDate,
+      timing.endDate,
+      timing.dayOfWeek,
+      timing.startTime,
+      timing.endTime,
+      rowerId,
+      rowerId ? null : reservation.PersonName || null,
+      reservation.Reason || null,
+      reservation.Contact || null,
+      number,
+      msToIso(reservation.LastModified, nowIso),
+      msToIso(reservation.LastModified, nowIso),
+    ]);
+    link(
+      "efa2boatreservations",
+      reservationsObject.name,
+      reservation,
+      position,
+      {
+        table: "boat_reservation",
+        id,
+      }
+    );
   });
 
   // ----- Groups, plus one group per efa2 status -----
@@ -807,6 +1006,8 @@ export const planEfa2Import = ({
   if (guestIds.size > 0 || rowerRows.some((row) => row[3] === "guest"))
     modules.push("guests");
   if (hasCaptain) modules.push("captain");
+  if (damageRows.length > 0) modules.push("damages");
+  if (reservationRows.length > 0) modules.push("reservations");
 
   const expected: Record<string, number> = {
     boat: boatRows.length,
@@ -815,7 +1016,8 @@ export const planEfa2Import = ({
     route: routeRows.length,
     outing: outingRows.length,
     outing_crew: crewRows.length,
-    incident: incidentRows.length,
+    boat_damage: damageRows.length,
+    boat_reservation: reservationRows.length,
     rower_group: groupRows.length,
     efa_record: uniqueEfaRows.length,
   };
@@ -926,9 +1128,44 @@ export const planEfa2Import = ({
       crewRows
     ),
     ...buildInsertStatements(
-      "incident",
-      ["id", "outing_id", "boat_id", "message", "occurred_at", "created_at"],
-      incidentRows
+      "boat_damage",
+      [
+        "id",
+        "boat_id",
+        "kind",
+        "severity",
+        "description",
+        "reported_at",
+        "reported_by_rower_id",
+        "fixed_at",
+        "fixed_by_rower_id",
+        "repair_note",
+        "repair_cost",
+        "created_at",
+        "updated_at",
+      ],
+      damageRows
+    ),
+    ...buildInsertStatements(
+      "boat_reservation",
+      [
+        "id",
+        "boat_id",
+        "recurrence",
+        "start_date",
+        "end_date",
+        "day_of_week",
+        "start_time",
+        "end_time",
+        "rower_id",
+        "person_name",
+        "reason",
+        "contact",
+        "efa_number",
+        "created_at",
+        "updated_at",
+      ],
+      reservationRows
     ),
     ...buildInsertStatements(
       "rower_group",
@@ -983,7 +1220,10 @@ export const planEfa2Import = ({
       closedOpenOutings,
       ambiguousNames: ambiguousNames.size,
       unreadableEntries,
-      incidents: incidentRows.length,
+      openDamages,
+      fixedDamages,
+      unavailableBoats,
+      reservations: reservationRows.length,
       groups: groupRows.length,
       logbooks: logbooks.map((logbook) => logbook.name),
       keptWithoutScreen,

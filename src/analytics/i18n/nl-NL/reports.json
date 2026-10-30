@@ -1,0 +1,279 @@
+{
+  "title": "Rapporten",
+  "search": "Rapport zoeken",
+  "noMatch": "Geen rapport komt overeen met \"{{query}}\". Stel de vraag aan de AI: die schrijft de statistiek voor u.",
+  "categories": {
+    "overview": "Overzicht",
+    "fleet": "Vloot",
+    "people": "Roeiers",
+    "retention": "Ledenbehoud",
+    "attendance": "Drukte",
+    "safety": "Veiligheid en begeleiding",
+    "maintenance": "Materiaal"
+  },
+  "labels": {
+    "selectedSeason": "Gekozen seizoen",
+    "previousSeason": "Vorig seizoen",
+    "classAvgOutings": "Gemiddelde tochten van het type",
+    "monthsSinceArrival": "Maanden sinds aankomst",
+    "avgPerWeek": {
+      "participations": "Roeiers per week gemiddeld",
+      "outings": "Tochten per week gemiddeld"
+    },
+    "female": "Vrouwen",
+    "male": "Mannen",
+    "otherGender": "Anders",
+    "unknownGender": "Geslacht niet opgegeven",
+    "total": "Totaal",
+    "previous": {
+      "outings": "Tochten, vorig seizoen",
+      "participations": "Deelnames, vorig seizoen",
+      "active_rowers": "Actieve roeiers, vorig seizoen",
+      "km": "Kilometers, vorig seizoen",
+      "hours": "Uren op het water, vorig seizoen"
+    }
+  },
+  "notes": {
+    "multiDay": "Meerdaagse tochten tellen niet mee in de uren.",
+    "km": "Kilometers: bij terugkomst ingevoerde afstand, anders de afstand van het traject.",
+    "excluded": "Boten en roeiers die van statistieken zijn uitgesloten (Beheer) tellen niet mee.",
+    "v1Coxes": "Uit versie 1 overgenomen tochten tellen stuurlieden als roeiers.",
+    "noStartTime": "Geïmporteerde tochten zonder vertrektijd ontbreken in de verdeling per uur.",
+    "retention": "Behoud gerekend vanaf de eerste tocht (de inschrijfdatum is niet bekend).",
+    "motorboat": "Motorboottochten (begeleidingsboten) tellen niet mee als tochten van roeiers.",
+    "membersOnly": "Alleen leden worden geteld: gasten en andere statussen vallen weg."
+  },
+  "coverage": {
+    "gender": "Geslacht bekend voor {{pct}}% van de actieve roeiers.",
+    "birth_date": "Geboortedatum bekend voor {{pct}}% van de actieve roeiers.",
+    "age_category": "Leeftijdscategorie bekend voor {{pct}}% van de actieve roeiers.",
+    "distance": "Afstand bekend voor {{pct}}% van de tochten.",
+    "is_coached": "Begeleiding ingevuld voor {{pct}}% van de tochten.",
+    "has_start_time": "Vertrektijd bekend voor {{pct}}% van de tochten."
+  },
+  "howToRead": "Zo leest u dit rapport",
+  "items": {
+    "season-overview": {
+      "title": "Seizoen in één oogopslag",
+      "description": "Welke cijfers laat u zien op de algemene ledenvergadering? Tochten, actieve roeiers, kilometers, uren op het water en aandeel begeleid, vergeleken met dezelfde periode vorig seizoen.",
+      "howToRead": "Elke tegel toont de waarde van het seizoen en het verschil met vorig seizoen tot dezelfde datum: een lopend seizoen wordt vergeleken met dezelfde periode vorig jaar, niet met het hele vorige seizoen. Een actieve roeier is minstens één keer uitgevaren.",
+      "keywords": "ALV algemene ledenvergadering jaarverslag samenvatting cijfers"
+    },
+    "yoy-monthly": {
+      "title": "Maand per maand, seizoen tegen seizoen",
+      "description": "Roeit de club meer of minder dan vorig seizoen, maand per maand? Kies tochten, deelnames, actieve roeiers, kilometers of uren.",
+      "howToRead": "Voor elke maand twee staven naast elkaar: het gekozen seizoen en het vorige. De maanden beginnen bij de start van het seizoen. Voor de lopende maand telt het vorige seizoen tot dezelfde dag. Een deelname is een plaats in een ploeg: een tocht in een vier telt vier deelnames.",
+      "keywords": "vergelijking ontwikkeling vorig jaar"
+    },
+    "yoy-cumulative": {
+      "title": "Cumulatieve tochten, seizoen tegen seizoen",
+      "description": "Loopt dit seizoen voor of achter op het vorige? Het totaal aantal tochten week na week, voor beide seizoenen.",
+      "howToRead": "Elke lijn telt de tochten op sinds het begin van het seizoen. Ligt de lijn van het gekozen seizoen boven de andere, dan heeft de club al meer tochten gedaan dan op dezelfde datum vorig jaar. Voor het lopende seizoen stopt de lijn vandaag.",
+      "keywords": "vergelijking voorsprong achterstand cumulatief"
+    },
+    "outing-types": {
+      "title": "Soorten tochten",
+      "description": "Waarvoor wordt er geroeid: recreatie, training, wedstrijd, instructie, toertocht…? Tochten, kilometers en uren per soort tocht.",
+      "howToRead": "De soorten staan van meest naar minst voorkomend. Een tocht zonder soort telt als \"Gewone tocht\". Handig om het aandeel van de roeischool, wedstrijden of toertochten te laten zien.",
+      "keywords": "school wedstrijd toertocht recreatie training"
+    },
+    "routes-usage": {
+      "title": "Meest gebruikte trajecten",
+      "description": "Waar wordt er geroeid? Tochten, kilometers en aantal verschillende boten per traject.",
+      "howToRead": "De trajecten staan van meest naar minst gevaren. Tochten zonder traject ontbreken.",
+      "keywords": "traject route km kilometers"
+    },
+    "boat-usage-ranking": {
+      "title": "Ranglijst van boten",
+      "description": "Welke boten varen het meest uit en welke blijven in de loods? Tochten, gebruiksdagen, uren en kilometers per boot, ook boten die niet zijn uitgevaren.",
+      "howToRead": "De boten staan van meest naar minst gebruikt. \"Gebruiksdagen\" telt de verschillende dagen dat de boot uitvoer, de laatste kolom hoeveel dagen geleden hij voor het laatst uitvoer. Gearchiveerde en van statistieken uitgesloten boten ontbreken.",
+      "keywords": "boten gebruik ranglijst botenhuis"
+    },
+    "underused-boats": {
+      "title": "Weinig gebruikte boten",
+      "description": "Welke boten zouden verkocht, uitgeleend of elders gestald kunnen worden? Boten die in de gekozen periode weinig zijn uitgevaren, naast het gemiddelde van hun type.",
+      "howToRead": "Stel de periode (in dagen) en het maximale aantal tochten in. Boten die nooit zijn uitgevaren staan bovenaan. Een boot ver onder het gemiddelde van zijn type past misschien niet (afstelling, gewicht, niveau); een heel type dat weinig gebruikt wordt wijst eerder op te veel boten.",
+      "keywords": "verkopen verkoop uitlenen stallen vloot ongebruikt"
+    },
+    "fleet-by-class": {
+      "title": "Vloot per boottype",
+      "description": "Moet de club een boot kopen, en van welk type? Dagen waarop alle boten van een type op het water waren, piek van boten tegelijk op het water en tochten per boot.",
+      "howToRead": "De types staan van meest naar minst bezet. \"Dagen dat alle boten weg waren\": zijn het er veel, dan hebben roeiers waarschijnlijk op een boot van dat type gewacht. \"Maximaal tegelijk weg\" is het grootste aantal boten van het type tegelijk op het water. \"Tochten per boot\" vergelijkt de types, ongeacht de grootte van hun vloot. Boten zonder opgegeven tuigage, zoals motorboten, horen niet bij de vloot.",
+      "keywords": "aankoop kopen vloot bezetting tekort"
+    },
+    "fleet-class-monthly": {
+      "title": "Tochten per boottype en per maand",
+      "description": "Welke boottypes worden in welke periode van het jaar het meest gebruikt?",
+      "howToRead": "Elke staaf is een maand, verdeeld per boottype: de totale hoogte geeft alle tochten van de maand, elke kleur het aandeel van één type. \"Niet opgegeven\" groepeert boten waarvan de uitvoering niet is ingevuld. Tochten met motorboten worden niet geteld.",
+      "keywords": "vloot seizoen periode"
+    },
+    "boat-class-week-heatmap": {
+      "title": "Boottypes week na week",
+      "description": "In welke weken komt een boottype tekort? Tochten per boottype, week na week.",
+      "howToRead": "Eén rij per boottype (1x, 2x, 4+…), één kolom per week, gedateerd op de maandag. Hoe donkerder het vak, hoe meer het type die week gevraagd was. \"Niet opgegeven\" groepeert boten waarvan de uitvoering niet is ingevuld. Tochten met motorboten worden niet geteld.",
+      "keywords": "vloot tekort piek week"
+    },
+    "boat-month-heatmap": {
+      "title": "Boten maand per maand",
+      "description": "Welke boten varen in welke periode van het jaar uit? Tochten per boot en per maand (de 40 meest gebruikte boten).",
+      "howToRead": "Eén rij per boot, één kolom per maand: hoe donkerder het vak, hoe vaker de boot die maand uitvoer. De rustige maanden van een boot zijn het goede moment voor onderhoud.",
+      "keywords": "onderhoud revisie planning vloot"
+    },
+    "active-members-demographics": {
+      "title": "Actieve leden per geslacht en leeftijd",
+      "description": "Hoeveel vrouwen, mannen, jongeren en volwassenen roeiden dit seizoen? De tabel die subsidieaanvragen vragen.",
+      "howToRead": "Leden die minstens één keer uitvoeren in het seizoen (zonder gasten): een rij per leeftijdsgroep, een kolom per geslacht en de totalen, zoals in subsidieaanvragen. Jong: 18 of jonger in het jaar van de tocht, volgens de geboortedatum, anders de leeftijdscategorie. \"Niet opgegeven\" telt kaarten zonder geslacht of leeftijd: vul ze aan in Beheer voordat u een aanvraag verstuurt.",
+      "keywords": "ledenaantal subsidie gemeente vrouwen mannen jeugd volwassenen"
+    },
+    "active-rowers-monthly": {
+      "title": "Actieve en nieuwe roeiers per maand",
+      "description": "Hoeveel roeiers komen er elke maand, en hoeveel zijn nieuw?",
+      "howToRead": "Elke staaf telt de roeiers die minstens één keer uitvoeren in de maand: onderaan wie al roeide, bovenaan de nieuwe. Een roeier is nieuw in de maand van zijn eerste tocht als hij voor het seizoen nooit had geroeid.",
+      "keywords": "nieuw nieuwkomers drukte"
+    },
+    "rower-frequency": {
+      "title": "Regelmaat van de leden",
+      "description": "Komen de leden vaak of af en toe? Aantal leden per aantal tochten dit seizoen.",
+      "howToRead": "Elke staaf telt de leden die 1 keer, 2 tot 5 keer, 6 tot 10 keer enzovoort uitvoeren. Veel leden in de eerste groepen wijst op weinig regelmatige leden, die een belletje of een beter onthaal verdienen.",
+      "keywords": "trouw regelmaat opvolging"
+    },
+    "retention-cohorts": {
+      "title": "Behoud per seizoen van aankomst",
+      "description": "Blijven leden van seizoen tot seizoen? Aandeel leden dat in een seizoen begon en de volgende seizoenen nog roeit.",
+      "howToRead": "Eén rij per seizoen van aankomst, dat is het seizoen van de eerste tocht. Onder \"Seizoenen na start\" geeft kolom 1 het aandeel dat het volgende seizoen nog actief is, kolom 2 het seizoen daarna, enzovoort. Het eerste seizoen in de gegevens bevat iedereen die er al was, en het lopende seizoen is nog niet voorbij.",
+      "keywords": "trouw uitval vertrek herinschrijving opvolging"
+    },
+    "new-rower-survival": {
+      "title": "Behoud van nieuwe leden",
+      "description": "Hoe lang blijven nieuwe leden? Aandeel nieuwe leden dat 1, 2, 3, 6, 9, 12, 18 en 24 maanden na de eerste tocht nog roeit.",
+      "howToRead": "Elke staaf geeft het aandeel nieuwe leden dat na dat aantal maanden nog actief is: een lid telt nog als hij na die termijn weer uitvoer. Een staaf telt alleen leden die lang genoeg geleden kwamen, dus de staven gaan niet over dezelfde mensen en een staaf kan hoger zijn dan de vorige. Een sterke daling in de eerste drie maanden laat zien dat het onthaal van beginners beter kan. Leden uit de eerste 60 dagen van de gegevens worden buiten beschouwing gelaten: zij waren er meestal al.",
+      "keywords": "trouw uitval vertrek herinschrijving opvolging beginners onthaal"
+    },
+    "workload-by-category": {
+      "title": "Activiteit per groep",
+      "description": "Welke groepen houden de club draaiende, maand per maand? Deelnames, uren, kilometers of roeiers, gegroepeerd per leeftijdscategorie, niveau, geslacht, status, boottype of soort tocht.",
+      "howToRead": "Kies de groepering en de getoonde waarde. Elke staaf is een maand, verdeeld per groep. \"Niet opgegeven\" groepeert de kaarten waar de informatie ontbreekt: vul ze aan in Beheer voor juistere cijfers.",
+      "keywords": "groep categorie leeftijd niveau geslacht status"
+    },
+    "guests": {
+      "title": "Gasten",
+      "description": "Hoeveel gasten ontvangt de club? Gastdeelnames per maand en hun aandeel in de clubactiviteit.",
+      "howToRead": "Elke staaf telt de plaatsen die gasten in de maand innamen. De tabel geeft ook het aantal verschillende gasten en hun aandeel in alle deelnames: een goede maatstaf voor open dagen en proefroeien.",
+      "keywords": "gasten proefroeien kennismaking"
+    },
+    "outings-per-rower": {
+      "title": "Tochten per roeier",
+      "description": "Wie roeit het meest dit seizoen? Tochten, kilometers, uren en begeleide tochten per roeier.",
+      "howToRead": "Ranglijst van meest naar minst actief, te filteren op status (lid, gast, overig). Dit rapport toont namen: alleen voor bestuursleden, tenzij ranglijsten met namen in Beheer zijn toegestaan.",
+      "keywords": "ranglijst regelmaat roeiers"
+    },
+    "km-challenge": {
+      "title": "Kilometeruitdaging",
+      "description": "Wie roeide dit seizoen de meeste kilometers op het water? Ranglijst zonder ergometer, te filteren op geslacht en leeftijdscategorie.",
+      "howToRead": "De grafiek toont de eerste 20 en de tabel de eerste 100, van het grootste naar het kleinste totaal. Tochten zonder afstand tellen niet mee. Dit rapport toont namen: alleen voor bestuursleden, tenzij ranglijsten met namen in Beheer zijn toegestaan.",
+      "keywords": "km kilometers afstand uitdaging ranglijst"
+    },
+    "inactive-rowers": {
+      "title": "Vaste leden die niet meer komen",
+      "description": "Welke vaste leden komen niet meer? Leden die in het jaar voor hun laatste tocht vaak roeiden en al het gekozen aantal dagen wegblijven: het bellen waard.",
+      "howToRead": "Stel het aantal dagen afwezigheid en het minimale aantal tochten in. De lijst begint met de trouwste leden. Leden die al meer dan twee jaar weg zijn en gearchiveerde kaarten ontbreken. Alleen voor bestuursleden.",
+      "keywords": "trouw uitval vertrek opvolging afwezig"
+    },
+    "attendance-heatmap": {
+      "title": "Drukte per dag en uur",
+      "description": "Welke tijdsloten lopen het best? Gemiddeld aantal roeiers (of tochten) per week, per dag en vertrektijd.",
+      "howToRead": "Eén rij per weekdag, één kolom per vertrekuur. De waarde is een weekgemiddelde: 6 op zaterdag om 9 uur betekent dat er gemiddeld elke zaterdag tussen 9 en 10 uur 6 roeiers vertrekken. Handig om begeleide trainingen en diensten in te plannen.",
+      "keywords": "tijdsloten uren drukte"
+    },
+    "activity-calendar": {
+      "title": "Seizoenskalender",
+      "description": "Op welke dagen roeide de club? Deelnames dag per dag, om dalen, vakanties en het effect van het weer te zien. Te filteren op één boot.",
+      "howToRead": "Eén vak per dag, één kolom per week: hoe donkerder het vak, hoe meer roeiers die dag uitvoeren. Een licht vak betekent geen tocht.",
+      "keywords": "dagen kalender weer vakantie"
+    },
+    "coaching-balance": {
+      "title": "Evenwicht in begeleiding",
+      "description": "Krijgen alle leden begeleiding? Begeleid aandeel van de tochten van elk lid, minst begeleid eerst.",
+      "howToRead": "Bovenaan staan de leden met de minste begeleiding: zo kunt u de aandacht van coaches verdelen. Tochten zonder gegevens over begeleiding tellen niet mee in het percentage. Dit rapport toont namen: alleen voor bestuursleden, tenzij ranglijsten met namen in Beheer zijn toegestaan.",
+      "keywords": "coach begeleiding trainer"
+    },
+    "safety-summary": {
+      "title": "Veiligheid maand per maand",
+      "description": "Wordt de veiligheid beter? Late terugkomst, tochten zonder geplande terugkomsttijd en nooit afgesloten tochten, maand per maand.",
+      "howToRead": "Elke staaf is een maand. Dezelfde tocht kan dubbel tellen, bijvoorbeeld nooit afgesloten en zonder geplande terugkomsttijd. Stel de tolerantie voor te laat in minuten in. De tochten zelf staan in \"Te controleren tochten\".",
+      "keywords": "veiligheid te laat afsluiten"
+    },
+    "safety-issues": {
+      "title": "Te controleren tochten",
+      "description": "Welke tochten verdienen een controle? Nooit afgesloten tochten, late terugkomst, tochten zonder geplande terugkomsttijd en jeugdtochten (J10 tot J16) zonder begeleiding.",
+      "howToRead": "Eén rij per tocht, de ernstigste eerst: nooit afgesloten tochten, jeugd zonder begeleiding, te late terugkomst, dan tochten zonder geplande terugkomsttijd, telkens de meest recente eerst. Kies een aandachtspunt om alleen dat te houden. Een tocht staat er maar één keer in, met de belangrijkste reden. Motorboottochten worden niet gecontroleerd. Alleen voor bestuursleden.",
+      "keywords": "veiligheid te laat afsluiten jeugd controleren"
+    },
+    "boat-km": {
+      "title": "Slijtage van de boten",
+      "description": "Welke boten slijten het snelst? Kilometers, uren en incidenten per boot dit seizoen en sinds het begin van de gegevens.",
+      "howToRead": "De kolommen \"seizoen\" volgen het gekozen seizoen, de kolommen \"totaal\" de hele vastgelegde geschiedenis. Handig om revisies en vervanging te plannen. Van statistieken uitgesloten boten blijven hier staan, want ook zij slijten.",
+      "keywords": "slijtage onderhoud revisie km kilometers"
+    },
+    "incidents-per-boat": {
+      "title": "Incidenten per boot",
+      "description": "Welke boten hebben de meeste incidenten? Incidenten gemeld na afloop van tochten, afgezet tegen het aantal tochten van de boot.",
+      "howToRead": "De grafiek rangschikt de boten naar incidenten per 100 tochten, om een veelgebruikte boot te vergelijken met een die weinig uitvaart; de tabel geeft ook het aantal incidenten. Alleen boten met minstens één incident in het seizoen staan erin.",
+      "keywords": "incidenten breuk onderhoud"
+    },
+    "damages-per-boat": {
+      "title": "Schade per boot",
+      "description": "Hoe staat het met de schade? Gemelde schade per ernst, openstaande schade, gemiddelde hersteltijd en kosten per boot.",
+      "howToRead": "De staven stapelen de schade per ernst: onbruikbaar, beperkt bruikbaar, bruikbaar. De gemiddelde duur telt alleen herstelde schade, en de kosten tellen de bij herstel ingevoerde bedragen op.",
+      "keywords": "schade reparatie breuk onderhoud"
+    }
+  },
+  "clearSearch": "Zoekopdracht wissen",
+  "askAi": "Vraag het de AI",
+  "noMatchInCategory": "Geen rapport van dit thema komt overeen met \"{{query}}\".",
+  "showAllCategories": "Alle thema's tonen",
+  "allCategories": "Alle",
+  "categoryFilter": "Thema's",
+  "resultCount_one": "{{count}} rapport",
+  "resultCount_other": "{{count}} rapporten",
+  "lockedBadge": "Beheerderswachtwoord nodig om het te openen.",
+  "toolbar": "Rapportacties",
+  "view": {
+    "label": "Weergave",
+    "chart": "Grafiek",
+    "table": "Tabel"
+  },
+  "scope": {
+    "season": "Seizoen {{season}}",
+    "running": "lopend, gegevens tot {{date}}",
+    "fixed": "vastgezet op de dashboardkaart",
+    "followHub": "Het gekozen seizoen volgen",
+    "lastDays": "In de laatste {{days}} dagen",
+    "allHistory": "De hele geschiedenis van de club",
+    "noSeason": "het gekozen seizoen geldt hier niet"
+  },
+  "hints": {
+    "partialMonth": "{{month}}: lopende maand, gegevens tot {{date}}. Dezelfde maand van het vorige seizoen telt tot dezelfde dag.",
+    "noPrevious": "Geen gegevens voor seizoen {{season}}: alleen het gekozen seizoen wordt getoond."
+  },
+  "unavailable": {
+    "data": "Dit rapport gebruikt gegevens die deze versie van RowingBeacon nog niet vastlegt."
+  },
+  "module": {
+    "confirmTitle": "Module {{module}} inschakelen?",
+    "confirmMessage": "{{adds}} U kunt hem uitschakelen in Beheer › Modules.",
+    "enabled": "Module {{module}} ingeschakeld",
+    "seeInSettings": "Bekijken in Beheer"
+  },
+  "locked": {
+    "names": "Dit rapport toont namen van roeiers. Voer het beheerderswachtwoord in, of sta ranglijsten met namen voor iedereen toe in Beheer › Statistieken.",
+    "admin": "Dit rapport is alleen voor bestuursleden. Voer het beheerderswachtwoord in om het te tonen.",
+    "unlock": "Ontgrendelen"
+  },
+  "empty": {
+    "filtered": "Geen resultaat met deze filters.",
+    "reset": "Filters herstellen"
+  },
+  "missingParam": "Kies \"{{name}}\" om dit rapport te tonen.",
+  "customiseHint": "Deze instellingen veranderen alleen de weergave en blijven tot RowingBeacon wordt gesloten. Om ze te bewaren, zet u de grafiek op het dashboard of slaat u hem op als query."
+}

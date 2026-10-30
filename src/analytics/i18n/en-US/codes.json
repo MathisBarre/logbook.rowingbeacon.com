@@ -1,0 +1,100 @@
+{
+  "unknown": "Not specified",
+  "gender": {
+    "female": "Female",
+    "male": "Male",
+    "other": "Other"
+  },
+  "rower_status": {
+    "member": "Member",
+    "guest": "Guest",
+    "other": "Other"
+  },
+  "seriousness": {
+    "recreational": "Recreational",
+    "competitor": "Competitor"
+  },
+  "rigging": {
+    "scull": "Scull",
+    "sweep": "Sweep"
+  },
+  "role": {
+    "rower": "Rower",
+    "cox": "Cox"
+  },
+  "age_group": {
+    "youth": "Youth (18 or under)",
+    "adult": "Adults"
+  },
+  "issue": {
+    "not_closed": "Never closed",
+    "late_return": "Late return",
+    "no_estimated_end": "No planned return time",
+    "youth_not_coached": "Youth without coaching"
+  },
+  "severity": {
+    "usable": "Usable",
+    "limited": "Usable with restrictions",
+    "unusable": "Unusable"
+  },
+  "damage_kind": {
+    "damage": "Damage",
+    "unavailable": "Unavailability"
+  },
+  "distance_source": {
+    "recorded": "Distance entered",
+    "route": "Route distance"
+  },
+  "metric": {
+    "outings": "Outings",
+    "participations": "Participations",
+    "active_rowers": "Active rowers",
+    "km": "Kilometers",
+    "hours": "Hours on the water"
+  },
+  "measure": {
+    "participations": "Participations",
+    "hours": "Hours on the water",
+    "km": "Kilometers",
+    "rowers": "Rowers"
+  },
+  "dimension": {
+    "age_category": "Age category",
+    "seriousness": "Rower type (recreational, competitor)",
+    "gender": "Gender",
+    "rower_status": "Status (member, guest)",
+    "boat_class": "Boat class",
+    "outing_type": "Outing type"
+  },
+  "outing_type_code": {
+    "normal": "Regular outing",
+    "training": "Training",
+    "regatta": "Regatta",
+    "training_camp": "Training camp",
+    "instruction": "Instruction",
+    "tour": "Tour",
+    "club_trip": "Club trip",
+    "ergometer": "Ergometer",
+    "motorboat": "Motorboat"
+  },
+  "code": {
+    "normal": "Regular outing",
+    "training": "Training",
+    "regatta": "Regatta",
+    "training_camp": "Training camp",
+    "instruction": "Instruction",
+    "tour": "Tour",
+    "club_trip": "Club trip",
+    "ergometer": "Ergometer",
+    "motorboat": "Motorboat"
+  },
+  "status": {
+    "member": "Member",
+    "guest": "Guest",
+    "other": "Other"
+  },
+  "kind": {
+    "damage": "Damage",
+    "unavailable": "Unavailability"
+  }
+}

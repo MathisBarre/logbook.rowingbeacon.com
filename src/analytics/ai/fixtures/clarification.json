@@ -1,0 +1,27 @@
+{
+  "title": "Fréquentation du mardi soir",
+  "explanation": "Je peux compter les sorties ou les rameurs présents.",
+  "sql": null,
+  "params": [],
+  "chart": {
+    "type": "table",
+    "x": "",
+    "y": [],
+    "series": "",
+    "orientation": "vertical",
+    "stacked": false,
+    "sort": "none",
+    "limit": 0,
+    "cumulative": false,
+    "label": "",
+    "value": "",
+    "date": "",
+    "kpis": [],
+    "columns": [],
+    "column_labels": [],
+    "column_formats": []
+  },
+  "assumptions": [],
+  "clarification": "Voulez-vous compter les sorties (bateaux sur l'eau) ou les rameurs présents ?",
+  "choices": ["Les sorties", "Les rameurs présents"]
+}

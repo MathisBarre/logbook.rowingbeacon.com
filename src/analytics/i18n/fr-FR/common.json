@@ -1,0 +1,93 @@
+{
+  "hub": {
+    "title": "Statistiques"
+  },
+  "tabs": {
+    "dashboard": "Tableau de bord",
+    "reports": "Rapports",
+    "annual": "Rapport annuel",
+    "explorer": "Explorer"
+  },
+  "season": {
+    "label": "Saison",
+    "value": "Saison {{label}}",
+    "valueCurrent": "Saison {{label}} (en cours)",
+    "current": "Saison en cours",
+    "partial": "Saison en cours : données jusqu'au {{date}}."
+  },
+  "admin": {
+    "unlock": "Déverrouiller",
+    "lock": "Verrouiller",
+    "locked": "Réservé aux responsables",
+    "lockedHint": "Saisissez le mot de passe admin pour voir ce rapport.",
+    "autoLock": "Verrouillage automatique après 15 minutes sans activité.",
+    "autoLocked": "Statistiques verrouillées après 15 minutes sans activité.",
+    "lockedExplorerHint": "Saisissez le mot de passe admin pour poser vos questions à l'IA ou écrire vos propres requêtes."
+  },
+  "badges": {
+    "nominative": "Nominatif",
+    "admin": "Responsables",
+    "heavy": "Calcul long"
+  },
+  "actions": {
+    "showTable": "Voir le tableau",
+    "showChart": "Voir le graphique",
+    "open": "Ouvrir",
+    "export": "Exporter",
+    "pin": "Épingler au tableau de bord",
+    "customise": "Personnaliser",
+    "viewSql": "Voir la requête SQL",
+    "retry": "Réessayer",
+    "stop": "Arrêter",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "more": "Plus d'actions"
+  },
+  "states": {
+    "loading": "Calcul en cours…",
+    "loadingHeavy": "Calcul sur tout l'historique…",
+    "empty": "Aucune donnée pour ces critères.",
+    "noData": "Aucune donnée",
+    "noOutingsTitle": "Pas encore de statistiques",
+    "noOutingsBody": "Les statistiques apparaîtront dès les premières sorties enregistrées au hangar, ou après l'import d'un historique efa2 (Gestion › Données).",
+    "importEfa2": "Importer un historique efa2",
+    "truncated": "Seules les {{count}} premières lignes sont affichées.",
+    "hiddenColumns": "Données personnelles masquées : {{columns}} restent vides dans les statistiques.",
+    "desktopOnly": "Les statistiques avancées ne fonctionnent que dans l'application installée."
+  },
+  "unavailable": {
+    "module": "Nécessite le module « {{module}} ».",
+    "enableModule": "Activer le module {{module}}",
+    "table": "Données non disponibles dans cette version."
+  },
+  "export": {
+    "csv": "CSV (tableur)",
+    "xlsx": "Excel",
+    "png": "Image PNG",
+    "saved": "Fichier enregistré dans Téléchargements : {{name}}",
+    "failed": "L'export a échoué : {{message}}"
+  },
+  "values": {
+    "yes": "oui",
+    "no": "non",
+    "null": "—"
+  },
+  "errors": {
+    "syntax": "Erreur dans la requête (ligne {{line}}, colonne {{column}}) : {{message}}",
+    "syntaxNoPosition": "Erreur dans la requête : {{message}}",
+    "denied": "Accès refusé à « {{object}} » : les statistiques ne lisent que les vues et les tables du dictionnaire.",
+    "deniedNoObject": "Opération refusée : les statistiques sont en lecture seule.",
+    "not_read_only": "Seules les requêtes de lecture (SELECT, WITH) sont autorisées.",
+    "multiple_statements": "Une seule requête à la fois : supprimez ce qui suit le premier point-virgule.",
+    "timeout": "La requête a été arrêtée après {{seconds}} s. Réduisez la période ou ajoutez des filtres.",
+    "cancelled": "Requête arrêtée.",
+    "too_large": "Résultat trop volumineux : ajoutez des filtres ou un GROUP BY.",
+    "missing_param": "Paramètre manquant : {{name}}.",
+    "invalid_param": "Valeur invalide pour {{name}}.",
+    "busy": "La base de données est occupée (sauvegarde ou import en cours). Réessayez dans un instant.",
+    "desktop_only": "Les statistiques avancées ne fonctionnent que dans l'application installée.",
+    "internal": "Erreur inattendue du moteur de statistiques : {{message}}"
+  }
+}

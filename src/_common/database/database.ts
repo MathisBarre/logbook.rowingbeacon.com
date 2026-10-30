@@ -1,6 +1,7 @@
 import Database from "@tauri-apps/plugin-sql";
 import { toast } from "sonner";
 import { applyMigrations } from "./migrations";
+import { ensureWalMode } from "./journalMode";
 import { getDrizzle } from "./drizzle";
 import i18n from "../i18n/config";
 
@@ -12,6 +13,8 @@ export const getDatabase = async () => {
       console.log("ℹ️ Loading database...");
       db = await Database.load("sqlite:main.db");
 
+      // Before anything reads: readers then never block the app's writes.
+      await ensureWalMode(db);
       await applyMigrations(db);
     }
 

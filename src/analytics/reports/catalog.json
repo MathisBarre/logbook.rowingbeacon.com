@@ -1,0 +1,1055 @@
+[
+  {
+    "id": "season-overview",
+    "category": "overview",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ],
+    "chart": {
+      "type": "kpi",
+      "items": [
+        {
+          "value": "outings",
+          "compare": "outings_prev",
+          "format": "integer",
+          "higherIsBetter": true
+        },
+        {
+          "value": "active_rowers",
+          "compare": "active_rowers_prev",
+          "format": "integer",
+          "higherIsBetter": true
+        },
+        {
+          "value": "km",
+          "compare": "km_prev",
+          "format": "km",
+          "higherIsBetter": true,
+          "hideWhenNull": true
+        },
+        {
+          "value": "hours",
+          "compare": "hours_prev",
+          "format": "hours",
+          "higherIsBetter": true
+        },
+        {
+          "value": "coached_pct",
+          "compare": "coached_pct_prev",
+          "format": "percent",
+          "hideWhenNull": true
+        }
+      ]
+    },
+    "coverage": {
+      "column": "distance",
+      "sql": "SELECT COUNT(distance_m) AS known, COUNT(*) AS total FROM v_outings WHERE season = :season AND counts_in_stats = 1"
+    },
+    "notes": ["multiDay", "km", "motorboat", "excluded", "v1Coxes"],
+    "mcpDescription": "Outings, active rowers, kilometers, hours on the water and coached share, compared with the same period last season. Columns: outings, outings_prev, active_rowers, active_rowers_prev, km, km_prev, hours, hours_prev, coached_pct, coached_pct_prev, is_partial, cutoff_date."
+  },
+  {
+    "id": "yoy-monthly",
+    "category": "overview",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "metric",
+        "type": "choice",
+        "required": true,
+        "default": "outings",
+        "options": [
+          {
+            "value": "outings"
+          },
+          {
+            "value": "participations"
+          },
+          {
+            "value": "active_rowers"
+          },
+          {
+            "value": "km"
+          },
+          {
+            "value": "hours"
+          }
+        ]
+      }
+    ],
+    "chart": {
+      "type": "bar",
+      "x": "month",
+      "y": ["value", "value_prev"],
+      "orientation": "vertical",
+      "stacked": false,
+      "labelKeys": {
+        "value": "analytics.codes.metric.{metric}",
+        "value_prev": "analytics.reports.labels.previous.{metric}"
+      }
+    },
+    "notes": ["multiDay", "km", "motorboat", "excluded", "v1Coxes"],
+    "mcpDescription": "Pick the measure: outings, participations, active rowers, kilometers or hours. Columns: month, value, value_prev."
+  },
+  {
+    "id": "yoy-cumulative",
+    "category": "overview",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ],
+    "chart": {
+      "type": "line",
+      "x": "week_start",
+      "y": ["outings_cumulative", "outings_cumulative_prev"]
+    },
+    "notes": ["excluded"],
+    "mcpDescription": "How this season is tracking against the last one, week after week. Columns: week_start, outings_cumulative, outings_cumulative_prev."
+  },
+  {
+    "id": "outing-types",
+    "category": "overview",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing"],
+      "modules": ["outingTypes"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ],
+    "chart": {
+      "type": "bar",
+      "x": "outing_type_code",
+      "y": ["outings"],
+      "orientation": "horizontal",
+      "sort": "desc"
+    },
+    "notes": ["multiDay", "km", "excluded"],
+    "mcpDescription": "Outings, kilometers and hours per outing type. Columns: outing_type_code, outings, km, hours."
+  },
+  {
+    "id": "routes-usage",
+    "category": "overview",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing", "route"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ],
+    "chart": {
+      "type": "bar",
+      "x": "route_name",
+      "y": ["outings"],
+      "orientation": "horizontal",
+      "sort": "desc",
+      "limit": 15
+    },
+    "notes": ["km", "excluded"],
+    "mcpDescription": "Outings, kilometers and number of boats per route. Columns: route_name, outings, km, boats."
+  },
+  {
+    "id": "boat-usage-ranking",
+    "category": "fleet",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing", "boat"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "boat_class",
+        "type": "boat_class",
+        "required": false,
+        "default": null
+      }
+    ],
+    "chart": {
+      "type": "bar",
+      "x": "boat_name",
+      "y": ["outings"],
+      "orientation": "horizontal",
+      "sort": "desc"
+    },
+    "notes": ["multiDay", "km", "excluded"],
+    "mcpDescription": "Outings, days used, hours and kilometers per boat, including boats that never went out. Columns: boat_name, boat_class, outings, days_used, hours, km, last_outing_date, days_since_last."
+  },
+  {
+    "id": "underused-boats",
+    "category": "fleet",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing", "boat"]
+    },
+    "params": [
+      {
+        "name": "days",
+        "type": "integer",
+        "labelKey": "analytics.params.periodDays",
+        "required": true,
+        "default": 365,
+        "min": 7,
+        "max": 3650
+      },
+      {
+        "name": "max_outings",
+        "type": "integer",
+        "required": true,
+        "default": 5,
+        "min": 0,
+        "max": 1000
+      }
+    ],
+    "chart": {
+      "type": "table",
+      "labelKeys": {
+        "class_avg_outings": "analytics.reports.labels.classAvgOutings"
+      },
+      "formats": {
+        "build_year": "text"
+      }
+    },
+    "notes": ["excluded"],
+    "mcpDescription": "To free hangar space or plan a sale: boats used at most N times in the period, next to the average of their class. Columns: boat_name, boat_class, build_year, outings_period, last_outing_date, days_since_last, class_avg_outings."
+  },
+  {
+    "id": "fleet-by-class",
+    "category": "fleet",
+    "visibility": "public",
+    "cost": "medium",
+    "requires": {
+      "tables": ["outing", "boat_configuration"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ],
+    "chart": {
+      "type": "bar",
+      "x": "boat_class",
+      "y": ["outings_per_boat"],
+      "orientation": "horizontal",
+      "sort": "desc"
+    },
+    "notes": ["km", "excluded"],
+    "mcpDescription": "Outings per boat, peak number of boats out at once and days when every boat of a class was out: useful before buying. Columns: boat_class, fleet_size, outings, outings_per_boat, km, max_concurrent, saturated_days."
+  },
+  {
+    "id": "fleet-class-monthly",
+    "category": "fleet",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing", "boat_configuration"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ],
+    "chart": {
+      "type": "bar",
+      "x": "month",
+      "y": ["outings"],
+      "series": "boat_class",
+      "stacked": true
+    },
+    "notes": ["excluded"],
+    "mcpDescription": "Which boat classes are used most at each time of year. Columns: month, boat_class, outings."
+  },
+  {
+    "id": "boat-class-week-heatmap",
+    "category": "fleet",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing", "boat_configuration"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ],
+    "chart": {
+      "type": "heatmap",
+      "x": "week_start",
+      "y": "boat_class",
+      "value": "outings"
+    },
+    "notes": ["excluded"],
+    "mcpDescription": "Spot the weeks when a boat class is in high demand. Columns: boat_class, week_start, outings."
+  },
+  {
+    "id": "boat-month-heatmap",
+    "category": "fleet",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "boat_class",
+        "type": "boat_class",
+        "required": false,
+        "default": null
+      }
+    ],
+    "chart": {
+      "type": "heatmap",
+      "x": "month",
+      "y": "boat_name",
+      "value": "outings"
+    },
+    "notes": ["excluded"],
+    "mcpDescription": "Outings per boat and month (the 40 most used boats). Columns: boat_name, month, outings."
+  },
+  {
+    "id": "active-members-demographics",
+    "category": "people",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing", "rower"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ],
+    "chart": {
+      "type": "bar",
+      "x": "age_group",
+      "y": ["active_rowers"],
+      "series": "gender",
+      "stacked": true,
+      "orientation": "horizontal"
+    },
+    "coverage": {
+      "column": "gender",
+      "sql": "SELECT COUNT(DISTINCT CASE WHEN gender IS NOT NULL THEN rower_id END) AS known, COUNT(DISTINCT rower_id) AS total FROM v_outing_rowers WHERE season = :season AND counts_in_stats = 1 AND is_rowing = 1 AND rower_status = 'member'"
+    },
+    "notes": ["km", "membersOnly", "motorboat", "excluded", "v1Coxes"],
+    "mcpDescription": "Members who rowed at least once this season: youth (18 or younger in the year) and adults. For grant applications. Columns: age_group, gender, active_rowers, outings, km."
+  },
+  {
+    "id": "workload-by-category",
+    "category": "people",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing", "rower"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "dimension",
+        "type": "choice",
+        "required": true,
+        "default": "age_category",
+        "options": [
+          {
+            "value": "age_category"
+          },
+          {
+            "value": "seriousness"
+          },
+          {
+            "value": "gender"
+          },
+          {
+            "value": "rower_status"
+          },
+          {
+            "value": "boat_class"
+          },
+          {
+            "value": "outing_type"
+          }
+        ]
+      },
+      {
+        "name": "measure",
+        "type": "choice",
+        "required": true,
+        "default": "participations",
+        "options": [
+          {
+            "value": "participations"
+          },
+          {
+            "value": "hours"
+          },
+          {
+            "value": "km"
+          },
+          {
+            "value": "rowers"
+          }
+        ]
+      }
+    ],
+    "chart": {
+      "type": "bar",
+      "x": "month",
+      "y": ["value"],
+      "series": "category",
+      "stacked": true,
+      "labelKeys": {
+        "value": "analytics.codes.measure.{measure}"
+      }
+    },
+    "notes": ["multiDay", "km", "motorboat", "excluded", "v1Coxes"],
+    "mcpDescription": "Participations, hours, kilometers or rowers per month, grouped by age category, level, gender, status, boat class or outing type. Columns: month, category, value."
+  },
+  {
+    "id": "outings-per-rower",
+    "category": "people",
+    "visibility": "nominative",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing", "rower"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "rower_status",
+        "type": "choice",
+        "required": false,
+        "default": null,
+        "options": [
+          {
+            "value": "member"
+          },
+          {
+            "value": "guest"
+          },
+          {
+            "value": "other"
+          }
+        ]
+      }
+    ],
+    "chart": {
+      "type": "bar",
+      "x": "rower_label",
+      "y": ["outings"],
+      "orientation": "horizontal",
+      "sort": "desc",
+      "limit": 20
+    },
+    "notes": ["multiDay", "km", "motorboat", "excluded", "v1Coxes"],
+    "mcpDescription": "Who rows most this season: outings, kilometers, hours, coached outings. Columns: rower_label, rower_status, age_category, outings, km, hours, coached_outings, last_outing_date. Shows names."
+  },
+  {
+    "id": "km-challenge",
+    "category": "people",
+    "visibility": "nominative",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing", "rower"],
+      "modules": ["distances"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "gender",
+        "type": "choice",
+        "required": false,
+        "default": null,
+        "options": [
+          {
+            "value": "female"
+          },
+          {
+            "value": "male"
+          },
+          {
+            "value": "other"
+          }
+        ]
+      },
+      {
+        "name": "age_category",
+        "type": "choice",
+        "required": false,
+        "default": null,
+        "options": [
+          {
+            "value": "J10"
+          },
+          {
+            "value": "J12"
+          },
+          {
+            "value": "J14"
+          },
+          {
+            "value": "J16"
+          },
+          {
+            "value": "J18"
+          },
+          {
+            "value": "Senior"
+          }
+        ]
+      }
+    ],
+    "chart": {
+      "type": "bar",
+      "x": "rower_label",
+      "y": ["km"],
+      "orientation": "horizontal",
+      "sort": "desc",
+      "limit": 20
+    },
+    "coverage": {
+      "column": "distance",
+      "sql": "SELECT COUNT(distance_m) AS known, COUNT(*) AS total FROM v_outings WHERE season = :season AND counts_in_stats = 1 AND is_rowing = 1 AND outing_type_code <> 'ergometer'"
+    },
+    "notes": ["km", "motorboat", "excluded", "v1Coxes"],
+    "mcpDescription": "Ranking of kilometers rowed on the water (ergometer excluded), filterable by gender and age category. Columns: rower_label, km, outings, km_per_outing. Shows names."
+  },
+  {
+    "id": "retention-cohorts",
+    "category": "retention",
+    "visibility": "public",
+    "cost": "heavy",
+    "requires": {
+      "tables": ["outing", "rower"]
+    },
+    "params": [],
+    "chart": {
+      "type": "heatmap",
+      "x": "seasons_after",
+      "y": "cohort",
+      "value": "retention_pct"
+    },
+    "notes": ["retention", "membersOnly", "motorboat", "excluded", "v1Coxes"],
+    "mcpDescription": "Share of members who joined in a season and still row in later seasons. The first season on record holds everyone already there. Columns: cohort, seasons_after, cohort_size, still_active, retention_pct."
+  },
+  {
+    "id": "new-rower-survival",
+    "category": "retention",
+    "visibility": "public",
+    "cost": "heavy",
+    "requires": {
+      "tables": ["outing", "rower"]
+    },
+    "params": [],
+    "chart": {
+      "type": "bar",
+      "x": "months",
+      "y": ["survival_pct"],
+      "orientation": "vertical",
+      "labelKeys": {
+        "months": "analytics.reports.labels.monthsSinceArrival"
+      }
+    },
+    "notes": ["retention", "membersOnly", "motorboat", "excluded", "v1Coxes"],
+    "mcpDescription": "Share of new members still rowing 1, 2, 3, 6, 9, 12, 18 and 24 months after their first outing. Columns: months, new_rowers, still_rowing, survival_pct."
+  },
+  {
+    "id": "rower-frequency",
+    "category": "retention",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing", "rower"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ],
+    "chart": {
+      "type": "bar",
+      "x": "outings_bucket",
+      "y": ["rowers"]
+    },
+    "notes": ["membersOnly", "motorboat", "excluded", "v1Coxes"],
+    "mcpDescription": "Number of members by number of outings this season. Columns: outings_bucket, rowers."
+  },
+  {
+    "id": "inactive-rowers",
+    "category": "retention",
+    "visibility": "admin",
+    "cost": "heavy",
+    "requires": {
+      "tables": ["outing", "rower"]
+    },
+    "params": [
+      {
+        "name": "days",
+        "type": "integer",
+        "labelKey": "analytics.params.absentDays",
+        "required": true,
+        "default": 45,
+        "min": 7,
+        "max": 730
+      },
+      {
+        "name": "min_outings",
+        "type": "integer",
+        "required": true,
+        "default": 5,
+        "min": 1,
+        "max": 500
+      }
+    ],
+    "chart": {
+      "type": "table"
+    },
+    "notes": ["membersOnly", "motorboat", "excluded", "v1Coxes"],
+    "mcpDescription": "Members with at least N outings in the year before their last one, absent for more than X days: worth a call. Columns: rower_label, age_category, last_outing_date, days_since_last, outings_year_before."
+  },
+  {
+    "id": "active-rowers-monthly",
+    "category": "attendance",
+    "visibility": "public",
+    "cost": "medium",
+    "requires": {
+      "tables": ["outing", "rower"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ],
+    "chart": {
+      "type": "bar",
+      "x": "month",
+      "y": ["returning_rowers", "new_rowers"],
+      "stacked": true
+    },
+    "notes": ["motorboat", "excluded", "v1Coxes"],
+    "mcpDescription": "A rower is new in the month of their first outing if they had never rowed before the season. Columns: month, returning_rowers, new_rowers."
+  },
+  {
+    "id": "guests",
+    "category": "attendance",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing", "rower"],
+      "modules": ["guests"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ],
+    "chart": {
+      "type": "bar",
+      "x": "month",
+      "y": ["guest_participations"]
+    },
+    "notes": ["motorboat", "excluded", "v1Coxes"],
+    "mcpDescription": "Guest participations per month and their share of club activity. Columns: month, guest_participations, distinct_guests, guest_share_pct."
+  },
+  {
+    "id": "attendance-heatmap",
+    "category": "attendance",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "metric",
+        "type": "choice",
+        "required": true,
+        "default": "participations",
+        "options": [
+          {
+            "value": "participations"
+          },
+          {
+            "value": "outings"
+          }
+        ]
+      }
+    ],
+    "chart": {
+      "type": "heatmap",
+      "x": "hour",
+      "y": "weekday",
+      "value": "avg_per_week",
+      "labelKeys": {
+        "avg_per_week": "analytics.reports.labels.avgPerWeek.{metric}"
+      }
+    },
+    "coverage": {
+      "column": "has_start_time",
+      "sql": "SELECT SUM(has_start_time) AS known, COUNT(*) AS total FROM v_outings WHERE season = :season AND counts_in_stats = 1 AND is_rowing = 1"
+    },
+    "notes": ["noStartTime", "motorboat", "excluded", "v1Coxes"],
+    "mcpDescription": "Weekly average by start time: which slots work best. Columns: weekday, hour, total, avg_per_week."
+  },
+  {
+    "id": "activity-calendar",
+    "category": "attendance",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "boat_id",
+        "type": "boat",
+        "required": false,
+        "default": null
+      }
+    ],
+    "chart": {
+      "type": "calendar",
+      "date": "date",
+      "value": "participations"
+    },
+    "notes": ["motorboat", "excluded", "v1Coxes"],
+    "mcpDescription": "Participations day by day: dips, holidays, weather. Can be filtered on one boat. Columns: date, participations, outings."
+  },
+  {
+    "id": "coaching-balance",
+    "category": "safety",
+    "visibility": "nominative",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing", "rower"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "min_outings",
+        "type": "integer",
+        "required": true,
+        "default": 3,
+        "min": 1,
+        "max": 500
+      },
+      {
+        "name": "age_category",
+        "type": "choice",
+        "required": false,
+        "default": null,
+        "options": [
+          {
+            "value": "J10"
+          },
+          {
+            "value": "J12"
+          },
+          {
+            "value": "J14"
+          },
+          {
+            "value": "J16"
+          },
+          {
+            "value": "J18"
+          },
+          {
+            "value": "Senior"
+          }
+        ]
+      }
+    ],
+    "chart": {
+      "type": "bar",
+      "x": "rower_label",
+      "y": ["coached_pct"],
+      "orientation": "horizontal",
+      "sort": "none",
+      "limit": 30
+    },
+    "coverage": {
+      "column": "is_coached",
+      "sql": "SELECT COUNT(is_coached) AS known, COUNT(*) AS total FROM v_outings WHERE season = :season AND counts_in_stats = 1 AND is_rowing = 1"
+    },
+    "notes": ["membersOnly", "motorboat", "excluded", "v1Coxes"],
+    "mcpDescription": "Coached share of each member's outings, least coached first, to spread coaches' attention. Columns: rower_label, age_category, seriousness, outings, coached_outings, unknown_outings, coached_pct, last_coached_date. Shows names."
+  },
+  {
+    "id": "safety-summary",
+    "category": "safety",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "tolerance_min",
+        "type": "integer",
+        "required": true,
+        "default": 15,
+        "min": 0,
+        "max": 600
+      }
+    ],
+    "chart": {
+      "type": "bar",
+      "x": "month",
+      "y": ["late_returns", "no_estimated_end", "not_closed"],
+      "stacked": true
+    },
+    "notes": [],
+    "mcpDescription": "Late returns, outings without a planned return time and outings never closed, per month. Columns: month, late_returns, no_estimated_end, not_closed."
+  },
+  {
+    "id": "safety-issues",
+    "category": "safety",
+    "visibility": "admin",
+    "cost": "light",
+    "requires": {
+      "tables": ["outing"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "tolerance_min",
+        "type": "integer",
+        "required": true,
+        "default": 15,
+        "min": 0,
+        "max": 600
+      },
+      {
+        "name": "issue",
+        "type": "choice",
+        "required": false,
+        "default": null,
+        "options": [
+          {
+            "value": "not_closed"
+          },
+          {
+            "value": "late_return"
+          },
+          {
+            "value": "no_estimated_end"
+          },
+          {
+            "value": "youth_not_coached"
+          }
+        ]
+      }
+    ],
+    "chart": {
+      "type": "table"
+    },
+    "notes": [],
+    "mcpDescription": "Outings never closed, late returns, outings without a planned return time and youth outings (J10 to J16) without coaching. Filter on one issue, most serious first. Columns: issue, start_at, boat_name, boat_class, crew_size, estimated_end_at, end_at, return_delay_min."
+  },
+  {
+    "id": "boat-km",
+    "category": "maintenance",
+    "visibility": "public",
+    "cost": "medium",
+    "requires": {
+      "tables": ["outing", "boat"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ],
+    "chart": {
+      "type": "bar",
+      "x": "boat_name",
+      "y": ["km_season"],
+      "orientation": "horizontal",
+      "sort": "desc",
+      "limit": 25,
+      "formats": {
+        "build_year": "text"
+      }
+    },
+    "coverage": {
+      "column": "distance",
+      "sql": "SELECT COUNT(distance_m) AS known, COUNT(*) AS total FROM v_outings WHERE season = :season"
+    },
+    "notes": ["multiDay", "km"],
+    "mcpDescription": "Equipment follow-up: use this season and since records began. Columns: boat_name, boat_class, build_year, km_season, hours_season, outings_season, km_total, hours_total, incidents_season, incidents_total."
+  },
+  {
+    "id": "incidents-per-boat",
+    "category": "maintenance",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["incident"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ],
+    "chart": {
+      "type": "bar",
+      "x": "boat_name",
+      "y": ["incidents"],
+      "orientation": "horizontal",
+      "sort": "desc",
+      "limit": 25
+    },
+    "notes": [],
+    "mcpDescription": "Incidents reported at the end of outings, relative to the boat's number of outings. Columns: boat_name, incidents, last_incident_date, outings, incidents_per_100_outings."
+  },
+  {
+    "id": "damages-per-boat",
+    "category": "maintenance",
+    "visibility": "public",
+    "cost": "light",
+    "requires": {
+      "tables": ["boat_damage"],
+      "modules": ["damages"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ],
+    "chart": {
+      "type": "bar",
+      "x": "boat_name",
+      "y": ["unusable", "limited", "usable"],
+      "orientation": "horizontal",
+      "stacked": true,
+      "limit": 25
+    },
+    "notes": [],
+    "mcpDescription": "Reported damage by severity, damage still open, average repair time and cost. Columns: boat_name, unusable, limited, usable, open_damages, avg_days_to_fix, repair_cost."
+  }
+]

@@ -1,0 +1,224 @@
+{
+  "tabLabel": "Statistiken und KI",
+  "intro": "Jede Einstellung wird gespeichert, sobald Sie sie ändern, und zwar in der Vereinsdatenbank: Sie ist in deren Sicherungen enthalten. Nur die KI-Schlüssel bleiben auf diesem Rechner, außerhalb der Datenbank.",
+  "on": "Ein",
+  "off": "Aus",
+  "season": {
+    "title": "Saison",
+    "startMonth": "Saisonbeginn",
+    "defaultMonth": "{{month}} (Standard)",
+    "help": "Dieser Monat gilt für die Statistiken, den Jahresbericht und die Seiten Ruderer und Boote in der Verwaltung.",
+    "example": "Laufende Saison: {{start}} bis {{end}}.",
+    "changed": "Berichte und Übersicht verwenden jetzt die Saison vom {{start}} bis {{end}}.",
+    "description": "Die Daten, die in den Statistiken eine Saison begrenzen.",
+    "monthHints": {
+      "9": "{{month}} (Herbstsaison)",
+      "1": "{{month}} (Kalenderjahr)"
+    }
+  },
+  "rankings": {
+    "title": "Ranglisten",
+    "public": "Ranglisten mit den Namen der Ruderer im Bootshaus zeigen, ohne Admin-Passwort",
+    "help": "Betrifft: {{reports}}. Nur aktivieren, wenn die Mitglieder einverstanden sind, in Ranglisten im Bootshaus zu erscheinen.",
+    "noReports": "noch kein Bericht",
+    "description": "Was der Bildschirm im Bootshaus ohne Passwort zeigt.",
+    "publicWarning": "Alle im Bootshaus sehen diese Ranglisten mit Namen. Prüfen Sie, dass die Mitglieder informiert wurden (DSGVO)."
+  },
+  "ai": {
+    "title": "Integrierter KI-Assistent",
+    "status": {
+      "none": "Kein Schlüssel auf diesem Rechner.",
+      "keychain": "Schlüssel im Schlüsselbund dieses Rechners gespeichert: nie in der Vereinsdatenbank, ihren Sicherungen oder Exporten.",
+      "file": "Schlüssel in einer geschützten Datei dieses Rechners gespeichert: nie in der Vereinsdatenbank, ihren Sicherungen oder Exporten.",
+      "loading": "Status des Schlüssels wird gelesen…",
+      "error": "Der Schlüsselstatus konnte nicht gelesen werden. Versuchen Sie es erneut; besteht das Problem weiter, speichern Sie den Schlüssel neu.",
+      "noServer": "Kein Server auf diesem Rechner gespeichert.",
+      "serverWithKey": "Server auf diesem Rechner gespeichert: {{url}}, mit Schlüssel.",
+      "serverWithoutKey": "Server auf diesem Rechner gespeichert: {{url}}, ohne Schlüssel.",
+      "keychainHint": "Schlüssel …{{hint}} im Schlüsselbund dieses Rechners gespeichert: nie in der Vereinsdatenbank, ihren Sicherungen oder Exporten.",
+      "fileHint": "Schlüssel …{{hint}} in einer geschützten Datei dieses Rechners gespeichert: nie in der Vereinsdatenbank, ihren Sicherungen oder Exporten.",
+      "serverWithKeyHint": "Server auf diesem Rechner gespeichert: {{url}}, mit Schlüssel …{{hint}}."
+    },
+    "key": {
+      "anthropic": "Anthropic-API-Schlüssel",
+      "openai": "OpenAI-API-Schlüssel",
+      "openai_compatible": "API-Schlüssel des Servers (optional)"
+    },
+    "keyPlaceholder": {
+      "anthropic": "sk-ant-…",
+      "openai": "sk-…",
+      "openai_compatible": "Leer für einen Server ohne Schlüssel"
+    },
+    "replacePlaceholder": "Neuer Schlüssel (ersetzt den aktuellen)",
+    "save": "Speichern und prüfen",
+    "saved": "Schlüssel gespeichert.",
+    "test": "Prüfen",
+    "testing": "Wird geprüft…",
+    "delete": "Schlüssel löschen",
+    "deleteConfirm": "Der {{provider}}-Schlüssel wird von diesem Rechner entfernt. Ohne anderen Schlüssel wechselt der Assistent in den Kopieren-Einfügen-Modus.",
+    "deleted": "Schlüssel von diesem Rechner gelöscht.",
+    "testOk": "Gültiger Schlüssel: {{model}} antwortet.",
+    "invalidFormat": {
+      "anthropic": "Ein Anthropic-Schlüssel beginnt mit „sk-ant-“.",
+      "openai": "Ein OpenAI-Schlüssel beginnt mit „sk-“.",
+      "openai_compatible": "Der Schlüssel muss 8 bis 1.000 Zeichen lang sein, ohne Leerzeichen.",
+      "anthropicKey": "Das ist ein Anthropic-Schlüssel: Wählen Sie den Anbieter Anthropic, um ihn zu verwenden."
+    },
+    "model": "Modell",
+    "models": {
+      "opus": "Claude Opus 5.5 (empfohlen, am zuverlässigsten)",
+      "sonnet": "Claude Sonnet 5.5 (schneller, günstiger)",
+      "haiku": "Claude Haiku 5.5 (am günstigsten)",
+      "astra": "GPT-6 Astra (am zuverlässigsten, am teuersten)",
+      "sol": "GPT-6.1 Sol (empfohlen, zuverlässig und günstiger)",
+      "terra": "GPT-6.1 Terra (schneller, günstiger)",
+      "luna": "GPT-6 Luna (am günstigsten)"
+    },
+    "shareAssets": "Namen von Booten und Strecken senden",
+    "shareAssetsHelp": "Damit können Sie nach „Fahrten der Albatros“ fragen. Namen von Ruderern werden nie gesendet.",
+    "createKey": {
+      "anthropic": "Erstellen Sie einen Schlüssel auf <site>console.anthropic.com</site> und fügen Sie ihn hier ein.",
+      "openai": "Erstellen Sie einen Schlüssel auf <site>platform.openai.com</site> und fügen Sie ihn hier ein."
+    },
+    "noKeyHint": "Ohne Schlüssel funktioniert der Assistent trotzdem: Er bereitet eine Anfrage zum Kopieren in Ihren KI-Assistenten (Claude, ChatGPT, Le Chat…) vor, danach fügen Sie dessen Antwort ein.",
+    "whatIsSent": "Empfänger: {{provider}}. Gesendet werden Ihre Frage, die Struktur der Statistiktabellen, die Fahrtarten des Vereins und das heutige Datum. Nie Namen von Ruderern, Fahrten oder Ergebnisse.",
+    "privacy": {
+      "details": "Was gesendet wird, im Detail",
+      "sentTitle": "Bei jeder Frage gesendet (Empfänger: {{provider}})",
+      "sent": {
+        "question": "Ihre Frage, so wie Sie sie schreiben (daher der Rat, keine Namen hineinzuschreiben);",
+        "schema": "die Struktur der Statistiktabellen: Namen und Beschreibungen der Spalten, nie ihr Inhalt;",
+        "context": "die Fahrtarten des Vereins, die aktivierten Module, den Saisonbeginn und das heutige Datum;",
+        "assets": "die Namen der Boote und Strecken, nur wenn die Option oben aktiviert ist;",
+        "errors": "bei einem Fehler die Fehlermeldung der Abfrage, damit die KI sie korrigiert."
+      },
+      "neverTitle": "Nie gesendet",
+      "never": {
+        "people": "Namen, Geburtsdaten, Kontaktdaten und Notizen der Ruderer;",
+        "outings": "Fahrten, Kommentare und Rechenergebnisse: Die Abfrage läuft auf diesem Rechner und ihre Ergebnisse bleiben dort;",
+        "password": "das Verwaltungspasswort und der Rest der Vereinsdatenbank."
+      },
+      "copyPaste": "Ohne Schlüssel fügen Sie dieselbe Anfrage selbst in Ihren KI-Assistenten (Claude, ChatGPT…) ein: Sie enthält genau diese Angaben.",
+      "where": {
+        "anthropic": "Die Anfrage geht direkt von diesem Rechner an api.anthropic.com, über keinen anderen Server.",
+        "openai": "Die Anfrage geht direkt von diesem Rechner an api.openai.com, über keinen anderen Server. Die App bittet OpenAI, die Antwort nicht aufzubewahren (Option „store“ aus).",
+        "serverLocal": "Der Server {{host}} läuft auf diesem Rechner: Die Anfrage verlässt ihn nicht.",
+        "serverRemote": "Die Anfrage geht von diesem Rechner an {{host}}. Was dieser Server damit macht, liegt bei ihm: Lesen Sie seine Nutzungsbedingungen.",
+        "serverUnknown": "Die Anfrage geht an die Serveradresse, die Sie speichern, und an keine andere."
+      },
+      "title": "Datenschutz"
+    },
+    "provider": {
+      "label": "KI-Anbieter",
+      "help": "Jeder Anbieter behält seinen eigenen Schlüssel auf diesem Rechner: Ein Wechsel löscht keinen Schlüssel.",
+      "anthropic": "Anthropic (Claude)",
+      "anthropicHelp": "Ein API-Schlüssel von console.anthropic.com, mit etwas Prepaid-Guthaben (ein Claude-Pro-Abo reicht nicht).",
+      "openai": "OpenAI (GPT)",
+      "openaiHelp": "Ein API-Schlüssel von platform.openai.com, mit etwas Prepaid-Guthaben (ein ChatGPT-Abo reicht nicht).",
+      "openai_compatible": "Anderer kompatibler Dienst (Mistral, Ollama…)",
+      "openai_compatibleHelp": "Ein Dienst, der dem Format von OpenAI folgt: Mistral, OpenRouter oder ein auf diesem Rechner installiertes Modell (Ollama, LM Studio, llama.cpp…).",
+      "configured": "Schlüssel gespeichert",
+      "configuredServer": "Server gespeichert",
+      "mismatch": "Der integrierte Assistent nutzt den hier gewählten Anbieter. {{provider}} hat noch keinen Schlüssel: bis dahin arbeitet der Assistent im Kopieren-Einfügen-Modus.",
+      "switchBack": "Zurück zu {{provider}}"
+    },
+    "savedServer": "Server gespeichert.",
+    "testOkServer": "Server erreichbar: {{model}} antwortet.",
+    "costPerQuestion": "Etwa {{cost}} pro typischer Frage, abgerechnet über das {{provider}}-Konto des Vereins (Schätzung).",
+    "compatibleModel": {
+      "label": "Modellname",
+      "placeholder": "Zum Beispiel: llama3.3",
+      "help": "So wie der Server es nennt, zum Beispiel „mistral-large-latest“ oder „llama3.3“.",
+      "required": "Geben Sie den Modellnamen an, um den Server zu prüfen und Fragen zu stellen."
+    },
+    "baseUrl": {
+      "label": "Serveradresse",
+      "placeholder": "https://api.mistral.ai/v1 oder http://localhost:11434/v1",
+      "help": "Die Basisadresse der API, oft mit /v1 am Ende. Über https, außer für einen Server auf diesem Rechner.",
+      "local": "Server auf diesem Rechner: Die Tabellenstruktur und Ihre Fragen verlassen ihn nicht.",
+      "remote": "{{host}} ist nicht auf diesem Rechner. Er erhält die Tabellenstruktur und Ihre Fragen, wie Anthropic oder OpenAI sie erhielten. Wählen Sie einen vertrauenswürdigen Dienst.",
+      "changed": "Neue Adresse: Geben Sie auch ihren Schlüssel ein, falls nötig. Ein gespeicherter Schlüssel wird nie an eine andere Adresse gesendet.",
+      "invalid": {
+        "empty": "Geben Sie die Serveradresse ein.",
+        "invalid": "Adresse nicht erkannt: Sie sollte wie https://example.org/v1 aussehen.",
+        "insecure": "Ein Server, der nicht auf diesem Rechner läuft, muss https:// verwenden, damit der Schlüssel nicht im Klartext übertragen wird.",
+        "credentials": "Die Adresse darf keinen Benutzernamen und kein Passwort enthalten: Tragen Sie den Schlüssel in sein eigenes Feld ein.",
+        "query": "Die Adresse darf weder „?“ noch „#“ enthalten."
+      }
+    },
+    "billedServer": "Mögliche Kosten hängen vom Server ab: Ein Server auf diesem Rechner kostet nichts.",
+    "deleteConfirmServer": "Der Server und sein Schlüssel werden von diesem Rechner entfernt. Ohne anderen Schlüssel wechselt der Assistent in den Kopieren-Einfügen-Modus.",
+    "description": "Wird von „KI fragen“ im Explorer verwendet.",
+    "saving": "Wird gespeichert…",
+    "deleteServer": "Server löschen",
+    "deleteTitle": "{{provider}}-Schlüssel löschen?",
+    "deleteTitleServer": "Diesen Server löschen?",
+    "deletedServer": "Server von diesem Rechner gelöscht.",
+    "savedChecked": "Schlüssel gespeichert und geprüft: {{model}} antwortet.",
+    "savedCheckedServer": "Server gespeichert und geprüft: {{model}} antwortet.",
+    "savedCheckFailed": "Schlüssel gespeichert, aber die Prüfung ist fehlgeschlagen: {{error}}",
+    "savedCheckFailedServer": "Server gespeichert, aber die Prüfung ist fehlgeschlagen: {{error}}",
+    "keyRequired": "Fügen Sie zuerst den Schlüssel ein."
+  },
+  "mcp": {
+    "title": "Ihre KI-App (MCP)",
+    "enabled": "KI-Apps auf diesem Rechner erlauben, die Vereinsstatistiken zu lesen",
+    "help": "Stellen Sie Fragen zu den Vereinsstatistiken direkt in Claude Desktop, der ChatGPT-App (Codex), Cursor oder VS Code. Sie lesen die Datenbank dieses Rechners nur lesend und können Diagramme vorschlagen, die Sie unter Explorer › Vorschläge annehmen.",
+    "whatIsSent": "Anders als der integrierte Assistent liest Ihre App die Ergebnisse (die Zahlen) und sendet sie an ihren Anbieter, um Ihnen zu antworten: Anthropic für Claude, OpenAI für ChatGPT und Codex, den in Cursor oder VS Code gewählten.",
+    "privacyLabel": "Personenbezogene Daten",
+    "privacyModes": {
+      "pseudonymised": {
+        "title": "Codes statt Namen (empfohlen)",
+        "description": "Ruderer erscheinen als Code (R-1A2B3C4D): kein Name, kein Geburtsdatum, keine Kontaktdaten, keine Kommentare."
+      },
+      "nominative": {
+        "title": "Namen der Ruderer sichtbar",
+        "description": "Ihre App sieht die Namen; sie gehen mit den Ergebnissen an ihren Anbieter."
+      }
+    },
+    "nominativeWarning": "Die Antworten Ihrer App laufen über ihren Anbieter (Anthropic, OpenAI…): Die Namen der Ruderer verlassen diesen Rechner. Prüfen Sie, ob das zur Information der Mitglieder passt (DSGVO).",
+    "linux": "Claude Desktop gibt es unter Linux nicht: Wählen Sie oben eine andere App (Claude Code, Codex, Cursor, VS Code…).",
+    "copy": "Kopieren",
+    "copied": "Kopiert",
+    "copyFailed": "Kopieren nicht möglich: Markieren und kopieren Sie den Text.",
+    "appImage": "AppImage-Version: Der Pfad ändert sich, wenn Sie die Datei verschieben. Kopieren Sie die Konfiguration nach einem Verschieben oder Update erneut.",
+    "macosTemporary": "Rowing Beacon läuft von einem temporären Ort (Disk-Image oder Downloads-Ordner). Ziehen Sie die App in den Ordner Programme, öffnen Sie sie erneut und kopieren Sie dann die Konfiguration: sonst findet Ihre KI-App sie nicht mehr.",
+    "disabledNote": "Aus: Keine App kann die Statistiken lesen. Eine bereits eingerichtete App erhält die Meldung, dass der Zugriff geschlossen ist.",
+    "infoError": "Die Konfiguration der KI-Apps konnte nicht vorbereitet werden. Versuchen Sie es erneut; besteht das Problem weiter, starten Sie die Anwendung neu.",
+    "clientsTitle": "Ihre App verbinden",
+    "clientsHelp": "Wählen Sie Ihre App: Jede hat ihre eigene Konfiguration.",
+    "clients": {
+      "claudeDesktop": "Claude Desktop",
+      "claudeCode": "Claude Code",
+      "codex": "ChatGPT / Codex",
+      "cursor": "Cursor",
+      "vscode": "VS Code",
+      "other": "Andere"
+    },
+    "otherClients": "Eine andere MCP-kompatible App? Geben Sie ihr diesen Befehl (lokaler „stdio“-Server):",
+    "copyLabel": "{{name}}-Konfiguration kopieren",
+    "loading": "Konfiguration wird vorbereitet…",
+    "lastCall": "Letzte Frage erhalten: {{client}}, am {{date}} um {{time}}.",
+    "lastCallNone": "Auf diesem Rechner hat sich noch keine App verbunden: Folgen Sie den Schritten unten.",
+    "unknownClient": "eine App",
+    "clientsNote": "Wenn Sie diese Einstellungen ändern, müssen Sie die Konfiguration nicht neu kopieren.",
+    "steps": {
+      "copy": "Kopieren Sie die Konfiguration:",
+      "copyCommand": "Kopieren Sie diesen Befehl:",
+      "pasteMcpServers": "Fügen Sie die Konfiguration ein. Enthält die Datei bereits „mcpServers“, fügen Sie nur den Eintrag „rowing-beacon“ hinzu.",
+      "ask": "Starten Sie {{app}} neu und fragen Sie zum Beispiel: „Wie viele Ausfahrten hat der Verein in dieser Saison gemacht?“",
+      "yourApp": "Ihre App",
+      "claudeDesktopOpen": "Öffnen Sie in Claude Desktop Einstellungen › Entwickler › Konfiguration bearbeiten: Die Datei claude_desktop_config.json öffnet sich ({{path}}).",
+      "claudeCodeRun": "Fügen Sie ihn in ein Terminal ein und drücken Sie die Eingabetaste. Claude Code kann die Statistiken dann aus jedem Ordner dieses Rechners lesen.",
+      "claudeCodeAsk": "Öffnen Sie Claude Code und fragen Sie zum Beispiel: „Wie viele Ausfahrten hat der Verein in dieser Saison gemacht?“",
+      "codexOpen": "Öffnen Sie die Datei {{path}} (legen Sie sie an, falls sie fehlt). Die ChatGPT-Desktop-App, Codex CLI und die Codex-Erweiterung teilen diese Datei.",
+      "codexPaste": "Fügen Sie die Konfiguration am Ende der Datei hinzu und speichern Sie sie.",
+      "cursorOpen": "Öffnen Sie die Datei {{path}} (legen Sie sie an, falls sie fehlt).",
+      "vscodeOpen": "Öffnen Sie in VS Code die Befehlspalette und führen Sie „MCP: Open User Configuration“ aus.",
+      "vscodePaste": "Fügen Sie die Konfiguration ein. Enthält die Datei bereits „servers“, fügen Sie nur den Eintrag „rowing-beacon“ hinzu.",
+      "vscodeAsk": "Starten Sie VS Code neu und fragen Sie Copilot im Agent-Modus, zum Beispiel: „Wie viele Ausfahrten hat der Verein in dieser Saison gemacht?“"
+    }
+  },
+  "technicalDetails": "Technische Details",
+  "retry": "Erneut versuchen"
+}

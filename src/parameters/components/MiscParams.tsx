@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import Button from "../../_common/components/Button";
-import { useState } from "react";
+import { useState, type KeyboardEvent } from "react";
 import { Dialog, DialogContent } from "../../_common/components/Dialog/Dialog";
 import { useAdminEditModeSystem } from "../../_common/store/adminEditMode.system";
 import { DeleteDatas } from "./DeleteDatas";
@@ -8,6 +8,7 @@ import { useClubOverviewStore } from "../../_common/store/clubOverview.store";
 import { useAutoStart } from "../hooks/useAutoStart";
 import { BoatLevelConfigModal } from "./BoatLevelConfigModal";
 import { RouteConfigModal } from "./RouteConfigModal";
+import { UpdateSection } from "./UpdateSection";
 import { ClockIcon } from "@heroicons/react/24/outline";
 import { exportAllData, importAllData } from "../../_common/utils/importExport";
 import { toast } from "sonner";
@@ -20,6 +21,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../_common/components/Select";
+import { Checkbox } from "../../_common/components/Checkbox";
+import { useBoathouseSettingsStore } from "../../_common/store/boathouseSettings.store";
+import { parseCoordinate } from "../../_common/business/sun.rules";
 
 export const MiscParams = () => {
   const { t } = useTranslation();
@@ -55,7 +59,7 @@ export const MiscParams = () => {
             boats: result.boats,
             routes: result.routes,
             rowers: result.rowers,
-          })
+          }),
         );
       }
     } catch (error) {
@@ -63,7 +67,7 @@ export const MiscParams = () => {
       toast.error(
         error instanceof Error
           ? error.message
-          : t("parameters.errorImportingData")
+          : t("parameters.errorImportingData"),
       );
     } finally {
       setIsImporting(false);
@@ -230,6 +234,8 @@ export const MiscParams = () => {
               )}
             </section>
 
+            <UpdateSection />
+
             <section className="flex flex-col h-full">
               <div className="flex-1">
                 <h1 className="font-bold text-xl mb-1 text-gray-900">
@@ -251,6 +257,30 @@ export const MiscParams = () => {
                   {t("parameters.timeFormatDescription")}
                 </p>
                 <TimeStyleSelector />
+              </div>
+            </section>
+
+            <section className="flex flex-col h-full">
+              <div className="flex-1">
+                <h1 className="font-bold text-xl mb-1 text-gray-900">
+                  {t("parameters.allBoatsBackBanner")}
+                </h1>
+                <p className="text-gray-500 mb-4">
+                  {t("parameters.allBoatsBackBannerDescription")}
+                </p>
+                <AllBoatsBackBannerToggle />
+              </div>
+            </section>
+
+            <section className="flex flex-col h-full">
+              <div className="flex-1">
+                <h1 className="font-bold text-xl mb-1 text-gray-900">
+                  {t("parameters.clubLocation")}
+                </h1>
+                <p className="text-gray-500 mb-4">
+                  {t("parameters.clubLocationDescription")}
+                </p>
+                <ClubLocationInputs />
               </div>
             </section>
 
@@ -326,5 +356,104 @@ const TimeStyleSelector = () => {
         <SelectItem value="24h">{t("parameters.timeFormat24h")}</SelectItem>
       </SelectContent>
     </Select>
+  );
+};
+
+const AllBoatsBackBannerToggle = () => {
+  const { t } = useTranslation();
+  const enabled = useBoathouseSettingsStore(
+    (state) => state.allBoatsBackBanner,
+  );
+  const setEnabled = useBoathouseSettingsStore(
+    (state) => state.setAllBoatsBackBanner,
+  );
+
+  return (
+    <div className="flex items-center gap-3">
+      <Checkbox
+        id="all-boats-back-banner"
+        className="h-5 w-5 border-steel-blue-800 data-[state=checked]:bg-steel-blue-800 data-[state=checked]:text-white"
+        checked={enabled}
+        onCheckedChange={(checked) => setEnabled(checked === true)}
+      />
+      <label htmlFor="all-boats-back-banner" className="cursor-pointer">
+        {t("parameters.allBoatsBackBannerOption")}
+      </label>
+    </div>
+  );
+};
+
+const ClubLocationInputs = () => {
+  const { t } = useTranslation();
+  const { clubLatitude, clubLongitude, setClubLocation } =
+    useBoathouseSettingsStore();
+  const [latitude, setLatitude] = useState(clubLatitude?.toString() ?? "");
+  const [longitude, setLongitude] = useState(clubLongitude?.toString() ?? "");
+
+  const isInvalid = (value: string, limit: number) =>
+    value.trim() !== "" && parseCoordinate(value, limit) === null;
+  const latitudeInvalid = isInvalid(latitude, 90);
+  const longitudeInvalid = isInvalid(longitude, 180);
+
+  // A typo must not erase the saved location: only valid values are saved
+  const save = () => {
+    if (latitudeInvalid || longitudeInvalid) {
+      return;
+    }
+    const nextLatitude = parseCoordinate(latitude, 90);
+    const nextLongitude = parseCoordinate(longitude, 180);
+    if (nextLatitude === clubLatitude && nextLongitude === clubLongitude) {
+      return;
+    }
+    setClubLocation(nextLatitude, nextLongitude);
+  };
+  const saveOnEnter = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      save();
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="flex items-center gap-2">
+        <span className="w-24">{t("parameters.clubLatitude")}</span>
+        <input
+          type="text"
+          className="input w-full py-1"
+          placeholder="48.8566"
+          value={latitude}
+          aria-invalid={latitudeInvalid}
+          aria-describedby={latitudeInvalid ? "club-location-error" : undefined}
+          onChange={(e) => setLatitude(e.target.value)}
+          onBlur={save}
+          onKeyDown={saveOnEnter}
+        />
+      </label>
+      <label className="flex items-center gap-2">
+        <span className="w-24">{t("parameters.clubLongitude")}</span>
+        <input
+          type="text"
+          className="input w-full py-1"
+          placeholder="2.3522"
+          value={longitude}
+          aria-invalid={longitudeInvalid}
+          aria-describedby={
+            longitudeInvalid ? "club-location-error" : undefined
+          }
+          onChange={(e) => setLongitude(e.target.value)}
+          onBlur={save}
+          onKeyDown={saveOnEnter}
+        />
+      </label>
+      {(latitudeInvalid || longitudeInvalid) && (
+        <p
+          id="club-location-error"
+          role="alert"
+          className="text-sm text-error-600"
+        >
+          {t("parameters.clubLocationInvalid")}
+        </p>
+      )}
+    </div>
   );
 };

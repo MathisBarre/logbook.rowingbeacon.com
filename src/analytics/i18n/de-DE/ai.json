@@ -1,0 +1,147 @@
+{
+  "questionLabel": "KI fragen",
+  "intro": "Stellen Sie Ihre Frage auf Deutsch: Die KI schreibt die Abfrage und das Diagramm, Sie prüfen das Ergebnis vor dem Speichern.",
+  "placeholder": "Z. B.: Wie viele Fahrten gab es diese Saison dienstagabends?",
+  "ask": "KI fragen",
+  "generating": "Läuft…",
+  "newQuestion": "Neue Frage",
+  "editQuestion": "Frage bearbeiten",
+  "askedQuestion": "Ihre Frage",
+  "shortcut": "{{keys}} zum Senden",
+  "shortcutCopy": "{{keys}} zum Kopieren der Anfrage",
+  "counter": "{{count}} / {{max}} Zeichen",
+  "stopped": "Anfrage gestoppt.",
+  "examples": {
+    "title": "Beispielfragen:",
+    "weekend": "Welche Boote fahren am Wochenende am meisten?",
+    "youth": "Wie viele Jugendliche waren diese Saison jeden Monat auf dem Wasser?",
+    "hoursType": "Stunden auf dem Wasser nach Bootstyp und Monat"
+  },
+  "history": {
+    "title": "Ihre letzten Fragen",
+    "replayed": "Antwort vom {{date}}, erneut mit den heutigen Daten ausgeführt."
+  },
+  "privacy": {
+    "noNames": "Keine Personennamen: Die KI kennt die Ruderer nicht.",
+    "line": "Gesendet an {{provider}}: die Frage und die Tabellenstruktur, nie die Daten der Ruderer.",
+    "lineAssets": "Gesendet an {{provider}}: die Frage, die Tabellenstruktur und die Namen der Boote und Strecken, nie die Daten der Ruderer.",
+    "lineLocal": "Alles bleibt auf diesem Computer: Die Frage geht an den KI-Server dieses Computers ({{host}}).",
+    "lineCopy": "Die kopierte Anfrage enthält Ihre Frage und die Tabellenstruktur, nie die Daten der Ruderer. Sie wählen die KI, in die Sie sie einfügen.",
+    "lineCopyAssets": "Die kopierte Anfrage enthält Ihre Frage, die Tabellenstruktur und die Namen der Boote und Strecken, nie die Daten der Ruderer. Sie wählen die KI, in die Sie sie einfügen.",
+    "typicalCost": "Etwa {{cost}} pro Frage.",
+    "details": "Was gesendet wird"
+  },
+  "names": {
+    "found": "Ihre Frage enthält „{{name}}“, den Namen eines Ruderers: Er würde an {{provider}} gesendet. Ersetzen Sie ihn durch „ein Ruderer“: Sie wählen ihn danach in den Parametern.",
+    "foundCopy": "Ihre Frage enthält „{{name}}“, den Namen eines Ruderers: Er würde in die Anfrage kopiert. Ersetzen Sie ihn durch „ein Ruderer“: Sie wählen ihn danach in den Parametern.",
+    "replacement": "ein Ruderer",
+    "replace": "Durch „ein Ruderer“ ersetzen",
+    "sendAnyway": "Trotzdem senden",
+    "copyAnyway": "Trotzdem kopieren"
+  },
+  "status": {
+    "asking": "Die KI schreibt die Abfrage…",
+    "running": "Die Abfrage wird mit den Vereinsdaten geprüft…",
+    "repairing": "Die Abfrage wird nach einem Fehler automatisch korrigiert…",
+    "elapsed": "{{seconds}} s",
+    "slow": "Das kann bis zu einer Minute dauern.",
+    "slower": "Läuft noch: Schwierige Fragen brauchen länger."
+  },
+  "answer": {
+    "eyebrow": "Antwort der KI",
+    "assumptions": "Annahmen",
+    "clarified": "Präzisiert: {{text}}",
+    "refined": "Verfeinert: {{text}}",
+    "cost": "≈ {{cost}} für diese Frage",
+    "costTitle": "Schätzung nach dem öffentlichen Preis; der genaue Betrag steht im {{provider}}-Konto des Vereins.",
+    "repaired": "Abfrage nach einem Fehler automatisch korrigiert.",
+    "preview": "Vorschau des Ergebnisses",
+    "rows_one": "{{count}} Zeile in {{ms}} ms",
+    "rows_other": "{{count}} Zeilen in {{ms}} ms",
+    "inEditor": "Die Abfrage ist im Editor geladen: Prüfen Sie das Ergebnis, dann „Speichern“ oder „Anheften“. Ohne Sie wird nichts gespeichert.",
+    "showResult": "Ergebnis ansehen",
+    "needsValues": "Wählen Sie in den Parametern des Editors einen Wert für {{names}} und führen Sie die Abfrage erneut aus.",
+    "chooseParam": "{{name}} wählen",
+    "notLoaded": "Diese Antwort ist nicht im Editor.",
+    "load": "In den Editor laden",
+    "answeredBy": "Antwort von {{provider}} · {{model}}"
+  },
+  "refine": {
+    "placeholder": "Verfeinern: nur Jugendliche, pro Monat…",
+    "label": "Dieses Ergebnis verfeinern",
+    "button": "Verfeinern",
+    "pasted": "Zum Verfeinern schreiben Sie es Ihrer KI in derselben Unterhaltung und fügen dann ihre neue Antwort oben ein."
+  },
+  "clarification": {
+    "title": "Die KI braucht noch eine Angabe",
+    "choices": "Mögliche Antworten",
+    "other": "Andere Antwort:",
+    "answer": "Antworten",
+    "placeholder": "Ihre Antwort…"
+  },
+  "steps": {
+    "title": "Ihre gewohnte KI verwenden",
+    "copy": "Kopieren Sie die Anfrage.",
+    "open": "Fügen Sie sie in Ihre KI ein:",
+    "pasteHelp": "Klicken Sie in Ihrer KI unter der Antwort (oder oben am Codeblock) auf „Kopieren“.",
+    "alreadyHave": "Ich habe schon eine Antwort zum Einfügen",
+    "addKey": "Damit die KI direkt hier antwortet, fügen Sie einen API-Schlüssel hinzu:",
+    "configure": "KI einrichten",
+    "useStored": "{{provider}} verwenden (gespeicherter Schlüssel)"
+  },
+  "copy": {
+    "button": "Anfrage kopieren",
+    "header": "Von RowingBeacon vorbereitete Anfrage für die Statistiken des Vereins: Die KI antwortet mit einem Codeblock, den Sie in RowingBeacon zurückkopieren.",
+    "done": "Anfrage kopiert: Fügen Sie sie in Ihre gewohnte KI ein und kopieren Sie dann ihre Antwort.",
+    "doneIn": "Anfrage kopiert: Fügen Sie sie in {{name}} ein (Strg + V) und kopieren Sie dann die Antwort.",
+    "failed": "Kopieren nicht möglich: Markieren Sie den ganzen Text unten und kopieren Sie ihn.",
+    "open": "{{name}} öffnen",
+    "needQuestion": "Schreiben Sie zuerst Ihre Frage."
+  },
+  "paste": {
+    "label": "Fügen Sie hier die Antwort ein:",
+    "placeholder": "Fügen Sie hier die ganze Antwort Ihrer KI ein",
+    "apply": "Diese Antwort verwenden",
+    "invalid": "Diese Antwort wird nicht erkannt. Klicken Sie in Ihrer KI unter der Antwort auf „Kopieren“ und fügen Sie sie hier vollständig ein.",
+    "clarification": "Ihre KI bittet um eine Angabe: Antworten Sie in ihrer Unterhaltung und fügen Sie dann ihre neue Antwort hier ein.",
+    "copyRepair": "Fehler für Ihre KI kopieren",
+    "repairCopied": "Fehler kopiert: Fügen Sie ihn in dieselbe Unterhaltung mit Ihrer KI ein und dann die korrigierte Antwort hier."
+  },
+  "keyDialog": {
+    "title": "KI einrichten",
+    "saved": "Schlüssel gespeichert: Sie können die KI fragen."
+  },
+  "actions": {
+    "fixSettings": "KI-Einstellungen korrigieren",
+    "retryIn": "Erneut versuchen ({{seconds}} s)",
+    "copyForUsual": "Anfrage für Ihre gewohnte KI kopieren",
+    "openInEditor": "Abfrage im Editor öffnen",
+    "technical": "Technische Details"
+  },
+  "errors": {
+    "no_key": "Kein API-Schlüssel eingerichtet ({{provider}}).",
+    "invalid_key": "Der API-Schlüssel wird von {{provider}} abgelehnt: Er wurde vielleicht gelöscht oder falsch kopiert.",
+    "forbidden": "Dieser Schlüssel hat keinen Zugriff auf dieses Modell, oder das Guthaben des Kontos ist aufgebraucht. Wählen Sie ein anderes Modell oder prüfen Sie das Konto ({{provider}}).",
+    "rate_limited": "Zu viele Anfragen. Versuchen Sie es in {{seconds}} s erneut.",
+    "overloaded": "{{provider}} ist gerade überlastet. Versuchen Sie es in einigen Minuten erneut.",
+    "bad_request": "{{provider}} hat die Anfrage abgelehnt. Versuchen Sie es erneut; passiert es wieder, wählen Sie ein anderes Modell.",
+    "network": "{{provider}} ist nicht erreichbar: Prüfen Sie die Internetverbindung. Ohne Internet funktionieren die Berichte und der SQL-Editor weiterhin.",
+    "network_server": "{{provider}} ist nicht erreichbar: Prüfen Sie, ob der KI-Server läuft.",
+    "timeout": "Die KI hat nicht rechtzeitig geantwortet. Versuchen Sie es erneut.",
+    "refusal": "Die KI hat diese Anfrage abgelehnt. Formulieren Sie die Frage um.",
+    "truncated": "Antwort zu lang und abgeschnitten. Stellen Sie eine genauere Frage.",
+    "invalid_response": "Unlesbare KI-Antwort. Versuchen Sie es erneut.",
+    "repair_failed": "Die KI konnte die Abfrage nicht korrigieren: {{message}}",
+    "too_large": "Frage zu lang (höchstens 2.000 Zeichen).",
+    "model_not_allowed": "Modell nicht unterstützt. Wählen Sie ein Modell unter Verwaltung › Statistiken und KI.",
+    "desktop_only": "Der KI-Assistent funktioniert nur in der installierten Anwendung.",
+    "internal": "Unerwarteter Fehler des Assistenten. Versuchen Sie es erneut.",
+    "query": "Die vorgeschlagene Abfrage konnte nicht ausgeführt werden: {{message}}",
+    "model_not_found": "{{provider}} kennt dieses Modell nicht. Prüfen Sie seinen Namen unter Verwaltung › Statistiken und KI."
+  },
+  "providers": {
+    "generic": "Ihr KI-Dienst",
+    "server": "Ihr KI-Server",
+    "local": "der Server dieses Computers"
+  }
+}

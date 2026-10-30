@@ -15,6 +15,10 @@
     "fs:allow-home-write-recursive",
     "autostart:default",
     "fs:allow-appdata-write-recursive",
-    "fs:allow-appdata-read-recursive"
+    "fs:allow-appdata-read-recursive",
+    "updater:allow-check",
+    "updater:allow-download",
+    "updater:allow-install",
+    "process:allow-restart"
   ]
 }

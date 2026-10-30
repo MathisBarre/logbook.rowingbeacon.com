@@ -1,0 +1,152 @@
+{
+  "title": "Annual activity report",
+  "meta": {
+    "period": "Period: {{range}}",
+    "range": "{{start}} to {{end}}",
+    "rangePartial": "{{start}} to {{end}} (season in progress)",
+    "issued": "Issued on {{date}}"
+  },
+  "clubName": {
+    "label": "Club name",
+    "placeholder": "Shown at the top of the report"
+  },
+  "logo": {
+    "label": "Club logo (optional)",
+    "hint": "PNG, JPEG or SVG, 200 KB at most.",
+    "choose": "Choose an image",
+    "replace": "Change image",
+    "remove": "Remove the logo",
+    "tooLarge": "This image is over 200 KB: choose a lighter one.",
+    "badType": "Unsupported format: choose a PNG, JPEG or SVG image.",
+    "readFailed": "The image could not be read."
+  },
+  "notes": {
+    "heading": "A word from the club",
+    "label": "A word from the club, season {{season}}",
+    "placeholder": "Highlights, projects, thanks… (2,000 characters at most)",
+    "length": "{{count}} / {{max}} characters"
+  },
+  "edit": {
+    "open": "Edit the club name and message",
+    "addClubName": "Add the club name",
+    "saved": "Saved"
+  },
+  "chapters": {
+    "activity": "Activity",
+    "rowers": "Rowers",
+    "fleet": "The fleet",
+    "safety": "Safety and equipment"
+  },
+  "sections": {
+    "overview": "Key figures",
+    "outingsMonthly": "Outings per month",
+    "activeRowersMonthly": "Active rowers per month",
+    "demographics": "Active members by age and gender",
+    "fleet": "Fleet use by boat class",
+    "topBoats_one": "The most used boat",
+    "topBoats_other": "The {{count}} most used boats",
+    "routes_one": "The most used route",
+    "routes_other": "The {{count}} most used routes",
+    "outingTypes": "Outing types",
+    "incidents": "Incidents per boat",
+    "damages": "Damage per boat",
+    "retention": "Retention of new rowers",
+    "safety": "Safety month by month"
+  },
+  "intros": {
+    "overview": "Each figure is compared with last season up to the same date.",
+    "outingsMonthly": "Number of outings each month, compared with the same month last season.",
+    "activeRowersMonthly": "Number of different rowers who went out at least once in the month, compared with last season.",
+    "demographics": "Club members who went out at least once in the season, by age group and gender (guests are not counted). Juniors: 18 or under.",
+    "fleet": "Average number of outings per boat for each boat class: the higher it is, the busier the boats of that class.",
+    "topBoats": "Number of outings of each boat over the season.",
+    "routes": "Number of outings per route (outings logged without a route are not counted).",
+    "outingTypes": "Number of outings per type: learn-to-row, training, racing, touring…",
+    "incidents": "Number of incidents reported for each boat concerned.",
+    "damages": "Damage reported during the season, per boat and by severity.",
+    "retention": "Share of rowers still active one and two seasons after they joined.",
+    "safety": "Outings back late, without an expected return time or never closed in the logbook, month by month. One outing can appear in two categories."
+  },
+  "introsAlone": {
+    "outingsMonthly": "Number of outings each month.",
+    "activeRowersMonthly": "Number of different rowers who went out at least once in the month."
+  },
+  "empty": {
+    "incidents": "No incident reported during the season.",
+    "damages": "No damage reported during the season.",
+    "safety": "No late return or unclosed outing during the season."
+  },
+  "omitted": "No data this season, not printed: {{titles}}.",
+  "labels": {
+    "coachedPct": "Share of coached outings"
+  },
+  "retention": {
+    "joined": "Joined",
+    "after_one": "+{{count}} season",
+    "after_other": "+{{count}} seasons"
+  },
+  "notesFor": {
+    "demographics": "{{members}} club members out of {{active}} active rowers; the {{guests}} guests are not counted here.",
+    "retentionBoth": "{{arrivals}} new rowers in {{season}}; {{pct}} of those who joined in {{prev}} came back this season.",
+    "retentionArrivals": "{{arrivals}} new rowers in {{season}}.",
+    "retentionReturned": "{{pct}} of those who joined in {{prev}} came back this season.",
+    "retentionFirst": "The first season on record holds every member who was already there.",
+    "firstSeason": "First season recorded in Rowing Beacon: no comparison with last season.",
+    "partialMonth": "{{month}}: month in progress, data up to {{date}}.",
+    "incidents_one": "{{count}} incident reported.",
+    "incidents_other": "{{count}} incidents reported on {{boats}} boats.",
+    "incidentsOneBoat": "{{count}} incidents reported, all on the same boat."
+  },
+  "definitions": {
+    "title": "Definitions",
+    "activeRower": "Active rower: anyone who went out in a boat at least once during the season, member or guest.",
+    "coached": "Coached outing: an outing marked as coached in the logbook; the share counts only outings where this is filled in.",
+    "hours": "Hours on the water: duration of single-day outings; outings over several days are not counted.",
+    "km": "Kilometres: distances entered in the logbook."
+  },
+  "footer": "Generated by Rowing Beacon from the club's logbook.",
+  "appendix": "Appendix: detailed figures",
+  "pdfBanner": "To get a PDF: Print (Ctrl+P, or ⌘P on a Mac), destination \"Save as PDF\". Untick \"Headers and footers\" for a clean result.",
+  "summarySheet": "Summary",
+  "summary": {
+    "club": "Club",
+    "season": "Season",
+    "period": "Period",
+    "issued": "Issued on",
+    "notes": "A word from the club",
+    "indicator": "Indicator",
+    "change": "Change (%)",
+    "contents": "Contents"
+  },
+  "sheets": {
+    "outingsMonthly": "Outings per month",
+    "activeRowersMonthly": "Rowers per month",
+    "demographics": "Members",
+    "fleet": "Fleet",
+    "topBoats": "Boats",
+    "routes": "Routes",
+    "outingTypes": "Outing types",
+    "incidents": "Incidents",
+    "damages": "Damage",
+    "retention": "Retention",
+    "safety": "Safety"
+  },
+  "fileSlug": "annual-report",
+  "exportXlsx": "Export to Excel",
+  "exportHtml": "Open in browser",
+  "print": "Print or save as PDF",
+  "present": "Present",
+  "open": "Open",
+  "preparing": "Preparing the report…",
+  "preparingCount": "Preparing the report… {{done}} / {{total}} sections",
+  "ready": "Report ready",
+  "htmlSaved": "Page saved to Downloads ({{name}}) and opened in your browser. For a PDF: Print › Save as PDF.",
+  "htmlSavedNotOpened": "Page saved to Downloads ({{name}}): open it, then Print › Save as PDF.",
+  "failedSections_one": "{{count}} section could not be computed and is not in the document: {{titles}}.",
+  "failedSections_other": "{{count}} sections could not be computed and are not in the document: {{titles}}.",
+  "callout": {
+    "partial": "Season {{season}} is not over yet (data up to {{date}}). For the general meeting, clubs usually present the last full season.",
+    "showSeason": "Show season {{season}}"
+  },
+  "noOutings": "No outings recorded for season {{season}}."
+}

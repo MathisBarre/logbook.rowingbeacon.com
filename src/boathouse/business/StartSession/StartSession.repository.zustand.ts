@@ -5,6 +5,25 @@ import { ErrorWithCode } from "../../../_common/utils/error";
 import { isSamePersonName } from "../../../_common/business/crew.rules";
 import { IStartSessionRepository } from "./StartSession.repository.interface";
 
+/**
+ * A typed name that is an active member is that member, else the guest of
+ * that name, archived or not.
+ */
+const findPersonByName = (name: string) => {
+  // Fresh state: guests created earlier in this departure are included.
+  const store = useClubOverviewStore.getState();
+  const sameName = (rower: { name: string }) =>
+    isSamePersonName(rower.name, name);
+
+  return (
+    store.getAllRowers().find((rower) => sameName(rower)) ??
+    store.clubOverview.rowers.find(
+      (rower) =>
+        rower.status === "guest" && !rower.mergedIntoId && sameName(rower)
+    )
+  );
+};
+
 export const useGetZustandStartSessionRepository = () => {
   const sessionsStore = useSessionsStore();
   const clubOverviewStore = useClubOverviewStore();
@@ -38,28 +57,18 @@ export const useGetZustandStartSessionRepository = () => {
       return clubOverviewStore.getRowersById(rowersId);
     },
 
+    async findPersonByName(name) {
+      return findPersonByName(name);
+    },
+
     async createGuest(name) {
-      // Fresh state: guests created earlier in this departure are included.
       const store = useClubOverviewStore.getState();
-      const { rowers } = store.clubOverview;
-      const sameName = (rower: { name: string }) =>
-        isSamePersonName(rower.name, name);
-
-      // A typed name that is an active member is that member.
-      const member = clubOverviewStore
-        .getAllRowers()
-        .find((rower) => sameName(rower));
-      if (member) return member;
-
-      const guest = rowers.find(
-        (rower) =>
-          rower.status === "guest" && !rower.mergedIntoId && sameName(rower)
-      );
-      if (guest) {
-        if (guest.archivedAt) {
-          store.unarchiveRower(guest.id);
+      const person = findPersonByName(name);
+      if (person) {
+        if (person.status === "guest" && person.archivedAt) {
+          store.unarchiveRower(person.id);
         }
-        return guest;
+        return person;
       }
 
       return store.addRower(name, null, null, { status: "guest" });

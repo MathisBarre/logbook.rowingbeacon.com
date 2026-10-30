@@ -1,0 +1,69 @@
+{
+  "title": "Prestazioni",
+  "intro": "I limiti delle statistiche (durata di una query, numero di righe, memoria) dipendono dal computer.",
+  "machine_one": "Questo computer: {{memory}} di memoria, {{count}} core. Profilo consigliato: {{profile}}.",
+  "machine_other": "Questo computer: {{memory}} di memoria, {{count}} core. Profilo consigliato: {{profile}}.",
+  "machinePi_one": "Raspberry Pi: {{memory}} di memoria, {{count}} core. Profilo consigliato: {{profile}}.",
+  "machinePi_other": "Raspberry Pi: {{memory}} di memoria, {{count}} core. Profilo consigliato: {{profile}}.",
+  "machineUnknownMemory_one": "Questo computer: {{count}} core, memoria sconosciuta. Profilo consigliato: {{profile}}.",
+  "machineUnknownMemory_other": "Questo computer: {{count}} core, memoria sconosciuta. Profilo consigliato: {{profile}}.",
+  "machineUnavailable": "Il computer viene rilevato solo nell'app installata. Qui Auto equivale a Economico.",
+  "machineLoading": "Rilevamento del computer…",
+  "choiceLabel": "Profilo",
+  "recommendedBadge": "consigliato",
+  "choices": {
+    "auto": {
+      "name": "Auto",
+      "description": "Segue il profilo consigliato per questo computer: {{profile}}."
+    }
+  },
+  "profiles": {
+    "economy": {
+      "name": "Economico",
+      "description": "Raspberry Pi e piccoli computer: al massimo 10 s per query in Esplora, 20 s per report, poca memoria."
+    },
+    "standard": {
+      "name": "Standard",
+      "description": "Portatile recente (8 GB, 4 core): tre volte più tempo, più righe e più memoria."
+    },
+    "powerful": {
+      "name": "Potente",
+      "description": "Computer fisso (16 GB, 8 core): query di un minuto, report di due minuti, 50.000 righe."
+    }
+  },
+  "piAdvice": "Un Raspberry Pi deve restare su Economico: una query pesante lo rallenterebbe mentre i vogatori registrano le uscite. Un profilo più potente non rende le query più veloci: concede loro più tempo e memoria.",
+  "aboveRecommended": "Questo profilo supera quello consigliato per questo computer ({{profile}}). Una query pesante potrebbe rallentare l'app: in tal caso torna ad Auto.",
+  "aboveRecommendedPi": "Questo profilo non è adatto a un Raspberry Pi: una query pesante potrebbe rallentare il registro delle uscite. Torna a Economico o ad Auto.",
+  "memoryCapped": "La memoria resta limitata a un quarto di quella del computer: qui questo profilo mantiene la memoria del profilo {{profile}}.",
+  "saved": "Le prossime query, comprese quelle della tua app di IA (MCP), seguono questo profilo.",
+  "advanced": "Avanzate: i limiti del profilo {{profile}}",
+  "limits": {
+    "query": "Query di Esplora o dell'assistente",
+    "report": "Report",
+    "card": "Scheda del cruscotto",
+    "editorRows": "Righe mostrate da Esplora",
+    "maxRows": "Righe al massimo per una query",
+    "resultSize": "Dimensione di un risultato",
+    "memory": "Memoria di una query",
+    "heap": "Memoria delle statistiche per tutta l'applicazione",
+    "concurrent": "Query contemporanee",
+    "mcp": "App di IA (MCP)",
+    "mcpValue": "{{query}} per query, {{report}} per report, {{rows}} righe"
+  },
+  "override": {
+    "label": "Durata massima di una query di Esplora e dell'assistente (secondi)",
+    "help": "Tra {{min}} e {{max}} s con questo profilo. Lascia vuoto per il valore del profilo: {{default}} s.",
+    "reset": "Valore del profilo",
+    "clamped": "Riportato a {{value}} s (tra {{min}} e {{max}} s con questo profilo)."
+  },
+  "units": {
+    "seconds": "{{value}} s",
+    "mb": "{{value}} MB",
+    "gb": "{{value}} GB",
+    "minutes": "{{value}} min"
+  },
+  "raiseHint": "Questo computer può fare di più: scegli il profilo {{profile}} in Gestione › Statistiche e IA › Prestazioni.",
+  "profileInUse": "Profilo in uso: {{profile}}.",
+  "profileInUseAuto": "Profilo in uso: Auto, cioè {{profile}} per questo computer.",
+  "change": "Cambia profilo"
+}

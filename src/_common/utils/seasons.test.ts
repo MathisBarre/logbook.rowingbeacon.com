@@ -1,5 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { afterEach, describe, it, expect } from "vitest";
 import { getSeasonDate } from "./seasons";
+import { useAnalyticsSettingsStore } from "../../analytics/store/analyticsSettings.store";
 
 describe("getCurrentSeasonDate", () => {
   it("should return correct dates when current date is in season (September or later)", () => {
@@ -57,5 +58,26 @@ describe("getCurrentSeasonDate", () => {
       resultWithDate.endDate.getFullYear()
     );
     expect(result.endDate.getMonth()).toBe(resultWithDate.endDate.getMonth());
+  });
+});
+
+describe("getSeasonDate with another season start", () => {
+  afterEach(() => {
+    useAnalyticsSettingsStore.getState().reset();
+  });
+
+  it("takes an explicit 0-based start month", () => {
+    const result = getSeasonDate(new Date(2024, 7, 15), 8); // September start
+    expect(result.startDate).toEqual(new Date(2023, 8, 1));
+    expect(result.endDate).toEqual(new Date(2024, 7, 31));
+  });
+
+  it("follows analytics.seasonStartMonth by default", () => {
+    useAnalyticsSettingsStore
+      .getState()
+      .hydrate({ "analytics.seasonStartMonth": 1 });
+    const result = getSeasonDate(new Date(2024, 7, 15));
+    expect(result.startDate).toEqual(new Date(2024, 0, 1));
+    expect(result.endDate).toEqual(new Date(2024, 11, 31));
   });
 });

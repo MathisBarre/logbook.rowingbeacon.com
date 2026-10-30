@@ -1,0 +1,147 @@
+{
+  "questionLabel": "Chiedi all'IA",
+  "intro": "Fai la tua domanda in italiano: l'IA scrive la query e il grafico, tu controlli il risultato prima di salvare.",
+  "placeholder": "Es.: quante uscite il martedì sera in questa stagione?",
+  "ask": "Chiedi all'IA",
+  "generating": "In corso…",
+  "newQuestion": "Nuova domanda",
+  "editQuestion": "Modifica la domanda",
+  "askedQuestion": "La tua domanda",
+  "shortcut": "{{keys}} per inviare",
+  "shortcutCopy": "{{keys}} per copiare la richiesta",
+  "counter": "{{count}} / {{max}} caratteri",
+  "stopped": "Richiesta interrotta.",
+  "examples": {
+    "title": "Esempi di domande:",
+    "weekend": "Quali barche escono di più nel fine settimana?",
+    "youth": "Quanti giovani sono usciti ogni mese in questa stagione?",
+    "hoursType": "Ore in acqua per tipo di barca e per mese"
+  },
+  "history": {
+    "title": "Le tue ultime domande",
+    "replayed": "Risposta del {{date}}, rieseguita sui dati di oggi."
+  },
+  "privacy": {
+    "noNames": "Niente nomi di persone: l'IA non conosce i vogatori.",
+    "line": "Inviato a {{provider}}: la domanda e la struttura delle tabelle, mai i dati dei vogatori.",
+    "lineAssets": "Inviato a {{provider}}: la domanda, la struttura delle tabelle e i nomi delle barche e dei percorsi, mai i dati dei vogatori.",
+    "lineLocal": "Tutto resta su questo computer: la domanda va al server di IA di questo computer ({{host}}).",
+    "lineCopy": "La richiesta copiata contiene la tua domanda e la struttura delle tabelle, mai i dati dei vogatori. Sei tu a scegliere l'IA in cui incollarla.",
+    "lineCopyAssets": "La richiesta copiata contiene la tua domanda, la struttura delle tabelle e i nomi delle barche e dei percorsi, mai i dati dei vogatori. Sei tu a scegliere l'IA in cui incollarla.",
+    "typicalCost": "Circa {{cost}} a domanda.",
+    "details": "Cosa viene inviato"
+  },
+  "names": {
+    "found": "La tua domanda contiene «{{name}}», il nome di un vogatore: verrebbe inviato a {{provider}}. Sostituiscilo con «un vogatore»: lo sceglierai poi nei parametri.",
+    "foundCopy": "La tua domanda contiene «{{name}}», il nome di un vogatore: verrebbe copiato nella richiesta. Sostituiscilo con «un vogatore»: lo sceglierai poi nei parametri.",
+    "replacement": "un vogatore",
+    "replace": "Sostituisci con «un vogatore»",
+    "sendAnyway": "Invia comunque",
+    "copyAnyway": "Copia comunque"
+  },
+  "status": {
+    "asking": "L'IA sta scrivendo la query…",
+    "running": "Verifica della query sui dati del club…",
+    "repairing": "Correzione automatica della query dopo un errore…",
+    "elapsed": "{{seconds}} s",
+    "slow": "Può richiedere fino a un minuto.",
+    "slower": "Ancora in corso: le domande difficili richiedono più tempo."
+  },
+  "answer": {
+    "eyebrow": "Risposta dell'IA",
+    "assumptions": "Ipotesi",
+    "clarified": "Precisato: {{text}}",
+    "refined": "Affinato: {{text}}",
+    "cost": "≈ {{cost}} per questa domanda",
+    "costTitle": "Stima in base alla tariffa pubblica; l'importo esatto figura sull'account {{provider}} del club.",
+    "repaired": "Query corretta automaticamente dopo un errore.",
+    "preview": "Anteprima del risultato",
+    "rows_one": "{{count}} riga in {{ms}} ms",
+    "rows_other": "{{count}} righe in {{ms}} ms",
+    "inEditor": "La query è caricata nell'editor: controlla il risultato, poi «Salva» o «Fissa». Nulla viene salvato senza di te.",
+    "showResult": "Vedi il risultato",
+    "needsValues": "Scegli un valore per {{names}} nei parametri dell'editor, poi esegui di nuovo la query.",
+    "chooseParam": "Scegli {{name}}",
+    "notLoaded": "Questa risposta non è nell'editor.",
+    "load": "Carica nell'editor",
+    "answeredBy": "Risposta di {{provider}} · {{model}}"
+  },
+  "refine": {
+    "placeholder": "Affina: solo i giovani, per mese…",
+    "label": "Affina questo risultato",
+    "button": "Affina",
+    "pasted": "Per affinarlo, scrivilo alla tua IA nella stessa conversazione, poi incolla qui sopra la sua nuova risposta."
+  },
+  "clarification": {
+    "title": "L'IA ha bisogno di una precisazione",
+    "choices": "Risposte possibili",
+    "other": "Altra risposta:",
+    "answer": "Rispondi",
+    "placeholder": "La tua risposta…"
+  },
+  "steps": {
+    "title": "Usa la tua IA abituale",
+    "copy": "Copia la richiesta.",
+    "open": "Incollala nella tua IA:",
+    "pasteHelp": "Nella tua IA, clicca su «Copia» sotto la sua risposta (o in alto nel blocco di codice).",
+    "alreadyHave": "Ho già una risposta da incollare",
+    "addKey": "Perché l'IA risponda direttamente qui, aggiungi una chiave API:",
+    "configure": "Configura l'IA",
+    "useStored": "Usa {{provider}} (chiave salvata)"
+  },
+  "copy": {
+    "button": "Copia la richiesta",
+    "header": "Richiesta preparata da RowingBeacon per le statistiche del club: l'IA risponderà con un blocco di codice da ricopiare in RowingBeacon.",
+    "done": "Richiesta copiata: incollala nella tua IA abituale, poi copia la sua risposta.",
+    "doneIn": "Richiesta copiata: incollala in {{name}} (Ctrl + V), poi copia la sua risposta.",
+    "failed": "Copia non riuscita: seleziona tutto il testo qui sotto e copialo.",
+    "open": "Apri {{name}}",
+    "needQuestion": "Scrivi prima la tua domanda."
+  },
+  "paste": {
+    "label": "Incolla qui la sua risposta:",
+    "placeholder": "Incolla qui tutta la risposta della tua IA",
+    "apply": "Usa questa risposta",
+    "invalid": "Questa risposta non è riconosciuta. Nella tua IA, clicca su «Copia» sotto la sua risposta, poi incollala qui per intero.",
+    "clarification": "La tua IA chiede una precisazione: rispondile nella sua conversazione, poi incolla qui la sua nuova risposta.",
+    "copyRepair": "Copia l'errore per la tua IA",
+    "repairCopied": "Errore copiato: incollalo nella stessa conversazione della tua IA, poi incolla qui la risposta corretta."
+  },
+  "keyDialog": {
+    "title": "Configura l'IA",
+    "saved": "Chiave salvata: puoi chiedere all'IA."
+  },
+  "actions": {
+    "fixSettings": "Correggi le impostazioni dell'IA",
+    "retryIn": "Riprova ({{seconds}} s)",
+    "copyForUsual": "Copia la richiesta per la tua IA abituale",
+    "openInEditor": "Apri la query nell'editor",
+    "technical": "Dettaglio tecnico"
+  },
+  "errors": {
+    "no_key": "Nessuna chiave API configurata ({{provider}}).",
+    "invalid_key": "La chiave API è rifiutata da {{provider}}: forse è stata eliminata, o copiata male.",
+    "forbidden": "Questa chiave non ha accesso a questo modello, oppure il credito dell'account è esaurito. Scegli un altro modello o verifica l'account ({{provider}}).",
+    "rate_limited": "Troppe richieste in questo momento. Riprova tra {{seconds}} s.",
+    "overloaded": "Servizio sovraccarico al momento ({{provider}}). Riprova tra qualche minuto.",
+    "bad_request": "{{provider}} ha rifiutato la richiesta. Riprova; se succede di nuovo, scegli un altro modello.",
+    "network": "Impossibile raggiungere {{provider}}: verifica la connessione a Internet. Senza Internet, i report e l'editor SQL funzionano comunque.",
+    "network_server": "Impossibile raggiungere {{provider}}: verifica che il server di IA sia avviato.",
+    "timeout": "L'IA non ha risposto in tempo. Riprova.",
+    "refusal": "L'IA ha rifiutato questa richiesta. Riformula la domanda.",
+    "truncated": "Risposta troppo lunga e interrotta. Fai una domanda più precisa.",
+    "invalid_response": "Risposta dell'IA illeggibile. Riprova.",
+    "repair_failed": "L'IA non è riuscita a correggere la query: {{message}}",
+    "too_large": "Domanda troppo lunga (al massimo 2.000 caratteri).",
+    "model_not_allowed": "Modello non supportato. Scegli un modello in Gestione › Statistiche e IA.",
+    "desktop_only": "L'assistente IA funziona solo nell'applicazione installata.",
+    "internal": "Errore imprevisto dell'assistente. Riprova.",
+    "query": "La query proposta non è stata eseguita: {{message}}",
+    "model_not_found": "Modello non trovato ({{provider}}). Verificane il nome in Gestione › Statistiche e IA."
+  },
+  "providers": {
+    "generic": "il servizio di IA",
+    "server": "il tuo server di IA",
+    "local": "il server di questo computer"
+  }
+}

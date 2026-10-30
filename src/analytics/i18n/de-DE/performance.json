@@ -1,0 +1,69 @@
+{
+  "title": "Leistung",
+  "intro": "Die Grenzen der Statistiken (Dauer einer Abfrage, Zeilenzahl, Speicher) hängen vom Rechner ab.",
+  "machine_one": "Dieser Computer: {{memory}} Arbeitsspeicher, {{count}} Kern. Empfohlenes Profil: {{profile}}.",
+  "machine_other": "Dieser Computer: {{memory}} Arbeitsspeicher, {{count}} Kerne. Empfohlenes Profil: {{profile}}.",
+  "machinePi_one": "Raspberry Pi: {{memory}} Arbeitsspeicher, {{count}} Kern. Empfohlenes Profil: {{profile}}.",
+  "machinePi_other": "Raspberry Pi: {{memory}} Arbeitsspeicher, {{count}} Kerne. Empfohlenes Profil: {{profile}}.",
+  "machineUnknownMemory_one": "Dieser Computer: {{count}} Kern, Arbeitsspeicher unbekannt. Empfohlenes Profil: {{profile}}.",
+  "machineUnknownMemory_other": "Dieser Computer: {{count}} Kerne, Arbeitsspeicher unbekannt. Empfohlenes Profil: {{profile}}.",
+  "machineUnavailable": "Der Computer wird nur in der installierten App erkannt. Hier entspricht Auto dem Profil Sparsam.",
+  "machineLoading": "Computer wird erkannt…",
+  "choiceLabel": "Profil",
+  "recommendedBadge": "empfohlen",
+  "choices": {
+    "auto": {
+      "name": "Auto",
+      "description": "Folgt dem für diesen Computer empfohlenen Profil: {{profile}}."
+    }
+  },
+  "profiles": {
+    "economy": {
+      "name": "Sparsam",
+      "description": "Raspberry Pi und kleine Computer: höchstens 10 s pro Explorer-Abfrage, 20 s pro Bericht, wenig Speicher."
+    },
+    "standard": {
+      "name": "Standard",
+      "description": "Aktueller Laptop (8 GB, 4 Kerne): dreimal mehr Zeit, mehr Zeilen und mehr Speicher."
+    },
+    "powerful": {
+      "name": "Leistungsstark",
+      "description": "Desktop-PC (16 GB, 8 Kerne): Abfragen von einer Minute, Berichte von zwei Minuten, 50.000 Zeilen."
+    }
+  },
+  "piAdvice": "Ein Raspberry Pi sollte auf Sparsam bleiben: Eine schwere Abfrage würde ihn verlangsamen, während Ruderer ihre Fahrten eintragen. Ein stärkeres Profil macht Abfragen nicht schneller, es gibt ihnen mehr Zeit und Speicher.",
+  "aboveRecommended": "Dieses Profil geht über das für diesen Computer empfohlene hinaus ({{profile}}). Eine schwere Abfrage könnte die App verlangsamen: Kehren Sie in dem Fall zu Auto zurück.",
+  "aboveRecommendedPi": "Dieses Profil ist nicht für einen Raspberry Pi gedacht: Eine schwere Abfrage könnte das Fahrtenbuch verlangsamen. Kehren Sie zu Sparsam oder Auto zurück.",
+  "memoryCapped": "Der Speicher bleibt auf ein Viertel des Arbeitsspeichers begrenzt: Hier behält dieses Profil den Speicher des Profils {{profile}}.",
+  "saved": "Die nächsten Abfragen, auch die Ihrer KI-App (MCP), folgen diesem Profil.",
+  "advanced": "Erweitert: die Grenzen des Profils {{profile}}",
+  "limits": {
+    "query": "Abfrage im Explorer oder vom Assistenten",
+    "report": "Bericht",
+    "card": "Karte der Übersicht",
+    "editorRows": "Vom Explorer angezeigte Zeilen",
+    "maxRows": "Höchstens Zeilen pro Abfrage",
+    "resultSize": "Größe eines Ergebnisses",
+    "memory": "Speicher einer Abfrage",
+    "heap": "Statistikspeicher für die ganze Anwendung",
+    "concurrent": "Gleichzeitige Abfragen",
+    "mcp": "KI-Apps (MCP)",
+    "mcpValue": "{{query}} pro Abfrage, {{report}} pro Bericht, {{rows}} Zeilen"
+  },
+  "override": {
+    "label": "Längste Abfrage im Explorer und vom Assistenten (Sekunden)",
+    "help": "Zwischen {{min}} und {{max}} s mit diesem Profil. Leer lassen für den Wert des Profils: {{default}} s.",
+    "reset": "Wert des Profils",
+    "clamped": "Auf {{value}} s gesetzt (zwischen {{min}} und {{max}} s mit diesem Profil)."
+  },
+  "units": {
+    "seconds": "{{value}} s",
+    "mb": "{{value}} MB",
+    "gb": "{{value}} GB",
+    "minutes": "{{value}} Min."
+  },
+  "raiseHint": "Dieser Computer kann mehr: Wählen Sie das Profil {{profile}} unter Verwaltung › Statistiken und KI › Leistung.",
+  "profileInUse": "Verwendetes Profil: {{profile}}.",
+  "profileInUseAuto": "Verwendetes Profil: Auto, also {{profile}} für diesen Rechner.",
+  "change": "Profil ändern"
+}

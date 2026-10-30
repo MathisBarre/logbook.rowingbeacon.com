@@ -1,0 +1,57 @@
+{
+  "season": "Seizoen",
+  "boat_class": "Boottype",
+  "boat_id": "Boot",
+  "rower_id": "Roeier",
+  "route_id": "Traject",
+  "outing_type": "Soort tocht",
+  "metric": "Tonen",
+  "measure": "Tonen",
+  "dimension": "Groeperen op",
+  "days": "Aantal dagen",
+  "periodDays": "In de laatste (dagen)",
+  "absentDays": "Minstens afwezig sinds (dagen)",
+  "max_outings": "Maximaal aantal tochten",
+  "min_outings": "Minimaal aantal tochten",
+  "rower_status": "Status",
+  "gender": "Geslacht",
+  "age_category": "Leeftijdscategorie",
+  "tolerance_min": "Tolerantie te laat (minuten)",
+  "start_date": "Van",
+  "end_date": "Tot",
+  "limit": "Aantal rijen",
+  "all": {
+    "default": "Alle",
+    "boat_class": "Alle types",
+    "boat_id": "Alle boten",
+    "rower_status": "Alle statussen",
+    "age_category": "Alle categorieën",
+    "issue": "Alle punten"
+  },
+  "types": {
+    "text": "Tekst",
+    "integer": "Geheel getal",
+    "date": "Datum",
+    "boolean": "Ja / nee",
+    "season": "Seizoen",
+    "boat": "Boot",
+    "rower": "Roeier",
+    "route": "Traject",
+    "outing_type": "Soort tocht",
+    "boat_class": "Boottype",
+    "choice": "Keuzelijst"
+  },
+  "validation": {
+    "required": "Verplicht",
+    "range": "Tussen {{min}} en {{max}}",
+    "clampedMin": "Teruggezet naar {{value}} (minimum)",
+    "clampedMax": "Teruggezet naar {{value}} (maximum)",
+    "restored": "Standaardwaarde hersteld: {{value}}"
+  },
+  "issue": "Aandachtspunt",
+  "bar": "Rapportparameters",
+  "stepper": {
+    "decrease": "Verlagen: {{label}}",
+    "increase": "Verhogen: {{label}}"
+  }
+}

@@ -1,0 +1,348 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "title",
+    "explanation",
+    "sql",
+    "params",
+    "chart",
+    "assumptions",
+    "clarification",
+    "choices"
+  ],
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "explanation": {
+      "type": "string"
+    },
+    "sql": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "One SQLite SELECT statement, or null when asking for clarification."
+    },
+    "params": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "type",
+          "label",
+          "required",
+          "default",
+          "options",
+          "min",
+          "max"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "season",
+              "date",
+              "boat",
+              "rower",
+              "route",
+              "outing_type",
+              "boat_class",
+              "integer",
+              "choice",
+              "boolean",
+              "text"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "default": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "options": {
+            "type": "array",
+            "description": "Choices of a choice parameter; [] otherwise.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["value", "label"],
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "min": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "max": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "chart": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "x",
+        "y",
+        "series",
+        "orientation",
+        "stacked",
+        "sort",
+        "limit",
+        "cumulative",
+        "label",
+        "value",
+        "date",
+        "kpis",
+        "columns",
+        "column_labels",
+        "column_formats"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "table",
+            "kpi",
+            "bar",
+            "line",
+            "area",
+            "pie",
+            "heatmap",
+            "calendar"
+          ]
+        },
+        "x": {
+          "type": "string",
+          "description": "A result column name, or \"\" when it does not apply."
+        },
+        "y": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Value columns; [] when it does not apply."
+        },
+        "series": {
+          "type": "string",
+          "description": "A result column name, or \"\" when it does not apply."
+        },
+        "orientation": {
+          "type": "string",
+          "enum": ["vertical", "horizontal"]
+        },
+        "stacked": {
+          "type": "boolean"
+        },
+        "sort": {
+          "type": "string",
+          "enum": ["none", "asc", "desc"]
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Bars to show, 1-100; 0 for no limit."
+        },
+        "cumulative": {
+          "type": "boolean"
+        },
+        "label": {
+          "type": "string",
+          "description": "A result column name, or \"\" when it does not apply."
+        },
+        "value": {
+          "type": "string",
+          "description": "A result column name, or \"\" when it does not apply."
+        },
+        "date": {
+          "type": "string",
+          "description": "A result column name, or \"\" when it does not apply."
+        },
+        "kpis": {
+          "type": "array",
+          "description": "KPI tiles of a kpi chart; [] otherwise.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "value",
+              "compare",
+              "format",
+              "higher_is_better",
+              "label"
+            ],
+            "properties": {
+              "value": {
+                "type": "string"
+              },
+              "compare": {
+                "type": "string",
+                "description": "A result column name, or \"\" when it does not apply."
+              },
+              "format": {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "integer",
+                  "decimal",
+                  "percent",
+                  "km",
+                  "hours",
+                  "minutes",
+                  "date",
+                  "datetime",
+                  "month",
+                  "week",
+                  "weekday",
+                  "hour",
+                  "season",
+                  "code",
+                  "text",
+                  "year",
+                  "months"
+                ]
+              },
+              "higher_is_better": {
+                "type": "boolean"
+              },
+              "label": {
+                "type": "string",
+                "description": "Tile label, or \"\" for the default label."
+              }
+            }
+          }
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Table columns to show; [] for all."
+        },
+        "column_labels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["column", "label"],
+            "properties": {
+              "column": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "column_formats": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["column", "format"],
+            "properties": {
+              "column": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "integer",
+                  "decimal",
+                  "percent",
+                  "km",
+                  "hours",
+                  "minutes",
+                  "date",
+                  "datetime",
+                  "month",
+                  "week",
+                  "weekday",
+                  "hour",
+                  "season",
+                  "code",
+                  "text",
+                  "year",
+                  "months"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "clarification": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "choices": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "When clarification is set: 2 to 4 short answers the user can pick; [] otherwise."
+    }
+  }
+}

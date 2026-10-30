@@ -82,3 +82,32 @@ export interface ClubIncident {
   sessionId: string;
   datetime: string;
 }
+
+/** How far a damage limits the use of the boat. */
+export type DamageSeverity = "usable" | "limited" | "unusable";
+
+/**
+ * "damage": something broken, reported and fixed. "unavailable": the boat
+ * is put out of service without a damage (winter storage, lent out…), as
+ * efa2's NOTAVAILABLE status; it is always "unusable".
+ */
+export type DamageKind = "damage" | "unavailable";
+
+export interface BoatDamage {
+  id: string;
+  boatId: string;
+  kind: DamageKind;
+  severity: DamageSeverity;
+  description: string;
+  /** ISO date-time, as the other store dates. */
+  reportedAt: string;
+  reportedByRowerId: string | null;
+  outingId: string | null;
+  /** The incident reported at the end of an outing, when it came from one. */
+  incidentId: string | null;
+  /** Null while the damage is open. */
+  fixedAt: string | null;
+  fixedByRowerId: string | null;
+  repairNote: string | null;
+  repairCost: number | null;
+}

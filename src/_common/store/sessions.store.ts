@@ -30,6 +30,13 @@ interface ZustandSessionsStoreState {
   getOngoingSessions: () => ZustandSession[];
   getOngoingSession: (sessionId: string) => ZustandSession | undefined;
   findOngoingSessionByBoatId: (boatId: string) => ZustandSession | undefined;
+  /** Replaces the ongoing outing that has the same id (in memory only). */
+  updateSession: (outing: ZustandSession) => void;
+  /**
+   * When an outing was last finished (ms). Only finishing an outing sets it,
+   * not a failed start rolled back nor a reload.
+   */
+  lastEndedAt: number | null;
   /** Removes an outing from the ongoing list (it stays in the database). */
   removeSession: (sessionId: string) => void;
   reset: () => void;
@@ -38,6 +45,7 @@ interface ZustandSessionsStoreState {
 export const useSessionsStore = create<ZustandSessionsStoreState>()(
   devtools((set, get) => ({
     session: [],
+    lastEndedAt: null,
 
     hydrate: (sessions) => {
       set({ session: sessions });
@@ -106,14 +114,23 @@ export const useSessionsStore = create<ZustandSessionsStoreState>()(
       );
     },
 
+    updateSession(outing) {
+      set((state) => ({
+        session: state.session.map((session) =>
+          session.id === outing.id ? outing : session
+        ),
+      }));
+    },
+
     removeSession(sessionId) {
       set((state) => ({
         session: state.session.filter((session) => session.id !== sessionId),
+        lastEndedAt: Date.now(),
       }));
     },
 
     reset() {
-      set({ session: [] });
+      set({ session: [], lastEndedAt: null });
     },
   }))
 );

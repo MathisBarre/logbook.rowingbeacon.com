@@ -1,0 +1,100 @@
+{
+  "unknown": "Non specificato",
+  "gender": {
+    "female": "Donna",
+    "male": "Uomo",
+    "other": "Altro"
+  },
+  "rower_status": {
+    "member": "Socio",
+    "guest": "Ospite",
+    "other": "Altro"
+  },
+  "seriousness": {
+    "recreational": "Non agonista",
+    "competitor": "Agonista"
+  },
+  "rigging": {
+    "scull": "Coppia",
+    "sweep": "Punta"
+  },
+  "role": {
+    "rower": "Vogatore",
+    "cox": "Timoniere"
+  },
+  "age_group": {
+    "youth": "Giovani (fino a 18 anni)",
+    "adult": "Adulti"
+  },
+  "issue": {
+    "not_closed": "Mai chiusa",
+    "late_return": "Rientro in ritardo",
+    "no_estimated_end": "Senza orario di rientro previsto",
+    "youth_not_coached": "Giovani senza accompagnamento"
+  },
+  "severity": {
+    "usable": "Utilizzabile",
+    "limited": "Utilizzabile con limitazioni",
+    "unusable": "Inutilizzabile"
+  },
+  "damage_kind": {
+    "damage": "Danno",
+    "unavailable": "Indisponibilità"
+  },
+  "distance_source": {
+    "recorded": "Distanza inserita",
+    "route": "Distanza del percorso"
+  },
+  "metric": {
+    "outings": "Uscite",
+    "participations": "Partecipazioni",
+    "active_rowers": "Vogatori attivi",
+    "km": "Chilometri",
+    "hours": "Ore in acqua"
+  },
+  "measure": {
+    "participations": "Partecipazioni",
+    "hours": "Ore in acqua",
+    "km": "Chilometri",
+    "rowers": "Vogatori"
+  },
+  "dimension": {
+    "age_category": "Categoria d'età",
+    "seriousness": "Tipo di vogatore (non agonista, agonista)",
+    "gender": "Sesso",
+    "rower_status": "Stato (socio, ospite)",
+    "boat_class": "Tipo di barca",
+    "outing_type": "Tipo di uscita"
+  },
+  "outing_type_code": {
+    "normal": "Uscita normale",
+    "training": "Allenamento",
+    "regatta": "Regata",
+    "training_camp": "Raduno",
+    "instruction": "Avviamento",
+    "tour": "Gita",
+    "club_trip": "Uscita sociale",
+    "ergometer": "Remoergometro",
+    "motorboat": "Motoscafo"
+  },
+  "code": {
+    "normal": "Uscita normale",
+    "training": "Allenamento",
+    "regatta": "Regata",
+    "training_camp": "Raduno",
+    "instruction": "Avviamento",
+    "tour": "Gita",
+    "club_trip": "Uscita sociale",
+    "ergometer": "Remoergometro",
+    "motorboat": "Motoscafo"
+  },
+  "status": {
+    "member": "Socio",
+    "guest": "Ospite",
+    "other": "Altro"
+  },
+  "kind": {
+    "damage": "Danno",
+    "unavailable": "Indisponibilità"
+  }
+}

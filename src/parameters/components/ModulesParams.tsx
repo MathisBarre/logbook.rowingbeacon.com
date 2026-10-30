@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MODULE_IDS, ModuleId } from "../../_common/business/modules.rules";
 import { Checkbox } from "../../_common/components/Checkbox";
 import { useModulesStore } from "../../_common/store/modules.store";
+import { useReservationStore } from "../../_common/store/reservation.store";
 
 const CHECKBOX_CLASS =
   "h-5 w-5 border-steel-blue-800 data-[state=checked]:bg-steel-blue-800 data-[state=checked]:text-white";
@@ -67,6 +69,7 @@ const ModuleCard = ({ id }: { id: ModuleId }) => {
       <p className="text-gray-600">{t(`modules.${id}.description`)}</p>
       <p className="text-sm text-gray-500">{t(`modules.${id}.adds`)}</p>
       {id === "captain" && isEnabled && <CaptainOptions />}
+      {id === "reservations" && isEnabled && <ReservationsOptions />}
     </section>
   );
 };
@@ -90,5 +93,54 @@ const CaptainOptions = () => {
         {t("modules.captain.requiredOption")}
       </label>
     </div>
+  );
+};
+
+const MAX_LOOKAHEAD_MINUTES = 1440;
+
+const ReservationsOptions = () => {
+  const { t } = useTranslation();
+  const lookaheadMinutes = useReservationStore(
+    (state) => state.lookaheadMinutes
+  );
+  const setLookaheadMinutes = useReservationStore(
+    (state) => state.setLookaheadMinutes
+  );
+  // What is typed; saved when the field is left, once it is a valid number.
+  const [typed, setTyped] = useState<string | null>(null);
+
+  const commit = () => {
+    const minutes = Math.round(Number(typed));
+    if (typed !== null && typed.trim() !== "" && Number.isFinite(minutes)) {
+      setLookaheadMinutes(
+        Math.min(Math.max(minutes, 0), MAX_LOOKAHEAD_MINUTES)
+      );
+    }
+    setTyped(null);
+  };
+
+  // The sentence keeps its own word order in every language.
+  const [before, after] = t("modules.reservations.lookahead", {
+    minutes: "\u0000",
+  }).split("\u0000");
+
+  return (
+    <label className="flex items-center gap-2 mt-2 pt-2 border-t text-sm">
+      {before}
+      <input
+        type="number"
+        min={0}
+        max={MAX_LOOKAHEAD_MINUTES}
+        step={5}
+        className="input w-20 !mt-0 py-1"
+        value={typed ?? lookaheadMinutes}
+        onChange={(event) => setTyped(event.target.value)}
+        onBlur={commit}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") commit();
+        }}
+      />
+      {after}
+    </label>
   );
 };

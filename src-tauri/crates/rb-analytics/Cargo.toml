@@ -1,0 +1,20 @@
+[package]
+name = "rb-analytics"
+version = "0.1.0"
+description = "Read-only analytics engine, AI proxy and MCP server of Rowing Beacon (no Tauri dependency)"
+edition = "2021"
+publish = false
+
+[dependencies]
+rusqlite = { version = "=0.32.1", features = ["bundled", "hooks", "limits", "column_decltype"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+dirs = "5"
+uuid = { version = "1", features = ["v4"] }
+keyring = "4.2.0"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+
+[dev-dependencies]
+tempfile = "3"
+# Runs the async AI proxy in tests (reqwest already depends on tokio).
+tokio = { version = "1", features = ["rt"] }

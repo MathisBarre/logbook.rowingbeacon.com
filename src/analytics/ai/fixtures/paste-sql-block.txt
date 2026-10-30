@@ -1,0 +1,12 @@
+Voici une requête qui compte les jeunes rameurs actifs chaque mois de la saison :
+
+```sql
+SELECT start_month_key AS month, COUNT(DISTINCT rower_id) AS active_rowers
+FROM v_outing_rowers
+WHERE season = :season AND counts_in_stats = 1 AND is_rowing = 1
+  AND age_category IN ('J10', 'J12', 'J14', 'J16', 'J18')
+GROUP BY start_month_key
+ORDER BY month
+```
+
+Elle utilise le paramètre `:season`, que vous pourrez changer dans l'éditeur. Les jeunes sont les catégories J10 à J18.

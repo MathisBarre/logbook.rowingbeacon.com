@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { RowersCrud } from "./components/RowersCrud";
 import { forEnum } from "../_common/utils/utils";
 import { BoatCrud } from "./components/BoatsCrud";
@@ -6,12 +6,26 @@ import { MiscParams } from "./components/MiscParams";
 import { ModulesParams } from "./components/ModulesParams";
 import { DataParams } from "./components/DataParams";
 import { useTranslation } from "react-i18next";
+import Loading from "../_common/components/Loading";
+import {
+  takeRequestedAnalyticsSection,
+  takeRequestedParametersPage,
+} from "../analytics/reportsUi/parametersRequest";
 
-type Page = "rowers" | "boats" | "misc" | "modules" | "data";
+const AnalyticsSettingsTab = lazy(() =>
+  import("../analytics/settings/AnalyticsSettingsTab").then((m) => ({
+    default: m.AnalyticsSettingsTab,
+  }))
+);
+
+type Page = "rowers" | "boats" | "misc" | "modules" | "analytics" | "data";
 
 export const ParametersScreen = () => {
   const { t } = useTranslation();
-  const [page, setPage] = useState<Page>("rowers");
+  const [page, setPage] = useState<Page>(
+    () => takeRequestedParametersPage() ?? "rowers"
+  );
+  const [section] = useState(() => takeRequestedAnalyticsSection());
 
   return (
     <div className="flex flex-col h-full gap-1">
@@ -21,6 +35,11 @@ export const ParametersScreen = () => {
           boats: () => <BoatCrud />,
           misc: () => <MiscParams />,
           modules: () => <ModulesParams />,
+          analytics: () => (
+            <Suspense fallback={<Loading />}>
+              <AnalyticsSettingsTab section={section} />
+            </Suspense>
+          ),
           data: () => <DataParams />,
         })}
       </div>
@@ -41,6 +60,12 @@ export const ParametersScreen = () => {
         <NavigationButton
           label={t("modules.title")}
           page="modules"
+          currentPage={page}
+          setPage={setPage}
+        />
+        <NavigationButton
+          label={t("analytics.settings.tabLabel")}
+          page="analytics"
           currentPage={page}
           setPage={setPage}
         />

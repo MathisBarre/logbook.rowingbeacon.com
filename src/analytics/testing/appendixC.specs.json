@@ -1,0 +1,730 @@
+{
+  "season-overview": {
+    "chart": {
+      "type": "kpi",
+      "items": [
+        {
+          "value": "outings",
+          "compare": "outings_prev",
+          "format": "integer",
+          "higherIsBetter": true
+        },
+        {
+          "value": "active_rowers",
+          "compare": "active_rowers_prev",
+          "format": "integer",
+          "higherIsBetter": true
+        },
+        {
+          "value": "km",
+          "compare": "km_prev",
+          "format": "km",
+          "higherIsBetter": true,
+          "hideWhenNull": true
+        },
+        {
+          "value": "hours",
+          "compare": "hours_prev",
+          "format": "hours",
+          "higherIsBetter": true
+        },
+        {
+          "value": "coached_pct",
+          "compare": "coached_pct_prev",
+          "format": "percent",
+          "hideWhenNull": true
+        }
+      ]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ]
+  },
+  "yoy-monthly": {
+    "chart": {
+      "type": "bar",
+      "x": "month",
+      "y": ["value", "value_prev"],
+      "orientation": "vertical",
+      "stacked": false,
+      "labelKeys": {
+        "value": "analytics.reports.labels.selectedSeason",
+        "value_prev": "analytics.reports.labels.previousSeason"
+      }
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "metric",
+        "type": "choice",
+        "required": true,
+        "default": "outings",
+        "options": [
+          {
+            "value": "outings"
+          },
+          {
+            "value": "participations"
+          },
+          {
+            "value": "active_rowers"
+          },
+          {
+            "value": "km"
+          },
+          {
+            "value": "hours"
+          }
+        ]
+      }
+    ]
+  },
+  "yoy-cumulative": {
+    "chart": {
+      "type": "line",
+      "x": "week_start",
+      "y": ["outings_cumulative", "outings_cumulative_prev"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ]
+  },
+  "boat-usage-ranking": {
+    "chart": {
+      "type": "bar",
+      "x": "boat_name",
+      "y": ["outings"],
+      "orientation": "horizontal",
+      "sort": "desc",
+      "limit": 25
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "boat_class",
+        "type": "boat_class",
+        "required": false,
+        "default": null
+      }
+    ]
+  },
+  "underused-boats": {
+    "chart": {
+      "type": "table"
+    },
+    "params": [
+      {
+        "name": "days",
+        "type": "integer",
+        "labelKey": "analytics.params.periodDays",
+        "required": true,
+        "default": 365,
+        "min": 7,
+        "max": 3650
+      },
+      {
+        "name": "max_outings",
+        "type": "integer",
+        "required": true,
+        "default": 5,
+        "min": 0,
+        "max": 1000
+      }
+    ]
+  },
+  "boat-month-heatmap": {
+    "chart": {
+      "type": "heatmap",
+      "x": "month",
+      "y": "boat_name",
+      "value": "outings"
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "boat_class",
+        "type": "boat_class",
+        "required": false,
+        "default": null
+      }
+    ]
+  },
+  "boat-class-week-heatmap": {
+    "chart": {
+      "type": "heatmap",
+      "x": "week_start",
+      "y": "boat_class",
+      "value": "outings"
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ]
+  },
+  "fleet-class-monthly": {
+    "chart": {
+      "type": "bar",
+      "x": "month",
+      "y": ["outings"],
+      "series": "boat_class",
+      "stacked": true
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ]
+  },
+  "fleet-by-class": {
+    "chart": {
+      "type": "bar",
+      "x": "boat_class",
+      "y": ["outings_per_boat"],
+      "orientation": "vertical",
+      "sort": "desc"
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ]
+  },
+  "activity-calendar": {
+    "chart": {
+      "type": "calendar",
+      "date": "date",
+      "value": "participations"
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "boat_id",
+        "type": "boat",
+        "required": false,
+        "default": null
+      }
+    ]
+  },
+  "attendance-heatmap": {
+    "chart": {
+      "type": "heatmap",
+      "x": "hour",
+      "y": "weekday",
+      "value": "avg_per_week"
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "metric",
+        "type": "choice",
+        "required": true,
+        "default": "participations",
+        "options": [
+          {
+            "value": "participations"
+          },
+          {
+            "value": "outings"
+          }
+        ]
+      }
+    ]
+  },
+  "outings-per-rower": {
+    "chart": {
+      "type": "bar",
+      "x": "rower_label",
+      "y": ["outings"],
+      "orientation": "horizontal",
+      "sort": "desc",
+      "limit": 20
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "rower_status",
+        "type": "choice",
+        "required": false,
+        "default": null,
+        "options": [
+          {
+            "value": "member"
+          },
+          {
+            "value": "guest"
+          },
+          {
+            "value": "other"
+          }
+        ]
+      }
+    ]
+  },
+  "rower-frequency": {
+    "chart": {
+      "type": "bar",
+      "x": "outings_bucket",
+      "y": ["rowers"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ]
+  },
+  "active-rowers-monthly": {
+    "chart": {
+      "type": "bar",
+      "x": "month",
+      "y": ["returning_rowers", "new_rowers"],
+      "stacked": true
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ]
+  },
+  "retention-cohorts": {
+    "chart": {
+      "type": "heatmap",
+      "x": "seasons_after",
+      "y": "cohort",
+      "value": "retention_pct"
+    },
+    "params": []
+  },
+  "new-rower-survival": {
+    "chart": {
+      "type": "line",
+      "x": "months",
+      "y": ["survival_pct"]
+    },
+    "params": []
+  },
+  "inactive-rowers": {
+    "chart": {
+      "type": "table"
+    },
+    "params": [
+      {
+        "name": "days",
+        "type": "integer",
+        "labelKey": "analytics.params.absentDays",
+        "required": true,
+        "default": 45,
+        "min": 7,
+        "max": 730
+      },
+      {
+        "name": "min_outings",
+        "type": "integer",
+        "required": true,
+        "default": 5,
+        "min": 1,
+        "max": 500
+      }
+    ]
+  },
+  "km-challenge": {
+    "chart": {
+      "type": "bar",
+      "x": "rower_label",
+      "y": ["km"],
+      "orientation": "horizontal",
+      "sort": "desc",
+      "limit": 20
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "gender",
+        "type": "choice",
+        "required": false,
+        "default": null,
+        "options": [
+          {
+            "value": "female"
+          },
+          {
+            "value": "male"
+          },
+          {
+            "value": "other"
+          }
+        ]
+      },
+      {
+        "name": "age_category",
+        "type": "choice",
+        "required": false,
+        "default": null,
+        "options": [
+          {
+            "value": "J10"
+          },
+          {
+            "value": "J12"
+          },
+          {
+            "value": "J14"
+          },
+          {
+            "value": "J16"
+          },
+          {
+            "value": "J18"
+          },
+          {
+            "value": "Senior"
+          }
+        ]
+      }
+    ]
+  },
+  "boat-km": {
+    "chart": {
+      "type": "bar",
+      "x": "boat_name",
+      "y": ["km_season"],
+      "orientation": "horizontal",
+      "sort": "desc",
+      "limit": 25
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ]
+  },
+  "workload-by-category": {
+    "chart": {
+      "type": "bar",
+      "x": "month",
+      "y": ["value"],
+      "series": "category",
+      "stacked": true,
+      "labelKeys": {
+        "value": "analytics.codes.measure.{measure}"
+      }
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "dimension",
+        "type": "choice",
+        "required": true,
+        "default": "age_category",
+        "options": [
+          {
+            "value": "age_category"
+          },
+          {
+            "value": "seriousness"
+          },
+          {
+            "value": "gender"
+          },
+          {
+            "value": "rower_status"
+          },
+          {
+            "value": "boat_class"
+          },
+          {
+            "value": "outing_type"
+          }
+        ]
+      },
+      {
+        "name": "measure",
+        "type": "choice",
+        "required": true,
+        "default": "participations",
+        "options": [
+          {
+            "value": "participations"
+          },
+          {
+            "value": "hours"
+          },
+          {
+            "value": "km"
+          },
+          {
+            "value": "rowers"
+          }
+        ]
+      }
+    ]
+  },
+  "active-members-demographics": {
+    "chart": {
+      "type": "bar",
+      "x": "age_group",
+      "y": ["active_rowers"],
+      "series": "gender",
+      "stacked": true
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ]
+  },
+  "coaching-balance": {
+    "chart": {
+      "type": "bar",
+      "x": "rower_label",
+      "y": ["coached_pct"],
+      "orientation": "horizontal",
+      "sort": "none",
+      "limit": 30
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "min_outings",
+        "type": "integer",
+        "required": true,
+        "default": 3,
+        "min": 1,
+        "max": 500
+      },
+      {
+        "name": "age_category",
+        "type": "choice",
+        "required": false,
+        "default": null,
+        "options": [
+          {
+            "value": "J10"
+          },
+          {
+            "value": "J12"
+          },
+          {
+            "value": "J14"
+          },
+          {
+            "value": "J16"
+          },
+          {
+            "value": "J18"
+          },
+          {
+            "value": "Senior"
+          }
+        ]
+      }
+    ]
+  },
+  "routes-usage": {
+    "chart": {
+      "type": "bar",
+      "x": "route_name",
+      "y": ["outings"],
+      "orientation": "horizontal",
+      "sort": "desc",
+      "limit": 15
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ]
+  },
+  "outing-types": {
+    "chart": {
+      "type": "bar",
+      "x": "outing_type_code",
+      "y": ["outings"],
+      "orientation": "horizontal",
+      "sort": "desc"
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ]
+  },
+  "safety-issues": {
+    "chart": {
+      "type": "table"
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "tolerance_min",
+        "type": "integer",
+        "required": true,
+        "default": 15,
+        "min": 0,
+        "max": 600
+      }
+    ]
+  },
+  "safety-summary": {
+    "chart": {
+      "type": "bar",
+      "x": "month",
+      "y": ["late_returns", "no_estimated_end", "not_closed"],
+      "stacked": true
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      },
+      {
+        "name": "tolerance_min",
+        "type": "integer",
+        "required": true,
+        "default": 15,
+        "min": 0,
+        "max": 600
+      }
+    ]
+  },
+  "incidents-per-boat": {
+    "chart": {
+      "type": "bar",
+      "x": "boat_name",
+      "y": ["incidents"],
+      "orientation": "horizontal",
+      "sort": "desc",
+      "limit": 25
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ]
+  },
+  "damages-per-boat": {
+    "chart": {
+      "type": "bar",
+      "x": "boat_name",
+      "y": ["unusable", "limited", "usable"],
+      "orientation": "horizontal",
+      "stacked": true,
+      "limit": 25
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ]
+  },
+  "guests": {
+    "chart": {
+      "type": "bar",
+      "x": "month",
+      "y": ["guest_participations"]
+    },
+    "params": [
+      {
+        "name": "season",
+        "type": "season",
+        "required": true,
+        "default": "current"
+      }
+    ]
+  }
+}

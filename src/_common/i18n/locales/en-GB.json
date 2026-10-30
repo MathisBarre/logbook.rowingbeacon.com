@@ -36,6 +36,7 @@
   },
   "navigation": {
     "boathouse": "Boathouse",
+    "reservations": "Reservations",
     "logbook": "Logbook",
     "stats": "Statistics",
     "parameters": "Management",
@@ -70,7 +71,7 @@
       },
       "fullClub": {
         "name": "Full club",
-        "description": "Adds distances, outing types, full member profiles, guests and captain."
+        "description": "Adds distances, outing types, full member profiles, guests, captain and reservations."
       },
       "efaImport": {
         "name": "I'm coming from efa",
@@ -100,7 +101,15 @@
     "noBoatsToDisplay": "No boats to display",
     "at": "at {{time}}",
     "tomorrowAt": "tomorrow at {{time}}",
-    "onDate": "on {{date}}"
+    "onDate": "on {{date}}",
+    "outOfService": "Out of service",
+    "unavailableBoats": "Unavailable boats",
+    "allBoatsBack": "All boats are back. Remember to close the boathouse.",
+    "allBoatsBackClosing": "Closing in {{seconds}} s (click to close)",
+    "sunrise": "Sunrise",
+    "sunset": "Sunset",
+    "outingsAfterSunset_one": "{{count}} outing still on the water in the dark",
+    "outingsAfterSunset_other": "{{count}} outings still on the water in the dark"
   },
   "session": {
     "start": "Start session",
@@ -176,7 +185,19 @@
     "duplicateCrewMember": "The same person is picked twice in the crew.",
     "boatAlreadyOnSession": "This boat is already out.",
     "returnBeforeStart": "The expected return must be after the start.",
-    "invalidDistance": "Invalid distance: enter a number of km, for example 12.5."
+    "invalidDistance": "Invalid distance: enter a number of km, for example 12.5.",
+    "boatUnusable": "This boat is out of service.",
+    "boatDamages": "Open damages on this boat",
+    "boatIsDamaged": "The boat is damaged",
+    "damageSeverity": "Damage severity",
+    "damageSeverityRequired": "Choose how serious the damage is.",
+    "sessionEndedBoatOutOfService": "Session end has been recorded successfully. The boat is out of service until it is repaired.",
+    "seatsRemaining_one": "{{count}} seat left",
+    "seatsRemaining_other": "{{count}} seats left",
+    "rowersOverflow_one": "{{count}} rower too many",
+    "rowersOverflow_other": "{{count}} rowers too many",
+    "crewComplete": "Crew complete",
+    "coxMissing": "Cox missing"
   },
   "logbook": {
     "title": "Logbook",
@@ -208,17 +229,13 @@
     "createNewExport": "Create a new export",
     "backToSessionList": "Return to session list",
     "captainName": "Captain: {{name}}",
-    "coxName": "{{name}} (cox)"
+    "coxName": "{{name}} (cox)",
+    "editSession": "Edit outing"
   },
   "stats": {
-    "title": "Statistics",
-    "infoMessage": "Many additional statistics are available in the \"Management\" tab, \"Rowers\" and \"Boats\" pages",
     "sessions": "Sessions",
-    "totalTimeOnWater": "Total time on water",
-    "averageTimePerSession": "Average time per session",
     "noSessionsRecorded": "No sessions recorded yet",
     "season": "Season",
-    "allMonths": "All months",
     "numberOfSessions": "Number of sessions",
     "timeOnWater": "Time on water",
     "averagePerSession": "Average per session",
@@ -236,23 +253,8 @@
     "boat": "Boat",
     "rower": "Rower",
     "aboutBoat": "Information about {{boatName}}",
-    "months": {
-      "january": "January",
-      "february": "February",
-      "march": "March",
-      "april": "April",
-      "may": "May",
-      "june": "June",
-      "july": "July",
-      "august": "August",
-      "september": "September",
-      "october": "October",
-      "november": "November",
-      "december": "December"
-    },
     "session_one": "{{count}} session",
     "session_other": "{{count}} sessions",
-    "totalDistance": "Total distance",
     "coxedSessions": "Outings as cox"
   },
   "parameters": {
@@ -298,7 +300,7 @@
     "noType": "No type",
     "type": "Type",
     "updateConfiguration": "Update configuration",
-    "inMaintenance": "In maintenance",
+    "inMaintenance": "Out of service",
     "noteDisplayedAtSessionStart": "Note (displayed at session start)",
     "yourRowers": "Your rowers",
     "yourBoats": "Your boats",
@@ -353,6 +355,7 @@
     "warning": "Warning!",
     "deleteAllDataWarning1": "You are about to delete all application data.",
     "deleteAllDataWarning2": "A safety backup is made first in the backups folder (Management > Data), alongside earlier backups. To erase the data for good, delete those files too.",
+    "deleteAiKeyToo": "Also delete the AI API keys stored on this computer (Anthropic, OpenAI, compatible server). Otherwise they stay, and questions asked to the AI are still billed to those accounts.",
     "deleteConfirmationText": "I wish to delete all my data",
     "deleteConfirmationInstruction": "Confirm by writing exactly \"{{text}}\" in the field below.",
     "enterAdminPassword": "Enter admin password",
@@ -384,7 +387,15 @@
     "showGuests": "Guests ({{count}})",
     "guestsHelp": "Guests are created when a name is typed at departure. They don't appear in the rower list; set their status to “Member” to add them.",
     "finishOutingBeforeArchiving": "Cannot archive: finish the ongoing outing first.",
-    "nameRequired": "The name is required."
+    "nameRequired": "The name is required.",
+    "allBoatsBackBanner": "Boathouse closing reminder",
+    "allBoatsBackBannerDescription": "Show a large reminder to close the boathouse when the last outing ends.",
+    "allBoatsBackBannerOption": "Show the reminder when all boats are back",
+    "clubLocation": "Club location",
+    "clubLocationDescription": "Used to display sunrise and sunset times on the boathouse screen. Leave empty to hide them. Decimal degrees, e.g. 48.8566 and 2.3522.",
+    "clubLatitude": "Latitude",
+    "clubLongitude": "Longitude",
+    "clubLocationInvalid": "Invalid value: latitude must be between -90 and 90, longitude between -180 and 180."
   },
   "boat": {
     "type": "Type",
@@ -460,6 +471,8 @@
     "failedToLoad": "Failed to load database",
     "failedToSave": "Saving failed: the change was cancelled",
     "backupsNotDeleted": "The old v1 backups could not be deleted from the backups folder",
+    "inboxNotCleared": "Claude's waiting proposals could not be deleted from the analytics-inbox folder",
+    "aiKeyNotDeleted": "An AI API key could not be deleted: delete it in Management › Statistics and AI",
     "reloadFailed": "Could not reload the data: please restart the app"
   },
   "migration": {
@@ -505,6 +518,19 @@
       "adds": "Adds a captain choice among the crew at departure (the cox, otherwise the first adult rower, is suggested), shown in the logbook and exports.",
       "suggestion": "Want to know who is responsible for each boat on the water? The Captain module adds it at departure.",
       "requiredOption": "Require a captain to start an outing"
+    },
+    "damages": {
+      "name": "Damages",
+      "description": "Report damage to a boat with its severity, follow it until it is repaired, and warn the crew before they set off.",
+      "adds": "Adds a Damages tab to the logbook, damage reports from an incident or a boat's page, a warning at departure for damaged boats, and each boat's damage history.",
+      "suggestion": "A damaged boat? The Damages module lets you report the damage, follow its repair and warn the crew at departure."
+    },
+    "reservations": {
+      "name": "Reservations",
+      "description": "Reserve a boat for a regatta, a course or a weekly training session.",
+      "adds": "Adds a Reservations page, a “reserved” label on the boats concerned in the boathouse, and a notice when an outing would overlap a reservation. Starting an outing is never blocked.",
+      "suggestion": "Need to keep a boat free for a regatta, a course or a regular slot? The Reservations module shows it in the boathouse.",
+      "lookahead": "Show a boat as reserved {{minutes}} minutes before"
     }
   },
   "outingTypes": {
@@ -518,10 +544,75 @@
     "ergometer": "Ergometer",
     "motorboat": "Motorboat"
   },
+  "reservations": {
+    "title": "Reservations",
+    "new": "New reservation",
+    "newTitle": "New reservation",
+    "editTitle": "Edit reservation",
+    "saved": "Reservation saved",
+    "deleted": "Reservation deleted",
+    "confirmDelete": "Delete the reservation of {{boat}} ({{when}})?",
+    "emptyTitle": "No reservations yet",
+    "emptyText": "Reserve a boat for a regatta, a course, a group outing or a slot that comes back every week. In the boathouse the boat shows as reserved, and a notice appears if an outing overlaps the reservation, without ever stopping anyone from going out.",
+    "noUpcoming": "No upcoming reservations.",
+    "filterByBoat": "Boat",
+    "allBoats": "All boats",
+    "past": "Past reservations ({{count}})",
+    "inProgress": "In progress",
+    "nextOn": "Next: {{date}}",
+    "unknownBoat": "Unknown boat",
+    "weekly": "Every {{day}} {{start}}–{{end}}",
+    "periodBetween": "from {{from}} to {{to}}",
+    "periodFrom": "from {{from}}",
+    "periodUntil": "until {{to}}",
+    "reservedBy": "Reserved by {{holder}}",
+    "badge": {
+      "until": "reserved · ends {{time}}",
+      "at": "reserved · starts {{time}}"
+    },
+    "notice": {
+      "line": "This boat is reserved from {{from}} to {{to}} by {{holder}}",
+      "withReason": "This boat is reserved from {{from}} to {{to}} by {{holder}} ({{reason}})"
+    },
+    "boat": "Boat",
+    "chooseBoat": "Choose a boat",
+    "recurrence": "Repeat",
+    "recurrences": {
+      "once": "One-time",
+      "weekly": "Weekly"
+    },
+    "startDate": "Start date",
+    "startTime": "Start time",
+    "endDate": "End date",
+    "endTime": "End time",
+    "day": "Day",
+    "onlyDuringPeriod": "Only during a period",
+    "periodStart": "First day",
+    "periodEnd": "Last day",
+    "holder": "Reserved by",
+    "holderPlaceholder": "Search a rower or type a name",
+    "holderNoOptions": "No rower found",
+    "holderUseName": "Use the name “{{name}}”",
+    "reason": "Reason",
+    "reasonPlaceholder": "Regatta, course, maintenance…",
+    "moreOptions": "More options",
+    "contact": "Contact",
+    "contactPlaceholder": "Phone or email",
+    "errors": {
+      "MISSING_BOAT": "Choose a boat.",
+      "MISSING_HOLDER": "Say who is reserving: a rower or a name.",
+      "MISSING_DATES": "Fill in all the dates.",
+      "MISSING_DAY": "Choose a day of the week.",
+      "INVALID_TIME": "Enter valid times.",
+      "END_BEFORE_START": "The end must be after the start.",
+      "NO_OCCURRENCE": "The chosen period contains no such weekday, so this reservation would never apply.",
+      "OVERLAPS": "This boat is already reserved by {{holder}}: {{when}}."
+    }
+  },
   "backup": {
     "dataTitle": "Data",
     "title": "Backups",
-    "description": "Rowing Beacon automatically copies all club data at start-up, then every 24 hours, and before every import, restore or deletion. The last 14 automatic backups are kept.",
+    "description": "Rowing Beacon automatically copies all club data at start-up, then every 24 hours, and before every import, restore, deletion or update. The last 14 automatic backups are kept.",
     "lastBackup": "Last backup: {{date}}",
     "noBackupYet": "No backup yet.",
     "backupNow": "Back up now",
@@ -549,11 +640,33 @@
       "manual": "Manual",
       "before-import": "Before an import",
       "before-restore": "Before a restore",
-      "before-delete": "Before a deletion"
+      "before-delete": "Before a deletion",
+      "before-update": "Before an update"
     },
     "notABackup": "This file is not a valid Rowing Beacon backup. Nothing has been changed.",
     "newerBackup": "This backup comes from a newer version of Rowing Beacon. Update the application to restore it. Nothing has been changed.",
     "restoreNotStarted": "The restore could not start (unreadable file, or the safety backup failed). Nothing has been changed."
+  },
+  "update": {
+    "sectionTitle": "Updates",
+    "sectionDescription": "Rowing Beacon looks for a new version at start-up and every 6 hours. The club data is backed up just before installing.",
+    "currentVersion": "Installed version: {{version}}",
+    "available": "Rowing Beacon {{version}} is available",
+    "see": "See the update",
+    "checkNow": "Check for updates",
+    "upToDate": "Rowing Beacon is up to date",
+    "checkFailed": "Could not check for updates. Is the computer connected to the Internet?",
+    "title": "Update to version {{version}}",
+    "changelog": "See what's new",
+    "safety": "The club data is backed up before installing, then the app restarts. Outings in progress are kept.",
+    "backingUp": "Backing up the data…",
+    "downloading": "Downloading…",
+    "downloadingPercent": "Downloading: {{percent}}%",
+    "installing": "Installing…",
+    "later": "Later",
+    "install": "Install and restart",
+    "backupFailed": "The backup failed: the update was not installed.",
+    "failed": "The update failed. Rowing Beacon stays on its current version."
   },
   "efa2": {
     "title": "efa2",
@@ -588,19 +701,25 @@
       "guests_other": "{{count}} guests created for names typed freely",
       "externalBoats_one": "{{count}} external boat, archived",
       "externalBoats_other": "{{count}} external boats, archived",
-      "incidents_one": "{{count}} unrepaired damage, kept as an incident",
-      "incidents_other": "{{count}} unrepaired damages, kept as incidents",
+      "reservations_one": "{{count}} boat reservation",
+      "reservations_other": "{{count}} boat reservations",
       "keptIntro": "Also kept, without a screen for now, and written back on efa2 export:",
       "closedOpen_one": "{{count}} outing left open in efa before today, closed by the import",
       "closedOpen_other": "{{count}} outings left open in efa before today, closed by the import",
       "ambiguousNames_one": "{{count}} freely typed name matches several records: it becomes a guest",
       "ambiguousNames_other": "{{count}} freely typed names match several records: they become guests",
       "unreadableEntries_one": "{{count}} unreadable logbook entry (no date or number): kept as is and written back on efa2 export",
-      "unreadableEntries_other": "{{count}} unreadable logbook entries (no date or number): kept as is and written back on efa2 export"
+      "unreadableEntries_other": "{{count}} unreadable logbook entries (no date or number): kept as is and written back on efa2 export",
+      "openDamages_one": "{{count}} unrepaired damage, kept as an open damage",
+      "openDamages_other": "{{count}} unrepaired damages, kept as open damages",
+      "fixedDamages_one": "{{count}} damage already repaired, kept in the history",
+      "fixedDamages_other": "{{count}} damages already repaired, kept in the history",
+      "unavailableBoats_one": "{{count}} unavailable boat, kept with its reason",
+      "unavailableBoats_other": "{{count}} unavailable boats, kept with their reasons"
     },
     "objects": {
       "efa2boatreservations": "reservations",
-      "efa2boatdamages": "repaired damages",
+      "efa2boatdamages": "damages of an unknown boat",
       "efa2messages": "messages",
       "efa2crews": "standard crews",
       "efa2waters": "waters",
@@ -626,5 +745,104 @@
     "closedOpenOutingNote": "(Outing left open in efa, closed by the import.)",
     "crewsCut_one": "{{count}} outing has more than 24 rowers or several coxes: efa2 has no seat for the others, they are not exported.",
     "crewsCut_other": "{{count}} outings have more than 24 rowers or several coxes: efa2 has no seat for the others, they are not exported."
+  },
+  "damages": {
+    "title": "Damages",
+    "report": "Report damage",
+    "fix": "Mark as repaired",
+    "reopen": "Reopen",
+    "fixed": "Repaired",
+    "reportDialogTitle": "Report damage",
+    "editDialogTitle": "Edit damage",
+    "fixDialogTitle": "Mark damage as repaired",
+    "reported": "Damage reported",
+    "updated": "Damage updated",
+    "fixedToast": "Damage marked as repaired",
+    "reopened": "Damage reopened",
+    "unavailableDescription": "Put out of service",
+    "noDescription": "No description",
+    "unavailableSeverityNote": "A boat put out of service keeps the “Out of service” severity.",
+    "reportedByName": "Reported by {{name}}",
+    "fixedOn": "Repaired on {{date}}",
+    "fixedByName": "by {{name}}",
+    "repairCostValue": "Cost: {{cost}}",
+    "openOnBoat": "Open damages",
+    "noOpenOnBoat": "No open damage on this boat.",
+    "noneOnBoat": "No damage",
+    "filter": {
+      "open": "Open",
+      "all": "All",
+      "label": "Filter damages"
+    },
+    "empty": {
+      "open": "No open damage",
+      "all": "No damage recorded yet"
+    },
+    "severity": {
+      "usable": "Usable",
+      "limited": "Caution",
+      "unusable": "Out of service"
+    },
+    "severityHelp": {
+      "usable": "The boat can be used normally.",
+      "limited": "The boat can be used with caution; the damage is shown at departure.",
+      "unusable": "The boat is out of service: it cannot set off."
+    },
+    "fields": {
+      "boat": "Boat",
+      "chooseBoat": "Choose a boat",
+      "severity": "Severity",
+      "description": "Description",
+      "reportedBy": "Reported by",
+      "reportedAt": "Date and time",
+      "fixedAt": "Repair date and time",
+      "fixedBy": "Repaired by",
+      "repairNote": "Repair note",
+      "repairCost": "Cost",
+      "notSpecified": "Not specified"
+    },
+    "errors": {
+      "boatRequired": "Choose a boat.",
+      "descriptionRequired": "Describe the damage.",
+      "dateInvalid": "Enter a valid date.",
+      "costInvalid": "Enter a valid amount, for example 12.50.",
+      "dateInFuture": "The date cannot be in the future.",
+      "fixedBeforeReported": "The date cannot be earlier than the report ({{date}})."
+    },
+    "outOfServiceLocked": "An “Out of service” damage is open: mark it as repaired in the list below to put the boat back in service.",
+    "actionOnBoat": "{{action}}: {{boat}}",
+    "unavailable": {
+      "fix": "Put back in service",
+      "fixed": "Back in service",
+      "fixedOn": "Back in service on {{date}}",
+      "fixDialogTitle": "Put the boat back in service",
+      "fixedToast": "Boat put back in service",
+      "reopened": "Boat out of service again",
+      "fixedAt": "Back-in-service date and time",
+      "fixedBy": "Put back in service by"
+    }
+  },
+  "outingEditor": {
+    "pastOuting": "Log past outing",
+    "pastTitle": "Log a past outing",
+    "editTitle": "Edit outing",
+    "editOuting": "Edit outing",
+    "savePast": "Save outing",
+    "saveEdit": "Save changes",
+    "pastSaved": "The outing was added to the history",
+    "editSaved": "The outing was updated",
+    "endRequired": "Enter the end date and time.",
+    "startRequired": "Enter the start date and time.",
+    "endInFuture": "The end of the outing cannot be in the future.",
+    "startInFuture": "The start of the outing cannot be in the future.",
+    "noRowers": "Select at least one rower.",
+    "coachedRequired": "Choose an answer.",
+    "notFound": "This outing could not be found: it may have been deleted.",
+    "fix": "Fix",
+    "saveAnyway": "Save anyway",
+    "boatOverlap": "The boat “{{boatName}}” is already on another outing at these times.",
+    "rowersOverlap_one": "{{rowerNames}} is already on another outing at these times.",
+    "rowersOverlap_other": "{{rowerNames}} are already on another outing at these times.",
+    "boatRequired": "Select a boat."
   }
 }

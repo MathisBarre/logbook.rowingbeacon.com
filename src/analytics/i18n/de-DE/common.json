@@ -1,0 +1,93 @@
+{
+  "hub": {
+    "title": "Statistiken"
+  },
+  "tabs": {
+    "dashboard": "Übersicht",
+    "reports": "Berichte",
+    "annual": "Jahresbericht",
+    "explorer": "Explorer"
+  },
+  "season": {
+    "label": "Saison",
+    "value": "Saison {{label}}",
+    "valueCurrent": "Saison {{label}} (laufend)",
+    "current": "Laufende Saison",
+    "partial": "Laufende Saison: Daten bis {{date}}."
+  },
+  "admin": {
+    "unlock": "Entsperren",
+    "lock": "Sperren",
+    "locked": "Nur für Verantwortliche",
+    "lockedHint": "Geben Sie das Admin-Passwort ein, um diesen Bericht zu sehen.",
+    "autoLock": "Sperrt automatisch nach 15 Minuten ohne Aktivität.",
+    "autoLocked": "Statistiken nach 15 Minuten ohne Aktivität gesperrt.",
+    "lockedExplorerHint": "Geben Sie das Admin-Passwort ein, um der KI Fragen zu stellen oder eigene Abfragen zu schreiben."
+  },
+  "badges": {
+    "nominative": "Mit Namen",
+    "admin": "Verantwortliche",
+    "heavy": "Rechenintensiv"
+  },
+  "actions": {
+    "showTable": "Tabelle anzeigen",
+    "showChart": "Diagramm anzeigen",
+    "open": "Öffnen",
+    "export": "Exportieren",
+    "pin": "An die Übersicht anheften",
+    "customise": "Anpassen",
+    "viewSql": "SQL-Abfrage anzeigen",
+    "retry": "Erneut versuchen",
+    "stop": "Anhalten",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "close": "Schließen",
+    "confirm": "Bestätigen",
+    "more": "Weitere Aktionen"
+  },
+  "states": {
+    "loading": "Wird berechnet…",
+    "loadingHeavy": "Berechnung über die gesamte Historie…",
+    "empty": "Keine Daten für diese Kriterien.",
+    "noData": "Keine Daten",
+    "noOutingsTitle": "Noch keine Statistiken",
+    "noOutingsBody": "Statistiken erscheinen, sobald die ersten Fahrten im Bootshaus eingetragen sind, oder nach dem Import einer efa2-Historie (Verwaltung › Daten).",
+    "importEfa2": "efa2-Historie importieren",
+    "truncated": "Nur die ersten {{count}} Zeilen werden angezeigt.",
+    "hiddenColumns": "Personenbezogene Daten ausgeblendet: {{columns}} bleiben in den Statistiken leer.",
+    "desktopOnly": "Erweiterte Statistiken funktionieren nur in der installierten App."
+  },
+  "unavailable": {
+    "module": "Benötigt das Modul „{{module}}“.",
+    "enableModule": "Modul {{module}} aktivieren",
+    "table": "Daten in dieser Version nicht verfügbar."
+  },
+  "export": {
+    "csv": "CSV (Tabelle)",
+    "xlsx": "Excel",
+    "png": "PNG-Bild",
+    "saved": "Datei unter Downloads gespeichert: {{name}}",
+    "failed": "Export fehlgeschlagen: {{message}}"
+  },
+  "values": {
+    "yes": "ja",
+    "no": "nein",
+    "null": "—"
+  },
+  "errors": {
+    "syntax": "Fehler in der Abfrage (Zeile {{line}}, Spalte {{column}}): {{message}}",
+    "syntaxNoPosition": "Fehler in der Abfrage: {{message}}",
+    "denied": "Zugriff auf „{{object}}“ verweigert: Statistiken lesen nur die Ansichten und Tabellen des Wörterbuchs.",
+    "deniedNoObject": "Vorgang abgelehnt: Statistiken sind schreibgeschützt.",
+    "not_read_only": "Nur Leseabfragen (SELECT, WITH) sind erlaubt.",
+    "multiple_statements": "Nur eine Abfrage auf einmal: Entfernen Sie alles nach dem ersten Semikolon.",
+    "timeout": "Die Abfrage wurde nach {{seconds}} s abgebrochen. Verkürzen Sie den Zeitraum oder fügen Sie Filter hinzu.",
+    "cancelled": "Abfrage angehalten.",
+    "too_large": "Ergebnis zu groß: Fügen Sie Filter oder ein GROUP BY hinzu.",
+    "missing_param": "Fehlender Parameter: {{name}}.",
+    "invalid_param": "Ungültiger Wert für {{name}}.",
+    "busy": "Die Datenbank ist belegt (Sicherung oder Import läuft). Versuchen Sie es gleich noch einmal.",
+    "desktop_only": "Erweiterte Statistiken funktionieren nur in der installierten App.",
+    "internal": "Unerwarteter Fehler der Statistik-Engine: {{message}}"
+  }
+}

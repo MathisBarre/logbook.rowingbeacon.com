@@ -10,6 +10,8 @@ import { ConfigurationSection } from "./ConfigurationSection";
 import { OutingTypeSection } from "./OutingTypeSection";
 import { CaptainSection } from "./CaptainSection";
 import { InvalidRowersLevelText } from "./InvalidRowersLevelText";
+import { BoatDamageWarnings } from "./BoatDamageWarnings";
+import { BoatReservationNotice } from "./BoatReservationNotice";
 import { getDefaultCaptainId } from "../../../_common/business/crew.rules";
 import { DEFAULT_OUTING_TYPE_CODE } from "../../../_common/business/outingType.rules";
 import StartDatetimeSection from "./StartDatetimeSection";
@@ -421,6 +423,8 @@ export const StartSessionForm = ({
               </div>
             )}
 
+            <BoatDamageWarnings boatId={selectedBoat.id} />
+
             {boatLevelRestrictionText && (
               <div className="text-xs text-steel-blue-900 bg-steel-blue-50 border border-steel-blue-200 rounded p-2 whitespace-pre-wrap">
                 <h3 className="font-medium mb-1 flex items-center gap-1">
@@ -430,6 +434,11 @@ export const StartSessionForm = ({
                 <p>{boatLevelRestrictionText}</p>
               </div>
             )}
+
+            <BoatReservationNotice
+              boatId={selectedBoat.id}
+              coxed={Boolean(selectedConfiguration?.coxed)}
+            />
           </div>
 
           {selectedBoatData && (
@@ -457,6 +466,8 @@ export const StartSessionForm = ({
                   values={field.value}
                   errorMessage={fieldState.error?.message}
                   seats={selectedConfiguration?.seats}
+                  coxed={selectedConfiguration?.coxed}
+                  cox={selectedCox}
                   allowGuests={allowGuests}
                   excluded={
                     selectedConfiguration?.coxed && selectedCox
@@ -611,16 +622,21 @@ export const StartSessionForm = ({
   );
 };
 
-const StartSessionAlert = ({
+export const StartSessionAlert = ({
   t,
   TextContent,
   onStartSessionClick,
   onFixSessionClick,
+  fixLabel,
+  confirmLabel,
 }: {
   t: (key: string) => string;
   TextContent: () => React.ReactNode;
   onStartSessionClick: (() => void) | null;
   onFixSessionClick: () => void;
+  /** Button labels, for flows other than starting an outing. */
+  fixLabel?: string;
+  confirmLabel?: string;
 }) => {
   return (
     <div className="absolute inset-0 bg-white bg-opacity-80 backdrop-blur-sm z-10">
@@ -631,7 +647,7 @@ const StartSessionAlert = ({
         </p>
         <div className="flex gap-2">
           <Button className="w-60" type="button" onClick={onFixSessionClick}>
-            {t("session.alert.fixInformation")}
+            {fixLabel ?? t("session.alert.fixInformation")}
           </Button>
           {onStartSessionClick !== null && (
             <Button
@@ -641,7 +657,7 @@ const StartSessionAlert = ({
               color="danger"
               onClick={onStartSessionClick}
             >
-              {t("session.startSession")}
+              {confirmLabel ?? t("session.startSession")}
             </Button>
           )}
         </div>

@@ -4,7 +4,7 @@ import {
   getBoatTypeLevelConfig,
 } from "../../../_common/store/boatLevelConfig.rules";
 import {
-  getExpectedCrewSize,
+  getCrewSizeMismatch,
   getOutingConfiguration,
   whatShouldItDo,
 } from "./StartSession.rules";
@@ -23,7 +23,6 @@ import {
   ErrorWithCode,
   TechnicalError,
 } from "../../../_common/utils/error";
-import { checkIfNotSameRowersAsSeatsInBoat } from "./StartSession.rules";
 import {
   SessionToStart,
   isInvalidStartSessionDate,
@@ -88,6 +87,15 @@ export class StartSessionUsecase {
         return asError({ code: "BOAT_ALREADY_ON_SESSION" });
       }
 
+      // Checked again here: the boat may have been put out of service since
+      // the dialog opened.
+      const boat = await this.startSessionRepository.getBoat(
+        sessionToStart.boatId
+      );
+      if (boat.isInMaintenance) {
+        return asError({ code: "BOAT_UNUSABLE" });
+      }
+
       const RowersNumberError = await this.getRowersNumberError(sessionToStart);
 
       if (!ignoreRowersNumberError && RowersNumberError) {
@@ -144,47 +152,16 @@ export class StartSessionUsecase {
 
   private async getRowersNumberError(payload: SessionToStart) {
     const boat = await this.startSessionRepository.getBoat(payload.boatId);
-    const configuration = getOutingConfiguration(
-      boat,
-      payload.boatConfigurationId
-    );
+    const mismatch = getCrewSizeMismatch(boat, {
+      nbOfRowers: payload.rowersId.length,
+      hasCox: !!payload.coxId,
+      boatConfigurationId: payload.boatConfigurationId,
+    });
 
-    // With a configuration the cox has a field of their own: rowers are
-    // compared to the seats, so 5 rowers in a 4+ without cox are noticed.
-    // A cox in a coxless boat takes a seat.
-    if (configuration && configuration.seats !== null) {
-      const nbOfRowers =
-        payload.rowersId.length +
-        (!configuration.coxed && payload.coxId ? 1 : 0);
-      if (nbOfRowers === configuration.seats) return;
+    if (mismatch) {
       return new ErrorWithCode({
         code: "BAD_AMOUNT_OF_ROWERS",
-        details: {
-          nbOfRowers,
-          boatRowersQuantity: configuration.seats,
-          boatName: boat.name,
-        },
-      });
-    }
-
-    const crewSize = getCrewIds(payload).length;
-    const notSameRowersAsSeatsInBoat = checkIfNotSameRowersAsSeatsInBoat(
-      crewSize,
-      boat,
-      payload.boatConfigurationId
-    );
-
-    if (notSameRowersAsSeatsInBoat) {
-      return new ErrorWithCode({
-        code: "BAD_AMOUNT_OF_ROWERS",
-        details: {
-          nbOfRowers: crewSize,
-          boatRowersQuantity: getExpectedCrewSize(
-            boat,
-            payload.boatConfigurationId
-          ),
-          boatName: boat.name,
-        },
+        details: { ...mismatch, boatName: boat.name },
       });
     }
   }
@@ -333,7 +310,10 @@ export class StartSessionUsecase {
 
     let nbOfInvalidRowers = 0;
     for (const rower of rowers) {
-      if (rower.status !== "guest" && !canRowerUseBoat(boatLevelConfig, rower)) {
+      if (
+        rower.status !== "guest" &&
+        !canRowerUseBoat(boatLevelConfig, rower)
+      ) {
         nbOfInvalidRowers++;
       }
     }

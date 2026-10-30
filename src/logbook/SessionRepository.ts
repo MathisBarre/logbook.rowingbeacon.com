@@ -2,6 +2,7 @@ import { asc, desc, isNotNull } from "drizzle-orm";
 import { getDatabase } from "../_common/database/database";
 import { deleteOuting } from "../_common/database/repositories/club.repository";
 import { enqueueWrite } from "../_common/database/writeQueue";
+import { useDamageStore } from "../_common/store/damage.store";
 import useIncidentStore from "../_common/store/incident.store";
 import { DBOutingCrew, DBOutings } from "../_common/database/schema";
 import { getDateTimeWithoutTimezone } from "../_common/utils/date.utils";
@@ -129,6 +130,7 @@ export const sessionRepository = {
     );
     if (deleted) {
       useIncidentStore.getState().detachFromSession(sessionId);
+      useDamageStore.getState().detachFromSession(sessionId);
     }
     return deleted;
   },

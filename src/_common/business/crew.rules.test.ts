@@ -5,6 +5,7 @@ import {
   getNewGuestName,
   hasDuplicateCrewMember,
   isSamePersonName,
+  personNameIncludes,
   isAdult,
   toNewGuestOptionId,
 } from "./crew.rules";
@@ -94,5 +95,13 @@ describe("crew members", () => {
         toNewGuestOptionId("PAUL "),
       ])
     ).toBe(true);
+  });
+});
+
+describe("personNameIncludes", () => {
+  it("finds a name typed with extra spaces, accents or case", () => {
+    expect(personNameIncludes("Léa Martin", "Léa  Martin")).toBe(true);
+    expect(personNameIncludes("Léa Martin", " lea  mar")).toBe(true);
+    expect(personNameIncludes("Léa Martin", "Léo")).toBe(false);
   });
 });

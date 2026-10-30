@@ -8,6 +8,7 @@ interface BoatListProps {
   label: string;
   onBoatRowClick: (boat: { id: string; name: string }) => void;
   icon: ReactNode;
+  headerAction?: ReactNode;
 }
 
 export const BoatsList = ({
@@ -15,6 +16,7 @@ export const BoatsList = ({
   label,
   onBoatRowClick,
   icon,
+  headerAction,
 }: BoatListProps) => {
   const [search, setSearch] = useState("");
   return (
@@ -23,6 +25,7 @@ export const BoatsList = ({
       setSearch={setSearch}
       label={label}
       icon={icon}
+      headerAction={headerAction}
     >
       <BoatListContent
         search={search}

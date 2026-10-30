@@ -1,0 +1,57 @@
+{
+  "season": "Saison",
+  "boat_class": "Bootstyp",
+  "boat_id": "Boot",
+  "rower_id": "Ruderer",
+  "route_id": "Strecke",
+  "outing_type": "Fahrtart",
+  "metric": "Anzeigen",
+  "measure": "Anzeigen",
+  "dimension": "Gruppieren nach",
+  "days": "Anzahl Tage",
+  "periodDays": "In den letzten (Tagen)",
+  "absentDays": "Abwesend seit mindestens (Tagen)",
+  "max_outings": "Fahrten höchstens",
+  "min_outings": "Fahrten mindestens",
+  "rower_status": "Status",
+  "gender": "Geschlecht",
+  "age_category": "Altersklasse",
+  "tolerance_min": "Verspätungstoleranz (Minuten)",
+  "start_date": "Von",
+  "end_date": "Bis",
+  "limit": "Anzahl Zeilen",
+  "all": {
+    "default": "Alle",
+    "boat_class": "Alle Typen",
+    "boat_id": "Alle Boote",
+    "rower_status": "Alle Status",
+    "age_category": "Alle Altersklassen",
+    "issue": "Alle Punkte"
+  },
+  "types": {
+    "text": "Text",
+    "integer": "Ganze Zahl",
+    "date": "Datum",
+    "boolean": "Ja / nein",
+    "season": "Saison",
+    "boat": "Boot",
+    "rower": "Ruderer",
+    "route": "Strecke",
+    "outing_type": "Fahrtart",
+    "boat_class": "Bootstyp",
+    "choice": "Auswahlliste"
+  },
+  "validation": {
+    "required": "Pflichtfeld",
+    "range": "Zwischen {{min}} und {{max}}",
+    "clampedMin": "Auf {{value}} gesetzt (Minimum)",
+    "clampedMax": "Auf {{value}} gesetzt (Maximum)",
+    "restored": "Standardwert wiederhergestellt: {{value}}"
+  },
+  "issue": "Zu prüfender Punkt",
+  "bar": "Berichtsparameter",
+  "stepper": {
+    "decrease": "Verringern: {{label}}",
+    "increase": "Erhöhen: {{label}}"
+  }
+}

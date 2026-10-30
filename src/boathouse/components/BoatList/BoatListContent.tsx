@@ -1,6 +1,7 @@
 /* eslint-disable react/display-name */
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { TriangleAlertIcon } from "lucide-react";
 import { Boat } from "../../../_common/business/boat.rules";
 import { useSearchInBoats } from "./BoatList.utils";
 import {
@@ -21,6 +22,10 @@ import { boatLevelConfigStoreCore } from "../../../_common/store/boatLevelConfig
 import { SeriousnessCategoryEnum } from "../../../_common/business/seriousness.rules";
 import { AGE_CATEGORIES } from "../../../_common/business/ageCategory.rules";
 import { AgeCategoryEnum } from "../../../_common/business/ageCategory.rules";
+import { useDamageStore } from "../../../_common/store/damage.store";
+import { useModule } from "../../../_common/store/modules.store";
+import { getOpenDamagesOfBoat } from "../../../_common/business/damage.rules";
+import { BoatReservationBadge } from "./BoatReservationBadge";
 
 interface BoatListContentProps {
   search: string;
@@ -238,16 +243,76 @@ const BoatInSessionRow = memo(
   }
 );
 
+/** The open damages of a boat, most serious first; none without the module. */
+const useOpenDamagesOfBoat = (boatId: string) => {
+  const hasDamages = useModule("damages");
+  const damages = useDamageStore((state) => state.damages);
+
+  return useMemo(
+    () => (hasDamages ? getOpenDamagesOfBoat(damages, boatId) : []),
+    [hasDamages, damages, boatId]
+  );
+};
+
 const UnusuableBoatRow = memo(({ boat }: { boat: Boat }) => {
+  const { t } = useTranslation();
+  const blockingDamage = useOpenDamagesOfBoat(boat.id).find(
+    (damage) => damage.severity === "unusable" && damage.description.trim()
+  );
+  const reason =
+    blockingDamage?.description.trim() ?? t("boathouse.outOfService");
+
   return (
     <div
       key={boat.id}
+      title={reason}
       className={cn(
-        "px-2 py-1 bg-error-50 cursor-not-allowed font-mono font-medium text-gray-700 tracking-tighter opacity-50 flex justify-between overflow-hidden"
+        "px-2 py-1 bg-error-50 cursor-not-allowed font-mono font-medium text-gray-700 tracking-tighter opacity-50 flex justify-between gap-4 overflow-hidden"
       )}
     >
-      <span className="text-error-900">{boat.name}</span>
+      <span className="text-error-900 shrink-0">{boat.name}</span>
+      <span className="text-xs font-sans font-normal text-error-900 truncate self-center">
+        {reason}
+      </span>
     </div>
+  );
+});
+
+/** Open damages that do not block the boat: a small sign, details on hover. */
+const BoatDamageIndicator = memo(({ boatId }: { boatId: string }) => {
+  const { t } = useTranslation();
+  const damages = useOpenDamagesOfBoat(boatId).filter(
+    (damage) => damage.severity !== "unusable"
+  );
+
+  if (damages.length === 0) {
+    return null;
+  }
+
+  const hasLimited = damages.some((damage) => damage.severity === "limited");
+  const details = damages
+    .map((damage) =>
+      [t(`damages.severity.${damage.severity}`), damage.description.trim()]
+        .filter(Boolean)
+        .join(": ")
+    )
+    .join("\n");
+
+  return (
+    // Named for screen readers too: a title alone is read by none of them.
+    <span
+      title={details}
+      role="img"
+      aria-label={details}
+      className="flex items-center"
+    >
+      <TriangleAlertIcon
+        className={cn(
+          "h-4 w-4",
+          hasLimited ? "text-yellow-600" : "text-gray-400"
+        )}
+      />
+    </span>
   );
 });
 
@@ -293,6 +358,7 @@ const BoatRowDefault = memo(
     onBoatRowClick: (boat: Boat) => void;
   }) => {
     const { t } = useTranslation();
+    const hasReservations = useModule("reservations");
     const boatLevelConfigStore = useStore(boatLevelConfigStoreCore);
     const boatLevelConfig = boatLevelConfigStore.getBoatLevelConfig(boat.id);
 
@@ -314,6 +380,9 @@ const BoatRowDefault = memo(
           <span className="select-none">{boat.name}</span>
 
           <div className="flex gap-1 items-center">
+            {hasReservations && <BoatReservationBadge boatId={boat.id} />}
+
+            <BoatDamageIndicator boatId={boat.id} />
             {boatTypeFromTo && (
               <p className="bg-steel-blue-50 border border-steel-blue-200 inline-block px-2 py-1 rounded-full text-xs">
                 {boatTypeFromTo}

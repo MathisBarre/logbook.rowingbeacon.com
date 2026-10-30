@@ -9,11 +9,15 @@ import { SeriousnessCategoryEnum } from "../../business/seriousness.rules";
 import { getRowerFullName } from "../../business/rower.rules";
 import { getDateTimeWithoutTimezone } from "../../utils/date.utils";
 import { SqlClient, sqlLiteral } from "../sqlClient";
+import { getUnusableBoatIds } from "../../business/damage.rules";
 import {
+  BoatDamage,
   ClubBoat,
   ClubIncident,
   ClubRoute,
   ClubRower,
+  DamageKind,
+  DamageSeverity,
   Gender,
   OngoingOuting,
   RowerStatus,
@@ -109,6 +113,22 @@ interface IncidentRow {
   occurred_at: string;
 }
 
+interface BoatDamageRow {
+  id: string;
+  boat_id: string;
+  kind: DamageKind;
+  severity: DamageSeverity;
+  description: string;
+  reported_at: string;
+  reported_by_rower_id: string | null;
+  outing_id: string | null;
+  incident_id: string | null;
+  fixed_at: string | null;
+  fixed_by_rower_id: string | null;
+  repair_note: string | null;
+  repair_cost: number | null;
+}
+
 interface BoatLevelConfigRow {
   boat_id: string;
   minimal_rower_category: AgeCategoryEnum | null;
@@ -121,6 +141,9 @@ export interface ClubData {
   routes: ClubRoute[];
   ongoingOutings: OngoingOuting[];
   incidents: ClubIncident[];
+  damages: BoatDamage[];
+  /** Boats still blocked by the former maintenance flag (ADR 0007). */
+  legacyMaintenanceBoatIds: string[];
   boatLevelConfigs: {
     boatId: string;
     minimalRowerCategory: AgeCategoryEnum | null;
@@ -151,7 +174,8 @@ const localToIso = (value: string) => {
 
 const toClubBoat = (
   row: BoatRow,
-  configurationRows: BoatConfigurationRow[]
+  configurationRows: BoatConfigurationRow[],
+  unusable: boolean
 ): ClubBoat => {
   const configurations = configurationRows
     .filter((configuration) => configuration.archived_at === null)
@@ -170,7 +194,9 @@ const toClubBoat = (
     id: row.id,
     name: row.name,
     note: row.note ?? "",
-    isInMaintenance: row.is_in_maintenance === 1,
+    // Derived from the damages (ADR 0007). The former flag still counts
+    // until upgradeToBoatDamages has moved it.
+    isInMaintenance: unusable || row.is_in_maintenance === 1,
     type: getLegacyTypeFromConfiguration(
       getDefaultConfiguration(configurations)
     ),
@@ -209,6 +235,22 @@ const toClubRower = (row: RowerRow): ClubRower => ({
   archivedAt: undefinedIfNull(row.archived_at),
   mergedIntoId: row.merged_into_id,
   anonymizedAt: row.anonymized_at,
+});
+
+const toBoatDamage = (row: BoatDamageRow): BoatDamage => ({
+  id: row.id,
+  boatId: row.boat_id,
+  kind: row.kind,
+  severity: row.severity,
+  description: row.description,
+  reportedAt: localToIso(row.reported_at),
+  reportedByRowerId: row.reported_by_rower_id,
+  outingId: row.outing_id,
+  incidentId: row.incident_id,
+  fixedAt: row.fixed_at ? localToIso(row.fixed_at) : null,
+  fixedByRowerId: row.fixed_by_rower_id,
+  repairNote: row.repair_note,
+  repairCost: row.repair_cost,
 });
 
 const toClubRoute = (row: RouteRow): ClubRoute => ({
@@ -257,6 +299,9 @@ export const loadClubData = async (db: SqlClient): Promise<ClubData> => {
   const incidentRows = await db.select<IncidentRow[]>(
     "SELECT id, outing_id, boat_id, message, occurred_at FROM incident ORDER BY occurred_at DESC"
   );
+  const damageRows = await db.select<BoatDamageRow[]>(
+    "SELECT * FROM boat_damage ORDER BY reported_at DESC"
+  );
   const levelRows = await db.select<BoatLevelConfigRow[]>(
     "SELECT * FROM boat_level_config"
   );
@@ -271,9 +316,16 @@ export const loadClubData = async (db: SqlClient): Promise<ClubData> => {
     configurationsByBoat.set(configuration.boat_id, list);
   }
 
+  const damages = damageRows.map(toBoatDamage);
+  const unusableBoatIds = getUnusableBoatIds(damages);
+
   return {
     boats: boatRows.map((row) =>
-      toClubBoat(row, configurationsByBoat.get(row.id) ?? [])
+      toClubBoat(
+        row,
+        configurationsByBoat.get(row.id) ?? [],
+        unusableBoatIds.has(row.id)
+      )
     ),
     rowers: rowerRows.map(toClubRower),
     routes: routeRows.map(toClubRoute),
@@ -311,6 +363,10 @@ export const loadClubData = async (db: SqlClient): Promise<ClubData> => {
       sessionId: row.outing_id ?? "",
       datetime: localToIso(row.occurred_at),
     })),
+    damages,
+    legacyMaintenanceBoatIds: boatRows
+      .filter((row) => row.is_in_maintenance === 1)
+      .map((row) => row.id),
     boatLevelConfigs: levelRows.map((row) => ({
       boatId: row.boat_id,
       minimalRowerCategory: row.minimal_rower_category,
@@ -343,6 +399,39 @@ const toHistoryValue = (value: unknown): string | null => {
   return JSON.stringify(value);
 };
 
+const recordChange = (
+  db: SqlClient,
+  entity: string,
+  id: string,
+  field: string,
+  before: string | null,
+  after: string | null,
+  changedAt: string
+) =>
+  db.execute(
+    "INSERT INTO change_log (entity, entity_id, field, old_value, new_value, changed_at) VALUES ($1, $2, $3, $4, $5, $6)",
+    [entity, id, field, before, after, changedAt]
+  );
+
+/** Records the tracked columns whose value differs from the stored row. */
+const recordColumnChanges = async (
+  db: SqlClient,
+  entity: string,
+  id: string,
+  previous: Record<string, unknown>,
+  values: Record<string, unknown>,
+  trackedColumns: string[],
+  changedAt: string
+) => {
+  for (const column of trackedColumns) {
+    const before = toHistoryValue(previous[column]);
+    const after = toHistoryValue(values[column]);
+    if (column in values && before !== after) {
+      await recordChange(db, entity, id, column, before, after, changedAt);
+    }
+  }
+};
+
 /**
  * Upsert a row and record changed columns in the readable history.
  */
@@ -365,7 +454,9 @@ const upsertWithHistory = async (
       .filter((column) => column !== "id")
       .map((column, index) => `${column} = $${index + 2}`);
     await db.execute(
-      `UPDATE ${entity} SET ${assignments.join(", ")}, updated_at = $${assignments.length + 2} WHERE id = $1`,
+      `UPDATE ${entity} SET ${assignments.join(", ")}, updated_at = $${
+        assignments.length + 2
+      } WHERE id = $1`,
       [
         id,
         ...columns.filter((column) => column !== "id").map((c) => values[c]),
@@ -373,16 +464,15 @@ const upsertWithHistory = async (
       ]
     );
 
-    for (const column of trackedColumns) {
-      const before = toHistoryValue(previous[column]);
-      const after = toHistoryValue(values[column]);
-      if (column in values && before !== after) {
-        await db.execute(
-          "INSERT INTO change_log (entity, entity_id, field, old_value, new_value, changed_at) VALUES ($1, $2, $3, $4, $5, $6)",
-          [entity, id, column, before, after, now]
-        );
-      }
-    }
+    await recordColumnChanges(
+      db,
+      entity,
+      id,
+      previous,
+      values,
+      trackedColumns,
+      now
+    );
     return;
   }
 
@@ -403,7 +493,6 @@ export const saveBoat = async (db: SqlClient, boat: ClubBoat) => {
       id: boat.id,
       name: boat.name,
       note: boat.note || null,
-      is_in_maintenance: boat.isInMaintenance ? 1 : 0,
       owner: boat.owner ?? null,
       manufacturer: boat.manufacturer ?? null,
       model: boat.model ?? null,
@@ -414,7 +503,7 @@ export const saveBoat = async (db: SqlClient, boat: ClubBoat) => {
       exclude_from_stats: boat.excludeFromStats ? 1 : 0,
       archived_at: boat.archivedAt ?? null,
     },
-    ["name", "note", "is_in_maintenance", "archived_at"]
+    ["name", "note", "archived_at"]
   );
 
   const existing = await db.select<{ id: string }[]>(
@@ -492,6 +581,15 @@ export const saveRower = async (db: SqlClient, rower: ClubRower) => {
  * GDPR: blank a rower's personal data, keep their outings for the club's
  * statistics, and purge the readable history that still holds old values.
  */
+/** Names typed in an efa logbook entry, as json_remove paths. */
+const EFA_CREW_NAME_FIELDS = [
+  "CoxName",
+  "AllCrewNames",
+  ...Array.from({ length: 24 }, (_, i) => `Crew${i + 1}Name`),
+]
+  .map((field) => `'$.${field}'`)
+  .join(", ");
+
 export const anonymizeRower = async (
   db: SqlClient,
   rowerId: string,
@@ -534,6 +632,11 @@ export const anonymizeRower = async (
     "DELETE FROM change_log WHERE entity = 'rower' AND entity_id = $1",
     [rowerId]
   );
+  // Their reservations stay, held by the anonymised record, without contact.
+  await db.execute(
+    "UPDATE boat_reservation SET contact = NULL WHERE rower_id = $1",
+    [rowerId]
+  );
   // The efa2 copies too: every version of the person, and the names typed
   // in the logbook entries of their outings. The export then writes the
   // anonymised record only.
@@ -541,16 +644,9 @@ export const anonymizeRower = async (
     "DELETE FROM efa_record WHERE object_type = 'efa2persons' AND json_extract(fields, '$.Id') = $1",
     [rowerId]
   );
-  const nameFields = [
-    "CoxName",
-    "AllCrewNames",
-    ...Array.from({ length: 24 }, (_, i) => `Crew${i + 1}Name`),
-  ]
-    .map((field) => `'$.${field}'`)
-    .join(", ");
   await db.execute(
     /* sql */ `
-    UPDATE efa_record SET fields = json_remove(fields, ${nameFields})
+    UPDATE efa_record SET fields = json_remove(fields, ${EFA_CREW_NAME_FIELDS})
     WHERE object_type = 'efa2logbook' AND rb_table = 'outing'
       AND rb_id IN (SELECT outing_id FROM outing_crew WHERE rower_id = $1)`,
     [rowerId]
@@ -593,8 +689,12 @@ const anonymizeEfaRecordsOf = async (
     // A lone first or last name is too common to replace inside a text.
     if (first && last) {
       for (const name of [`${first} ${last}`, `${last}, ${first}`]) {
+        // Whole names only: "Marie Martin" must not cut "Marie Martinez".
         inText.push(
-          new RegExp(escapeRegExp(name.normalize("NFC")), "giu")
+          new RegExp(
+            `(?<![\\p{L}\\p{N}])${escapeRegExp(name.normalize("NFC"))}(?![\\p{L}\\p{N}])`,
+            "giu"
+          )
         );
       }
     }
@@ -605,6 +705,11 @@ const anonymizeEfaRecordsOf = async (
   const mentions = (value: unknown) =>
     typeof value === "string" &&
     [...needles].some((needle) => foldName(value).includes(needle));
+  const scrub = (text: string) =>
+    inText.reduce(
+      (result, name) => result.replace(name, label),
+      text.normalize("NFC")
+    );
 
   const rows = await db.select<
     {
@@ -615,7 +720,9 @@ const anonymizeEfaRecordsOf = async (
     }[]
   >(
     `SELECT object_type, object_name, record_key, fields FROM efa_record
-    WHERE object_type IN (${EFA_TYPES_NAMING_PEOPLE.map(sqlLiteral).join(", ")})`
+    WHERE object_type IN (${EFA_TYPES_NAMING_PEOPLE.map(sqlLiteral).join(
+      ", "
+    )})`
   );
   for (const row of rows) {
     const fields = JSON.parse(row.fields) as Record<string, string>;
@@ -628,10 +735,7 @@ const anonymizeEfaRecordsOf = async (
         }
         // Message texts (efa's audit reports…) mention people by name.
         if (mentions(fields.Text)) {
-          fields.Text = inText.reduce(
-            (text, name) => text.replace(name, label),
-            fields.Text.normalize("NFC")
-          );
+          fields.Text = scrub(fields.Text);
         }
         break;
       case "efa2boatdamages":
@@ -641,11 +745,26 @@ const anonymizeEfaRecordsOf = async (
         ) {
           delete fields.ReportedByPersonName;
         }
+        if (
+          fields.FixedByPersonId === rowerId ||
+          isName(fields.FixedByPersonName)
+        ) {
+          delete fields.FixedByPersonName;
+        }
+        for (const field of ["Description", "Notes"]) {
+          if (mentions(fields[field])) fields[field] = scrub(fields[field]);
+        }
         break;
       case "efa2boatreservations":
         if (fields.PersonId === rowerId || isName(fields.PersonName)) {
           delete fields.PersonName;
           delete fields.Contact;
+        }
+        if (mentions(fields.Reason)) {
+          fields.Reason = inText.reduce(
+            (text, name) => text.replace(name, label),
+            fields.Reason.normalize("NFC")
+          );
         }
         break;
       case "efa2sessiongroups":
@@ -660,6 +779,73 @@ const anonymizeEfaRecordsOf = async (
     await db.execute(
       "UPDATE efa_record SET fields = $1 WHERE object_type = $2 AND object_name = $3 AND record_key = $4",
       [after, row.object_type, row.object_name, row.record_key]
+    );
+  }
+
+  // Damages typed in Rowing Beacon, and "unavailable" entries that carry an
+  // efa2 status comment, name people in their texts too.
+  const damageRows = await db.select<
+    { id: string; description: string; repair_note: string | null }[]
+  >("SELECT id, description, repair_note FROM boat_damage");
+  for (const damage of damageRows) {
+    const description = mentions(damage.description)
+      ? scrub(damage.description)
+      : damage.description;
+    const repairNote =
+      damage.repair_note !== null && mentions(damage.repair_note)
+        ? scrub(damage.repair_note)
+        : damage.repair_note;
+    // Nothing replaced (a lone name, a longer name): keep the history.
+    if (
+      description === damage.description &&
+      repairNote === damage.repair_note
+    ) {
+      continue;
+    }
+    await db.execute(
+      "UPDATE boat_damage SET description = $2, repair_note = $3 WHERE id = $1",
+      [damage.id, description, repairNote]
+    );
+    // The history keeps the former descriptions.
+    await db.execute(
+      "DELETE FROM change_log WHERE entity = 'boat_damage' AND entity_id = $1",
+      [damage.id]
+    );
+  }
+
+  // Reservations held by the person under a free name (an efa person RB did
+  // not know): the export writes the table's holder, so blank it here too.
+  // Their name is also taken out of every reason, their own reservations
+  // included ("Training Jean Dupont").
+  const reservations = await db.select<
+    {
+      id: string;
+      rower_id: string | null;
+      person_name: string | null;
+      reason: string | null;
+    }[]
+  >("SELECT id, rower_id, person_name, reason FROM boat_reservation");
+  for (const reservation of reservations) {
+    const named = !reservation.rower_id && isName(reservation.person_name);
+    const reason =
+      reservation.reason && mentions(reservation.reason)
+        ? inText.reduce(
+            (text, name) => text.replace(name, label),
+            reservation.reason.normalize("NFC")
+          )
+        : reservation.reason;
+    if (!named && reason === reservation.reason) continue;
+    await db.execute(
+      /* sql */ `
+      UPDATE boat_reservation SET person_name = $2, reason = $3,
+        contact = CASE WHEN $4 THEN NULL ELSE contact END
+      WHERE id = $1`,
+      [
+        reservation.id,
+        named ? label : reservation.person_name,
+        reason,
+        named ? 1 : 0,
+      ]
     );
   }
 };
@@ -736,6 +922,53 @@ const toLocal = (value: string | null | undefined) =>
 const coachedToInteger = (value: boolean | null | undefined) =>
   value === true ? 1 : value === false ? 0 : null;
 
+/** A rower appears once per outing (primary key); the first role wins. */
+const withoutDuplicateMembers = (crew: OutingToSave["crew"]) =>
+  crew.filter(
+    (member, index) =>
+      crew.findIndex((other) => other.rowerId === member.rowerId) === index
+  );
+
+const insertCrew = async (
+  db: SqlClient,
+  outingId: string,
+  crew: OutingToSave["crew"]
+) => {
+  for (const [position, member] of crew.entries()) {
+    await db.execute(
+      "INSERT INTO outing_crew (outing_id, rower_id, role, position) VALUES ($1, $2, $3, $4)",
+      [outingId, member.rowerId, member.role, position]
+    );
+  }
+};
+
+const upsertCrew = async (
+  db: SqlClient,
+  outingId: string,
+  crew: OutingToSave["crew"],
+  positions: number[]
+) => {
+  for (const [index, member] of crew.entries()) {
+    await db.execute(
+      `INSERT INTO outing_crew (outing_id, rower_id, role, position) VALUES ($1, $2, $3, $4)
+      ON CONFLICT (outing_id, rower_id) DO UPDATE SET role = excluded.role, position = excluded.position`,
+      [outingId, member.rowerId, member.role, positions[index]]
+    );
+  }
+};
+
+const deleteCrewExcept = (
+  db: SqlClient,
+  outingId: string,
+  crew: OutingToSave["crew"]
+) =>
+  db.execute(
+    `DELETE FROM outing_crew WHERE outing_id = $1 AND rower_id NOT IN (${crew
+      .map((_, index) => `$${index + 2}`)
+      .join(", ")})`,
+    [outingId, ...crew.map((member) => member.rowerId)]
+  );
+
 export const insertOuting = async (db: SqlClient, outing: OutingToSave) => {
   const now = nowIso();
   await db.execute(
@@ -764,18 +997,9 @@ export const insertOuting = async (db: SqlClient, outing: OutingToSave) => {
 
   // No transaction across calls with the Tauri SQL plugin: an outing whose
   // crew could not be saved is removed so that it is never half written.
-  const crew = outing.crew.filter(
-    (member, index) =>
-      outing.crew.findIndex((other) => other.rowerId === member.rowerId) ===
-      index
-  );
+  const crew = withoutDuplicateMembers(outing.crew);
   try {
-    for (const [position, member] of crew.entries()) {
-      await db.execute(
-        "INSERT INTO outing_crew (outing_id, rower_id, role, position) VALUES ($1, $2, $3, $4)",
-        [outing.id, member.rowerId, member.role, position]
-      );
-    }
+    await insertCrew(db, outing.id, crew);
   } catch (error) {
     await db.execute("DELETE FROM outing_crew WHERE outing_id = $1", [
       outing.id,
@@ -825,6 +1049,419 @@ export const finishOuting = async (
   return true;
 };
 
+interface StoredOutingRow {
+  id: string;
+  boat_id: string;
+  boat_configuration_id: string | null;
+  route_id: string | null;
+  outing_type_code: string | null;
+  captain_rower_id: string | null;
+  start_date_time: string;
+  estimated_end_date_time: string | null;
+  end_date_time: string | null;
+  distance_m: number | null;
+  comment: string | null;
+  has_been_coached: number | null;
+  updated_at: string;
+}
+
+interface StoredCrewRow {
+  rower_id: string;
+  role: "rower" | "cox";
+  position: number;
+}
+
+/** An outing as stored: local "YYYY-MM-DDTHH:mm" dates, crew in seat order. */
+export interface StoredOuting {
+  id: string;
+  boatId: string;
+  boatConfigurationId: string | null;
+  routeId: string | null;
+  outingTypeCode: string | null;
+  captainRowerId: string | null;
+  startDateTime: string;
+  estimatedEndDateTime: string | null;
+  endDateTime: string | null;
+  distanceM: number | null;
+  comment: string;
+  hasBeenCoached: boolean | null;
+  crew: { rowerId: string; role: "rower" | "cox" }[];
+}
+
+const selectCrewRows = (db: SqlClient, outingId: string) =>
+  db.select<StoredCrewRow[]>(
+    "SELECT rower_id, role, position FROM outing_crew WHERE outing_id = $1 ORDER BY position",
+    [outingId]
+  );
+
+export const loadOuting = async (
+  db: SqlClient,
+  outingId: string
+): Promise<StoredOuting | null> => {
+  const [row] = await db.select<StoredOutingRow[]>(
+    "SELECT * FROM outing WHERE id = $1",
+    [outingId]
+  );
+  if (!row) return null;
+
+  const crewRows = await selectCrewRows(db, outingId);
+  return {
+    id: row.id,
+    boatId: row.boat_id,
+    boatConfigurationId: row.boat_configuration_id,
+    routeId: row.route_id,
+    outingTypeCode: row.outing_type_code,
+    captainRowerId: row.captain_rower_id,
+    startDateTime: row.start_date_time,
+    estimatedEndDateTime: row.estimated_end_date_time,
+    endDateTime: row.end_date_time,
+    distanceM: row.distance_m,
+    comment: row.comment ?? "",
+    hasBeenCoached:
+      row.has_been_coached === null ? null : row.has_been_coached === 1,
+    crew: crewRows.map((member) => ({
+      rowerId: member.rower_id,
+      role: member.role,
+    })),
+  };
+};
+
+/**
+ * Same rowers in the same seats and the same cox. Where the cox sits in the
+ * list does not matter: the editor always puts the cox last, imports may not.
+ */
+const isSameCrew = (a: OutingToSave["crew"], b: OutingToSave["crew"]) => {
+  const describe = (crew: OutingToSave["crew"]) =>
+    JSON.stringify([
+      crew.filter((member) => member.role === "rower").map((m) => m.rowerId),
+      crew
+        .filter((member) => member.role === "cox")
+        .map((m) => m.rowerId)
+        .sort(),
+    ]);
+  return describe(a) === describe(b);
+};
+
+/**
+ * Positions of a corrected crew. An imported crew sits on efa seats (1 to
+ * 24, gaps allowed, cox 0): rowers who stay keep their seat, a new rower
+ * takes the first seat left free after the rower before them. When that
+ * cannot follow the editor's order (rowers swapped, no seat left), the
+ * rowers are seated 1, 2, 3… in that order. Any other crew is numbered in
+ * the editor's order.
+ */
+export const getCorrectedCrewPositions = (
+  previousCrew: { rowerId: string; role: "rower" | "cox"; position: number }[],
+  crew: OutingToSave["crew"]
+): number[] => {
+  const previousSeats = new Map(
+    previousCrew
+      .filter((member) => member.role === "rower")
+      .map((member) => [member.rowerId, member.position])
+  );
+  const seats = [...previousSeats.values()];
+  const isOnEfaSeats =
+    seats.length > 0 &&
+    seats.every((seat) => seat >= 1 && seat <= 24) &&
+    new Set(seats).size === seats.length;
+  if (!isOnEfaSeats) {
+    return crew.map((_, index) => index);
+  }
+
+  const taken = new Set(
+    crew
+      .filter((member) => member.role === "rower")
+      .map((member) => previousSeats.get(member.rowerId))
+      .filter((seat): seat is number => seat !== undefined)
+  );
+  let lastSeat = 0;
+  const keptSeats: number[] = [];
+  for (const member of crew) {
+    if (member.role === "cox") {
+      keptSeats.push(0);
+      continue;
+    }
+    let seat = previousSeats.get(member.rowerId);
+    if (seat === undefined) {
+      seat = lastSeat + 1;
+      while (taken.has(seat)) seat++;
+      taken.add(seat);
+    }
+    if (seat <= lastSeat || seat > 24) {
+      let next = 1;
+      return crew.map((other) => (other.role === "cox" ? 0 : next++));
+    }
+    lastSeat = seat;
+    keptSeats.push(seat);
+  }
+  return keptSeats;
+};
+
+/**
+ * Correct an outing, ongoing or finished. Resolves with false when the
+ * outing is not in the database. Every column is written; distanceM
+ * undefined keeps the stored distance. The crew is rewritten only when it
+ * changed, and rowers who stay keep their efa seat.
+ * `onlyIfOngoing`: also false when the outing was finished meanwhile, so
+ * that a correction never reopens it. `onlyIfFinished`: also false when the
+ * outing is still ongoing, so that a correction never ends it.
+ */
+export const updateOuting = async (
+  db: SqlClient,
+  outing: OutingToSave,
+  {
+    onlyIfOngoing = false,
+    onlyIfFinished = false,
+  }: { onlyIfOngoing?: boolean; onlyIfFinished?: boolean } = {}
+): Promise<boolean> => {
+  const [previous] = await db.select<StoredOutingRow[]>(
+    "SELECT * FROM outing WHERE id = $1",
+    [outing.id]
+  );
+  if (
+    !previous ||
+    (onlyIfOngoing && previous.end_date_time !== null) ||
+    (onlyIfFinished && previous.end_date_time === null)
+  ) {
+    return false;
+  }
+  const previousValues = previous as unknown as Record<string, unknown>;
+
+  const values: Record<string, unknown> = {
+    boat_id: outing.boatId,
+    boat_configuration_id: outing.boatConfigurationId ?? null,
+    route_id: outing.routeId ?? null,
+    outing_type_code: outing.outingTypeCode ?? null,
+    captain_rower_id: outing.captainRowerId ?? null,
+    start_date_time: toLocal(outing.startDateTime),
+    estimated_end_date_time: toLocal(outing.estimatedEndDateTime),
+    end_date_time: toLocal(outing.endDateTime),
+    comment: outing.comment || null,
+    has_been_coached: coachedToInteger(outing.hasBeenCoached),
+    ...(outing.distanceM !== undefined ? { distance_m: outing.distanceM } : {}),
+  };
+  const columns = Object.keys(values);
+  const assignments = columns.map(
+    (column, index) => `${column} = $${index + 2}`
+  );
+  const updateSql = `UPDATE outing SET ${assignments.join(
+    ", "
+  )}, updated_at = $${columns.length + 2} WHERE id = $1`;
+
+  const previousCrew = await selectCrewRows(db, outing.id);
+  // The editor has one cox: an imported crew with several keeps the others
+  // while the one shown stays.
+  const previousCoxIds = previousCrew
+    .filter((member) => member.role === "cox")
+    .map((member) => member.rower_id);
+  const coxIds = outing.crew
+    .filter((member) => member.role === "cox")
+    .map((member) => member.rowerId);
+  const crew = withoutDuplicateMembers(
+    previousCoxIds.length > 1 &&
+      coxIds.length === 1 &&
+      previousCoxIds.includes(coxIds[0])
+      ? [
+          ...outing.crew,
+          ...previousCoxIds.map((rowerId) => ({
+            rowerId,
+            role: "cox" as const,
+          })),
+        ]
+      : outing.crew
+  );
+  const crewChanged = !isSameCrew(
+    previousCrew.map((member) => ({
+      rowerId: member.rower_id,
+      role: member.role,
+    })),
+    crew
+  );
+  const now = nowIso();
+  const [{ lastChangeId }] = await db.select<{ lastChangeId: number }[]>(
+    "SELECT COALESCE(MAX(id), 0) AS lastChangeId FROM change_log"
+  );
+  let crewRewritten = false;
+
+  // No transaction across calls with the Tauri SQL plugin: on a failure the
+  // outing is put back as it was, so that it is never half corrected.
+  try {
+    await db.execute(updateSql, [
+      outing.id,
+      ...columns.map((column) => values[column]),
+      now,
+    ]);
+
+    if (crewChanged) {
+      crewRewritten = true;
+      // Upsert first, then drop who left: the outing never has no crew.
+      const positions = getCorrectedCrewPositions(
+        previousCrew.map((member) => ({
+          rowerId: member.rower_id,
+          role: member.role,
+          position: member.position,
+        })),
+        crew
+      );
+      await upsertCrew(db, outing.id, crew, positions);
+      await deleteCrewExcept(db, outing.id, crew);
+      await recordChange(
+        db,
+        "outing",
+        outing.id,
+        "crew",
+        JSON.stringify(
+          previousCrew.map((m) => ({ rowerId: m.rower_id, role: m.role }))
+        ),
+        JSON.stringify(crew),
+        now
+      );
+    }
+
+    await recordColumnChanges(
+      db,
+      "outing",
+      outing.id,
+      previousValues,
+      values,
+      columns,
+      now
+    );
+
+    if (crewChanged) {
+      // The names efa typed in the entry are rebuilt from the crew on export;
+      // the old ones must not stay, nor name someone who left (GDPR). Last,
+      // as the restore below does not bring them back.
+      await db.execute(
+        `UPDATE efa_record SET fields = json_remove(fields, ${EFA_CREW_NAME_FIELDS})
+        WHERE object_type = 'efa2logbook' AND rb_table = 'outing' AND rb_id = $1`,
+        [outing.id]
+      );
+    }
+  } catch (error) {
+    try {
+      await db.execute(updateSql, [
+        outing.id,
+        ...columns.map((column) => previousValues[column]),
+        previous.updated_at,
+      ]);
+      if (crewRewritten) {
+        const before = previousCrew.map((member) => ({
+          rowerId: member.rower_id,
+          role: member.role,
+        }));
+        await upsertCrew(
+          db,
+          outing.id,
+          before,
+          previousCrew.map((member) => member.position)
+        );
+        await deleteCrewExcept(db, outing.id, before);
+      }
+      await db.execute(
+        "DELETE FROM change_log WHERE entity = 'outing' AND entity_id = $1 AND id > $2",
+        [outing.id, lastChangeId]
+      );
+    } catch (restoreError) {
+      console.error("❌ Failed to restore the outing", restoreError);
+    }
+    throw error;
+  }
+  return true;
+};
+
+interface OverlapRow {
+  id: string;
+  boat_id: string;
+  start_date_time: string;
+  end_date_time: string | null;
+}
+
+export interface OutingOverlap {
+  outingId: string;
+  boatId: string;
+  startDateTime: string;
+  /** Null when the other outing is still ongoing. */
+  endDateTime: string | null;
+  /** Same boat as the outing checked. */
+  boatOverlaps: boolean;
+  /** Rowers of the outing checked who are also on the other outing. */
+  rowerIds: string[];
+}
+
+/**
+ * Other outings on the water at the same time with the same boat or some
+ * of the same people. An outing without an end is open-ended, and an outing
+ * ending when the next one starts does not overlap it.
+ */
+export const findOverlappingOutings = async (
+  db: SqlClient,
+  query: {
+    excludeOutingId?: string | undefined;
+    boatId: string;
+    rowerIds: string[];
+    startDateTime: string;
+    /** Null for an ongoing outing. */
+    endDateTime: string | null;
+  }
+): Promise<OutingOverlap[]> => {
+  // Parameters 1 and 2 are the interval, then the optional exclusion.
+  const params: unknown[] = [
+    toLocal(query.startDateTime),
+    toLocal(query.endDateTime),
+  ];
+  const conditions = [
+    "(o.end_date_time IS NULL OR o.end_date_time > $1)",
+    "($2 IS NULL OR o.start_date_time < $2)",
+  ];
+  if (query.excludeOutingId !== undefined) {
+    params.push(query.excludeOutingId);
+    conditions.push(`o.id <> $${params.length}`);
+  }
+  const where = conditions.join(" AND ");
+  const columns = "o.id, o.boat_id, o.start_date_time, o.end_date_time";
+
+  const sameBoat = await db.select<OverlapRow[]>(
+    `SELECT ${columns} FROM outing o WHERE ${where} AND o.boat_id = $${
+      params.length + 1
+    }`,
+    [...params, query.boatId]
+  );
+
+  const rowerIds = [...new Set(query.rowerIds)];
+  const sameRowers =
+    rowerIds.length === 0
+      ? []
+      : await db.select<(OverlapRow & { rower_id: string })[]>(
+          `SELECT ${columns}, c.rower_id FROM outing o JOIN outing_crew c ON c.outing_id = o.id WHERE ${where} AND c.rower_id IN (${rowerIds
+            .map((_, index) => `$${params.length + 1 + index}`)
+            .join(", ")})`,
+          [...params, ...rowerIds]
+        );
+
+  const overlaps = new Map<string, OutingOverlap>();
+  const getOverlap = (row: OverlapRow) => {
+    const known = overlaps.get(row.id);
+    if (known) return known;
+    const overlap: OutingOverlap = {
+      outingId: row.id,
+      boatId: row.boat_id,
+      startDateTime: row.start_date_time,
+      endDateTime: row.end_date_time,
+      boatOverlaps: false,
+      rowerIds: [],
+    };
+    overlaps.set(row.id, overlap);
+    return overlap;
+  };
+  for (const row of sameBoat) getOverlap(row).boatOverlaps = true;
+  for (const row of sameRowers) getOverlap(row).rowerIds.push(row.rower_id);
+
+  return [...overlaps.values()].sort((a, b) =>
+    a.startDateTime.localeCompare(b.startDateTime)
+  );
+};
+
 /**
  * One statement, so a failure cannot leave an outing without its crew: the
  * crew goes by ON DELETE CASCADE and incidents are unlinked by ON DELETE
@@ -848,22 +1485,50 @@ export const insertIncident = async (db: SqlClient, incident: ClubIncident) => {
   );
 };
 
+/** Inserts or updates a damage; severity and repair are kept in the history. */
+export const saveBoatDamage = async (db: SqlClient, damage: BoatDamage) => {
+  await upsertWithHistory(
+    db,
+    "boat_damage",
+    {
+      id: damage.id,
+      boat_id: damage.boatId,
+      kind: damage.kind,
+      severity: damage.severity,
+      description: damage.description,
+      reported_at: toLocal(damage.reportedAt),
+      reported_by_rower_id: damage.reportedByRowerId,
+      outing_id: damage.outingId,
+      incident_id: damage.incidentId,
+      fixed_at: toLocal(damage.fixedAt),
+      fixed_by_rower_id: damage.fixedByRowerId,
+      repair_note: damage.repairNote,
+      repair_cost: damage.repairCost,
+    },
+    ["severity", "description", "fixed_at"]
+  );
+};
+
 /**
  * Remove all club data, the v1 tables included. The v1 migration marker is
  * kept so that a reset does not re-import old localStorage data.
  */
 export const deleteAllClubData = async (db: SqlClient) => {
   for (const table of [
+    "analytics_dashboard_item",
+    "analytics_query",
     "efa_record",
     "session_rowers",
     "session",
     "change_log",
     "boat_level_config",
+    "boat_damage",
     "incident",
     "outing_crew",
     "outing",
     "rower_group_member",
     "rower_group",
+    "boat_reservation",
     "boat_configuration",
     "boat",
     "rower",
