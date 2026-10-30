@@ -8,7 +8,10 @@ import type {
   SavedQuery,
 } from "../types";
 import { paramDefsFromSql } from "../params/resolveParams";
-import { onAnalyticsLocalMemoryCleared } from "../store/localMemory";
+import {
+  analyticsStorageKey,
+  onAnalyticsLocalMemoryCleared,
+} from "../store/localMemory";
 
 /**
  * The parameters of `sql`, the ones typed here required (review 22): an
@@ -147,7 +150,7 @@ interface ExplorerState {
 
 const readJson = (key: string): unknown => {
   try {
-    const text = window.localStorage.getItem(key);
+    const text = window.localStorage.getItem(analyticsStorageKey(key));
     return text === null ? null : JSON.parse(text);
   } catch {
     return null;
@@ -156,7 +159,10 @@ const readJson = (key: string): unknown => {
 
 const writeJson = (key: string, value: unknown) => {
   try {
-    window.localStorage.setItem(key, JSON.stringify(value));
+    window.localStorage.setItem(
+      analyticsStorageKey(key),
+      JSON.stringify(value)
+    );
   } catch {
     // Storage blocked or full: only a convenience is lost.
   }
@@ -484,7 +490,7 @@ const resetExplorerStore = () => {
     queriesVersion: useExplorerStore.getState().queriesVersion + 1,
   });
   try {
-    window.localStorage.removeItem(TAB_STORAGE_KEY);
+    window.localStorage.removeItem(analyticsStorageKey(TAB_STORAGE_KEY));
   } catch {
     // Storage blocked: nothing was remembered.
   }

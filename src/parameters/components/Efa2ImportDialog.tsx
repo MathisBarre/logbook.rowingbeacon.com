@@ -11,6 +11,7 @@ import {
 } from "../../_common/efa2/efa2.tauri";
 import { Efa2BackupFailedError } from "../../_common/efa2/runEfa2Import";
 import { windowAlert } from "../../_common/utils/window.utils";
+import { isDemoMode } from "../../demo/demoMode";
 
 /**
  * Shows what an efa2 project holds before it replaces the club data
@@ -169,7 +170,9 @@ export const Efa2ImportDialog = ({
               </div>
             )}
             <p className="text-error-800 font-medium">
-              {t("efa2.replaceWarning")}
+              {t(
+                isDemoMode() ? "demo.efa2ReplaceWarning" : "efa2.replaceWarning"
+              )}
             </p>
             <div className="flex gap-2 justify-end">
               <Button

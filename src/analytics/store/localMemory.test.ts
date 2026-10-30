@@ -1,7 +1,13 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { useExplorerStore } from "../explorer/explorer.store";
 import { useAnalyticsHubStore } from "./analyticsHub.store";
-import { clearAnalyticsLocalMemory } from "./localMemory";
+import { beginDemo } from "../../demo/demoMode";
+import { readAiHistory, rememberAiAnswer } from "../ai/aiHistory";
+import {
+  analyticsStorageKey,
+  clearAnalyticsLocalMemory,
+  clearDemoAnalyticsLocalMemory,
+} from "./localMemory";
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -58,5 +64,47 @@ describe("clearAnalyticsLocalMemory (review C, 5)", () => {
       },
     });
     expect(() => clearAnalyticsLocalMemory()).not.toThrow();
+  });
+});
+
+describe("the demo's own analytics memory (ADR 0009)", () => {
+  const entry = (question: string) => ({
+    question,
+    draft: {
+      title: question,
+      sql: "SELECT 1",
+      params: [],
+      chart: { type: "table" as const },
+      explanation: "",
+      assumptions: [],
+    },
+    at: "2026-10-29T10:00:00Z",
+    provider: null,
+    model: null,
+  });
+
+  it("never shows the real club's keys in the demo, nor the demo's in the club", () => {
+    const { map, storage } = fakeStorage({});
+    vi.stubGlobal("window", { localStorage: storage });
+    expect(analyticsStorageKey("rb.analytics.tab")).toBe("rb.analytics.tab");
+    rememberAiAnswer(entry("Sorties d'Anouk Martin ?"));
+
+    expect(beginDemo(true)).toBe(true);
+    expect(analyticsStorageKey("rb.analytics.tab")).toBe(
+      "rb.analytics.demo.tab"
+    );
+    expect(readAiHistory()).toEqual([]);
+    rememberAiAnswer(entry("Sorties du club fictif ?"));
+    expect(readAiHistory().map((e) => e.question)).toEqual([
+      "Sorties du club fictif ?",
+    ]);
+
+    // Demo reset or left: only the demo's memory goes.
+    clearDemoAnalyticsLocalMemory();
+    expect(readAiHistory()).toEqual([]);
+    expect(
+      [...map.keys()].filter((k) => k.startsWith("rb.analytics."))
+    ).toEqual(["rb.analytics.ai.history"]);
+    expect(map.get("rb.analytics.ai.history")).toContain("Anouk Martin");
   });
 });

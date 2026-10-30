@@ -3,6 +3,8 @@ import { applyMigrations, migrations } from "./migrations";
 import { createTestSqlClient } from "./testing/nodeSqlClient";
 
 describe("applyMigrations", () => {
+  // demo.db has no Rust-side migration (ADR 0009): this alone must build the
+  // whole schema of a fresh file.
   it("creates the v2 tables and can run twice", async () => {
     const db = createTestSqlClient();
 
@@ -28,6 +30,8 @@ describe("applyMigrations", () => {
       "efa_record",
       "session",
       "session_rowers",
+      "boat_damage",
+      "boat_reservation",
       "analytics_query",
       "analytics_dashboard_item",
     ]) {

@@ -37,6 +37,8 @@ import { useDamageStore } from "../store/damage.store";
 import { useReservationStore } from "../store/reservation.store";
 import { loadReservations } from "./repositories/reservation.repository";
 import { useOnboardingStore } from "../../onboarding/onboarding.store";
+import { isDemoMode } from "../../demo/demoMode";
+import { seedDemoIfPending } from "../../demo/demoSession";
 import {
   boatLevelConfigStoreCore,
   SETTING_BOAT_TYPE_LEVEL_CONFIGS,
@@ -85,10 +87,13 @@ const pruneV1Backups = () =>
   removeV1Backups((fileNames) => getExpiredV1Backups(fileNames, new Date()));
 
 /** The v1 backups hold every name of the club: "delete data" removes them. */
-export const deleteAllV1Backups = () =>
-  removeV1Backups((fileNames) =>
+export const deleteAllV1Backups = async () => {
+  // The v1 backups belong to the real club: the demo never touches them.
+  if (isDemoMode()) return true;
+  return removeV1Backups((fileNames) =>
     fileNames.filter((fileName) => getV1BackupDate(fileName) !== null)
   );
+};
 
 /**
  * Replace every in-memory store with what SQLite holds. Resolves with true
@@ -111,19 +116,20 @@ export const loadIntoStores = async (db: SqlClient) => {
   useModulesStore.getState().hydrate(data.settings);
   useBoathouseSettingsStore.getState().hydrate(data.settings);
   useAnalyticsSettingsStore.getState().hydrate(data.settings);
-  const onboardingToSave = useOnboardingStore
-    .getState()
-    .hydrate(
-      data.settings,
-      Boolean(data.settings[SETTING_PASSWORD_HASH]) || data.boats.length > 0,
-      (key) => window.localStorage.getItem(key)
-    );
+  const onboardingToSave = useOnboardingStore.getState().hydrate(
+    data.settings,
+    Boolean(data.settings[SETTING_PASSWORD_HASH]) || data.boats.length > 0,
+    // The demo must not read (nor, later, remove) the real club's v1 key.
+    isDemoMode() ? undefined : (key) => window.localStorage.getItem(key)
+  );
   useSessionsStore.getState().hydrate(data.ongoingOutings);
   useIncidentStore.getState().hydrate(data.incidents);
   useDamageStore
     .getState()
     .hydrate(data.damages, data.legacyMaintenanceBoatIds);
-  useReservationStore.getState().hydrate(await loadReservations(db), data.settings);
+  useReservationStore
+    .getState()
+    .hydrate(await loadReservations(db), data.settings);
   boatLevelConfigStoreCore.getState().hydrate({
     boatTypeLevelConfigs: {
       ...DEFAULT_BOAT_TYPE_LEVEL_CONFIGS,
@@ -139,21 +145,29 @@ export const loadIntoStores = async (db: SqlClient) => {
 
 /**
  * Open the database, migrate v1 data if needed, then load every club record
- * into the in-memory stores (ADR 0003).
+ * into the in-memory stores (ADR 0003). In demo mode (ADR 0009) the database
+ * is demo.db: it is seeded when the demo has just started, and nothing that
+ * belongs to the real club runs (v1 migration, v1 backups pruning).
  */
 export const bootstrapClubData = async (): Promise<V1MigrationResult> => {
   const { db } = await getDatabase();
+  const demo = isDemoMode();
 
-  const migration = await runV1Migration(db, {
-    readLocalStorage: (key) => window.localStorage.getItem(key),
-    removeLocalStorage: (key) => window.localStorage.removeItem(key),
-    writeBackup: writeV1Backup,
-    unknownLabels: {
-      boat: i18n.t("migration.unknownBoat"),
-      rower: i18n.t("migration.unknownRower"),
-      route: i18n.t("migration.unknownRoute"),
-    },
-  });
+  if (demo) await seedDemoIfPending(db);
+
+  // runV1Migration reads and REMOVES the v1 localStorage keys: main.db only.
+  const migration: V1MigrationResult = demo
+    ? { status: "nothing-to-migrate" }
+    : await runV1Migration(db, {
+        readLocalStorage: (key) => window.localStorage.getItem(key),
+        removeLocalStorage: (key) => window.localStorage.removeItem(key),
+        writeBackup: writeV1Backup,
+        unknownLabels: {
+          boat: i18n.t("migration.unknownBoat"),
+          rower: i18n.t("migration.unknownRower"),
+          route: i18n.t("migration.unknownRoute"),
+        },
+      });
 
   try {
     await upgradeToBoatDamages(db);
@@ -168,10 +182,12 @@ export const bootstrapClubData = async (): Promise<V1MigrationResult> => {
   // The performance profile "auto" needs the machine: ask now, so the
   // first analytics queries start with their final timeouts.
   void ensureMachineInfo();
-  void pruneV1Backups();
-  // A boathouse computer may stay on for months: purge daily too.
-  if (!pruneTimer) {
-    pruneTimer = setInterval(() => void pruneV1Backups(), DAY_IN_MS);
+  if (!demo) {
+    void pruneV1Backups();
+    // A boathouse computer may stay on for months: purge daily too.
+    if (!pruneTimer) {
+      pruneTimer = setInterval(() => void pruneV1Backups(), DAY_IN_MS);
+    }
   }
 
   setReloadAfterFailedWrite(loadIntoStores);

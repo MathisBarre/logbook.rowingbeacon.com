@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { enqueueWrite } from "../_common/database/writeQueue";
 import { saveSetting } from "../_common/database/repositories/club.repository";
+import { isDemoMode } from "../demo/demoMode";
 
 export const SETTING_ONBOARDING_DONE = "onboarding.done";
 
@@ -12,6 +13,8 @@ const LEGACY_ONBOARDING_KEY = "onboarding-storage";
  * win again whenever the SQLite flag is missing (after "delete data").
  */
 const forgetLegacyFlag = () => {
+  // The legacy key belongs to the real club: the demo leaves it alone.
+  if (isDemoMode()) return;
   try {
     window.localStorage.removeItem(LEGACY_ONBOARDING_KEY);
   } catch {

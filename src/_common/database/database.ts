@@ -4,14 +4,18 @@ import { applyMigrations } from "./migrations";
 import { ensureWalMode } from "./journalMode";
 import { getDrizzle } from "./drizzle";
 import i18n from "../i18n/config";
+import { getActiveDatabaseUrl } from "../../demo/demoMode";
 
 let db: Database | null = null;
 
 export const getDatabase = async () => {
   try {
     if (db === null) {
-      console.log("ℹ️ Loading database...");
-      db = await Database.load("sqlite:main.db");
+      // main.db for the club, demo.db in demo mode (ADR 0009): the mode is
+      // read here, once, and only changes with a reload.
+      const url = getActiveDatabaseUrl();
+      console.log(`ℹ️ Loading database ${url}...`);
+      db = await Database.load(url);
 
       // Before anything reads: readers then never block the app's writes.
       await ensureWalMode(db);

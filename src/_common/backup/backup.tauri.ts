@@ -26,6 +26,7 @@ import {
   RestoreFailedError,
 } from "./backup.service";
 import { useBackupStore } from "./backup.store";
+import { isDemoMode } from "../../demo/demoMode";
 
 const BACKUP_FOLDER = "backups";
 const AUTO_BACKUP_CHECK_INTERVAL_MS = 60 * 60 * 1000;
@@ -76,7 +77,12 @@ const recordBackup = (
   }
 };
 
+/**
+ * Resolves with null in demo mode (ADR 0009): there is nothing worth saving
+ * in demo.db, and a copy must never land in the club's backup folders.
+ */
 export const runBackup = async (kind: BackupKind) => {
+  if (isDemoMode()) return null;
   const { db } = await getDatabase();
   await flushWrites();
   const { externalFolder, lastExternalAutoCopyAt, machineId } =
@@ -95,6 +101,7 @@ export const runBackup = async (kind: BackupKind) => {
 };
 
 const runAutoBackupIfDue = async () => {
+  if (isDemoMode()) return;
   if (
     !isAutoBackupDue(useBackupStore.getState().lastAutoBackupAt, new Date())
   ) {
@@ -115,6 +122,7 @@ let autoBackupTimer: ReturnType<typeof setInterval> | null = null;
  * computer often stays on for days.
  */
 export const startAutoBackups = () => {
+  if (isDemoMode()) return;
   void removeLeftoverRestoreCopies(backupStorage).catch((error: unknown) => {
     console.error("❌ Removing leftover restore copies failed", error);
   });
@@ -126,6 +134,8 @@ export const startAutoBackups = () => {
 
 /** Replace the club data with a backup, then reload the app. */
 export const restoreFromFile = async (path: string) => {
+  // The screen hides the button in demo; this keeps a stray call harmless.
+  if (isDemoMode()) throw new Error("Restoring a backup is off in demo mode");
   const { db } = await getDatabase();
   await flushWrites();
   try {

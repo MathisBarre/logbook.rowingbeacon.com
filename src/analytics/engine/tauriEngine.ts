@@ -1,6 +1,7 @@
 import { invoke, isTauri } from "@tauri-apps/api/core";
 import type { EngineObjects, QueryResult, RunQueryRequest } from "../types";
 import type { AnalyticsEngine } from "./engine";
+import { getActiveDatabaseFile } from "../../demo/demoMode";
 import { AnalyticsError, toAnalyticsError } from "./errors";
 import { ANALYTICS_COMMANDS } from "./ipc";
 
@@ -22,6 +23,7 @@ export const tauriEngine: AnalyticsEngine = {
     try {
       return await invoke<QueryResult>(ANALYTICS_COMMANDS.runQuery, {
         request,
+        database: getActiveDatabaseFile(),
       });
     } catch (error) {
       throw toAnalyticsError(error, {
@@ -47,7 +49,9 @@ export const tauriEngine: AnalyticsEngine = {
       throw desktopOnly();
     }
     try {
-      return await invoke<EngineObjects>(ANALYTICS_COMMANDS.listObjects);
+      return await invoke<EngineObjects>(ANALYTICS_COMMANDS.listObjects, {
+        database: getActiveDatabaseFile(),
+      });
     } catch (error) {
       throw toAnalyticsError(error);
     }

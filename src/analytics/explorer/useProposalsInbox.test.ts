@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { applyMigrations } from "../../_common/database/migrations";
 import { createTestSqlClient } from "../../_common/database/testing/nodeSqlClient";
 import type { InboxProposal } from "../engine/ipc";
+import { beginDemo } from "../../demo/demoMode";
 import {
   acceptProposal,
   deleteQuery,
@@ -115,6 +116,28 @@ describe("syncInbox", () => {
     const second = await syncInbox({ invoke: inbox.invoke, write });
     expect(second.imported).toEqual([]);
     expect(await listQueries(db, { status: "proposed" })).toHaveLength(1);
+  });
+
+  it("leaves the real club's inbox alone in demo mode (ADR 0009)", async () => {
+    const values = new Map<string, string>();
+    vi.stubGlobal("window", {
+      localStorage: {
+        getItem: (key: string) => values.get(key) ?? null,
+        setItem: (key: string, value: string) => void values.set(key, value),
+        removeItem: (key: string) => void values.delete(key),
+      },
+    });
+    try {
+      expect(beginDemo(true)).toBe(true);
+      const inbox = fakeInbox([VALID, BROKEN]);
+      const result = await syncInbox({ invoke: inbox.invoke, write });
+      expect(result).toEqual({ imported: [], proposals: [], invalid: [] });
+      expect(inbox.calls).toEqual([]);
+      expect(inbox.folder.size).toBe(2);
+      expect(await listQueries(db, { status: "proposed" })).toEqual([]);
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 
   it("is idempotent when the file could not be removed", async () => {

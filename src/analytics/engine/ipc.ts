@@ -9,9 +9,9 @@
  *
  * | Command                  | Arguments                     | Resolves with      |
  * |--------------------------|-------------------------------|--------------------|
- * | analytics_run_query      | { request: RunQueryRequest }  | QueryResult        |
+ * | analytics_run_query      | { request: RunQueryRequest, database } | QueryResult |
  * | analytics_cancel_query   | { requestId: string }         | void               |
- * | analytics_list_objects   | —                             | EngineObjects      |
+ * | analytics_list_objects   | { database }                  | EngineObjects      |
  * | analytics_ai_key_status  | { provider }                  | KeyStatus          |
  * | analytics_ai_set_key     | { provider, key, baseUrl? }   | KeyStatus          |
  * | analytics_ai_delete_key  | { provider }                  | KeyStatus          |
@@ -22,6 +22,10 @@
  * | analytics_machine_info   | —                             | MachineInfo        |
  * | analytics_inbox_list     | —                             | InboxProposal[]    |
  * | analytics_inbox_remove   | { id: string }                | void               |
+ *
+ * `database` is the file the app opened, "main.db" or "demo.db" (demo mode,
+ * ADR 0009): Rust reads that file, and rejects any other name with
+ * `invalid_param`. Left out, it means "main.db".
  *
  * `provider` (AiProvider) may be left out of the analytics_ai_* commands:
  * Rust then means "anthropic", as before providers existed (ADR 0008).

@@ -47,10 +47,6 @@
   },
   "onboarding": {
     "title": "Konfigurieren Sie Ihre Anwendung",
-    "testQuestion": "Möchten Sie RowingBeacon nur testen?",
-    "testDescription": "Wenn Sie die Anwendung nur testen möchten, können Sie den Demo-Modus aktivieren, um Testdaten zu verwenden.",
-    "launchDemo": "Anwendung im Demo-Modus starten",
-    "demoPasswordAlert": "Das Admin-Passwort für den Demo-Modus ist \"{{password}}\"",
     "password": "Passwort",
     "passwordHelp": "Das Passwort wird nützlich sein, um sensible Aktionen zu schützen.",
     "passwordRequired": "Wählen Sie ein Passwort.",
@@ -845,5 +841,151 @@
     "rowersOverlap_one": "{{rowerNames}} ist zu dieser Zeit bereits auf einer anderen Fahrt.",
     "rowersOverlap_other": "{{rowerNames}} sind zu dieser Zeit bereits auf einer anderen Fahrt.",
     "boatRequired": "Wählen Sie ein Boot aus."
+  },
+  "demo": {
+    "banner": {
+      "title": "Demo-Modus",
+      "fictionalClub": "fiktiver Verein",
+      "adminPassword": "Admin-Passwort: {{password}}",
+      "guide": "Was ausprobieren?",
+      "reset": "Zurücksetzen",
+      "backToClub": "Zurück zu meinem Verein",
+      "createClub": "Meinen Verein anlegen"
+    },
+    "reset": {
+      "title": "Demo zurücksetzen?",
+      "description": "Der fiktive Verein wird mit aktuellen Daten neu aufgebaut. Alles, was Sie in der Demo ausprobiert haben, wird gelöscht. Ihr echter Verein ist nicht betroffen.",
+      "confirm": "Zurücksetzen"
+    },
+    "exit": {
+      "title": "Demo verlassen?",
+      "backToClub": "Sie finden Ihren Verein so vor, wie Sie ihn verlassen haben. Der fiktive Verein wird neu aufgebaut, wenn Sie die Demo erneut starten.",
+      "createClub": "Sie gelangen zur Einrichtung Ihres Vereins. Der fiktive Verein wird neu aufgebaut, wenn Sie die Demo erneut starten."
+    },
+    "try": {
+      "title": "Mit einem Demo-Verein ausprobieren",
+      "description": "Lernen Sie RowingBeacon mit einem vollständigen fiktiven Verein kennen, sofort einsatzbereit: Boote, Ruderer, Fahrtenhistorie, Schäden, Reservierungen …",
+      "point1": "Alle Module sind aktiviert.",
+      "point2": "Ihre Daten bleiben unberührt: Die Demo läuft völlig getrennt.",
+      "point3": "Sie können jederzeit zurückkehren und Ihren Verein anlegen.",
+      "passwordNote": "Admin-Passwort des Demo-Vereins: {{password}}",
+      "action": "Mit einem Demo-Verein ausprobieren"
+    },
+    "params": {
+      "title": "Demo-Modus",
+      "description": "Probieren Sie RowingBeacon in vollem Umfang an einem vollständigen fiktiven Verein aus, ohne Risiko für Ihre Daten. Ihr aktueller Verein wird unberührt beiseitegelegt.",
+      "action": "Demo-Modus ausprobieren",
+      "confirmTitle": "Demo-Modus ausprobieren?",
+      "confirmDescription": "Die App startet mit einem vollständigen fiktiven Verein neu (Admin-Passwort: {{password}}). Ihr aktueller Verein wird unberührt beiseitegelegt: Er wird während der Demo weder gelesen noch geändert, und es wird keine automatische Sicherung erstellt. Mit „Zurück zu meinem Verein“ finden Sie ihn wieder.",
+      "confirm": "Demo starten",
+      "inDemoTitle": "Demo-Modus aktiv",
+      "inDemoDescription": "Sie befinden sich in einem fiktiven Verein. Über die Leiste oben am Bildschirm können Sie die Demo zurücksetzen oder verlassen; hier ist „Alle Daten löschen“ durch „Zurücksetzen“ ersetzt. Ihre echten Daten sind nie betroffen."
+    },
+    "loading": {
+      "title": "Demo-Verein wird vorbereitet …",
+      "description": "Boote, Ruderer und Fahrtenhistorie werden angelegt. Das kann einige Sekunden dauern."
+    },
+    "errors": {
+      "switchFailed": "Der Modus konnte nicht gewechselt werden. Es wurde nichts geändert: Versuchen Sie es erneut.",
+      "seedFailed": "Der Demo-Verein konnte nicht vorbereitet werden. Ihre echten Daten wurden nicht berührt.",
+      "retry": "Erneut versuchen"
+    },
+    "backupsOff": "Sicherungen und Wiederherstellungen sind im Demo-Modus deaktiviert: Der fiktive Verein lässt sich beliebig neu aufbauen, und Ihre echten Sicherungen bleiben unberührt.",
+    "efa2ReplaceWarning": "Alle Daten des fiktiven Vereins werden durch dieses Projekt ersetzt. Ihr echter Verein bleibt unberührt, und im Demo-Modus wird keine Sicherung erstellt.",
+    "updateBlocked": "Verlassen Sie den Demo-Modus, um das Update zu installieren: Ihr echter Verein muss zuerst gesichert werden.",
+    "guide": {
+      "title": "Was ausprobieren?",
+      "subtitle": "Einige Anregungen, um RowingBeacon mit dem fiktiven Verein kennenzulernen. Haken Sie ab, was Sie ausprobiert haben.",
+      "progress": "{{done}} von {{total}} ausprobiert",
+      "go": "Hingehen",
+      "adminHint": "Fragt nach dem Admin-Passwort: {{password}}.",
+      "groups": {
+        "boathouse": "Bootshaus",
+        "logbook": "Fahrtenbuch",
+        "reservations": "Reservierungen",
+        "damages": "Schäden",
+        "stats": "Statistiken",
+        "management": "Verwaltung und Module",
+        "efa2": "efa2-Import"
+      },
+      "steps": {
+        "startOuting": {
+          "title": "Ein Boot aufs Wasser schicken",
+          "description": "Klicken Sie im Bootshaus auf ein verfügbares Boot: Wählen Sie Mannschaft und Strecke, dann „Fahrt beginnen“."
+        },
+        "stopOuting": {
+          "title": "Ein Boot zurückbringen",
+          "description": "Klicken Sie in der Liste „Boote im Einsatz“ auf ein Boot, um die Fahrt zu beenden: Rückkehr, Kommentar, mögliche Vorkommnisse."
+        },
+        "pastOuting": {
+          "title": "Eine vergessene Fahrt nachtragen",
+          "description": "Die Schaltfläche „Fahrt nachtragen“ über den verfügbaren Booten trägt eine Fahrt nachträglich in die Historie ein."
+        },
+        "history": {
+          "title": "Die Historie durchsehen",
+          "description": "Das Fahrtenbuch listet die Fahrten der Saison mit Mannschaft, Dauer und Kommentaren; „Exportieren“ erzeugt daraus eine Datei."
+        },
+        "editOuting": {
+          "title": "Eine Fahrt korrigieren",
+          "description": "Der Stift am Zeilenende öffnet die Fahrt: Ändern Sie Boot, Mannschaft oder Zeiten, die App meldet Überschneidungen."
+        },
+        "reservations": {
+          "title": "Ein Boot reservieren",
+          "description": "„Neue Reservierung“ legt einen einmaligen oder wöchentlichen Zeitraum an (Regatta, Lehrgang, Training); filtern Sie die Liste nach Boot."
+        },
+        "reservedBoats": {
+          "title": "Reservierte Boote im Bootshaus sehen",
+          "description": "Ein bald reserviertes Boot trägt den Vermerk „reserviert“; beim Losfahren erscheint eine Warnung, die die Fahrt nie verhindert."
+        },
+        "damagesList": {
+          "title": "Schäden verfolgen",
+          "description": "Der Reiter „Schäden“ im Fahrtenbuch listet offene Schäden und die Reparaturhistorie mit ihrem Schweregrad."
+        },
+        "declareDamage": {
+          "title": "Einen Schaden melden",
+          "description": "Öffnen Sie unter Verwaltung > Boote ein Boot und dann „Schaden melden“: Ein Boot „Außer Betrieb“ kann nicht mehr fahren, „Mit Vorsicht“ warnt die Mannschaft beim Start."
+        },
+        "stats": {
+          "title": "Die Übersicht durchsehen",
+          "description": "Der Reiter „Übersicht“ fasst die Saison in Karten zusammen. Mit „Bearbeiten“ (Admin-Passwort) ordnen Sie sie neu an, ändern ihre Größe oder entfernen sie; die Auswahl „Saison“ oben ändert den Zeitraum."
+        },
+        "statsReports": {
+          "title": "Einen Vereinsbericht öffnen",
+          "description": "Der Reiter „Berichte“ bietet 29 Berichte nach Themen (Flotte, Andrang, Mitgliederbindung …): „Bootsnutzung im Vergleich“, „Andrang nach Tag und Uhrzeit“, „Bindung nach Eintrittssaison“ … „An die Übersicht anheften“ (Admin-Passwort) macht daraus eine Karte."
+        },
+        "statsAnnual": {
+          "title": "Den Jahresbericht vorbereiten",
+          "description": "Der Reiter „Jahresbericht“ fasst die Zahlen der Saison in einem Dokument für die Mitgliederversammlung zusammen: „Drucken oder als PDF speichern“ oder „Als Excel exportieren“; mit dem Admin-Passwort fügen Sie den Vereinsnamen und ein kurzes Wort hinzu."
+        },
+        "statsExplorer": {
+          "title": "Eine SQL-Abfrage schreiben",
+          "description": "Im Reiter „Explorer“, nur für Verantwortliche, schreiben Sie eine SQL-Abfrage auf die Vereinsdaten und führen sie mit „Ausführen“ aus; „Speichern unter…“ behält sie. Öffnen Sie eine Abfrage aus der Liste „Abfragen“, um Ergebnis und Diagramm zu sehen."
+        },
+        "statsAi": {
+          "title": "Der KI eine Frage stellen",
+          "description": "Im Explorer macht „KI fragen“ aus einer Frage in normaler Sprache eine Abfrage und ein Diagramm. Dafür braucht es einen API-Schlüssel, einzutragen unter Verwaltung > Statistiken und KI (ohne Schlüssel bereitet der Assistent eine Anfrage zum Kopieren und Einfügen vor). Namen und Daten der Ruderer werden ihr nie geschickt: Sie erhält Ihre Frage und die Tabellenstruktur."
+        },
+        "rowerStats": {
+          "title": "Die Statistiken eines Ruderers öffnen",
+          "description": "Unter Verwaltung > Ruderer zeigt das Statistik-Symbol eines Ruderers seine Fahrten, Boote und Partner, mit Vergleichen."
+        },
+        "modules": {
+          "title": "Module ein- und ausschalten",
+          "description": "Schalten Sie unter Verwaltung > Module Distanzen, Schäden, Reservierungen … ein oder aus: Bildschirme erscheinen oder verschwinden, nichts wird gelöscht."
+        },
+        "boatsAndRowers": {
+          "title": "Boote und Ruderer verwalten",
+          "description": "Unter Verwaltung > Boote und Ruderer: hinzufügen, archivieren, das erforderliche Niveau eines Boots einstellen oder mehrere Ruderer gleichzeitig bearbeiten."
+        },
+        "efa2Export": {
+          "title": "Nach efa2 exportieren",
+          "description": "Unter Verwaltung > Daten erzeugt „Exportieren“ eine ZIP-Sicherung, die efa2 wieder öffnen kann, mit allen Fahrten des fiktiven Vereins."
+        },
+        "efa2Import": {
+          "title": "Ihr efa2-Projekt importieren",
+          "description": "Sie kommen von efa? Importieren Sie Ihre ZIP-Sicherung oder Ihren Datenordner: Sie ersetzt den fiktiven Verein (nie Ihren echten) und Sie sehen Ihre eigenen Daten in RowingBeacon."
+        }
+      }
+    }
   }
 }

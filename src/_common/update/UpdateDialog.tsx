@@ -12,7 +12,11 @@ import { useLocaleStore } from "../store/locale.store";
 import useNavigationStore from "../store/navigation.store";
 import { getChangelogUrl } from "./update.rules";
 import { isUpdateBusy, useUpdateStore } from "./update.store";
-import { installUpdate, UpdateBackupFailedError } from "./update.tauri";
+import {
+  installUpdate,
+  UpdateBackupFailedError,
+  UpdateBlockedInDemoError,
+} from "./update.tauri";
 
 /** Mounted once for the whole app: the start-up toast opens it too. */
 export const UpdateDialog = () => {
@@ -47,7 +51,9 @@ export const UpdateDialog = () => {
       toast.error(
         error instanceof UpdateBackupFailedError
           ? t("update.backupFailed")
-          : t("update.failed")
+          : error instanceof UpdateBlockedInDemoError
+            ? t("demo.updateBlocked")
+            : t("update.failed")
       );
     }
   };

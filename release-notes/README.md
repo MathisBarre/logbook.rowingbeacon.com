@@ -16,6 +16,6 @@ Sans ces deux étapes, la publication échoue dès le build avec un message qui 
 
 ## Publier une version
 
-Commiter `release-notes/v<version>.md` **avant** de lancer `scripts/release-logbook.sh` : le tag pointe sur le commit du script, une note ajoutée après n'est pas publiée (la release reçoit alors des notes générées, sans erreur). Le script monte la version dans `package.json`, `src-tauri/Cargo.toml` et `src-tauri/tauri.conf.json` et crée le tag `logbook-v<version>`.
+`node scripts/logbook-release.mjs bump patch` (ou `minor`, `major`, `X.Y.Z`) monte la version et crée `v<version>.md` à remplir. Merger cette PR dans `main` publie la version : le tag `logbook-v<version>` est créé par la CI (voir `docs/desktop-releases.md`). La CI refuse une PR dont les notes manquent ou contiennent encore une puce vide.
 
 Relancer la publication sur une release déjà publique ne met à jour que le texte de la page GitHub : les notes de `latest.json`, celles que l'application affiche, restent celles de la première publication. La release du miroir publie les installeurs, leurs signatures et `latest.json`, que les postes des clubs lisent.

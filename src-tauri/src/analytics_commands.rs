@@ -20,10 +20,15 @@ use rb_analytics::{ai, mcp, paths};
 use tauri::State;
 
 /// The app always reads nominatively; the UI checks report visibility.
-/// The limits are those of the club's performance profile, read from
-/// `main.db` at each call (`perf::app_limits`), never from the webview.
-fn app_context() -> Result<EngineContext, AnalyticsError> {
-    let db_path = paths::db_path()?;
+/// The limits are those of the club's performance profile, read from the
+/// open database at each call (`perf::app_limits`), never from the webview.
+///
+/// `database` is the file the webview opened: `main.db`, or `demo.db` in
+/// demo mode (ADR 0009). Only these two names are accepted
+/// (`paths::db_path_for`), so the statistics of the demo never read the
+/// real club, and a webview cannot point the engine at another file.
+fn app_context(database: Option<&str>) -> Result<EngineContext, AnalyticsError> {
+    let db_path = paths::db_path_for(database)?;
     let limits = perf::app_limits(&db_path);
     Ok(EngineContext {
         db_path,
@@ -46,9 +51,10 @@ where
 pub async fn analytics_run_query(
     state: State<'_, Arc<EngineState>>,
     request: RunQueryRequest,
+    database: Option<String>,
 ) -> Result<QueryResult, AnalyticsError> {
     let state = Arc::clone(state.inner());
-    blocking(move || engine::run_query(&state, &app_context()?, &request)).await
+    blocking(move || engine::run_query(&state, &app_context(database.as_deref())?, &request)).await
 }
 
 #[tauri::command]
@@ -61,8 +67,10 @@ pub async fn analytics_cancel_query(
 }
 
 #[tauri::command]
-pub async fn analytics_list_objects() -> Result<EngineObjects, AnalyticsError> {
-    blocking(|| engine::list_objects(&app_context()?)).await
+pub async fn analytics_list_objects(
+    database: Option<String>,
+) -> Result<EngineObjects, AnalyticsError> {
+    blocking(move || engine::list_objects(&app_context(database.as_deref())?)).await
 }
 
 // AI commands (ADR 0008, "AI providers"): `provider` is optional so that

@@ -20,6 +20,8 @@ import { useSessionsStore } from "../store/sessions.store";
 import { useModulesStore } from "../store/modules.store";
 import { useBoathouseSettingsStore } from "../store/boathouseSettings.store";
 import { runBackup } from "../backup/backup.tauri";
+import { isDemoMode } from "../../demo/demoMode";
+import { resetDemo } from "../../demo/demoSession";
 import { clearProposalsInbox } from "../../analytics/repository/proposalsInbox";
 import { aiDeleteKey } from "../../analytics/ai/aiClient";
 import { AI_PROVIDERS } from "../../analytics/engine/ipc";
@@ -45,6 +47,12 @@ export const useLogout = () => {
   const boatLevelConfigStore = useStore(boatLevelConfigStoreCore);
 
   return async ({ deleteAiKey = false }: LogoutOptions = {}) => {
+    // In demo, "delete all data" starts the demo over: no backup, and the
+    // real club is never concerned (ADR 0009).
+    if (isDemoMode()) {
+      await resetDemo();
+      return;
+    }
     // Deleting everything can be undone from this backup (ADR 0005).
     try {
       await runBackup("before-delete");

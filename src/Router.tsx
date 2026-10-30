@@ -25,6 +25,15 @@ import Loading from "./_common/components/Loading";
 import { getErrorMessage } from "./_common/utils/error";
 import { changeLanguage } from "./_common/i18n/config";
 import { useTranslation } from "react-i18next";
+import { DemoBanner } from "./demo/DemoBanner";
+import { DemoGuideDialog } from "./demo/DemoGuideDialog";
+import { DemoLoadingScreen } from "./demo/DemoLoadingScreen";
+import { exitDemo } from "./demo/demoSession";
+import {
+  getDemoExitLabelKey,
+  isDemoMode,
+  readDemoState,
+} from "./demo/demoMode";
 
 export function Router() {
   const { locale } = useLocaleStore();
@@ -60,8 +69,11 @@ export function Router() {
   }, [locale]);
 
   const bootstrap = useClubDataBootstrap();
+  // Read at the first render: the flag is cleared once the seed has run.
+  const [isSeedingDemo] = useState(() => readDemoState().seedPending);
 
   if (bootstrap.status === "loading") {
+    if (isSeedingDemo) return <DemoLoadingScreen />;
     return (
       <div className="h-screen flex items-center justify-center">
         <Loading />
@@ -156,6 +168,7 @@ const useClubDataBootstrap = () => {
           }
         }
         setState({ status: "ready" });
+        // Does nothing in demo mode (ADR 0009).
         startAutoBackups();
         startUpdateChecks();
       })
@@ -170,18 +183,39 @@ const useClubDataBootstrap = () => {
 
 const BootstrapErrorScreen = ({ message }: { message: string }) => {
   const { t } = useTranslation();
+  const demo = readDemoState();
+  const [isLeaving, setIsLeaving] = useState(false);
   return (
     <div className="h-screen flex items-center justify-center flex-col gap-4 p-4">
       <AlertCircleIcon className="w-12 h-12 text-red-500" />
-      <p className="text-lg">{t("migration.failed")}</p>
+      <p className="text-lg">
+        {t(demo.active ? "demo.errors.seedFailed" : "migration.failed")}
+      </p>
       <p className="text-sm text-gray-500 max-w-xl text-center">{message}</p>
-      <button
-        onClick={() => window.location.reload()}
-        className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center gap-2"
-      >
-        <RefreshCwIcon className="w-4 h-4" />
-        {t("error.reload")}
-      </button>
+      <div className="flex gap-2">
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center gap-2"
+        >
+          <RefreshCwIcon className="w-4 h-4" />
+          {t(demo.active ? "demo.errors.retry" : "error.reload")}
+        </button>
+        {demo.active && (
+          // A demo that cannot start must never lock the club out.
+          <button
+            disabled={isLeaving}
+            onClick={() => {
+              setIsLeaving(true);
+              void exitDemo().then((left) => {
+                if (!left) setIsLeaving(false);
+              });
+            }}
+            className="px-4 py-2 bg-steel-blue-700 hover:bg-steel-blue-800 text-white rounded-lg disabled:opacity-50"
+          >
+            {t(getDemoExitLabelKey(demo.hadRealClub))}
+          </button>
+        )}
+      </div>
     </div>
   );
 };
@@ -206,9 +240,11 @@ const ErrorFallback = () => {
 const AppTemplate = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="absolute inset-0 flex flex-col p-1 gap-1 h-screen max-h-screen">
+      {isDemoMode() && <DemoBanner />}
       <main className="flex-1 relative">{children}</main>
       <NavigationBar />
       <UpdateDialog />
+      {isDemoMode() && <DemoGuideDialog />}
     </div>
   );
 };

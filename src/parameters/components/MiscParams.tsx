@@ -24,6 +24,8 @@ import {
 import { Checkbox } from "../../_common/components/Checkbox";
 import { useBoathouseSettingsStore } from "../../_common/store/boathouseSettings.store";
 import { parseCoordinate } from "../../_common/business/sun.rules";
+import { DemoParamsSection } from "../../demo/DemoParamsSection";
+import { isDemoMode } from "../../demo/demoMode";
 
 export const MiscParams = () => {
   const { t } = useTranslation();
@@ -35,6 +37,7 @@ export const MiscParams = () => {
   const adminEditSystem = useAdminEditModeSystem();
   const clubOverview = useClubOverviewStore();
   const { autoStartState, enableAutoStart, disableAutoStart } = useAutoStart();
+  const inDemo = isDemoMode();
 
   const handleExport = async () => {
     try {
@@ -59,7 +62,7 @@ export const MiscParams = () => {
             boats: result.boats,
             routes: result.routes,
             rowers: result.rowers,
-          }),
+          })
         );
       }
     } catch (error) {
@@ -67,7 +70,7 @@ export const MiscParams = () => {
       toast.error(
         error instanceof Error
           ? error.message
-          : t("parameters.errorImportingData"),
+          : t("parameters.errorImportingData")
       );
     } finally {
       setIsImporting(false);
@@ -284,30 +287,35 @@ export const MiscParams = () => {
               </div>
             </section>
 
-            <section className="flex flex-col h-full">
-              <div className="flex-1">
-                <h1 className="font-bold text-xl mb-1 text-gray-900">
-                  {t("parameters.sensitiveActions")}
-                </h1>
-                <p className="text-gray-500 mb-4">
-                  {t("parameters.sensitiveActionsWarning")}
-                </p>
-              </div>
-              <Button
-                type="button"
-                color="danger"
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                onClick={async () => {
-                  if (!(await adminEditSystem.askForAdminAccess())) {
-                    return;
-                  }
-                  setDeleteDataDialogOpen(true);
-                }}
-                className="w-full mt-4"
-              >
-                {t("parameters.deleteAllData")}
-              </Button>
-            </section>
+            <DemoParamsSection />
+
+            {/* In demo, "delete all data" is the demo reset above. */}
+            {!inDemo && (
+              <section className="flex flex-col h-full">
+                <div className="flex-1">
+                  <h1 className="font-bold text-xl mb-1 text-gray-900">
+                    {t("parameters.sensitiveActions")}
+                  </h1>
+                  <p className="text-gray-500 mb-4">
+                    {t("parameters.sensitiveActionsWarning")}
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  color="danger"
+                  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                  onClick={async () => {
+                    if (!(await adminEditSystem.askForAdminAccess())) {
+                      return;
+                    }
+                    setDeleteDataDialogOpen(true);
+                  }}
+                  className="w-full mt-4"
+                >
+                  {t("parameters.deleteAllData")}
+                </Button>
+              </section>
+            )}
           </div>
         </div>
       </div>
@@ -362,10 +370,10 @@ const TimeStyleSelector = () => {
 const AllBoatsBackBannerToggle = () => {
   const { t } = useTranslation();
   const enabled = useBoathouseSettingsStore(
-    (state) => state.allBoatsBackBanner,
+    (state) => state.allBoatsBackBanner
   );
   const setEnabled = useBoathouseSettingsStore(
-    (state) => state.setAllBoatsBackBanner,
+    (state) => state.setAllBoatsBackBanner
   );
 
   return (

@@ -47,10 +47,6 @@
   },
   "onboarding": {
     "title": "Configurez votre application",
-    "testQuestion": "Souhaitez-vous juste tester RowingBeacon ?",
-    "testDescription": "Si vous souhaitez simplement tester l'application, vous pouvez activer le mode démo pour utiliser des données fictives.",
-    "launchDemo": "Lancer l'application en mode démo",
-    "demoPasswordAlert": "Le mot de passe admin du mode démo est \"{{password}}\"",
     "password": "Mot de passe",
     "passwordHelp": "Le mot de passe sera utile pour protéger les actions sensibles.",
     "passwordRequired": "Choisissez un mot de passe.",
@@ -844,5 +840,151 @@
     "rowersOverlap_one": "{{rowerNames}} est déjà sur une autre sortie à ces horaires.",
     "rowersOverlap_other": "{{rowerNames}} sont déjà sur une autre sortie à ces horaires.",
     "boatRequired": "Choisissez un bateau."
+  },
+  "demo": {
+    "banner": {
+      "title": "Mode démo",
+      "fictionalClub": "club fictif",
+      "adminPassword": "mot de passe admin : {{password}}",
+      "guide": "Que tester ?",
+      "reset": "Réinitialiser",
+      "backToClub": "Revenir à mon club",
+      "createClub": "Créer mon club"
+    },
+    "reset": {
+      "title": "Réinitialiser la démo ?",
+      "description": "Le club fictif est recréé à neuf, avec des dates à jour. Tout ce que vous avez essayé dans la démo est effacé. Votre vrai club n'est pas concerné.",
+      "confirm": "Réinitialiser"
+    },
+    "exit": {
+      "title": "Quitter la démo ?",
+      "backToClub": "Vous retrouvez votre club tel que vous l'avez laissé. Le club fictif sera recréé à neuf si vous relancez la démo.",
+      "createClub": "Vous passez à la création de votre club. Le club fictif sera recréé à neuf si vous relancez la démo."
+    },
+    "try": {
+      "title": "Essayer avec un club de démo",
+      "description": "Découvrez RowingBeacon avec un club fictif complet, prêt à l'emploi : bateaux, rameurs, historique de sorties, avaries, réservations…",
+      "point1": "Tous les modules sont activés.",
+      "point2": "Vos données ne sont pas touchées : la démo est tenue complètement à part.",
+      "point3": "Vous pourrez revenir et créer votre club à tout moment.",
+      "passwordNote": "Mot de passe admin du club de démo : {{password}}",
+      "action": "Essayer avec un club de démo"
+    },
+    "params": {
+      "title": "Mode démo",
+      "description": "Essayez toute la puissance de RowingBeacon sur un club fictif complet, sans risque pour vos données. Votre club actuel est gardé de côté, intact.",
+      "action": "Essayer le mode démo",
+      "confirmTitle": "Essayer le mode démo ?",
+      "confirmDescription": "L'application redémarre sur un club fictif complet (mot de passe admin : {{password}}). Votre club actuel est gardé de côté, intact : il n'est ni lu ni modifié pendant la démo, et aucune sauvegarde automatique n'est faite. Vous le retrouvez avec « Revenir à mon club ».",
+      "confirm": "Lancer la démo",
+      "inDemoTitle": "Mode démo en cours",
+      "inDemoDescription": "Vous êtes sur un club fictif. Le bandeau en haut de l'écran permet de réinitialiser la démo ou de la quitter ; ici, « Supprimer toutes les données » est remplacé par « Réinitialiser ». Vos vraies données ne sont jamais concernées."
+    },
+    "loading": {
+      "title": "Préparation du club de démo…",
+      "description": "Création des bateaux, des rameurs et de l'historique des sorties. Cela peut prendre quelques secondes."
+    },
+    "errors": {
+      "switchFailed": "Impossible de changer de mode. Rien n'a été modifié : réessayez.",
+      "seedFailed": "Le club de démo n'a pas pu être préparé. Vos vraies données n'ont pas été touchées.",
+      "retry": "Réessayer"
+    },
+    "backupsOff": "Les sauvegardes et leur restauration sont désactivées en mode démo : le club fictif se recrée à volonté et vos vraies sauvegardes ne sont pas touchées.",
+    "efa2ReplaceWarning": "Toutes les données du club fictif seront remplacées par ce projet. Votre vrai club n'est pas touché et aucune sauvegarde n'est faite en démo.",
+    "updateBlocked": "Quittez le mode démo pour installer la mise à jour : votre vrai club doit d'abord être sauvegardé.",
+    "guide": {
+      "title": "Que tester ?",
+      "subtitle": "Quelques pistes pour découvrir RowingBeacon avec le club fictif. Cochez ce que vous avez essayé.",
+      "progress": "{{done}} sur {{total}} essayés",
+      "go": "Y aller",
+      "adminHint": "Demande le mot de passe admin : {{password}}.",
+      "groups": {
+        "boathouse": "Boathouse",
+        "logbook": "Logbook",
+        "reservations": "Réservations",
+        "damages": "Avaries",
+        "stats": "Statistiques",
+        "management": "Gestion et modules",
+        "efa2": "Import efa2"
+      },
+      "steps": {
+        "startOuting": {
+          "title": "Faire partir un bateau",
+          "description": "Sur la page Boathouse, cliquez sur un bateau disponible : choisissez l'équipage et le parcours, puis « Commencer la sortie »."
+        },
+        "stopOuting": {
+          "title": "Faire rentrer un bateau",
+          "description": "Cliquez sur un bateau de la liste « Bateaux en cours d'utilisation » pour terminer sa sortie : retour, commentaire, incident éventuel."
+        },
+        "pastOuting": {
+          "title": "Saisir une sortie oubliée",
+          "description": "Le bouton « Sortie déjà faite », au-dessus des bateaux disponibles, ajoute après coup une sortie à l'historique."
+        },
+        "history": {
+          "title": "Parcourir l'historique",
+          "description": "Le Logbook liste les sorties de la saison avec équipage, durée et commentaires ; « Exporter » en tire un fichier."
+        },
+        "editOuting": {
+          "title": "Corriger une sortie",
+          "description": "Le crayon au bout d'une ligne ouvre la sortie : changez le bateau, l'équipage ou les heures, l'application signale les chevauchements."
+        },
+        "reservations": {
+          "title": "Réserver un bateau",
+          "description": "« Nouvelle réservation » crée un créneau unique ou hebdomadaire (régate, stage, entraînement) ; filtrez la liste par bateau."
+        },
+        "reservedBoats": {
+          "title": "Voir les bateaux réservés dans Boathouse",
+          "description": "Un bateau bientôt réservé porte la mention « réservé » ; en le faisant partir, un avertissement s'affiche, sans jamais empêcher la sortie."
+        },
+        "damagesList": {
+          "title": "Suivre les avaries",
+          "description": "L'onglet « Avaries » du Logbook liste les avaries ouvertes et l'historique des réparations, avec leur gravité."
+        },
+        "declareDamage": {
+          "title": "Déclarer une avarie",
+          "description": "Dans Gestion > Bateaux, ouvrez un bateau puis « Déclarer une avarie » : un bateau « Hors service » ne peut plus partir, « Précaution » avertit l'équipage au départ."
+        },
+        "stats": {
+          "title": "Parcourir le tableau de bord",
+          "description": "L'onglet « Tableau de bord » résume la saison en cartes. « Modifier » (mot de passe admin) permet de les réordonner, de changer leur taille ou de les retirer ; le sélecteur « Saison », en haut, change la période."
+        },
+        "statsReports": {
+          "title": "Ouvrir un rapport du club",
+          "description": "L'onglet « Rapports » propose 29 rapports classés par thème (Flotte, Fréquentation, Fidélisation…) : « Classement des bateaux », « Affluence par jour et par heure », « Fidélisation par saison d'arrivée »… « Épingler au tableau de bord » (mot de passe admin) en fait une carte."
+        },
+        "statsAnnual": {
+          "title": "Préparer le rapport annuel",
+          "description": "L'onglet « Rapport annuel » rassemble les chiffres de la saison en un document pour l'assemblée générale : « Imprimer ou enregistrer en PDF » ou « Exporter en Excel » ; avec le mot de passe admin, ajoutez le nom du club et un petit mot."
+        },
+        "statsExplorer": {
+          "title": "Écrire une requête SQL",
+          "description": "L'onglet « Explorer », réservé aux responsables, permet d'écrire une requête SQL sur les données du club et de la lancer avec « Exécuter » ; « Enregistrer sous… » la garde. Ouvrez une des requêtes de la liste « Requêtes » pour voir son résultat et son graphique."
+        },
+        "statsAi": {
+          "title": "Poser une question à l'IA",
+          "description": "Dans l'Explorer, « Demander à l'IA » transforme une question posée en français en requête et en graphique. Il faut une clé API, à saisir dans Gestion > Statistiques et IA (sans clé, l'assistant prépare une demande à copier-coller). Les noms et les données des rameurs ne lui sont jamais envoyés : elle reçoit votre question et la structure des tables."
+        },
+        "rowerStats": {
+          "title": "Ouvrir les statistiques d'un rameur",
+          "description": "Dans Gestion > Rameurs, l'icône Statistiques d'un rameur montre ses sorties, ses bateaux et ses partenaires, avec des comparaisons."
+        },
+        "modules": {
+          "title": "Activer et désactiver des modules",
+          "description": "Dans Gestion > Modules, activez ou désactivez Distances, Avaries, Réservations… : les écrans apparaissent ou disparaissent, sans rien effacer."
+        },
+        "boatsAndRowers": {
+          "title": "Gérer bateaux et rameurs",
+          "description": "Dans Gestion > Bateaux et Rameurs : ajoutez, archivez, réglez le niveau requis d'un bateau ou modifiez plusieurs rameurs en masse."
+        },
+        "efa2Export": {
+          "title": "Exporter vers efa2",
+          "description": "Dans Gestion > Données, « Exporter » crée une sauvegarde ZIP que efa2 sait rouvrir, avec toutes les sorties du club fictif."
+        },
+        "efa2Import": {
+          "title": "Importer votre projet efa2",
+          "description": "Vous venez d'efa ? Importez votre sauvegarde ZIP ou votre dossier de données : elle remplace le club fictif (jamais votre vrai club) et vous voyez vos données dans RowingBeacon."
+        }
+      }
+    }
   }
 }

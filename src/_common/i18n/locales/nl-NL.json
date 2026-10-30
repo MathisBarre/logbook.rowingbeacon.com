@@ -47,10 +47,6 @@
   },
   "onboarding": {
     "title": "Configureer uw applicatie",
-    "testQuestion": "Wilt u RowingBeacon alleen testen?",
-    "testDescription": "Als u de applicatie alleen wilt testen, kunt u de demomodus inschakelen om nepgegevens te gebruiken.",
-    "launchDemo": "Start de applicatie in demomodus",
-    "demoPasswordAlert": "Het beheerderswachtwoord voor de demomodus is \"{{password}}\"",
     "password": "Wachtwoord",
     "passwordHelp": "Het wachtwoord is nuttig om gevoelige acties te beschermen.",
     "passwordRequired": "Kies een wachtwoord.",
@@ -845,5 +841,151 @@
     "rowersOverlap_one": "{{rowerNames}} zit op deze tijden al op een andere tocht.",
     "rowersOverlap_other": "{{rowerNames}} zitten op deze tijden al op een andere tocht.",
     "boatRequired": "Kies een boot."
+  },
+  "demo": {
+    "banner": {
+      "title": "Demomodus",
+      "fictionalClub": "fictieve club",
+      "adminPassword": "beheerderswachtwoord: {{password}}",
+      "guide": "Wat uitproberen?",
+      "reset": "Opnieuw instellen",
+      "backToClub": "Terug naar mijn club",
+      "createClub": "Mijn club aanmaken"
+    },
+    "reset": {
+      "title": "De demo opnieuw instellen?",
+      "description": "De fictieve club wordt helemaal opnieuw opgebouwd, met actuele data. Alles wat u in de demo hebt uitgeprobeerd, wordt gewist. Uw echte club blijft buiten schot.",
+      "confirm": "Opnieuw instellen"
+    },
+    "exit": {
+      "title": "De demo verlaten?",
+      "backToClub": "U vindt uw club terug zoals u hem achterliet. De fictieve club wordt opnieuw opgebouwd als u de demo weer start.",
+      "createClub": "U gaat verder met het aanmaken van uw club. De fictieve club wordt opnieuw opgebouwd als u de demo weer start."
+    },
+    "try": {
+      "title": "Uitproberen met een democlub",
+      "description": "Ontdek RowingBeacon met een complete fictieve club, direct klaar voor gebruik: boten, roeiers, tochtenhistoriek, schades, reserveringen…",
+      "point1": "Alle modules staan aan.",
+      "point2": "Uw gegevens blijven onaangeroerd: de demo staat volledig los.",
+      "point3": "U kunt op elk moment terugkeren en uw club aanmaken.",
+      "passwordNote": "Beheerderswachtwoord van de democlub: {{password}}",
+      "action": "Uitproberen met een democlub"
+    },
+    "params": {
+      "title": "Demomodus",
+      "description": "Probeer de volle kracht van RowingBeacon uit op een complete fictieve club, zonder risico voor uw gegevens. Uw huidige club wordt onaangeroerd apart gehouden.",
+      "action": "Demomodus uitproberen",
+      "confirmTitle": "De demomodus uitproberen?",
+      "confirmDescription": "De app start opnieuw op met een complete fictieve club (beheerderswachtwoord: {{password}}). Uw huidige club wordt onaangeroerd apart gehouden: tijdens de demo wordt hij niet gelezen of gewijzigd en er wordt geen automatische back-up gemaakt. U vindt hem terug met ‘Terug naar mijn club’.",
+      "confirm": "Demo starten",
+      "inDemoTitle": "Demomodus actief",
+      "inDemoDescription": "U gebruikt een fictieve club. Met de balk bovenaan het scherm kunt u de demo opnieuw instellen of verlaten; hier is ‘Alle gegevens verwijderen’ vervangen door ‘Opnieuw instellen’. Uw echte gegevens worden nooit geraakt."
+    },
+    "loading": {
+      "title": "De democlub wordt voorbereid…",
+      "description": "Boten, roeiers en tochtenhistoriek worden aangemaakt. Dat kan een paar seconden duren."
+    },
+    "errors": {
+      "switchFailed": "De modus kon niet worden gewijzigd. Er is niets aangepast: probeer het opnieuw.",
+      "seedFailed": "De democlub kon niet worden voorbereid. Uw echte gegevens zijn niet aangeraakt.",
+      "retry": "Opnieuw proberen"
+    },
+    "backupsOff": "Back-ups en herstel staan uit in de demomodus: de fictieve club is naar believen opnieuw op te bouwen en uw echte back-ups worden niet aangeraakt.",
+    "efa2ReplaceWarning": "Alle gegevens van de fictieve club worden vervangen door dit project. Uw echte club blijft onaangeroerd en in de demomodus wordt geen back-up gemaakt.",
+    "updateBlocked": "Verlaat de demomodus om de update te installeren: uw echte club moet eerst een back-up krijgen.",
+    "guide": {
+      "title": "Wat uitproberen?",
+      "subtitle": "Enkele ideeën om RowingBeacon te ontdekken met de fictieve club. Vink af wat u hebt uitgeprobeerd.",
+      "progress": "{{done}} van {{total}} uitgeprobeerd",
+      "go": "Ga erheen",
+      "adminHint": "Vraagt om het beheerderswachtwoord: {{password}}.",
+      "groups": {
+        "boathouse": "Botenhuis",
+        "logbook": "Logboek",
+        "reservations": "Reserveringen",
+        "damages": "Schades",
+        "stats": "Statistieken",
+        "management": "Beheer en modules",
+        "efa2": "efa2-import"
+      },
+      "steps": {
+        "startOuting": {
+          "title": "Een boot laten vertrekken",
+          "description": "Klik in het botenhuis op een beschikbare boot: kies de bemanning en het traject, dan ‘Sessie starten’."
+        },
+        "stopOuting": {
+          "title": "Een boot laten terugkeren",
+          "description": "Klik op een boot in de lijst ‘Boten in gebruik’ om de tocht te beëindigen: terugkeer, opmerking, eventueel incident."
+        },
+        "pastOuting": {
+          "title": "Een vergeten tocht invoeren",
+          "description": "De knop ‘Tocht achteraf invoeren’ boven de beschikbare boten voegt achteraf een tocht toe aan de historiek."
+        },
+        "history": {
+          "title": "De historiek doorbladeren",
+          "description": "Het logboek toont de tochten van het seizoen met bemanning, duur en opmerkingen; ‘Exporteren’ maakt er een bestand van."
+        },
+        "editOuting": {
+          "title": "Een tocht corrigeren",
+          "description": "Het potlood aan het eind van een rij opent de tocht: wijzig boot, bemanning of tijden, de app meldt overlappingen."
+        },
+        "reservations": {
+          "title": "Een boot reserveren",
+          "description": "‘Nieuwe reservering’ maakt een eenmalig of wekelijks tijdvak (wedstrijd, stage, training); filter de lijst op boot."
+        },
+        "reservedBoats": {
+          "title": "Gereserveerde boten in het botenhuis zien",
+          "description": "Een binnenkort gereserveerde boot toont ‘gereserveerd’; bij vertrek verschijnt een waarschuwing, die de tocht nooit verhindert."
+        },
+        "damagesList": {
+          "title": "Schades opvolgen",
+          "description": "Het tabblad ‘Schades’ van het logboek toont openstaande schades en de herstelhistoriek, met hun ernst."
+        },
+        "declareDamage": {
+          "title": "Een schade melden",
+          "description": "Open in Beheer > Boten een boot en kies ‘Schade melden’: een boot ‘Buiten dienst’ kan niet meer vertrekken, ‘Voorzichtig’ waarschuwt de bemanning bij vertrek."
+        },
+        "stats": {
+          "title": "Het dashboard doorbladeren",
+          "description": "Het tabblad ‘Dashboard’ vat het seizoen samen in kaarten. Met ‘Bewerken’ (beheerderswachtwoord) ordent u ze opnieuw, wijzigt u hun grootte of verwijdert u ze; de keuze ‘Seizoen’ bovenaan wijzigt de periode."
+        },
+        "statsReports": {
+          "title": "Een clubrapport openen",
+          "description": "Het tabblad ‘Rapporten’ biedt 29 rapporten per thema (Vloot, Drukte, Ledenbehoud…): ‘Ranglijst van boten’, ‘Drukte per dag en uur’, ‘Behoud per seizoen van aankomst’… Met ‘Vastzetten op dashboard’ (beheerderswachtwoord) wordt het een kaart."
+        },
+        "statsAnnual": {
+          "title": "Het jaarverslag voorbereiden",
+          "description": "Het tabblad ‘Jaarverslag’ brengt de cijfers van het seizoen samen in een document voor de ledenvergadering: ‘Afdrukken of opslaan als pdf’ of ‘Exporteren naar Excel’; met het beheerderswachtwoord voegt u de clubnaam en een kort woord toe."
+        },
+        "statsExplorer": {
+          "title": "Een SQL-query schrijven",
+          "description": "Op het tabblad ‘Verkenner’, voorbehouden aan beheerders, schrijft u een SQL-query op de clubgegevens en voert u die uit met ‘Uitvoeren’; ‘Opslaan als…’ bewaart hem. Open een query uit de lijst ‘Query's’ om het resultaat en de grafiek te zien."
+        },
+        "statsAi": {
+          "title": "Een vraag aan de AI stellen",
+          "description": "In de Verkenner zet ‘AI vragen’ een vraag in gewone taal om in een query en een grafiek. Daarvoor is een API-sleutel nodig, in te voeren bij Beheer > Statistieken en AI (zonder sleutel maakt de assistent een verzoek om te kopiëren en te plakken). Namen en gegevens van roeiers worden nooit naar de AI gestuurd: die krijgt uw vraag en de structuur van de tabellen."
+        },
+        "rowerStats": {
+          "title": "De statistieken van een roeier openen",
+          "description": "In Beheer > Roeiers toont het statistiekenicoon van een roeier zijn tochten, boten en partners, met vergelijkingen."
+        },
+        "modules": {
+          "title": "Modules aan- en uitzetten",
+          "description": "Zet in Beheer > Modules Afstanden, Schades, Reserveringen… aan of uit: schermen verschijnen of verdwijnen, er wordt niets gewist."
+        },
+        "boatsAndRowers": {
+          "title": "Boten en roeiers beheren",
+          "description": "In Beheer > Boten en Roeiers: toevoegen, archiveren, het vereiste niveau van een boot instellen of meerdere roeiers tegelijk bewerken."
+        },
+        "efa2Export": {
+          "title": "Exporteren naar efa2",
+          "description": "In Beheer > Gegevens maakt ‘Exporteren’ een ZIP-back-up die efa2 kan heropenen, met alle tochten van de fictieve club."
+        },
+        "efa2Import": {
+          "title": "Uw efa2-project importeren",
+          "description": "Komt u van efa? Importeer uw ZIP-back-up of gegevensmap: die vervangt de fictieve club (nooit uw echte club) en u ziet uw eigen gegevens in RowingBeacon."
+        }
+      }
+    }
   }
 }

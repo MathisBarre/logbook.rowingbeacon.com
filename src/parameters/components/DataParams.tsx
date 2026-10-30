@@ -28,6 +28,7 @@ import {
   pickEfa2Project,
 } from "../../_common/efa2/efa2.tauri";
 import { Efa2ImportDialog } from "./Efa2ImportDialog";
+import { isDemoMode } from "../../demo/demoMode";
 
 const VISIBLE_BACKUPS = 20;
 
@@ -52,14 +53,19 @@ export const DataParams = () => {
   const [isReadingProject, setIsReadingProject] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
 
+  // Backups and restores are off in demo: they would touch the real
+  // club's backup folders (ADR 0009).
+  const inDemo = isDemoMode();
+
   const refresh = useCallback(async () => {
+    if (inDemo) return;
     try {
       setBackupFolder(await getBackupFolder());
       setBackups(await getBackups());
     } catch (error) {
       console.error(error);
     }
-  }, []);
+  }, [inDemo]);
 
   useEffect(() => {
     void refresh();
@@ -172,114 +178,126 @@ export const DataParams = () => {
       </div>
 
       <div className="p-6 flex flex-col gap-10">
-        <section className="flex flex-col gap-3">
-          <h2 className="font-bold text-xl text-gray-900">
-            {t("backup.title")}
-          </h2>
-          <p className="text-gray-500">{t("backup.description")}</p>
-          <p className="text-gray-900">
-            {backupStore.lastBackupAt
-              ? t("backup.lastBackup", {
-                  date: formatDateTime(backupStore.lastBackupAt, i18n.language),
-                })
-              : t("backup.noBackupYet")}
-          </p>
-          <div className="flex gap-2 flex-wrap">
-            <Button type="button" onClick={backupNow} loading={isBackingUp}>
-              {t("backup.backupNow")}
-            </Button>
-            <Button
-              type="button"
-              variant="outlined"
-              onClick={chooseFileToRestore}
-            >
-              {t("backup.restoreFromFile")}
-            </Button>
-          </div>
-
-          <div className="border rounded p-4 flex flex-col gap-2">
-            <h3 className="font-semibold text-gray-900">
-              {t("backup.externalTitle")}
-            </h3>
-            {backupStore.externalFolder ? (
-              <p className="text-gray-700 text-sm break-all">
-                {t("backup.externalFolder", {
-                  folder: backupStore.externalFolder,
-                })}
-              </p>
-            ) : (
-              <p className="text-yellow-900 text-sm flex gap-2 items-center">
-                <TriangleAlertIcon className="h-4 w-4 shrink-0" />
-                {t("backup.externalReminder")}
-              </p>
-            )}
-            {backupStore.externalCopyFailedAt && (
-              <p className="text-error-800 text-sm flex gap-2 items-center">
-                <TriangleAlertIcon className="h-4 w-4 shrink-0" />
-                {t("backup.externalCopyFailed")}
-              </p>
-            )}
-            <div className="flex gap-2">
+        {inDemo ? (
+          <section className="flex flex-col gap-3">
+            <h2 className="font-bold text-xl text-gray-900">
+              {t("backup.title")}
+            </h2>
+            <p className="text-gray-500">{t("demo.backupsOff")}</p>
+          </section>
+        ) : (
+          <section className="flex flex-col gap-3">
+            <h2 className="font-bold text-xl text-gray-900">
+              {t("backup.title")}
+            </h2>
+            <p className="text-gray-500">{t("backup.description")}</p>
+            <p className="text-gray-900">
+              {backupStore.lastBackupAt
+                ? t("backup.lastBackup", {
+                    date: formatDateTime(
+                      backupStore.lastBackupAt,
+                      i18n.language
+                    ),
+                  })
+                : t("backup.noBackupYet")}
+            </p>
+            <div className="flex gap-2 flex-wrap">
+              <Button type="button" onClick={backupNow} loading={isBackingUp}>
+                {t("backup.backupNow")}
+              </Button>
               <Button
                 type="button"
                 variant="outlined"
-                onClick={chooseExternalFolder}
+                onClick={chooseFileToRestore}
               >
-                {backupStore.externalFolder
-                  ? t("backup.changeExternalFolder")
-                  : t("backup.chooseExternalFolder")}
+                {t("backup.restoreFromFile")}
               </Button>
-              {backupStore.externalFolder && (
+            </div>
+
+            <div className="border rounded p-4 flex flex-col gap-2">
+              <h3 className="font-semibold text-gray-900">
+                {t("backup.externalTitle")}
+              </h3>
+              {backupStore.externalFolder ? (
+                <p className="text-gray-700 text-sm break-all">
+                  {t("backup.externalFolder", {
+                    folder: backupStore.externalFolder,
+                  })}
+                </p>
+              ) : (
+                <p className="text-yellow-900 text-sm flex gap-2 items-center">
+                  <TriangleAlertIcon className="h-4 w-4 shrink-0" />
+                  {t("backup.externalReminder")}
+                </p>
+              )}
+              {backupStore.externalCopyFailedAt && (
+                <p className="text-error-800 text-sm flex gap-2 items-center">
+                  <TriangleAlertIcon className="h-4 w-4 shrink-0" />
+                  {t("backup.externalCopyFailed")}
+                </p>
+              )}
+              <div className="flex gap-2">
                 <Button
                   type="button"
-                  variant="text"
-                  onClick={() => backupStore.setExternalFolder(null)}
+                  variant="outlined"
+                  onClick={chooseExternalFolder}
                 >
-                  {t("backup.stopExternalCopy")}
+                  {backupStore.externalFolder
+                    ? t("backup.changeExternalFolder")
+                    : t("backup.chooseExternalFolder")}
                 </Button>
-              )}
+                {backupStore.externalFolder && (
+                  <Button
+                    type="button"
+                    variant="text"
+                    onClick={() => backupStore.setExternalFolder(null)}
+                  >
+                    {t("backup.stopExternalCopy")}
+                  </Button>
+                )}
+              </div>
             </div>
-          </div>
 
-          {backups.length > 0 && (
-            <table className="w-full text-sm">
-              <tbody>
-                {backups.slice(0, VISIBLE_BACKUPS).map((backup) => (
-                  <tr key={backup.fileName} className="border-b">
-                    <td className="py-2">
-                      {formatDateTime(backup.createdAt, i18n.language)}
-                    </td>
-                    <td className="py-2 text-gray-500">
-                      {t(`backup.kind.${backup.kind}`)}
-                    </td>
-                    <td className="py-2 text-right">
-                      <Button
-                        type="button"
-                        variant="text"
-                        onClick={async () => {
-                          setToRestore({
-                            path: await join(backupFolder, backup.fileName),
-                            label: formatDateTime(
-                              backup.createdAt,
-                              i18n.language
-                            ),
-                          });
-                        }}
-                      >
-                        {t("backup.restore")}
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-          {backupFolder && (
-            <p className="text-xs text-gray-400 break-all">
-              {t("backup.folder", { folder: backupFolder })}
-            </p>
-          )}
-        </section>
+            {backups.length > 0 && (
+              <table className="w-full text-sm">
+                <tbody>
+                  {backups.slice(0, VISIBLE_BACKUPS).map((backup) => (
+                    <tr key={backup.fileName} className="border-b">
+                      <td className="py-2">
+                        {formatDateTime(backup.createdAt, i18n.language)}
+                      </td>
+                      <td className="py-2 text-gray-500">
+                        {t(`backup.kind.${backup.kind}`)}
+                      </td>
+                      <td className="py-2 text-right">
+                        <Button
+                          type="button"
+                          variant="text"
+                          onClick={async () => {
+                            setToRestore({
+                              path: await join(backupFolder, backup.fileName),
+                              label: formatDateTime(
+                                backup.createdAt,
+                                i18n.language
+                              ),
+                            });
+                          }}
+                        >
+                          {t("backup.restore")}
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+            {backupFolder && (
+              <p className="text-xs text-gray-400 break-all">
+                {t("backup.folder", { folder: backupFolder })}
+              </p>
+            )}
+          </section>
+        )}
 
         <section className="flex flex-col gap-3">
           <h2 className="font-bold text-xl text-gray-900">{t("efa2.title")}</h2>

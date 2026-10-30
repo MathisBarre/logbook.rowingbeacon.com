@@ -1512,6 +1512,38 @@ fn a_wal_without_shm_in_a_read_only_folder_is_never_read_stale() {
 
 // ------------------------------------------------------------------- cache
 
+/// Demo mode (ADR 0009): `main.db` and `demo.db` share one engine state
+/// (and its result cache), so the same SQL on two files must never serve
+/// one's result for the other, even when both stamps look alike.
+#[test]
+fn the_cache_never_serves_one_database_for_another() {
+    let main = TestDb::new();
+    let demo = TestDb::new();
+    demo.writer()
+        .execute(
+            "INSERT INTO outing (id, boat_id, start_date_time, created_at, updated_at) VALUES ('demo-only', 'boat-0', '2026-06-20T08:00', 'x', 'x')",
+            [],
+        )
+        .unwrap();
+    let state = EngineState::new();
+    let cached = RunQueryRequest {
+        use_cache: true,
+        ..request("SELECT count(*) FROM v_outings")
+    };
+    let count = |db: &TestDb| {
+        let result = engine::run_query(&state, &ctx(db, Privacy::Nominative), &cached).unwrap();
+        (result.cached, result.rows[0][0].as_i64().unwrap())
+    };
+    let (cached_first, main_count) = count(&main);
+    assert!(!cached_first);
+    let (cached_demo, demo_count) = count(&demo);
+    assert!(!cached_demo, "the other file starts its own entry");
+    assert_eq!(demo_count, main_count + 1);
+    // Back and forth: each file hits its own entry.
+    assert_eq!(count(&main), (true, main_count));
+    assert_eq!(count(&demo), (true, demo_count));
+}
+
 #[test]
 fn results_are_cached_until_the_database_changes() {
     let db = TestDb::new();

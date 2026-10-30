@@ -47,10 +47,6 @@
   },
   "onboarding": {
     "title": "Configure your application",
-    "testQuestion": "Do you just want to test RowingBeacon?",
-    "testDescription": "If you just want to test the application, you can enable demo mode to use fake data.",
-    "launchDemo": "Launch the application in demo mode",
-    "demoPasswordAlert": "The admin password for demo mode is \"{{password}}\"",
     "password": "Password",
     "passwordHelp": "The password will be useful to protect sensitive actions.",
     "passwordRequired": "Choose a password.",
@@ -844,5 +840,151 @@
     "rowersOverlap_one": "{{rowerNames}} is already on another outing at these times.",
     "rowersOverlap_other": "{{rowerNames}} are already on another outing at these times.",
     "boatRequired": "Select a boat."
+  },
+  "demo": {
+    "banner": {
+      "title": "Demo mode",
+      "fictionalClub": "fictional club",
+      "adminPassword": "admin password: {{password}}",
+      "guide": "What to try?",
+      "reset": "Reset",
+      "backToClub": "Back to my club",
+      "createClub": "Create my club"
+    },
+    "reset": {
+      "title": "Reset the demo?",
+      "description": "The fictional club is rebuilt from scratch, with current dates. Everything you tried in the demo is erased. Your real club is not affected.",
+      "confirm": "Reset"
+    },
+    "exit": {
+      "title": "Leave the demo?",
+      "backToClub": "You get your club back just as you left it. The fictional club will be rebuilt from scratch if you start the demo again.",
+      "createClub": "You move on to setting up your club. The fictional club will be rebuilt from scratch if you start the demo again."
+    },
+    "try": {
+      "title": "Try it with a demo club",
+      "description": "Discover RowingBeacon with a complete fictional club, ready to use: boats, rowers, outing history, damages, reservations…",
+      "point1": "Every module is turned on.",
+      "point2": "Your data is not touched: the demo is kept completely apart.",
+      "point3": "You can come back and set up your club at any time.",
+      "passwordNote": "Admin password of the demo club: {{password}}",
+      "action": "Try it with a demo club"
+    },
+    "params": {
+      "title": "Demo mode",
+      "description": "Try the full power of RowingBeacon on a complete fictional club, with no risk to your data. Your current club is kept aside, untouched.",
+      "action": "Try demo mode",
+      "confirmTitle": "Try demo mode?",
+      "confirmDescription": "The app restarts on a complete fictional club (admin password: {{password}}). Your current club is kept aside, untouched: it is neither read nor changed during the demo, and no automatic backup is made. You get it back with “Back to my club”.",
+      "confirm": "Start the demo",
+      "inDemoTitle": "Demo mode is on",
+      "inDemoDescription": "You are using a fictional club. The bar at the top of the screen lets you reset the demo or leave it; here, “Delete all data” is replaced by “Reset”. Your real data is never affected."
+    },
+    "loading": {
+      "title": "Preparing the demo club…",
+      "description": "Creating the boats, the rowers and the outing history. This can take a few seconds."
+    },
+    "errors": {
+      "switchFailed": "Could not switch mode. Nothing was changed: try again.",
+      "seedFailed": "The demo club could not be prepared. Your real data has not been touched.",
+      "retry": "Try again"
+    },
+    "backupsOff": "Backups and restores are turned off in demo mode: the fictional club can be rebuilt at will and your real backups are not touched.",
+    "efa2ReplaceWarning": "All the fictional club's data will be replaced by this project. Your real club is not touched and no backup is made in demo mode.",
+    "updateBlocked": "Leave demo mode to install the update: your real club has to be backed up first.",
+    "guide": {
+      "title": "What to try?",
+      "subtitle": "A few ideas to discover RowingBeacon with the fictional club. Tick what you have tried.",
+      "progress": "{{done}} of {{total}} tried",
+      "go": "Go",
+      "adminHint": "Asks for the admin password: {{password}}.",
+      "groups": {
+        "boathouse": "Boathouse",
+        "logbook": "Logbook",
+        "reservations": "Reservations",
+        "damages": "Damages",
+        "stats": "Statistics",
+        "management": "Management and modules",
+        "efa2": "efa2 import"
+      },
+      "steps": {
+        "startOuting": {
+          "title": "Send a boat out",
+          "description": "At the boathouse, click an available boat: pick the crew and the route, then “Start session”."
+        },
+        "stopOuting": {
+          "title": "Bring a boat back",
+          "description": "Click a boat in the “Boats in use” list to end its outing: return time, comment, possible incident."
+        },
+        "pastOuting": {
+          "title": "Add a forgotten outing",
+          "description": "The “Log past outing” button, above the available boats, adds an outing to the history after the fact."
+        },
+        "history": {
+          "title": "Browse the history",
+          "description": "The logbook lists the season's outings with crew, duration and comments; “Export” turns them into a file."
+        },
+        "editOuting": {
+          "title": "Correct an outing",
+          "description": "The pencil at the end of a row opens the outing: change the boat, the crew or the times, and the app flags overlaps."
+        },
+        "reservations": {
+          "title": "Reserve a boat",
+          "description": "“New reservation” creates a one-off or weekly slot (regatta, camp, training); filter the list by boat."
+        },
+        "reservedBoats": {
+          "title": "See reserved boats at the boathouse",
+          "description": "A boat reserved soon shows a “reserved” label; sending it out shows a warning, which never prevents the outing."
+        },
+        "damagesList": {
+          "title": "Follow damages",
+          "description": "The logbook's “Damages” tab lists open damages and the repair history, with their severity."
+        },
+        "declareDamage": {
+          "title": "Report a damage",
+          "description": "In Management > Boats, open a boat then “Report damage”: an “Out of service” boat can no longer leave, “Caution” warns the crew at departure."
+        },
+        "stats": {
+          "title": "Browse the dashboard",
+          "description": "The “Dashboard” tab sums up the season in cards. “Edit” (admin password) lets you reorder them, resize them or remove them; the “Season” selector at the top changes the period."
+        },
+        "statsReports": {
+          "title": "Open a club report",
+          "description": "The “Reports” tab offers 29 reports grouped by theme (Fleet, Attendance, Retention…): “Boat usage ranking”, “Busy days and hours”, “Retention by joining season”… “Pin to dashboard” (admin password) turns one into a card."
+        },
+        "statsAnnual": {
+          "title": "Prepare the annual report",
+          "description": "The “Annual report” tab gathers the season's figures into a document for the general meeting: “Print or save as PDF” or “Export to Excel”; with the admin password, add the club name and a short word."
+        },
+        "statsExplorer": {
+          "title": "Write an SQL query",
+          "description": "The “Explorer” tab, reserved for officials, lets you write an SQL query on the club's data and “Run” it; “Save as…” keeps it. Open one of the queries in the “Queries” list to see its result and chart."
+        },
+        "statsAi": {
+          "title": "Ask the AI a question",
+          "description": "In the Explorer, “Ask the AI” turns a question written in plain English into a query and a chart. It needs an API key, entered in Management > Statistics and AI (without a key, the assistant prepares a request to copy and paste). Rowers' names and data are never sent to it: it receives your question and the table structure."
+        },
+        "rowerStats": {
+          "title": "Open a rower's statistics",
+          "description": "In Management > Rowers, a rower's Statistics icon shows their outings, boats and partners, with comparisons."
+        },
+        "modules": {
+          "title": "Turn modules on and off",
+          "description": "In Management > Modules, turn Distances, Damages, Reservations… on or off: screens appear or disappear, nothing is erased."
+        },
+        "boatsAndRowers": {
+          "title": "Manage boats and rowers",
+          "description": "In Management > Boats and Rowers: add, archive, set a boat's required level or edit several rowers at once."
+        },
+        "efa2Export": {
+          "title": "Export to efa2",
+          "description": "In Management > Data, “Export” creates a ZIP backup that efa2 can reopen, with every outing of the fictional club."
+        },
+        "efa2Import": {
+          "title": "Import your efa2 project",
+          "description": "Coming from efa? Import your ZIP backup or data folder: it replaces the fictional club (never your real club) and you see your own data in RowingBeacon."
+        }
+      }
+    }
   }
 }

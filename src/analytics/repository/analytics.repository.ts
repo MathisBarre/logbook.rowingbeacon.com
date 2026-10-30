@@ -148,11 +148,14 @@ export interface SaveQueryInput {
   basedOnReportId?: string | null;
 }
 
-/** Creates or updates a query; resolves with what is stored. */
-export const saveQuery = async (
+/**
+ * Creates or updates a query without reading it back; resolves with its id.
+ * For a client that can only write (the demo club's script recorder).
+ */
+export const writeQuery = async (
   db: SqlClient,
   query: SaveQueryInput
-): Promise<SavedQuery> => {
+): Promise<string> => {
   const id = query.id ?? uuidv4();
   const now = nowIso();
   await db.execute(
@@ -183,6 +186,15 @@ export const saveQuery = async (
       now,
     ]
   );
+  return id;
+};
+
+/** Creates or updates a query; resolves with what is stored. */
+export const saveQuery = async (
+  db: SqlClient,
+  query: SaveQueryInput
+): Promise<SavedQuery> => {
+  const id = await writeQuery(db, query);
   const saved = await getQuery(db, id);
   if (!saved) {
     throw new Error(`Analytics query ${id} could not be read back`);

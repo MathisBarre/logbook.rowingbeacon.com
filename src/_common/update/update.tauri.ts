@@ -14,6 +14,7 @@ import {
 import { useLocaleStore } from "../store/locale.store";
 import { useOnboardingStore } from "../../onboarding/onboarding.store";
 import { isUpdateBusy, useUpdateStore } from "./update.store";
+import { isDemoMode } from "../../demo/demoMode";
 
 /** The checked update; the store only keeps what the screens show. */
 let pendingUpdate: Update | null = null;
@@ -29,6 +30,9 @@ let updateCheckTimer: ReturnType<typeof setInterval> | null = null;
 let checkInFlight: Promise<boolean> | null = null;
 
 export class UpdateBackupFailedError extends Error {}
+
+/** Installing restarts the app without the usual backup of the real club. */
+export class UpdateBlockedInDemoError extends Error {}
 
 /**
  * Asks the public releases for a newer version. Resolves to whether one is
@@ -122,6 +126,8 @@ export const startUpdateChecks = () => {
  * the installer closes the app itself and starts the new version.
  */
 export const installUpdate = async () => {
+  // The backup made before installing would save the demo, not the club.
+  if (isDemoMode()) throw new UpdateBlockedInDemoError();
   // A background check started meanwhile (e.g. during the admin password):
   // install the update it finds rather than ignore the click.
   if (checkInFlight) await checkInFlight;

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { RowersCrud } from "./components/RowersCrud";
 import { forEnum } from "../_common/utils/utils";
 import { BoatCrud } from "./components/BoatsCrud";
@@ -6,6 +6,7 @@ import { MiscParams } from "./components/MiscParams";
 import { ModulesParams } from "./components/ModulesParams";
 import { DataParams } from "./components/DataParams";
 import { useTranslation } from "react-i18next";
+import { useDemoStore } from "../demo/demo.store";
 import Loading from "../_common/components/Loading";
 import {
   takeRequestedAnalyticsSection,
@@ -26,6 +27,14 @@ export const ParametersScreen = () => {
     () => takeRequestedParametersPage() ?? "rowers"
   );
   const [section] = useState(() => takeRequestedAnalyticsSection());
+
+  // The demo guide opens a given tab (Modules, Données…).
+  const requestedTab = useDemoStore((state) => state.requestedParametersTab);
+  useEffect(() => {
+    if (!requestedTab) return;
+    setPage(requestedTab);
+    useDemoStore.getState().requestParametersTab(null);
+  }, [requestedTab]);
 
   return (
     <div className="flex flex-col h-full gap-1">

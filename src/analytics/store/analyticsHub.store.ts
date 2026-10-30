@@ -2,7 +2,10 @@ import { create } from "zustand";
 import type { ExplorerDraft, ParamValue } from "../types";
 import { currentSeason, localNow } from "../params/season";
 import { useAnalyticsSettingsStore } from "./analyticsSettings.store";
-import { onAnalyticsLocalMemoryCleared } from "./localMemory";
+import {
+  analyticsStorageKey,
+  onAnalyticsLocalMemoryCleared,
+} from "./localMemory";
 
 /**
  * State of the analytics hub (plan 1.2): the open tab (remembered per
@@ -76,7 +79,9 @@ interface AnalyticsHubState {
  */
 export const readTab = (): AnalyticsTab => {
   try {
-    const stored = window.localStorage.getItem(TAB_STORAGE_KEY);
+    const stored = window.localStorage.getItem(
+      analyticsStorageKey(TAB_STORAGE_KEY)
+    );
     return (ANALYTICS_TABS as readonly string[]).includes(stored ?? "") &&
       stored !== "explorer"
       ? (stored as AnalyticsTab)
@@ -88,7 +93,7 @@ export const readTab = (): AnalyticsTab => {
 
 const writeTab = (tab: AnalyticsTab) => {
   try {
-    window.localStorage.setItem(TAB_STORAGE_KEY, tab);
+    window.localStorage.setItem(analyticsStorageKey(TAB_STORAGE_KEY), tab);
   } catch {
     // Storage blocked: the tab is simply not remembered.
   }

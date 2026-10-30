@@ -47,10 +47,6 @@
   },
   "onboarding": {
     "title": "Configura la tua applicazione",
-    "testQuestion": "Vuoi solo testare RowingBeacon?",
-    "testDescription": "Se vuoi solo testare l'applicazione, puoi attivare la modalità demo per utilizzare dati fittizi.",
-    "launchDemo": "Avvia l'applicazione in modalità demo",
-    "demoPasswordAlert": "La password admin per la modalità demo è \"{{password}}\"",
     "password": "Password",
     "passwordHelp": "La password sarà utile per proteggere le azioni sensibili.",
     "passwordRequired": "Scegli una password.",
@@ -844,5 +840,151 @@
     "rowersOverlap_one": "{{rowerNames}} è già in un'altra uscita in questi orari.",
     "rowersOverlap_other": "{{rowerNames}} sono già in un'altra uscita in questi orari.",
     "boatRequired": "Seleziona una barca."
+  },
+  "demo": {
+    "banner": {
+      "title": "Modalità demo",
+      "fictionalClub": "club fittizio",
+      "adminPassword": "password admin: {{password}}",
+      "guide": "Cosa provare?",
+      "reset": "Reimposta",
+      "backToClub": "Torna al mio club",
+      "createClub": "Crea il mio club"
+    },
+    "reset": {
+      "title": "Reimpostare la demo?",
+      "description": "Il club fittizio viene ricreato da zero, con date aggiornate. Tutto ciò che hai provato nella demo viene cancellato. Il tuo vero club non è interessato.",
+      "confirm": "Reimposta"
+    },
+    "exit": {
+      "title": "Uscire dalla demo?",
+      "backToClub": "Ritrovi il tuo club così come l'avevi lasciato. Il club fittizio verrà ricreato da zero se rilanci la demo.",
+      "createClub": "Passi alla creazione del tuo club. Il club fittizio verrà ricreato da zero se rilanci la demo."
+    },
+    "try": {
+      "title": "Prova con un club demo",
+      "description": "Scopri RowingBeacon con un club fittizio completo, pronto all'uso: barche, vogatori, storico delle uscite, danni, prenotazioni…",
+      "point1": "Tutti i moduli sono attivi.",
+      "point2": "I tuoi dati non vengono toccati: la demo è tenuta completamente separata.",
+      "point3": "Potrai tornare e creare il tuo club in qualsiasi momento.",
+      "passwordNote": "Password admin del club demo: {{password}}",
+      "action": "Prova con un club demo"
+    },
+    "params": {
+      "title": "Modalità demo",
+      "description": "Prova tutta la potenza di RowingBeacon su un club fittizio completo, senza rischi per i tuoi dati. Il tuo club attuale resta da parte, intatto.",
+      "action": "Prova la modalità demo",
+      "confirmTitle": "Provare la modalità demo?",
+      "confirmDescription": "L'app si riavvia su un club fittizio completo (password admin: {{password}}). Il tuo club attuale resta da parte, intatto: durante la demo non viene né letto né modificato e non viene eseguito alcun backup automatico. Lo ritrovi con «Torna al mio club».",
+      "confirm": "Avvia la demo",
+      "inDemoTitle": "Modalità demo attiva",
+      "inDemoDescription": "Stai usando un club fittizio. La barra in alto nella schermata permette di reimpostare la demo o di uscirne; qui «Elimina tutti i dati» è sostituito da «Reimposta». I tuoi dati reali non sono mai interessati."
+    },
+    "loading": {
+      "title": "Preparazione del club demo…",
+      "description": "Creazione di barche, vogatori e storico delle uscite. Può richiedere qualche secondo."
+    },
+    "errors": {
+      "switchFailed": "Impossibile cambiare modalità. Nulla è stato modificato: riprova.",
+      "seedFailed": "Non è stato possibile preparare il club demo. I tuoi dati reali non sono stati toccati.",
+      "retry": "Riprova"
+    },
+    "backupsOff": "I backup e il ripristino sono disattivati in modalità demo: il club fittizio si ricrea a piacere e i tuoi veri backup non vengono toccati.",
+    "efa2ReplaceWarning": "Tutti i dati del club fittizio saranno sostituiti da questo progetto. Il tuo vero club non viene toccato e in modalità demo non viene eseguito alcun backup.",
+    "updateBlocked": "Esci dalla modalità demo per installare l'aggiornamento: prima va eseguito il backup del tuo vero club.",
+    "guide": {
+      "title": "Cosa provare?",
+      "subtitle": "Qualche spunto per scoprire RowingBeacon con il club fittizio. Spunta ciò che hai provato.",
+      "progress": "{{done}} su {{total}} provati",
+      "go": "Vai",
+      "adminHint": "Chiede la password admin: {{password}}.",
+      "groups": {
+        "boathouse": "Hangar",
+        "logbook": "Giornale di bordo",
+        "reservations": "Prenotazioni",
+        "damages": "Danni",
+        "stats": "Statistiche",
+        "management": "Gestione e moduli",
+        "efa2": "Importazione efa2"
+      },
+      "steps": {
+        "startOuting": {
+          "title": "Far partire una barca",
+          "description": "All'hangar, clicca su una barca disponibile: scegli l'equipaggio e il percorso, poi «Inizia l'uscita»."
+        },
+        "stopOuting": {
+          "title": "Far rientrare una barca",
+          "description": "Clicca su una barca dell'elenco «Barche in uso» per terminare l'uscita: rientro, commento, eventuale incidente."
+        },
+        "pastOuting": {
+          "title": "Registrare un'uscita dimenticata",
+          "description": "Il pulsante «Uscita già fatta», sopra le barche disponibili, aggiunge a posteriori un'uscita allo storico."
+        },
+        "history": {
+          "title": "Consultare lo storico",
+          "description": "Il giornale di bordo elenca le uscite della stagione con equipaggio, durata e commenti; «Esporta» ne ricava un file."
+        },
+        "editOuting": {
+          "title": "Correggere un'uscita",
+          "description": "La matita a fine riga apre l'uscita: cambia barca, equipaggio o orari, l'app segnala le sovrapposizioni."
+        },
+        "reservations": {
+          "title": "Prenotare una barca",
+          "description": "«Nuova prenotazione» crea una fascia singola o settimanale (regata, stage, allenamento); filtra l'elenco per barca."
+        },
+        "reservedBoats": {
+          "title": "Vedere le barche prenotate all'hangar",
+          "description": "Una barca prenotata a breve riporta la dicitura «prenotata»; facendola partire compare un avviso, che non impedisce mai l'uscita."
+        },
+        "damagesList": {
+          "title": "Seguire i danni",
+          "description": "La scheda «Danni» del giornale di bordo elenca i danni aperti e lo storico delle riparazioni, con la gravità."
+        },
+        "declareDamage": {
+          "title": "Segnalare un danno",
+          "description": "In Gestione > Barche apri una barca poi «Segnala un danno»: una barca «Fuori servizio» non può più partire, «Con cautela» avvisa l'equipaggio alla partenza."
+        },
+        "stats": {
+          "title": "Sfogliare il cruscotto",
+          "description": "La scheda «Cruscotto» riassume la stagione in schede. «Modifica» (password admin) permette di riordinarle, ridimensionarle o toglierle; il selettore «Stagione» in alto cambia il periodo."
+        },
+        "statsReports": {
+          "title": "Aprire un report del club",
+          "description": "La scheda «Report» propone 29 report per tema (Flotta, Affluenza, Fidelizzazione…): «Classifica delle barche», «Affluenza per giorno e ora», «Fidelizzazione per stagione di arrivo»… «Aggiungi al cruscotto» (password admin) ne fa una scheda."
+        },
+        "statsAnnual": {
+          "title": "Preparare la relazione annuale",
+          "description": "La scheda «Relazione annuale» riunisce i numeri della stagione in un documento per l'assemblea: «Stampa o salva in PDF» o «Esporta in Excel»; con la password admin aggiungi il nome del club e due parole."
+        },
+        "statsExplorer": {
+          "title": "Scrivere una query SQL",
+          "description": "La scheda «Esplora», riservata ai responsabili, permette di scrivere una query SQL sui dati del club ed eseguirla con «Esegui»; «Salva con nome…» la conserva. Apri una query dell'elenco «Query» per vedere risultato e grafico."
+        },
+        "statsAi": {
+          "title": "Fare una domanda all'IA",
+          "description": "In Esplora, «Chiedi all'IA» trasforma una domanda in italiano in una query e in un grafico. Serve una chiave API, da inserire in Gestione > Statistiche e IA (senza chiave l'assistente prepara una richiesta da copiare e incollare). I nomi e i dati dei vogatori non le vengono mai inviati: riceve la domanda e la struttura delle tabelle."
+        },
+        "rowerStats": {
+          "title": "Aprire le statistiche di un vogatore",
+          "description": "In Gestione > Vogatori, l'icona Statistiche di un vogatore mostra uscite, barche e compagni, con confronti."
+        },
+        "modules": {
+          "title": "Attivare e disattivare i moduli",
+          "description": "In Gestione > Moduli attiva o disattiva Distanze, Danni, Prenotazioni…: le schermate compaiono o scompaiono, senza cancellare nulla."
+        },
+        "boatsAndRowers": {
+          "title": "Gestire barche e vogatori",
+          "description": "In Gestione > Barche e Vogatori: aggiungi, archivia, imposta il livello richiesto di una barca o modifica più vogatori insieme."
+        },
+        "efa2Export": {
+          "title": "Esportare verso efa2",
+          "description": "In Gestione > Dati, «Esporta» crea un backup ZIP che efa2 sa riaprire, con tutte le uscite del club fittizio."
+        },
+        "efa2Import": {
+          "title": "Importare il tuo progetto efa2",
+          "description": "Vieni da efa? Importa il tuo backup ZIP o la tua cartella dati: sostituisce il club fittizio (mai il tuo vero club) e vedi i tuoi dati in RowingBeacon."
+        }
+      }
+    }
   }
 }

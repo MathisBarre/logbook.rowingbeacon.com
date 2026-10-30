@@ -2,7 +2,10 @@
 //! MCP server (`--mcp`, no window) finds the same database as the app.
 //!
 //! - database: `dirs::config_dir()/<identifier>/main.db`, the folder of
-//!   Tauri's `app_config_dir()`, where plugin-sql resolves `sqlite:main.db`;
+//!   Tauri's `app_config_dir()`, where plugin-sql resolves `sqlite:main.db`.
+//!   In demo mode (ADR 0009) the app opens `demo.db` in the same folder:
+//!   the webview names the one it opened (`db_path_for`), among these two
+//!   only. The MCP server always reads `main.db`;
 //! - MCP inbox: `dirs::data_dir()/<identifier>/analytics-inbox/`;
 //! - AI key files (fallback of the keychain), one per provider:
 //!   `dirs::config_dir()/<identifier>/secrets/anthropic-api-key`,
@@ -10,13 +13,15 @@
 
 use std::path::PathBuf;
 
-use crate::error::AnalyticsError;
+use crate::error::{AnalyticsError, ErrorCode};
 use crate::ipc::{McpInfo, McpPlatform};
 
 /// `identifier` of `tauri.conf.json` (a test compares them).
 pub const APP_IDENTIFIER: &str = "com.rowing-beacon-tauri-app.app";
 
 pub const DB_FILE_NAME: &str = "main.db";
+/// The database of the demo mode (ADR 0009), next to `main.db`.
+pub const DEMO_DB_FILE_NAME: &str = "demo.db";
 pub const INBOX_DIR_NAME: &str = "analytics-inbox";
 pub const KEY_FILE_NAME: &str = "anthropic-api-key";
 
@@ -28,6 +33,23 @@ fn config_root() -> Result<PathBuf, AnalyticsError> {
 
 pub fn db_path() -> Result<PathBuf, AnalyticsError> {
     Ok(config_root()?.join(DB_FILE_NAME))
+}
+
+/// The database the app has open: `main.db`, or `demo.db` in demo mode. The
+/// webview sends the file name; only these two are accepted, never a path.
+/// `None` is the club's `main.db` (MCP, calls from before demo mode).
+pub fn db_path_for(database: Option<&str>) -> Result<PathBuf, AnalyticsError> {
+    let name = match database {
+        None | Some(DB_FILE_NAME) => DB_FILE_NAME,
+        Some(DEMO_DB_FILE_NAME) => DEMO_DB_FILE_NAME,
+        Some(other) => {
+            return Err(AnalyticsError::new(
+                ErrorCode::InvalidParam,
+                format!("Unknown database \"{other}\": main.db or demo.db"),
+            ))
+        }
+    };
+    Ok(config_root()?.join(name))
 }
 
 pub fn inbox_dir() -> Result<PathBuf, AnalyticsError> {
@@ -115,6 +137,32 @@ mod tests {
             .ends_with(format!("{APP_IDENTIFIER}/secrets/anthropic-api-key")));
         if let Some(path) = claude_desktop_config_path() {
             assert!(path.ends_with("Claude/claude_desktop_config.json"));
+        }
+    }
+
+    #[test]
+    fn the_app_database_is_main_or_demo_and_nothing_else() {
+        let Ok(main) = db_path() else {
+            return; // No home folder in this environment.
+        };
+        assert_eq!(db_path_for(None).unwrap(), main);
+        assert_eq!(db_path_for(Some("main.db")).unwrap(), main);
+        let demo = db_path_for(Some("demo.db")).unwrap();
+        assert!(demo.ends_with(format!("{APP_IDENTIFIER}/demo.db")));
+        assert_eq!(demo.parent(), main.parent());
+        for name in [
+            "",
+            "other.db",
+            "MAIN.DB",
+            "main.db ",
+            "../main.db",
+            "/etc/passwd",
+            "sub/demo.db",
+            "demo.db/..",
+            "..\\demo.db",
+        ] {
+            let error = db_path_for(Some(name)).unwrap_err();
+            assert_eq!(error.code, ErrorCode::InvalidParam, "{name:?}");
         }
     }
 

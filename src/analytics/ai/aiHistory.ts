@@ -2,6 +2,7 @@ import { z } from "zod";
 import { ChartSpec, ParamDef } from "../chartSpec";
 import type { AiProvider } from "../engine/ipc";
 import type { AiDraft } from "../types";
+import { analyticsStorageKey } from "../store/localMemory";
 
 /**
  * The assistant's memory on this computer (review #7): the last answered
@@ -43,7 +44,9 @@ const Entry = z.object({
 export const readAiHistory = (): AiHistoryEntry[] => {
   let value: unknown;
   try {
-    const raw = window.localStorage.getItem(AI_HISTORY_STORAGE_KEY);
+    const raw = window.localStorage.getItem(
+      analyticsStorageKey(AI_HISTORY_STORAGE_KEY)
+    );
     value = raw ? JSON.parse(raw) : [];
   } catch {
     return [];
@@ -78,7 +81,10 @@ export const withAiHistoryEntry = (
 export const rememberAiAnswer = (entry: AiHistoryEntry): AiHistoryEntry[] => {
   const next = withAiHistoryEntry(readAiHistory(), entry);
   try {
-    window.localStorage.setItem(AI_HISTORY_STORAGE_KEY, JSON.stringify(next));
+    window.localStorage.setItem(
+      analyticsStorageKey(AI_HISTORY_STORAGE_KEY),
+      JSON.stringify(next)
+    );
   } catch {
     // Storage blocked or full: only a convenience is lost.
   }

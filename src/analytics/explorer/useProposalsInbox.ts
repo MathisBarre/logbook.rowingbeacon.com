@@ -3,6 +3,7 @@ import { invoke as tauriInvoke, isTauri } from "@tauri-apps/api/core";
 import { ChartSpec, ParamDefs } from "../chartSpec";
 import { ANALYTICS_COMMANDS, InboxProposal } from "../engine/ipc";
 import type { SqlClient } from "../../_common/database/sqlClient";
+import { isDemoMode } from "../../demo/demoMode";
 import {
   insertProposal,
   ProposalInput,
@@ -137,6 +138,8 @@ export const syncInbox = async ({
   invoke: InvokeFn;
   write: WriteFn;
 }): Promise<InboxSyncResult> => {
+  // Demo mode: the inbox belongs to the real club (see useProposalsInbox).
+  if (isDemoMode()) return { imported: [], proposals: [], invalid: [] };
   const proposals = await invoke<InboxProposal[]>(ANALYTICS_COMMANDS.inboxList);
   const imported: string[] = [];
   const importedProposals: ImportedProposal[] = [];
@@ -233,11 +236,16 @@ export const useProposalsInbox = ({
   enabled?: boolean;
 } = {}) => {
   const [invalid, setInvalid] = useState<InvalidProposal[]>([]);
+  // The AI apps (MCP) read and propose for the real club's main.db: in
+  // demo mode their proposals stay in the inbox for it, never imported into
+  // demo.db and thrown away with it (ADR 0009).
+  const [inDemo] = useState(() => isDemoMode());
   const running = useRef(false);
   const onImportedRef = useRef(onImported);
   onImportedRef.current = onImported;
   const active =
     enabled &&
+    !inDemo &&
     (invoke !== defaultInvoke || (typeof window !== "undefined" && isTauri()));
 
   const sync = useCallback(async () => {

@@ -2,12 +2,11 @@
 import Button from "../_common/components/Button";
 import { Input } from "../_common/components/Input";
 import { Label } from "../_common/components/Label";
-import { ArrowRightIcon, Check, CircleHelpIcon } from "lucide-react";
+import { Check } from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FormField } from "../_common/components/Form";
-import { faker } from "@faker-js/faker";
 import { useClubOverviewStore } from "../_common/store/clubOverview.store";
 import { generateBoatId } from "../_common/business/boat.rules";
 import { generateRowerId } from "../_common/business/rower.rules";
@@ -15,7 +14,7 @@ import { generateRoutesId } from "../_common/business/route.rules";
 import { windowAlert } from "../_common/utils/window.utils";
 import { BoatTypeEnum } from "../_common/business/boat.rules";
 import { hashPassword } from "../_common/utils/password";
-import { useGenerateFakeData } from "../boathouse/data/generateFakeData";
+import { TryDemoCard } from "../demo/TryDemoCard";
 import { useRef, useState } from "react";
 import { AdminPage } from "../_common/store/navigation.store";
 import { useTranslation } from "react-i18next";
@@ -57,9 +56,6 @@ export const OnboardingScreen = ({
     defaultValues: { clubPassword: "", boats: "", rowers: "", routes: "" },
   });
 
-  const generateFakeData = useGenerateFakeData();
-
-  const [generatingFakeDate, setIsGeneratingFakeData] = useState(false);
   const [isSavingClub, setIsSavingClub] = useState(false);
   const isSaving = useRef(false);
   const [profile, setProfile] = useState<OnboardingProfile>("simple");
@@ -84,85 +80,33 @@ export const OnboardingScreen = ({
       <main className="max-w-screen-lg m-auto flex-1 w-full py-6">
         <form
           className="flex flex-col gap-6"
-          onSubmit={form.handleSubmit(async (values) => {
-            if (isEfaImport) {
-              if (!efaProject) {
-                await windowAlert(t("onboarding.efa.required"));
+          onSubmit={form.handleSubmit(
+            async (values) => {
+              if (isEfaImport) {
+                if (!efaProject) {
+                  await windowAlert(t("onboarding.efa.required"));
+                  return;
+                }
+                setClubPassword(values.clubPassword);
+                setConfirmEfaImport(true);
                 return;
               }
-              setClubPassword(values.clubPassword);
-              setConfirmEfaImport(true);
-              return;
-            }
-            // A second click would save a second club with new ids.
-            if (isSaving.current) return;
-            isSaving.current = true;
-            setIsSavingClub(true);
-            const saved = await setClubOverview(formatFormValues(values));
-            isSaving.current = false;
-            setIsSavingClub(false);
-            if (!saved) return;
-            setEnabledModules(getModulesForProfile(profile));
-            setIsOnboardingDone(true);
-            setPage("boathouse");
-          }, () => void windowAlert(t("onboarding.passwordRequired")))}
+              // A second click would save a second club with new ids.
+              if (isSaving.current) return;
+              isSaving.current = true;
+              setIsSavingClub(true);
+              const saved = await setClubOverview(formatFormValues(values));
+              isSaving.current = false;
+              setIsSavingClub(false);
+              if (!saved) return;
+              setEnabledModules(getModulesForProfile(profile));
+              setIsOnboardingDone(true);
+              setPage("boathouse");
+            },
+            () => void windowAlert(t("onboarding.passwordRequired"))
+          )}
         >
-          <article className="flex flex-col gap-1 items-start bg-blue-100 border-l-4 border-blue-500 p-4 rounded text-blue-950 my-4">
-            <div className="flex gap-2 items-center">
-              <CircleHelpIcon className="color-blue-500 h-5 w-5" />
-
-              <div>
-                <h5 className="text-base font-medium">
-                  {t("onboarding.testQuestion")}
-                </h5>
-              </div>
-            </div>
-            <p className="text-sm ">{t("onboarding.testDescription")}</p>
-            <Button
-              loading={generatingFakeDate}
-              variant="outlined"
-              type="button"
-              className="flex items-center gap-2 text-sm mt-1"
-              disabled={isSavingClub}
-              onClick={async () => {
-                if (isSaving.current) return;
-                isSaving.current = true;
-                setIsGeneratingFakeData(true);
-                try {
-                  const ADMIN_PASSWORD = "admin";
-                  const saved = await setClubOverview({
-                    club: {
-                      password: hashPassword(ADMIN_PASSWORD),
-                    },
-                    boats: generateBoats(),
-                    rowers: generateRowers(100),
-                    routes: generateRoutes(3),
-                  });
-                  if (!saved) return;
-                  // After the club is saved, which starts from a clean slate.
-                  setEnabledModules(getModulesForProfile("fullClub"));
-
-                  // Shown before the long generation: an app closed
-                  // meanwhile must not leave a club whose password nobody saw.
-                  await windowAlert(
-                    t("onboarding.demoPasswordAlert", {
-                      password: ADMIN_PASSWORD,
-                    })
-                  );
-
-                  // A half-generated demo stays on the onboarding; the next
-                  // attempt starts again from a clean slate.
-                  if (await generateFakeData()) setIsOnboardingDone(true);
-                } finally {
-                  isSaving.current = false;
-                  setIsGeneratingFakeData(false);
-                }
-              }}
-            >
-              {t("onboarding.launchDemo")}
-              <ArrowRightIcon className="h-4 w-4" />
-            </Button>
-          </article>
+          <TryDemoCard disabled={isSavingClub} />
 
           <ProfileChooser profile={profile} setProfile={setProfile} />
 
@@ -263,7 +207,6 @@ export const OnboardingScreen = ({
           <Button
             type="submit"
             loading={isSavingClub}
-            disabled={generatingFakeDate}
             className="flex items-center justify-center mb-8"
           >
             {isEfaImport
@@ -433,90 +376,4 @@ const formatFormValues = (values: OnboardingFormValues) => {
       type: BoatTypeEnum.OTHER,
     })),
   };
-};
-
-const generateRowers = (nbOfRowers: number) => {
-  return Array.from({ length: nbOfRowers }, () => ({
-    id: generateRowerId(),
-    name: faker.person.fullName(),
-  }));
-};
-
-const generateBoats = () => {
-  let last1xBoatGenerated = 100;
-  let last2xBoatGenerated = 200;
-  let last4xBoatGenerated = 400;
-  let last8xBoatGenerated = 800;
-
-  const nbOfBoats = 38;
-  let i = 0;
-  return Array.from({ length: nbOfBoats }, () => {
-    const shouldGenerate1x = i >= 0 && i < 20;
-    const shouldGenerate2x = i >= 20 && i < 30;
-    const shouldGenerate4x = i >= 30 && i < 35;
-    const shouldGenerate8x = i >= 35 && i < 38;
-
-    const rowingBrands = [
-      "Hudson",
-      "Filippi",
-      "Empacher",
-      "Vespoli",
-      "Swift",
-      "WinTech",
-    ];
-
-    let name = "";
-    let type = BoatTypeEnum.OTHER;
-
-    if (shouldGenerate1x) {
-      name = `${last1xBoatGenerated++} ${
-        rowingBrands[generateNumberBetween(0, rowingBrands.length - 1)]
-      }`;
-      type = BoatTypeEnum.ONE_ROWER_COXLESS;
-    }
-
-    if (shouldGenerate2x) {
-      name = `${last2xBoatGenerated++} ${
-        rowingBrands[generateNumberBetween(0, rowingBrands.length - 1)]
-      }`;
-      type = [BoatTypeEnum.TWO_ROWERS_COXLESS, BoatTypeEnum.TWO_ROWERS_COXED][
-        generateNumberBetween(0, 1)
-      ];
-    }
-
-    if (shouldGenerate4x) {
-      name = `${last4xBoatGenerated++} ${
-        rowingBrands[generateNumberBetween(0, rowingBrands.length - 1)]
-      }`;
-      type = [BoatTypeEnum.FOUR_ROWERS_COXLESS, BoatTypeEnum.FOUR_ROWERS_COXED][
-        generateNumberBetween(0, 1)
-      ];
-    }
-
-    if (shouldGenerate8x) {
-      name = `${last8xBoatGenerated++} ${
-        rowingBrands[generateNumberBetween(0, rowingBrands.length - 1)]
-      }`;
-      type = BoatTypeEnum.EIGHT_ROWERS_COXED;
-    }
-
-    i++;
-
-    return {
-      id: generateBoatId(),
-      name,
-      type,
-    };
-  }).sort();
-};
-
-const generateNumberBetween = (min: number, max: number) => {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
-const generateRoutes = (nbOfRoutes: number) => {
-  return Array.from({ length: nbOfRoutes }, () => ({
-    id: generateRoutesId(),
-    name: faker.location.street(),
-  }));
 };
