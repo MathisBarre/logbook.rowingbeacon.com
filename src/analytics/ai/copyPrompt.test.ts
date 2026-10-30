@@ -110,6 +110,14 @@ describe("parsePastedAnswer", () => {
     expect(result.answer.chart).toBeNull();
   });
 
+  it("reads an answer pasted with Windows line endings", () => {
+    const result = parsePastedAnswer(
+      pasteSqlBlock.replace(/\r?\n/g, "\r\n"),
+      QUESTION
+    );
+    expect(result.ok && result.answer.sql).toBe(answerYouth.sql);
+  });
+
   it("accepts a bare SELECT and a trailing semicolon", () => {
     const result = parsePastedAnswer(
       "SELECT boat_name FROM v_boats;",

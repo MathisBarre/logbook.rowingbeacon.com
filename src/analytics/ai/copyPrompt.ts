@@ -243,7 +243,8 @@ export const parsePastedAnswer = (
   text: string,
   question: string
 ): PasteResult => {
-  const trimmed = text.trim();
+  // Text copied on Windows ends its lines with \r\n: keep the SQL as it would read on any system.
+  const trimmed = text.replace(/\r\n?/g, "\n").trim();
   if (trimmed === "") {
     return { ok: false };
   }
